@@ -1,0 +1,2 @@
+# S&C - Plataforma Interna (Frontend)
+Este repositorio contiene la interfaz de usuario de la plataforma SANO & CONTROLADO (S&C), diseñada para digitalizar y estandarizar el método de entrenamiento homónimo.
