@@ -1,31 +1,93 @@
 type Props = {
   name: string;
+  chosen: [string, string];
   colors: string[];
 };
 
-export function ColorScale({ name, colors }: Props) {
+export function ColorScale({ name, chosen, colors }: Props) {
   const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+  const [chosenHex, chosenStep] = chosen;
 
   return (
-    <div className="space-y-2">
-      <p className="text-xs font-medium text-neutral-500">{name}</p>
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-bold text-neutral-500 uppercase tracking-widest">
+          {name}
+        </h3>
 
-      <div className="flex overflow-hidden rounded-xl border border-neutral-200">
-        {colors.map((color, i) => (
+        <div className="flex items-center gap-2.5">
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-black text-neutral-900 leading-none">
+              {chosenStep}
+            </span>
+            <span className="text-[9px] font-mono font-bold text-neutral-400 leading-none mt-1.5 uppercase">
+              {chosenHex}
+            </span>
+          </div>
           <div
-            key={steps[i]}
-            className="h-10 flex-1"
-            style={{ backgroundColor: color }}
-          />
-        ))}
+            className="w-9 h-9 rounded-lg shadow-sm border border-neutral-200 ring-4 ring-white flex items-center justify-center overflow-hidden"
+            style={{ backgroundColor: chosenHex }}
+          >
+            <div className="opacity-0 bg-black/10 w-full h-full flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex text-[10px] text-neutral-400">
-        {steps.map((step) => (
-          <div key={step} className="flex-1 text-center">
-            {step}
-          </div>
-        ))}
+      <div className="relative">
+        <div className="flex h-12 overflow-hidden rounded-xl border border-neutral-100 shadow-inner bg-neutral-50">
+          {colors.map((color, i) => {
+            const isChosen = String(steps[i]) === String(chosenStep);
+            return (
+              <div
+                key={steps[i]}
+                className={`relative flex-1 transition-all duration-500 ease-out ${
+                  isChosen
+                    ? "z-10 ring-2 ring-inset ring-white/40"
+                    : "hover:flex-[1.8] cursor-crosshair"
+                }`}
+                style={{ backgroundColor: color }}
+                title={`${name} ${steps[i]}: ${color}`}
+              >
+                {isChosen && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,1)] animate-pulse" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex text-[10px] font-bold font-mono text-neutral-400">
+        {steps.map((step) => {
+          const isChosen = String(step) === String(chosenStep);
+          return (
+            <div
+              key={step}
+              className={`flex-1 text-center transition-all duration-300 ${
+                isChosen ? "text-neutral-900 scale-110" : "opacity-60"
+              }`}
+            >
+              {step}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

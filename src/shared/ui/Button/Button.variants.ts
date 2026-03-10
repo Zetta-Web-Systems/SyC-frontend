@@ -94,7 +94,7 @@ export const buttonVariants = cva(
         variant: "ghost",
         intent: "secondary",
         className:
-          "text-secondary-600 hover:bg-secondary-50 active:bg-secondary-100 focus-visible:ring-secondary-500",
+          "text-secondary-600 hover:bg-secondary-50 active:bg-secondary-100 focus-visible:ring-secondary-300",
       },
       {
         variant: "ghost",

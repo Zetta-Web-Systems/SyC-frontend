@@ -64,6 +64,7 @@ function DesignHubPage() {
 
               <ColorScale
                 name="Primary"
+                chosen={["#3e4c93", "600"]}
                 colors={[
                   "#edeff7",
                   "#cdd2ea",
@@ -81,6 +82,7 @@ function DesignHubPage() {
 
               <ColorScale
                 name="Secondary"
+                chosen={["#71bcb5", "500"]}
                 colors={[
                   "#eef7f6",
                   "#cee8e6",
