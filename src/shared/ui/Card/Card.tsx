@@ -1,18 +1,17 @@
-import { forwardRef } from "react";
+import type { Ref } from "react";
 import type { HTMLAttributes } from "react";
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>;
   asChild?: boolean;
 }
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ children, className, ...props }, ref) => {
-    return (
-      <div ref={ref} className={className} {...props}>
-        {children}
-      </div>
-    );
-  },
-);
+export function Card({ children, className, asChild: _asChild, ref, ...props }: CardProps) {
+  return (
+    <div ref={ref} className={className} {...props}>
+      {children}
+    </div>
+  );
+}
 
 Card.displayName = "Card";
