@@ -5,7 +5,8 @@ import { cn } from "@shared/lib/cn";
 import { inputVariants } from "./Input.variants";
 
 export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size">,
+  extends
+    Omit<InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputVariants> {
   ref?: Ref<HTMLInputElement>;
   error?: boolean;
@@ -31,7 +32,7 @@ export function Input({
 
   return (
     <div className="relative flex w-full flex-col gap-1.5">
-      {(leftElement || rightElement) ? (
+      {leftElement || rightElement ? (
         <div className="relative flex items-center">
           {leftElement && (
             <div className="pointer-events-none absolute left-3 flex items-center text-neutral-400">
@@ -56,7 +57,7 @@ export function Input({
           />
 
           {rightElement && (
-            <div className="pointer-events-none absolute right-3 flex items-center text-neutral-400">
+            <div className="absolute right-3 flex items-center text-neutral-400">
               {rightElement}
             </div>
           )}
