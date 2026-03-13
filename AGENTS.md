@@ -9,15 +9,18 @@ feature-based architecture. Early-stage project — `features/` is not yet popul
 
 ```bash
 npm run dev        # Start Vite dev server
-npm run build      # Type-check + production build (tsc -b && vite build)
+npm run build      # Production build (ONLY when explicitly requested)
 npm run lint       # Run ESLint on all .ts / .tsx files
 npm run preview    # Preview the production build locally
 ```
 
-**There is no test framework configured yet.** Playwright (E2E) is planned but not installed.
-Do not attempt to run tests; add them only when explicitly asked.
+Agents must NOT run npm run build automatically.
+Validation for code changes consists only of:
+```bash
+npm run lint
+```
 
-Run `npm run lint` to check for lint violations before finishing a task.
+*npm run build* must be executed only if the user explicitly requests a build.
 
 ---
 # Agent Skills
@@ -30,7 +33,14 @@ The following global skills define the main implementation patterns:
 - `tailwind-4` — Tailwind CSS 4 styling rules
 - `skill-creator` — creating and documenting new agent skills
 
-Agents **must apply these skills automatically when their trigger conditions match the task.**
+### Skill usage rules
+
+Agents should follow these rules:
+
+1. During **task planning**, consult relevant skills if the task involves their domain.
+2. During **task execution**, do not repeatedly re-read or re-evaluate skills unless necessary.
+3. Skills are **reference documentation**, not mandatory execution steps.
+4. Do not load or analyze all skills by default — only the ones relevant to the task.
 
 ---
 
@@ -53,7 +63,8 @@ src/
     ├── components/ui/    — composite shared components (Form, Table…)
     ├── config/           — env.ts, queryClient.ts
     ├── hooks/            — generic, feature-agnostic hooks
-    ├── lib/              — cn.ts and other small utilities
+    ├── lib/              — cn.ts, createStore.ts and other small utilities
+    ├── stores/           — global Zustand stores
     ├── types/            — global types
     ├── ui/               — design system primitives (Button, Input, Card…)
     └── utils/            — pure utility functions
@@ -206,7 +217,72 @@ Global defaults (configured in `@shared/config/queryClient.ts`):
 - `retry: 1`
 - `refetchOnWindowFocus: false`
 
-Server state lives **only** in TanStack Query — never in Zustand (when added).
+Server state lives **only** in TanStack Query — never in Zustand.
+
+---
+
+## Client State (Zustand)
+
+Zustand manages all **client-side** state: auth session, UI state, notifications, and global modals.
+
+### Store location — hybrid convention
+
+| Scope | Location |
+| ------------- | ----------------------------------------------- |
+| Global/shared | `src/shared/stores/<name>.store.ts` |
+| Feature-local | `src/features/<domain>/stores/<name>.store.ts` |
+
+### Naming
+
+- Files: `camelCase.store.ts` — e.g. `auth.store.ts`, `ui.store.ts`
+- Exported hook: `use<Name>Store` — e.g. `useAuthStore`, `useUIStore`
+
+### Always use `createStore()` from `@shared/lib/createStore`
+
+Never call Zustand's `create` directly. The factory automatically applies `devtools` middleware in development:
+
+```typescript
+// shared/lib/createStore.ts — already implemented
+import { createStore } from "@shared/lib/createStore";
+```
+
+### Store template
+
+```typescript
+// features/auth/stores/auth.store.ts
+import { createStore } from "@shared/lib/createStore";
+import type { User } from "../types";
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  setUser: (user: User) => void;
+  logout: () => void;
+}
+
+export const useAuthStore = createStore<AuthState>("auth", (set) => ({
+  user: null,
+  isAuthenticated: false,
+  setUser: (user) => set({ user, isAuthenticated: true }),
+  logout: () => set({ user: null, isAuthenticated: false }),
+}));
+```
+
+### Selector pattern — subscribe to slices, not the whole store
+
+```typescript
+// In components
+const user = useAuthStore((s) => s.user);
+const logout = useAuthStore((s) => s.logout);
+```
+
+### Rules
+
+- **Never store server/API data in Zustand** — that belongs exclusively to TanStack Query.
+- Actions live **inside** the store initializer (not as external functions).
+- State interface defined **separately** from `createStore` call.
+- Use `import type` for type-only imports from Zustand and domain types.
+- `erasableSyntaxOnly` applies: no `enum` or `namespace` inside stores.
 
 ---
 
@@ -246,8 +322,8 @@ const baseUrl = env.API_URL;
 
 1. External libraries (`react`, `axios`, `zod`, …)
 2. `@app/` imports
-3. `@features/` imports
-4. `@shared/` imports
+3. `@shared/` imports
+4. `@features/` imports
 5. Relative imports (`./`, `../`) — only within the same zone
 
 Always use `import type` for type-only imports.
@@ -266,7 +342,6 @@ Always use `import type` for type-only imports.
 
 The following tools are in the architecture plan but have **not** been added yet:
 - **TanStack Router** — routing
-- **Zustand** — client state
 - **Playwright** — E2E testing
 - **Phosphor Icons** — icon library
 
