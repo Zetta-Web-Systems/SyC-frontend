@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import type { InputHTMLAttributes } from "react";
+import { Check } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 
 export interface CheckboxProps extends Omit<
@@ -54,21 +55,12 @@ export function Checkbox({
                 "border-error peer-checked:border-error peer-checked:bg-error",
             )}
           >
-            <svg
-              className="hidden h-2.5 w-2.5 text-white peer-checked:block [.peer:checked~*_&]:block"
-              viewBox="0 0 12 10"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <Check
+              size={10}
+              strokeWidth={3}
+              className="hidden text-white [.peer:checked~*_&]:block"
               aria-hidden="true"
-            >
-              <path
-                d="M1 5L4.5 8.5L11 1.5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            />
           </div>
         </div>
       </div>

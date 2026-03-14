@@ -3,10 +3,12 @@ import { useFormContext, get } from "react-hook-form";
 
 export interface FormMessageProps<TFields extends FieldValues> {
   name: Path<TFields>;
+  id?: string;
 }
 
 export function FormMessage<TFields extends FieldValues>({
   name,
+  id,
 }: FormMessageProps<TFields>) {
   const {
     formState: { errors },
@@ -20,7 +22,7 @@ export function FormMessage<TFields extends FieldValues>({
   if (!message || typeof message !== "string") return null;
 
   return (
-    <p role="alert" className="text-xs text-error">
+    <p id={id} role="alert" className="text-xs text-error">
       {message}
     </p>
   );

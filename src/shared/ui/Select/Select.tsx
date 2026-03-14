@@ -1,6 +1,7 @@
 import type { Ref } from "react";
 import type { SelectHTMLAttributes } from "react";
 import type { VariantProps } from "class-variance-authority";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { selectVariants } from "./Select.variants";
 
@@ -54,16 +55,7 @@ export function Select({
         </select>
 
         <div className="pointer-events-none absolute right-3 flex items-center text-neutral-400">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 256 256"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
-          </svg>
+          <ChevronDown size={16} aria-hidden="true" />
         </div>
       </div>
 

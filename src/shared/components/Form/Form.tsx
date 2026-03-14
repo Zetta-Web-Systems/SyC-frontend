@@ -28,7 +28,10 @@ export function Form<TFields extends FieldValues>({
 }: FormProps<TFields>) {
   const form = useForm<TFields>({
     resolver: zodResolver(schema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues,
+    shouldFocusError: true,
   });
 
   return (

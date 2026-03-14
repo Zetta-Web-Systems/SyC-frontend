@@ -50,9 +50,7 @@ export function Input({
               rightElement && "pr-9",
               className,
             )}
-            aria-invalid={hasError || undefined}
             aria-describedby={errorId}
-            data-invalid={hasError ? "true" : undefined}
             {...props}
           />
 

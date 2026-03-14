@@ -1,17 +1,19 @@
 import type { ReactElement } from "react";
-import type { FieldValues, Path, ControllerRenderProps } from "react-hook-form";
-import { useFormContext, Controller } from "react-hook-form";
+import type { FieldValues, Path, ChangeHandler } from "react-hook-form";
+import { useFormContext, get } from "react-hook-form";
 import { Label } from "@shared/ui/Label/Label";
+import { FormMessage } from "@shared/components/Form/FormMessage/FormMessage";
 import { cn } from "@shared/lib/cn";
 
-export interface FieldRenderProps extends Pick<
-  ControllerRenderProps,
-  "ref" | "name" | "value" | "onBlur" | "onChange"
-> {
+export interface FieldRenderProps {
+  ref: (instance: HTMLElement | null) => void;
+  name: string;
+  onChange: ChangeHandler;
+  onBlur: ChangeHandler;
   id: string;
   disabled?: boolean;
   error: boolean;
-  errorMessage?: string;
+  "aria-describedby"?: string;
 }
 
 export interface FormFieldProps<TFields extends FieldValues> {
@@ -31,46 +33,44 @@ export function FormField<TFields extends FieldValues>({
   className,
   children,
 }: FormFieldProps<TFields>) {
-  const { control } = useFormContext<TFields>();
+  const {
+    register,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext<TFields>();
+
   const fieldId = `field-${name}`;
+  const errorId = `${fieldId}-error`;
+  const hasError = !!get(errors, name);
+
+  const registration = register(name, { disabled });
+
+  const handleChange: ChangeHandler = (event) => {
+    clearErrors(name);
+    return registration.onChange(event);
+  };
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => {
-        const errorMessage = fieldState.error?.message;
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      {label && (
+        <Label htmlFor={fieldId} required={required}>
+          {label}
+        </Label>
+      )}
 
-        const content = (
-          <>
-            {label && (
-              <Label htmlFor={fieldId} required={required}>
-                {label}
-              </Label>
-            )}
-            {children({
-              ref: field.ref,
-              name: field.name,
-              value: field.value,
-              onChange: field.onChange,
-              onBlur: field.onBlur,
-              id: fieldId,
-              disabled,
-              error: !!fieldState.error,
-              errorMessage,
-            })}
-          </>
-        );
+      {children({
+        ref: registration.ref,
+        name,
+        onChange: handleChange,
+        onBlur: registration.onBlur,
+        id: fieldId,
+        disabled,
+        error: hasError,
+        "aria-describedby": hasError ? errorId : undefined,
+      })}
 
-        if (!label && !className) return content;
-
-        return (
-          <div className={cn("flex flex-col gap-1.5", className)}>
-            {content}
-          </div>
-        );
-      }}
-    />
+      <FormMessage name={name} id={errorId} />
+    </div>
   );
 }
 
