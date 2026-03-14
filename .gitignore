@@ -25,3 +25,11 @@ dist-ssr
 
 # Variables de entorno
 .env
+
+# Carpeta de documentación
+.opencode
+docs
+
+# TanStack Router — auto-generated route tree
+src/app/routeTree.gen.ts
+.tanstack
