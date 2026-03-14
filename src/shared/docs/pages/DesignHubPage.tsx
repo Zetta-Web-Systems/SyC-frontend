@@ -7,7 +7,7 @@ import { Label } from "@shared/ui/Label/Label";
 import { Select } from "@shared/ui/Select/Select";
 import { Textarea } from "@shared/ui/Textarea/Textarea";
 import { SearchInput } from "@shared/ui/SearchInput/SearchInput";
-import { Form, FormField, FormFieldArray } from "@shared/components/ui/Form";
+import { Form, FormField, FormFieldArray } from "@shared/components/Form";
 import { ColorScale } from "@shared/docs/components/ColorScale";
 
 const contactSchema = z.object({
@@ -88,40 +88,8 @@ function SearchInputDemo() {
 }
 
 function DesignHubPage() {
-  const navItems = ["Dashboard", "Alumnos", "Ejercicios", "Configuración"];
-
   return (
-    <div className="flex h-screen w-full bg-neutral-100 font-sans text-neutral-900">
-      {/* Sidebar */}
-      <aside className="flex w-64 shrink-0 flex-col bg-neutral-900 p-6">
-        <div className="mb-10 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
-            <span className="text-lg font-bold text-secondary-500">
-              S<span className="text-primary-500">C</span>
-            </span>
-          </div>
-          <h1 className="text-lg font-black tracking-tighter text-white">
-            S&C Gym
-          </h1>
-        </div>
-
-        <nav className="space-y-1">
-          {navItems.map((item, i) => (
-            <a
-              key={item}
-              href="#"
-              className={`flex h-11 items-center rounded-xl px-4 text-sm font-medium transition-colors ${
-                i === 0
-                  ? "bg-primary-500 text-white"
-                  : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
-              }`}
-            >
-              {item}
-            </a>
-          ))}
-        </nav>
-      </aside>
-
+    <div>
       {/* Main */}
       <main className="flex-1 overflow-auto p-10">
         <div className="mx-auto max-w-5xl space-y-12 pb-20">
@@ -804,9 +772,7 @@ function DesignHubPage() {
                               size="icon"
                               aria-label="Eliminar teléfono"
                               disabled={fields.length === 1}
-                              className={
-                                index === 0 ? "mt-[1.375rem]" : undefined
-                              }
+                              className={index === 0 ? "mt-5.5" : undefined}
                               onClick={() => remove(index)}
                             >
                               <svg
