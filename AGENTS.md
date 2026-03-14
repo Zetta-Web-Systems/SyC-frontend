@@ -338,10 +338,21 @@ Always use `import type` for type-only imports.
 
 ---
 
+## Tech Stack
+
+- **React 19**
+- **Vite 7**
+- **TypeScript 5.9**
+- **TanStack Router** — routing
+- **TanStack Query** — data fetching
+- **Tailwind CSS 4** — styling
+- **Zustand** — state management
+- **Axios** — API client
+- **React Hook Form** + **Zod** — forms
+
 ## Planned (not yet installed)
 
 The following tools are in the architecture plan but have **not** been added yet:
-- **TanStack Router** — routing
 - **Playwright** — E2E testing
 - **Phosphor Icons** — icon library
 
