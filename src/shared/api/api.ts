@@ -10,16 +10,6 @@ export const api = axios.create({
 });
 
 /**
- * Interceptor de Request
- */
-api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
-/**
  * Interceptor de Response (refresh)
  */
 api.interceptors.response.use(
@@ -39,7 +29,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/auth/refresh");
+        await api.post("/users/refresh-token");
         return api(originalRequest);
       } catch (refreshError) {
         window.location.href = "/login";
