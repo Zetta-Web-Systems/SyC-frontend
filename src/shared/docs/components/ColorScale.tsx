@@ -1,3 +1,5 @@
+import { Copy } from "lucide-react";
+
 type Props = {
   name: string;
   chosen: [string, string];
@@ -29,20 +31,7 @@ export function ColorScale({ name, chosen, colors }: Props) {
             style={{ backgroundColor: chosenHex }}
           >
             <div className="opacity-0 bg-black/10 w-full h-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-              </svg>
+              <Copy size={14} strokeWidth={3} className="text-white" aria-hidden="true" />
             </div>
           </div>
         </div>

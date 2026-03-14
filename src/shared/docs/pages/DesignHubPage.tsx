@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
+import { Plus, ChevronDown, Trash2, Search, Eye } from "lucide-react";
 import { Button } from "@shared/ui/Button/Button";
 import { Checkbox } from "@shared/ui/Checkbox/Checkbox";
 import { Input } from "@shared/ui/Input/Input";
@@ -12,7 +13,7 @@ import { ColorScale } from "@shared/docs/components/ColorScale";
 
 const contactSchema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
-  email: z.string().email("Ingresá un correo electrónico válido"),
+  email: z.email("Ingresá un correo electrónico válido"),
   plan: z.string().min(1, "Seleccioná un plan"),
   notes: z.string().max(200, "Máximo 200 caracteres").optional(),
   terms: z.literal(true, { error: "Debés aceptar los términos" }),
@@ -270,42 +271,15 @@ function DesignHubPage() {
                 <GroupHeading>Con icono</GroupHeading>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button intent="primary">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      viewBox="0 0 256 256"
-                      aria-hidden="true"
-                    >
-                      <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z" />
-                    </svg>
+                    <Plus size={16} aria-hidden="true" />
                     Agregar
                   </Button>
                   <Button variant="outline" intent="neutral">
                     Opciones
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      viewBox="0 0 256 256"
-                      aria-hidden="true"
-                    >
-                      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
-                    </svg>
+                    <ChevronDown size={16} aria-hidden="true" />
                   </Button>
                   <Button variant="ghost" intent="danger" size="icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      viewBox="0 0 256 256"
-                      aria-hidden="true"
-                    >
-                      <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z" />
-                    </svg>
+                    <Trash2 size={16} aria-hidden="true" />
                   </Button>
                 </div>
               </div>
@@ -354,34 +328,12 @@ function DesignHubPage() {
                 <div className="flex flex-col gap-3 max-w-sm">
                   <Input
                     placeholder="Buscar alumno..."
-                    leftElement={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 256 256"
-                        aria-hidden="true"
-                      >
-                        <path d="M229.66,218.34l-50.07-50.07a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.31ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" />
-                      </svg>
-                    }
+                    leftElement={<Search size={16} aria-hidden="true" />}
                   />
                   <Input
                     type="password"
                     placeholder="Contraseña"
-                    rightElement={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 256 256"
-                        aria-hidden="true"
-                      >
-                        <path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,112Z" />
-                      </svg>
-                    }
+                    rightElement={<Eye size={16} aria-hidden="true" />}
                   />
                 </div>
               </div>
@@ -610,11 +562,7 @@ function DesignHubPage() {
                   <FormField<ContactSchema> name="terms">
                     {(field) => (
                       <div className="flex items-center gap-2">
-                        <Checkbox
-                          {...field}
-                          checked={field.value === true}
-                          onChange={(e) => field.onChange(e.target.checked)}
-                        />
+                        <Checkbox {...field} />
                         <Label htmlFor={field.id}>
                           Acepto los términos y condiciones
                         </Label>
@@ -691,11 +639,7 @@ function DesignHubPage() {
                       <FormField<ContactSchema> name="terms">
                         {(field) => (
                           <div className="flex items-center gap-2">
-                            <Checkbox
-                              {...field}
-                              checked={field.value === true}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                            />
+                            <Checkbox {...field} />
                             <Label htmlFor={field.id}>
                               Acepto los términos
                             </Label>
@@ -775,16 +719,7 @@ function DesignHubPage() {
                               className={index === 0 ? "mt-5.5" : undefined}
                               onClick={() => remove(index)}
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                viewBox="0 0 256 256"
-                                aria-hidden="true"
-                              >
-                                <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z" />
-                              </svg>
+                              <Trash2 size={16} aria-hidden="true" />
                             </Button>
                           </div>
                         ))}
@@ -796,16 +731,7 @@ function DesignHubPage() {
                           size="sm"
                           onClick={() => append({ number: "" })}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            fill="currentColor"
-                            viewBox="0 0 256 256"
-                            aria-hidden="true"
-                          >
-                            <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z" />
-                          </svg>
+                          <Plus size={14} aria-hidden="true" />
                           Agregar teléfono
                         </Button>
                       </div>
