@@ -1,6 +1,8 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "@app/router";
 import { useAuthStore } from "@features/auth";
+import { ToastContainer } from "@shared/ui/Toast/ToastContainer";
+import { ConfirmDialogContainer } from "@shared/components/Feedback";
 
 export function App() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -13,6 +15,7 @@ export function App() {
         context={{ auth: { isAuthenticated, user } }}
       />
       <ToastContainer />
+      <ConfirmDialogContainer />
     </>
   );
 }
