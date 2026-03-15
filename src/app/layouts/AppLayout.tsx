@@ -1,6 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { LogOut } from "lucide-react";
 import { cn } from "@shared/lib/cn";
+import { confirm } from "@shared/stores/confirm.store";
+import { useLogoutMutation } from "@features/auth";
 
 interface NavItem {
   label: string;
@@ -11,6 +14,20 @@ const NAV_ITEMS: NavItem[] = [{ label: "Dashboard", to: "/" }];
 
 function Sidebar() {
   const { location } = useRouterState();
+  const logoutMutation = useLogoutMutation();
+
+  function handleLogoutClick() {
+    confirm({
+      intent: "danger",
+      title: "Cerrar sesión",
+      description:
+        "¿Estás seguro que querés cerrar sesión? Vas a tener que volver a ingresar tus credenciales.",
+      confirmLabel: "Cerrar sesión",
+      onConfirm: async () => {
+        await logoutMutation.mutateAsync();
+      },
+    });
+  }
 
   return (
     <aside className="flex w-64 shrink-0 flex-col bg-neutral-900 p-6">
@@ -50,6 +67,15 @@ function Sidebar() {
           );
         })}
       </nav>
+
+      <button
+        type="button"
+        onClick={handleLogoutClick}
+        className="mt-auto flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white"
+      >
+        <LogOut size={16} aria-hidden="true" />
+        Cerrar sesión
+      </button>
     </aside>
   );
 }

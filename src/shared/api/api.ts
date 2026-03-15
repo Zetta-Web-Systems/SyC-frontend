@@ -1,5 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@shared/config/env";
+import { useAuthStore } from "@features/auth";
+import { queryClient } from "@shared/config/queryClient";
 
 export const api = axios.create({
   baseURL: env.API_URL,
@@ -8,6 +10,20 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+/**
+ * Endpoints que no deben activar el flujo de refresh token.
+ */
+const SKIP_REFRESH_ENDPOINTS = ["/users/login"];
+
+function shouldSkipRefresh(url: string | undefined): boolean {
+  return SKIP_REFRESH_ENDPOINTS.some((endpoint) => url === endpoint);
+}
+
+function forceLogout() {
+  useAuthStore.getState().logout();
+  queryClient.clear();
+}
 
 /**
  * Interceptor de Response (refresh)
@@ -25,6 +41,10 @@ api.interceptors.response.use(
 
     const status = error.response.status;
 
+    if (shouldSkipRefresh(originalRequest.url)) {
+      return Promise.reject(error);
+    }
+
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -32,7 +52,7 @@ api.interceptors.response.use(
         await api.post("/users/refresh-token");
         return api(originalRequest);
       } catch (refreshError) {
-        window.location.href = "/login";
+        forceLogout();
         return Promise.reject(refreshError);
       }
     }
