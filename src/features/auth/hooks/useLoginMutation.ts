@@ -12,7 +12,6 @@ export function useLoginMutation() {
 
   return useMutation({
     mutationFn: login,
-    meta: { showGlobalError: true },
     onSuccess: (user) => {
       setUser(user);
       navigate({ to: redirectTo ?? "/" });

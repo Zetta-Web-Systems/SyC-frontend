@@ -4,7 +4,7 @@ import { cn } from "@shared/lib/cn";
 
 export function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 px-6 text-center">
+    <div className="flex flex-col items-center justify-center px-6 min-h-screen bg-neutral-50 text-center">
       <p className="text-sm font-semibold uppercase tracking-widest text-primary-600">
         404
       </p>

@@ -17,25 +17,25 @@ interface IntentConfig {
 const INTENT_CONFIG: Record<ConfirmIntent, IntentConfig> = {
   success: {
     icon: CircleCheck,
-    iconBg: "bg-green-100",
+    iconBg: "bg-success/15",
     iconColor: "text-success",
     confirmIntent: "primary",
   },
   danger: {
     icon: CircleAlert,
-    iconBg: "bg-red-100",
+    iconBg: "bg-error/15",
     iconColor: "text-error",
     confirmIntent: "danger",
   },
   warning: {
     icon: TriangleAlert,
-    iconBg: "bg-amber-100",
+    iconBg: "bg-warning/15",
     iconColor: "text-warning",
     confirmIntent: "primary",
   },
   info: {
     icon: Info,
-    iconBg: "bg-blue-100",
+    iconBg: "bg-info/15",
     iconColor: "text-info",
     confirmIntent: "primary",
   },
@@ -72,7 +72,6 @@ export function ConfirmDialog({
   return (
     <Modal open={open} onClose={onClose} size="sm">
       <div className="flex flex-col items-center px-4 pt-6 pb-4 sm:px-6 sm:pt-8 sm:pb-6">
-        {/* Icon */}
         <div
           className={cn(
             "flex h-14 w-14 items-center justify-center rounded-full",
@@ -84,21 +83,17 @@ export function ConfirmDialog({
           )}
         </div>
 
-        {/* Title */}
-        <h3 className="mt-4 text-center text-lg font-semibold text-neutral-900">
+        <h3 className="text-center mt-4 text-lg font-semibold text-neutral-900">
           {title}
         </h3>
 
-        {/* Separator */}
-        <hr className="mt-3 w-full border-neutral-200" />
+        <hr className="w-full mt-3 border-neutral-200" />
 
-        {/* Description */}
-        <p className="mt-4 text-center text-sm text-neutral-600">
+        <p className="text-center mt-4 text-sm text-neutral-600">
           {description}
         </p>
 
-        {/* Actions */}
-        <div className="mt-6 flex w-full gap-3">
+        <div className="flex w-full mt-6 gap-3">
           <Button
             variant="outline"
             intent="neutral"

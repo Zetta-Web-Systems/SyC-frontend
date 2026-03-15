@@ -7,17 +7,13 @@ export const Route = createFileRoute("/_auth/forgot-password")({
 
 function ForgotPasswordPage() {
   return (
-    <Card className="rounded-xl border border-neutral-100 bg-white p-8 shadow-xl shadow-neutral-200/50">
+    <Card className="rounded-xl border border-neutral-100 bg-white p-8 shadow-xl">
       {/* TODO: Hacer componente */}
 
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-neutral-900">
           Recuperar contraseña
         </h2>
-        <p className="mt-2 text-sm text-neutral-500">
-          Ingresá tu correo electrónico y te enviaremos las instrucciones para
-          restablecer tu contraseña.
-        </p>
       </div>
 
       {/* TODO: Conectar cuando se haga el forgot-password */}

@@ -72,15 +72,15 @@ function SearchInputDemo() {
           ? `${results.length} resultado${results.length !== 1 ? "s" : ""} para "${filter}"`
           : `${MOCK_ALUMNOS.length} alumnos`}
       </p>
-      {filter && results.length > 0 && (
-        <ul className="rounded-xl border border-neutral-200 bg-white divide-y divide-neutral-100">
-          {results.map((name) => (
-            <li key={name} className="px-4 py-2.5 text-sm text-neutral-700">
-              {name}
-            </li>
-          ))}
-        </ul>
-      )}
+       {filter && results.length > 0 && (
+         <ul className="bg-white rounded-xl border border-neutral-200 divide-y divide-neutral-100">
+           {results.map((name) => (
+             <li key={name} className="px-4 py-2.5 text-sm text-neutral-700">
+               {name}
+             </li>
+           ))}
+         </ul>
+       )}
       {filter && results.length === 0 && (
         <p className="text-sm text-neutral-400">Sin resultados.</p>
       )}
@@ -92,7 +92,7 @@ function DesignHubPage() {
   return (
     <div>
       {/* Main */}
-      <main className="flex-1 overflow-auto p-10">
+      <main className="flex overflow-auto p-10 flex-1">
         <div className="mx-auto max-w-5xl space-y-12 pb-20">
           <header>
             <h2 className="mb-2 text-2xl font-bold tracking-tight">

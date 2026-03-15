@@ -18,8 +18,8 @@ export default function LoginPage() {
   }
 
   return (
-    <Card className="rounded-xl border border-neutral-100 bg-white p-8 shadow-xl">
-      <div className="mb-10 flex justify-center">
+    <Card className="p-8 bg-white rounded-xl border border-neutral-100 shadow-xl">
+      <div className="flex justify-center mb-10">
         <img src="icons/login-logo.png" alt="Logo" className="object-contain" />
       </div>
 

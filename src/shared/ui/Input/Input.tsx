@@ -31,11 +31,18 @@ export function Input({
   const hasError = error ?? !!errorMessage;
 
   return (
-    <div className="relative flex w-full flex-col gap-1.5">
+    <div className="flex flex-col relative w-full gap-1.5">
       {leftElement || rightElement ? (
-        <div className="relative flex items-center">
+        <div className="flex items-center group relative">
           {leftElement && (
-            <div className="pointer-events-none absolute left-3 flex items-center text-neutral-400">
+            <div
+              className={cn(
+                "flex items-center pointer-events-none absolute left-3 transition-all",
+                hasError
+                  ? "text-error"
+                  : "text-primary-500 group-focus-within:text-primary-500 group-focus-within:drop-shadow-sm",
+              )}
+            >
               {leftElement}
             </div>
           )}
@@ -51,11 +58,19 @@ export function Input({
               className,
             )}
             aria-describedby={errorId}
+            data-invalid={hasError ? "true" : undefined}
             {...props}
           />
 
           {rightElement && (
-            <div className="absolute right-3 flex items-center text-neutral-400">
+            <div
+              className={cn(
+                "flex items-center absolute right-3 transition-all",
+                hasError
+                  ? "text-error"
+                  : "text-primary-500 group-focus-within:text-primary-500 group-focus-within:drop-shadow-sm",
+              )}
+            >
               {rightElement}
             </div>
           )}

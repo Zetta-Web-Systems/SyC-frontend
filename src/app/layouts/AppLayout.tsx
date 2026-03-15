@@ -86,7 +86,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="flex h-screen w-full bg-neutral-100 font-sans text-neutral-900">
+    <div className="flex h-screen w-full font-sans text-neutral-900 bg-neutral-100">
       <Sidebar />
       <main className="flex-1 overflow-auto p-10">{children}</main>
     </div>

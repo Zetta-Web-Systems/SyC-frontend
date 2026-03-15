@@ -1,13 +1,6 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { NotFound, GenericError } from "@shared/components/Errors";
-import type { AuthUser } from "@features/auth";
-
-interface RouterContext {
-  auth: {
-    isAuthenticated: boolean;
-    user: AuthUser | null;
-  };
-}
+import type { RouterContext } from "@app/types/router";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
