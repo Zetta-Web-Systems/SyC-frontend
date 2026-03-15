@@ -6,12 +6,12 @@ export const toastVariants = cva(
     variants: {
       intent: {
         success:
-          "border-b-2 border-b-success border-x-success/20 border-t-success/20 bg-success/10",
+          "border-b-2 border-b-success border-x-success/20 border-t-success/20 bg-white",
         error:
-          "border-b-2 border-b-error border-x-error/20 border-t-error/20 bg-error/10",
+          "border-b-2 border-b-error border-x-error/20 border-t-error/20 bg-error",
         warning:
-          "border-b-2 border-b-warning border-x-warning/20 border-t-warning/20 bg-warning/10",
-        info: "border-b-2 border-b-info border-x-info/20 border-t-info/20 bg-info/10",
+          "border-b-2 border-b-warning border-x-warning/20 border-t-warning/20 bg-warning",
+        info: "border-b-2 border-b-info border-x-info/20 border-t-info/20 bg-info",
       },
     },
     defaultVariants: {
