@@ -23,27 +23,17 @@ export default function LoginPage() {
         <img src="icons/login-logo.png" alt="Logo" className="object-contain" />
       </div>
 
-      {/*TODO: Resolver de otra manera */}
-      {loginMutation.isError && (
-        <div
-          role="alert"
-          className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-error"
-        >
-          {loginMutation.error instanceof Error
-            ? loginMutation.error.message
-            : "Credenciales inválidas. Verificá tu email y contraseña."}
-        </div>
-      )}
-
       <Form<LoginSchema>
         schema={loginSchema}
         onSubmit={onSubmit}
+        mutation={loginMutation}
         className="space-y-6"
       >
         <FormField<LoginSchema> name="email" required>
           {(field) => (
             <Input
               {...field}
+              size="lg"
               type="email"
               placeholder="Email"
               autoComplete="email"
@@ -57,6 +47,7 @@ export default function LoginPage() {
             {(field) => (
               <Input
                 {...field}
+                size="lg"
                 type={showPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 autoComplete="current-password"
