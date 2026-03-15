@@ -7,9 +7,12 @@ export function App() {
   const user = useAuthStore((s) => s.user);
 
   return (
-    <RouterProvider
-      router={router}
-      context={{ auth: { isAuthenticated, user } }}
-    />
+    <>
+      <RouterProvider
+        router={router}
+        context={{ auth: { isAuthenticated, user } }}
+      />
+      <ToastContainer />
+    </>
   );
 }
