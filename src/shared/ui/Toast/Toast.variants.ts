@@ -8,10 +8,10 @@ export const toastVariants = cva(
         success:
           "border-b-2 border-b-success border-x-success/20 border-t-success/20 bg-white",
         error:
-          "border-b-2 border-b-error border-x-error/20 border-t-error/20 bg-error",
+          "border-b-2 border-b-error border-x-error/20 border-t-error/20 bg-white",
         warning:
-          "border-b-2 border-b-warning border-x-warning/20 border-t-warning/20 bg-warning",
-        info: "border-b-2 border-b-info border-x-info/20 border-t-info/20 bg-info",
+          "border-b-2 border-b-warning border-x-warning/20 border-t-warning/20 bg-white",
+        info: "border-b-2 border-b-info border-x-info/20 border-t-info/20 bg-white",
       },
     },
     defaultVariants: {
@@ -20,7 +20,7 @@ export const toastVariants = cva(
   },
 );
 
-export const toastIconVariants = cva("mt-0.5 shrink-0", {
+export const toastIconVariants = cva("shrink-0", {
   variants: {
     intent: {
       success: "text-success",
