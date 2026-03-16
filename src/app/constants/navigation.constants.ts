@@ -1,10 +1,4 @@
-import {
-  CalendarClock,
-  Dumbbell,
-  GraduationCap,
-  LayoutDashboard,
-  Users,
-} from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Settings } from "lucide-react";
 import type { NavItem } from "@app/types/navigation.types";
 
 export const NAV_ITEMS: NavItem[] = [
@@ -12,25 +6,33 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Dashboard",
     to: "/",
     icon: LayoutDashboard,
+    color: "text-blue-400",
   },
   {
-    label: "Alumnos",
-    to: "/alumnos",
+    label: "Socios",
+    to: "/members",
     icon: Users,
+    color: "text-emerald-400",
   },
   {
-    label: "Sesión",
-    to: "/sesion",
-    icon: CalendarClock,
+    label: "Pagos",
+    icon: CreditCard,
+    color: "text-orange-400",
+    children: [
+      {
+        label: "Ingresos",
+        to: "/payments",
+      },
+      {
+        label: "Reembolsos",
+        to: "/refunds",
+      },
+    ],
   },
   {
-    label: "Entrenamientos",
-    to: "/entrenamientos",
-    icon: Dumbbell,
-  },
-  {
-    label: "Profesores",
-    to: "/profesores",
-    icon: GraduationCap,
+    label: "Configuración",
+    to: "/settings",
+    icon: Settings,
+    color: "text-purple-400",
   },
 ];
