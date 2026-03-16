@@ -1,7 +1,7 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "@app/router";
 import { useAuthStore } from "@features/auth";
-import { ToastContainer } from "@shared/ui/Toast/ToastContainer";
+import { ToastContainer } from "@shared/ui";
 import { ConfirmDialogContainer } from "@shared/components/Feedback";
 
 export function App() {

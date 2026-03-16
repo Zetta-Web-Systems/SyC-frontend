@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "@shared/ui/Button/Button.variants";
+import { buttonVariants } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 
 export function NotFound() {
@@ -17,7 +17,10 @@ export function NotFound() {
       </p>
       <Link
         to="/"
-        className={cn(buttonVariants({ variant: "solid", intent: "primary" }), "mt-8")}
+        className={cn(
+          buttonVariants({ variant: "solid", intent: "primary" }),
+          "mt-8",
+        )}
       >
         Volver al inicio
       </Link>

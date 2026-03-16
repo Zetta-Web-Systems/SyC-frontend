@@ -2,7 +2,7 @@ import type { Ref } from "react";
 import type { ChangeEvent } from "react";
 import { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
-import { Input } from "@shared/ui/Input/Input";
+import { Input } from "@shared/ui";
 import { useDebounce } from "@shared/hooks/useDebounce";
 
 export interface SearchInputProps {

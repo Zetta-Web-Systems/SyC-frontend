@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Card } from "@shared/ui/Card/Card";
+import { Card } from "@shared/ui";
 
 export const Route = createFileRoute("/_auth/forgot-password")({
   component: ForgotPasswordPage,

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { z } from "zod";
 import { Plus, ChevronDown, Trash2, Search, Eye } from "lucide-react";
-import { Button } from "@shared/ui/Button/Button";
-import { Checkbox } from "@shared/ui/Checkbox/Checkbox";
-import { Input } from "@shared/ui/Input/Input";
-import { Label } from "@shared/ui/Label/Label";
-import { Select } from "@shared/ui/Select/Select";
-import { Textarea } from "@shared/ui/Textarea/Textarea";
-import { SearchInput } from "@shared/ui/SearchInput/SearchInput";
+import { Button } from "@shared/ui";
+import { Checkbox } from "@shared/ui";
+import { Input } from "@shared/ui";
+import { Label } from "@shared/ui";
+import { Select } from "@shared/ui";
+import { Textarea } from "@shared/ui";
+import { SearchInput } from "@shared/ui";
 import { Form, FormField, FormFieldArray } from "@shared/components/Form";
 import { ColorScale } from "@shared/docs/components/ColorScale";
 
@@ -72,15 +72,15 @@ function SearchInputDemo() {
           ? `${results.length} resultado${results.length !== 1 ? "s" : ""} para "${filter}"`
           : `${MOCK_ALUMNOS.length} alumnos`}
       </p>
-       {filter && results.length > 0 && (
-         <ul className="bg-white rounded-xl border border-neutral-200 divide-y divide-neutral-100">
-           {results.map((name) => (
-             <li key={name} className="px-4 py-2.5 text-sm text-neutral-700">
-               {name}
-             </li>
-           ))}
-         </ul>
-       )}
+      {filter && results.length > 0 && (
+        <ul className="bg-white rounded-xl border border-neutral-200 divide-y divide-neutral-100">
+          {results.map((name) => (
+            <li key={name} className="px-4 py-2.5 text-sm text-neutral-700">
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
       {filter && results.length === 0 && (
         <p className="text-sm text-neutral-400">Sin resultados.</p>
       )}

@@ -7,7 +7,10 @@ type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 
 interface AuthUser {
   id: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
+  avatarUrl?: string | null;
   role: UserRole;
 }
 

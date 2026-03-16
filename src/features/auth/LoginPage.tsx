@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Button } from "@shared/ui/Button/Button";
-import { Card } from "@shared/ui/Card/Card";
-import { Input } from "@shared/ui/Input/Input";
+import { Button } from "@shared/ui";
+import { Card } from "@shared/ui";
+import { Input } from "@shared/ui";
 import { Form, FormField } from "@shared/components/Form";
 import { useLoginMutation } from "./hooks/useLoginMutation";
 import { loginSchema } from "./schemas/login.schema";
@@ -22,7 +22,7 @@ export default function LoginPage() {
       <div className="flex justify-center mb-10">
         <img src="icons/login-logo.png" alt="Logo" className="object-contain" />
       </div>
-
+      {/* TODO: Hacer componentes de esta page */}
       <Form<LoginSchema>
         schema={loginSchema}
         onSubmit={onSubmit}

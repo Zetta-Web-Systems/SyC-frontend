@@ -1,15 +1,9 @@
-import { CircleCheck, CircleAlert, TriangleAlert, Info, X } from "lucide-react";
+import { X } from "lucide-react";
 import { cn } from "@shared/lib/cn";
-import { Button } from "@shared/ui/Button/Button";
+import { Button } from "@shared/ui";
 import { toastVariants, toastIconVariants } from "./Toast.variants";
 import type { Toast as ToastType } from "@shared/stores/toast.store";
-
-const INTENT_ICONS = {
-  success: CircleCheck,
-  error: CircleAlert,
-  warning: TriangleAlert,
-  info: Info,
-} as const;
+import { INTENT_ICONS } from "@shared/constants/toast.constants";
 
 interface ToastProps {
   toast: ToastType;

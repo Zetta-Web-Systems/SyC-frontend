@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import type { FieldValues, Path, ChangeHandler } from "react-hook-form";
 import { useFormContext, get } from "react-hook-form";
-import { Label } from "@shared/ui/Label/Label";
+import { Label } from "@shared/ui";
 import { FormMessage } from "@shared/components/Form/FormMessage/FormMessage";
 import { cn } from "@shared/lib/cn";
 

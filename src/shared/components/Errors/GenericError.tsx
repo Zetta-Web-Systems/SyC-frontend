@@ -1,6 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
-import { Button } from "@shared/ui/Button/Button";
-import { buttonVariants } from "@shared/ui/Button/Button.variants";
+import { Button, buttonVariants } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 
 interface GenericErrorProps {
@@ -37,7 +36,9 @@ export function GenericError({ error, reset }: GenericErrorProps) {
         </Button>
         <a
           href="/"
-          className={cn(buttonVariants({ variant: "outline", intent: "neutral" }))}
+          className={cn(
+            buttonVariants({ variant: "outline", intent: "neutral" }),
+          )}
         >
           Volver al inicio
         </a>
