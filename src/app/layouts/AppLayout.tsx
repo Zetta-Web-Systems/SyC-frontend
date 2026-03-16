@@ -4,13 +4,7 @@ import { LogOut } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { confirm } from "@shared/stores/confirm.store";
 import { useLogoutMutation } from "@features/auth";
-
-interface NavItem {
-  label: string;
-  to: string;
-}
-
-const NAV_ITEMS: NavItem[] = [{ label: "Dashboard", to: "/" }];
+import { NAV_ITEMS } from "@app/constants/navigation.constants";
 
 function Sidebar() {
   const { location } = useRouterState();
@@ -56,12 +50,13 @@ function Sidebar() {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex h-11 items-center rounded-xl px-4 text-sm font-medium transition-colors",
+                "flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary-500 text-white"
                   : "text-neutral-400 hover:bg-neutral-800 hover:text-white",
               )}
             >
+              <item.icon size={16} aria-hidden="true" />
               {item.label}
             </Link>
           );
