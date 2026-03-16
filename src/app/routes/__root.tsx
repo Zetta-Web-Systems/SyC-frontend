@@ -1,6 +1,6 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { NotFound, GenericError } from "@shared/components/Errors";
-import type { RouterContext } from "@app/types/router";
+import type { RouterContext } from "@app/types/router.types";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
