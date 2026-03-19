@@ -33,7 +33,7 @@ export function ErrorComponent({
         className="w-full max-w-2xl object-contain"
       />
 
-      <h1 className="mt-3 text-2xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-5xl">
+      <h1 className="mt-3 text-2xl font-bold tracking-tight text-primary-500 sm:text-4xl md:text-5xl">
         {title}
       </h1>
 

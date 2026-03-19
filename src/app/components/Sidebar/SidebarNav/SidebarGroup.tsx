@@ -12,14 +12,14 @@ interface SidebarGroupProps {
 }
 
 export function SidebarGroup({ item, pathname, collapsed }: SidebarGroupProps) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="group flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-neutral-400 hover:bg-neutral-800 hover:text-white"
+        className="group flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-white hover:bg-primary-800"
       >
         <item.icon
           size={18}
@@ -50,10 +50,8 @@ export function SidebarGroup({ item, pathname, collapsed }: SidebarGroupProps) {
                 key={child.to}
                 to={child.to}
                 className={cn(
-                  "flex h-9 items-center rounded-lg px-3 text-sm transition-colors",
-                  isActive
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-400 hover:bg-neutral-800 hover:text-white",
+                  "flex h-9 items-center rounded-lg px-3 text-sm text-neutral-200 transition-colors",
+                  isActive ? "bg-primary-800" : "hover:bg-primary-800",
                 )}
               >
                 {child.label}

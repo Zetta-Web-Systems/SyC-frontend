@@ -17,10 +17,8 @@ export function SidebarItem({ item, pathname, collapsed }: SidebarItemProps) {
     <Link
       to={to}
       className={cn(
-        "group relative flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
-        isActive
-          ? "bg-neutral-800 text-white"
-          : "text-neutral-400 hover:bg-neutral-800 hover:text-white",
+        "group relative flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white font-medium transition-colors",
+        isActive ? "bg-primary-800" : "hover:bg-primary-800",
       )}
     >
       {isActive && (
