@@ -17,8 +17,6 @@ export function toTablePageIndex(page: number): number {
 /**
  * Buildea un registro plano de query params a partir de PaginatedParams,
  * adecuado para pasar como `params` de Axios.
- * Basicamente convierte `filters` y `filtersValues` a keys con notación de corchetes
- * para que Axios los serialice como query params repetidos.
  */
 export function buildPaginatedParams(
   params: PaginatedParams,
@@ -41,11 +39,11 @@ export function buildPaginatedParams(
   }
 
   if (params.filters && params.filters.length > 0) {
-    query["filters[]"] = params.filters;
+    query.filters = params.filters;
   }
 
   if (params.filtersValues && params.filtersValues.length > 0) {
-    query["filtersValues[]"] = params.filtersValues;
+    query.filtersValues = params.filtersValues;
   }
 
   return query;

@@ -23,6 +23,7 @@ export interface DataTableProps<TData> {
   onSortingChange?: OnChangeFn<SortingState>;
   isLoading?: boolean;
   noResultsMessage?: string;
+  showPagination?: boolean;
 }
 
 export function DataTable<TData>({
@@ -35,17 +36,20 @@ export function DataTable<TData>({
   onSortingChange,
   isLoading = false,
   noResultsMessage = "No se encontraron resultados.",
+  showPagination = true,
 }: DataTableProps<TData>) {
+  const hasSorting = !!onSortingChange;
+
   const table = useReactTable({
     data,
     columns,
     rowCount,
     state: {
       pagination,
-      sorting,
+      ...(hasSorting && { sorting }),
     },
     onPaginationChange,
-    onSortingChange,
+    ...(hasSorting && { onSortingChange }),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
@@ -57,9 +61,12 @@ export function DataTable<TData>({
         <table className="w-full text-sm">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b border-neutral-200">
+              <tr
+                key={headerGroup.id}
+                className="border-b border-primary-100 bg-primary-50"
+              >
                 {headerGroup.headers.map((header) => {
-                  const canSort = header.column.getCanSort();
+                  const canSort = hasSorting && header.column.getCanSort();
                   const sorted = header.column.getIsSorted();
 
                   return (
@@ -67,7 +74,7 @@ export function DataTable<TData>({
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn(
-                        "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500",
+                        "px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-primary-700",
                         canSort && "cursor-pointer select-none",
                       )}
                       onClick={
@@ -77,7 +84,7 @@ export function DataTable<TData>({
                       }
                     >
                       {header.isPlaceholder ? null : (
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5">
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
@@ -124,13 +131,10 @@ export function DataTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-neutral-100 transition-colors last:border-b-0 hover:bg-neutral-50"
+                  className="border-b border-neutral-100 transition-colors last:border-b-0 hover:bg-primary-50/50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="px-4 py-3 text-neutral-700"
-                    >
+                    <td key={cell.id} className="px-4 py-4 text-neutral-700">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -144,7 +148,7 @@ export function DataTable<TData>({
         </table>
       </div>
 
-      <DataTablePagination table={table} />
+      {showPagination && <DataTablePagination table={table} />}
     </div>
   );
 }
