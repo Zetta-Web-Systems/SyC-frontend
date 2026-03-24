@@ -9,6 +9,9 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  paramsSerializer: {
+    indexes: null, // TEMP_MSG: Evita que los arrays se serialicen con índices (e.g., ?ids=1&ids=2 en lugar de ?ids[0]=1&ids[1]=2)
+  },
 });
 
 /**
