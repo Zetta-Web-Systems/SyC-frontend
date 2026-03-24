@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, CreditCard, Settings } from "lucide-react";
+import { LayoutDashboard, Settings, GraduationCap } from "lucide-react";
 import type { NavItem } from "@app/types/navigation.types";
 
 export const NAV_ITEMS: NavItem[] = [
@@ -9,25 +9,10 @@ export const NAV_ITEMS: NavItem[] = [
     color: "text-blue-400",
   },
   {
-    label: "Socios",
-    to: "/members",
-    icon: Users,
-    color: "text-emerald-400",
-  },
-  {
-    label: "Pagos",
-    icon: CreditCard,
-    color: "text-orange-400",
-    children: [
-      {
-        label: "Ingresos",
-        to: "/payments",
-      },
-      {
-        label: "Reembolsos",
-        to: "/refunds",
-      },
-    ],
+    label: "Profesores",
+    to: "/instructors",
+    icon: GraduationCap,
+    color: "text-amber-400",
   },
   {
     label: "Configuración",
