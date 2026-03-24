@@ -33,5 +33,5 @@ export async function deleteInstructor(id: string) {
 }
 
 export async function restoreInstructor(id: string) {
-  await api.post(`/instructors/${id}/restore`);
+  await api.patch(`/instructors/restore/${id}`);
 }
