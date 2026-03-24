@@ -5,7 +5,7 @@ export interface Instructor {
   email: string;
   dni: string;
   isActive: boolean;
-  lastLoginAt?: string;
+  lastLoginAt: string;
 }
 
 export interface CreateInstructorDto {
