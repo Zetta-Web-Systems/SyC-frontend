@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colores (primary) */
+  --color-primary-50: #edeff7;
+  --color-primary-100: #cdd2ea;
+  --color-primary-200: #acb4dc;
+  --color-primary-300: #8c97cf;
+  --color-primary-400: #6c7ac1;
+  --color-primary-500: #4b5db4;
+  --color-primary-600: #3e4c93;
+  --color-primary-700: #313c75;
+  --color-primary-800: #232b53;
+  --color-primary-900: #151a32;
+  --color-primary-950: #080912;
+
+  /* Colores (secondary) */
+  --color-secondary-50: #eef7f6;
+  --color-secondary-100: #cee8e6;
+  --color-secondary-200: #afd9d5;
+  --color-secondary-300: #90cbc5;
+  --color-secondary-400: #71bcb5;
+  --color-secondary-500: #4ea49c;
+  --color-secondary-600: #438e87;
+  --color-secondary-700: #346f69;
+  --color-secondary-800: #26504c;
+  --color-secondary-900: #17312e;
+  --color-secondary-950: #081110;
+
+  /* Colores (semánticos) */
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+@layer base {
+  h1 {
+    @apply text-3xl font-bold tracking-tight leading-tight;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight leading-tight;
+  }
+
+  h3 {
+    @apply text-xl font-semibold leading-snug;
+  }
+
+  h4 {
+    @apply text-lg font-semibold;
+  }
+
+  h5 {
+    @apply text-base font-semibold;
+  }
+
+  h6 {
+    @apply text-sm font-semibold uppercase tracking-wide text-neutral-500;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
