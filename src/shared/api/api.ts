@@ -17,7 +17,7 @@ export const api = axios.create({
 /**
  * Endpoints que no deben activar el flujo de refresh token.
  */
-const SKIP_REFRESH_ENDPOINTS = ["/users/login"];
+const SKIP_REFRESH_ENDPOINTS = ["/users/login", "/users/refresh-token"];
 
 function shouldSkipRefresh(url: string | undefined): boolean {
   return SKIP_REFRESH_ENDPOINTS.some((endpoint) => url === endpoint);
