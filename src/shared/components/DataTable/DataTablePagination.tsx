@@ -62,7 +62,9 @@ export function DataTablePagination<TData>({
   const rowCount = table.getRowCount();
   const currentPage = pageIndex + 1;
 
-  const startRow = rowCount === 0 ? 0 : pageIndex * pageSize + 1;
+  if (rowCount === 0) return null;
+
+  const startRow = pageIndex * pageSize + 1;
   const endRow = Math.min(startRow + pageSize - 1, rowCount);
 
   const visiblePages = getVisiblePages(
@@ -77,22 +79,26 @@ export function DataTablePagination<TData>({
   );
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 md:flex-row md:justify-between md:gap-4">
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 md:flex-row md:gap-4">
       <div className="hidden items-center gap-2 text-sm text-neutral-600 md:flex">
-        <Select
-          value={String(pageSize)}
-          onChange={(e) => table.setPageSize(Number(e.target.value))}
-          size="sm"
-          className="w-18"
-        >
-          {PAGE_SIZE_OPTIONS.map((size) => (
-            <option key={size} value={String(size)}>
-              {size}
-            </option>
-          ))}
-        </Select>
-        <span>Filas por pagina</span>
+        <div className="w-18">
+          <Select
+            value={String(pageSize)}
+            onChange={(e) => table.setPageSize(Number(e.target.value))}
+            size="sm"
+            iconPosition="left"
+          >
+            {PAGE_SIZE_OPTIONS.map((size) => (
+              <option key={size} value={String(size)}>
+                {size}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <span className="whitespace-nowrap">Filas por pagina</span>
       </div>
+
+      <div className="flex-1" />
 
       <span className="text-sm font-medium text-neutral-600">
         {startRow} - {endRow} de {rowCount}
