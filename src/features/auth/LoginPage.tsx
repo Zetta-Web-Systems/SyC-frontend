@@ -53,20 +53,22 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 leftElement={<Lock size={16} aria-hidden="true" />}
                 rightElement={
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    intent="neutral"
+                    size="icon"
                     aria-label={
                       showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                     }
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="text-neutral-400 hover:text-neutral-600"
+                    className="h-auto w-auto p-0"
                   >
                     {showPassword ? (
                       <EyeOff size={16} aria-hidden="true" />
                     ) : (
                       <Eye size={16} aria-hidden="true" />
                     )}
-                  </button>
+                  </Button>
                 }
               />
             )}

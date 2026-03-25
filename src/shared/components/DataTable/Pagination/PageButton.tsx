@@ -1,4 +1,4 @@
-import { cn } from "@shared/lib/cn";
+import { Button } from "@shared/ui";
 
 interface PageButtonProps {
   page: number;
@@ -8,19 +8,16 @@ interface PageButtonProps {
 
 export function PageButton({ page, isActive, onClick }: PageButtonProps) {
   return (
-    <button
-      type="button"
+    <Button
+      variant={isActive ? "solid" : "ghost"}
+      intent={isActive ? "primary" : "neutral"}
+      size="icon"
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
-      className={cn(
-        "flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors",
-        isActive
-          ? "bg-primary-500 text-white shadow-sm"
-          : "bg-neutral-50 text-neutral-600 hover:bg-primary-50 hover:text-primary-600",
-      )}
+      className="h-8 w-8 rounded-lg text-sm"
     >
       {page}
-    </button>
+    </Button>
   );
 }
 
