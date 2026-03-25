@@ -2,7 +2,7 @@ import { Modal } from "@shared/ui";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { InstructorForm } from "../InstructorForm/InstructorForm";
 import type { Instructor } from "../../types";
-import type { CreateInstructorSchema } from "../../schemas/instructor.schema";
+import type { RegisterInstructorSchema } from "../../schemas/instructor.schema";
 import type { UpdateInstructorSchema } from "../../schemas/instructor.schema";
 
 interface InstructorFormModalBaseProps {
@@ -14,7 +14,7 @@ interface InstructorFormModalBaseProps {
 
 interface InstructorFormModalCreateProps extends InstructorFormModalBaseProps {
   instructor?: undefined;
-  onSubmit: (data: CreateInstructorSchema) => void;
+  onSubmit: (data: RegisterInstructorSchema) => void;
 }
 
 interface InstructorFormModalEditProps extends InstructorFormModalBaseProps {
@@ -39,26 +39,30 @@ export function InstructorFormModal({
 
   return (
     <Modal open={open} onClose={onClose} size="md">
-      <div className="p-6">
-        <h2 className="mb-6 text-lg font-semibold text-neutral-900">{title}</h2>
+      {open && (
+        <div className="p-6">
+          <h2 className="mb-6 text-lg font-semibold text-neutral-900">
+            {title}
+          </h2>
 
-        {isEditing ? (
-          <InstructorForm
-            key={instructor.id}
-            instructor={instructor}
-            onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
-            isPending={isPending}
-            mutation={mutation}
-          />
-        ) : (
-          <InstructorForm
-            key="create"
-            onSubmit={onSubmit as (data: CreateInstructorSchema) => void}
-            isPending={isPending}
-            mutation={mutation}
-          />
-        )}
-      </div>
+          {isEditing ? (
+            <InstructorForm
+              key={instructor.id}
+              instructor={instructor}
+              onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
+              isPending={isPending}
+              mutation={mutation}
+            />
+          ) : (
+            <InstructorForm
+              key="create"
+              onSubmit={onSubmit as (data: RegisterInstructorSchema) => void}
+              isPending={isPending}
+              mutation={mutation}
+            />
+          )}
+        </div>
+      )}
     </Modal>
   );
 }

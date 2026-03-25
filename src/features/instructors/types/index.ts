@@ -8,7 +8,7 @@ export interface Instructor {
   lastLoginAt: string;
 }
 
-export interface CreateInstructorDto {
+export interface RegisterInstructorDto {
   email: string;
   name: string;
   lastname: string;

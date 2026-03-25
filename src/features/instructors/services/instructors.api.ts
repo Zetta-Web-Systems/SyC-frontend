@@ -6,7 +6,7 @@ import type {
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type {
   Instructor,
-  CreateInstructorDto,
+  RegisterInstructorDto,
   UpdateInstructorDto,
 } from "../types";
 
@@ -18,7 +18,7 @@ export async function getInstructorsPaginated(params: PaginatedParams) {
   return data;
 }
 
-export async function createInstructor(dto: CreateInstructorDto) {
+export async function registerInstructor(dto: RegisterInstructorDto) {
   const { data } = await api.post<Instructor>("/instructors/register", dto);
   return data;
 }

@@ -15,14 +15,14 @@ const lastnameField = z
   .string({ error: "El apellido es requerido" })
   .min(1, "El apellido es requerido");
 
-export const createInstructorSchema = z.object({
+export const registerInstructorSchema = z.object({
   name: nameField,
   lastname: lastnameField,
   dni: dniField,
   email: z.email("Ingresa un email valido"),
 });
 
-export type CreateInstructorSchema = z.infer<typeof createInstructorSchema>;
+export type RegisterInstructorSchema = z.infer<typeof registerInstructorSchema>;
 
 export const updateInstructorSchema = z.object({
   name: nameField,

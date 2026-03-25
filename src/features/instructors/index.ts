@@ -1,2 +1,6 @@
 export { default as InstructorsPage } from "./InstructorsPage";
-export type { Instructor, CreateInstructorDto, UpdateInstructorDto } from "./types";
+export type {
+  Instructor,
+  RegisterInstructorDto,
+  UpdateInstructorDto,
+} from "./types";

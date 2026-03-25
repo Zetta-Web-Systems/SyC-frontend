@@ -97,7 +97,7 @@ export function InstructorsTable({
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {/* Desktop */}
       <div className="hidden md:block">
         <DataTable

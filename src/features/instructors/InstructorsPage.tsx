@@ -3,7 +3,6 @@ import type { PaginationState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { Button } from "@shared/ui";
 import { confirm } from "@shared/stores/confirm.store";
-import { toast } from "@shared/stores/toast.store";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
 import { toApiPage } from "@shared/utils/pagination.utils";
 import type { PaginatedParams } from "@shared/types/pagination.types";
@@ -11,12 +10,12 @@ import { InstructorsTable } from "./components/InstructorsTable/InstructorsTable
 import { InstructorFormModal } from "./components/InstructorFormModal/InstructorFormModal";
 import { InstructorsFilters } from "./components/InstructorsFilters/InstructorsFilters";
 import { useInstructorsQuery } from "./hooks/useInstructorsQuery";
-import { useCreateInstructorMutation } from "./hooks/mutations/useCreateInstructorMutation";
+import { useRegisterInstructorMutation } from "./hooks/mutations/useRegisterInstructorMutation";
 import { useUpdateInstructorMutation } from "./hooks/mutations/useUpdateInstructorMutation";
 import { useDeleteInstructorMutation } from "./hooks/mutations/useDeleteInstructorMutation";
 import { useRestoreInstructorMutation } from "./hooks/mutations/useRestoreInstructorMutation";
 import type {
-  CreateInstructorSchema,
+  RegisterInstructorSchema,
   UpdateInstructorSchema,
 } from "./schemas/instructor.schema";
 import { ORDER_MAP } from "./constants/instructors.constants";
@@ -52,7 +51,7 @@ export default function InstructorsPage() {
   };
 
   const { data, isLoading, isPlaceholderData } = useInstructorsQuery(params);
-  const createMutation = useCreateInstructorMutation();
+  const registerMutation = useRegisterInstructorMutation();
   const updateMutation = useUpdateInstructorMutation();
   const deleteMutation = useDeleteInstructorMutation();
   const restoreMutation = useRestoreInstructorMutation();
@@ -60,7 +59,7 @@ export default function InstructorsPage() {
   const instructors = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
 
-  function handleOpenCreate() {
+  function handleOpenRegister() {
     setEditingInstructor(null);
     setModalOpen(true);
   }
@@ -73,20 +72,30 @@ export default function InstructorsPage() {
   function handleCloseModal() {
     setModalOpen(false);
     setEditingInstructor(null);
+    registerMutation.reset();
+    updateMutation.reset();
   }
 
-  function handleCreate(data: CreateInstructorSchema) {
-    createMutation.mutate(data, {
+  function handleRegister(data: RegisterInstructorSchema) {
+    registerMutation.mutate(data, {
       onSuccess: () => handleCloseModal(),
     });
   }
 
   function handleUpdate(data: UpdateInstructorSchema) {
     if (!editingInstructor) return;
-    updateMutation.mutate(
-      { id: editingInstructor.id, dto: data },
-      { onSuccess: () => handleCloseModal() },
-    );
+    confirm({
+      intent: "warning",
+      title: "Modificar profesor",
+      description: `¿Estas seguro que deseas modificar a ${data.name} ${data.lastname}?`,
+      confirmLabel: "Modificar",
+      onConfirm: () => {
+        updateMutation.mutate(
+          { id: editingInstructor.id, dto: data },
+          { onSuccess: () => handleCloseModal() },
+        );
+      },
+    });
   }
 
   function handleDelete(instructor: Instructor) {
@@ -96,16 +105,7 @@ export default function InstructorsPage() {
       description: `¿Estas seguro que deseas eliminar a ${instructor.name} ${instructor.lastname}?`,
       confirmLabel: "Eliminar",
       onConfirm: () => {
-        deleteMutation.mutate(
-          { id: instructor.id },
-          {
-            onSuccess: () =>
-              toast.info("", {
-                description:
-                  "La baja de profesores aun no esta implementada en el servidor.",
-              }),
-          },
-        );
+        deleteMutation.mutate({ id: instructor.id });
       },
     });
   }
@@ -137,18 +137,18 @@ export default function InstructorsPage() {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
-  const activeMutation = editingInstructor ? updateMutation : createMutation;
+  const activeMutation = editingInstructor ? updateMutation : registerMutation;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Profesores</h1>
+          <h1>Profesores</h1>
           <p className="mt-1 text-sm text-neutral-500">
             Administra los profesores del gimnasio
           </p>
         </div>
-        <Button intent="primary" onClick={handleOpenCreate}>
+        <Button intent="primary" onClick={handleOpenRegister}>
           <Plus size={16} aria-hidden="true" />
           <span className="hidden sm:inline">Crear profesor</span>
         </Button>
@@ -186,7 +186,7 @@ export default function InstructorsPage() {
         <InstructorFormModal
           open={modalOpen}
           onClose={handleCloseModal}
-          onSubmit={handleCreate}
+          onSubmit={handleRegister}
           isPending={activeMutation.isPending}
           mutation={activeMutation}
         />
