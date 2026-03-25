@@ -16,5 +16,7 @@ export { PopoverSeparator } from "./Popover/PopoverSeparator";
 export { SearchInput } from "./SearchInput/SearchInput";
 export { Select } from "./Select/Select";
 export { Textarea } from "./Textarea/Textarea";
+export { Spinner } from "./Spinner/Spinner";
+export type { SpinnerProps } from "./Spinner/Spinner";
 export { Toast } from "./Toast/Toast";
 export { ToastContainer } from "./Toast/ToastContainer";
