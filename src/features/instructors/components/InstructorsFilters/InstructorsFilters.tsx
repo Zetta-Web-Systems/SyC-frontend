@@ -35,7 +35,7 @@ export function InstructorsFilters({
       />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex items-end gap-2">
+        <div className="flex flex-1 items-end gap-2 sm:flex-initial">
           <Label className="shrink-0 pb-2 text-sm text-neutral-500">
             Estado
           </Label>
@@ -43,7 +43,7 @@ export function InstructorsFilters({
             value={statusFilter}
             onChange={(e) => onStatusChange(e.target.value)}
             size="sm"
-            className="w-32"
+            className="w-full sm:w-32"
           >
             {STATUS_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -53,7 +53,7 @@ export function InstructorsFilters({
           </Select>
         </div>
 
-        <div className="flex items-end gap-2">
+        <div className="flex flex-1 items-end gap-2 sm:flex-initial">
           <Label className="shrink-0 pb-2 text-sm text-neutral-500">
             Ordenar por
           </Label>
@@ -61,7 +61,7 @@ export function InstructorsFilters({
             value={orderByValue}
             onChange={(e) => onOrderByChange(e.target.value)}
             size="sm"
-            className="w-40"
+            className="w-full sm:w-40"
           >
             {ORDER_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>

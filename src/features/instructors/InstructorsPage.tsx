@@ -115,12 +115,12 @@ export default function InstructorsPage() {
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">Profesores</h1>
           <p className="mt-1 text-sm text-neutral-500">
-            Administra el personal tecnico y supervisores de entrenamiento.
+            Administra los profesores del gimnasio
           </p>
         </div>
         <Button intent="primary" onClick={handleOpenCreate}>
           <Plus size={16} aria-hidden="true" />
-          Crear profesor
+          <span className="hidden sm:inline">Crear profesor</span>
         </Button>
       </div>
 

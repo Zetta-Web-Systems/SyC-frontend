@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@shared/ui";
-import type { Instructor } from "../../types";
+import { formatDateTime } from "@shared/utils/date.utils";
+import type { Instructor } from "@features/instructors/types";
 
 export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
   {
@@ -18,6 +19,15 @@ export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
   {
     accessorKey: "dni",
     header: "DNI",
+  },
+  {
+    id: "lastLoginAt",
+    header: "Última conexión",
+    cell: ({ row }) => {
+      const lastLoginAt = row.original.lastLoginAt;
+
+      return <p>{lastLoginAt ? formatDateTime(lastLoginAt) : "Nunca"}</p>;
+    },
   },
   {
     id: "estado",

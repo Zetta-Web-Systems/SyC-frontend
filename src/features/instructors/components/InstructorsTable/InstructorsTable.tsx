@@ -43,7 +43,7 @@ export function InstructorsTable({
           const instructor = row.original;
 
           return (
-            <div className="flex items-center gap-1">
+            <div className="flex place-content-center gap-1">
               <Button
                 variant="ghost"
                 intent="secondary"
