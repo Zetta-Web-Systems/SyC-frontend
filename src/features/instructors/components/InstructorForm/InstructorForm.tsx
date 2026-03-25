@@ -1,13 +1,12 @@
 import { Mail, User, CreditCard } from "lucide-react";
 import { Button, Input } from "@shared/ui";
 import { Form, FormField } from "@shared/components/Form";
+import type { MutationLike } from "@shared/types/mutations.types";
 import {
   createInstructorSchema,
   updateInstructorSchema,
-} from "../../schemas/instructor.schema";
-import type {
-  CreateInstructorSchema,
-  UpdateInstructorSchema,
+  type CreateInstructorSchema,
+  type UpdateInstructorSchema,
 } from "../../schemas/instructor.schema";
 import type { Instructor } from "../../types";
 
@@ -15,14 +14,14 @@ interface InstructorFormCreateProps {
   instructor?: undefined;
   onSubmit: (data: CreateInstructorSchema) => void;
   isPending: boolean;
-  mutation: { isError: boolean; error: unknown };
+  mutation: MutationLike;
 }
 
 interface InstructorFormEditProps {
   instructor: Instructor;
   onSubmit: (data: UpdateInstructorSchema) => void;
   isPending: boolean;
-  mutation: { isError: boolean; error: unknown };
+  mutation: MutationLike;
 }
 
 type InstructorFormProps = InstructorFormCreateProps | InstructorFormEditProps;

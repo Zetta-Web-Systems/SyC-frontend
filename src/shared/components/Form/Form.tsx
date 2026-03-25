@@ -9,11 +9,7 @@ import type {
 import type { $ZodType } from "zod/v4/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getApiErrorMessage } from "@shared/api/apiError";
-
-interface MutationLike {
-  isError: boolean;
-  error: unknown;
-}
+import type { MutationLike } from "@shared/types/mutations.types";
 
 export interface FormProps<TFields extends FieldValues> {
   schema: $ZodType<TFields, TFields>;

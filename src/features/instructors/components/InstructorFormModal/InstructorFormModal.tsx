@@ -1,41 +1,40 @@
 import { Modal } from "@shared/ui";
+import type { MutationLike } from "@shared/types/mutations.types";
 import { InstructorForm } from "../InstructorForm/InstructorForm";
-import { useCreateInstructorMutation } from "../../hooks/useCreateInstructorMutation";
-import { useUpdateInstructorMutation } from "../../hooks/useUpdateInstructorMutation";
 import type { Instructor } from "../../types";
 import type { CreateInstructorSchema } from "../../schemas/instructor.schema";
 import type { UpdateInstructorSchema } from "../../schemas/instructor.schema";
 
-interface InstructorFormModalProps {
+interface InstructorFormModalBaseProps {
   open: boolean;
+  mutation: MutationLike;
+  isPending: boolean;
   onClose: () => void;
-  instructor?: Instructor;
 }
+
+interface InstructorFormModalCreateProps extends InstructorFormModalBaseProps {
+  instructor?: undefined;
+  onSubmit: (data: CreateInstructorSchema) => void;
+}
+
+interface InstructorFormModalEditProps extends InstructorFormModalBaseProps {
+  instructor: Instructor;
+  onSubmit: (data: UpdateInstructorSchema) => void;
+}
+
+type InstructorFormModalProps =
+  | InstructorFormModalCreateProps
+  | InstructorFormModalEditProps;
 
 export function InstructorFormModal({
   open,
+  mutation,
+  isPending,
   onClose,
   instructor,
+  onSubmit,
 }: InstructorFormModalProps) {
-  const createMutation = useCreateInstructorMutation();
-  const updateMutation = useUpdateInstructorMutation();
-
   const isEditing = !!instructor;
-
-  function handleCreateSubmit(data: CreateInstructorSchema) {
-    createMutation.mutate(data, {
-      onSuccess: () => onClose(),
-    });
-  }
-
-  function handleEditSubmit(data: UpdateInstructorSchema) {
-    if (!instructor) return;
-    updateMutation.mutate(
-      { id: instructor.id, dto: data },
-      { onSuccess: () => onClose() },
-    );
-  }
-
   const title = isEditing ? "Editar profesor" : "Crear profesor";
 
   return (
@@ -45,16 +44,18 @@ export function InstructorFormModal({
 
         {isEditing ? (
           <InstructorForm
+            key={instructor.id}
             instructor={instructor}
-            onSubmit={handleEditSubmit}
-            isPending={updateMutation.isPending}
-            mutation={updateMutation}
+            onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
+            isPending={isPending}
+            mutation={mutation}
           />
         ) : (
           <InstructorForm
-            onSubmit={handleCreateSubmit}
-            isPending={createMutation.isPending}
-            mutation={createMutation}
+            key="create"
+            onSubmit={onSubmit as (data: CreateInstructorSchema) => void}
+            isPending={isPending}
+            mutation={mutation}
           />
         )}
       </div>
