@@ -1,4 +1,5 @@
 import type { PaginatedParams } from "@shared/types/pagination.types";
+import type { ToolbarTab } from "@shared/types/datatable.types";
 
 export const INSTRUCTORS_KEYS = {
   all: ["instructors"] as const,
@@ -6,11 +7,11 @@ export const INSTRUCTORS_KEYS = {
     [...INSTRUCTORS_KEYS.all, "list", params] as const,
 } as const;
 
-export const STATUS_OPTIONS = [
+export const STATUS_TABS: ToolbarTab[] = [
   { label: "Todos", value: "" },
-  { label: "Activo", value: "true" },
-  { label: "Inactivo", value: "false" },
-] as const;
+  { label: "Activos", value: "true" },
+  { label: "Inactivos", value: "false" },
+];
 
 export const ORDER_OPTIONS = [
   { label: "Mas recientes", value: "recent" },
