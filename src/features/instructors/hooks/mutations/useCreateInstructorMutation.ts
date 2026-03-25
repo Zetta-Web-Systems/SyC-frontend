@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@shared/stores/toast.store";
-import { createInstructor } from "../services/instructors.api";
-import { INSTRUCTORS_KEYS } from "@features/instructors/constants/instructors.constants";
+import { createInstructor } from "../../services/instructors.api";
+import { INSTRUCTORS_KEYS } from "../../constants/instructors.constants";
 
 export function useCreateInstructorMutation() {
   const queryClient = useQueryClient();

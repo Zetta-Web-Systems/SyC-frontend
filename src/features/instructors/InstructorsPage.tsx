@@ -7,21 +7,20 @@ import { toast } from "@shared/stores/toast.store";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
 import { toApiPage } from "@shared/utils/pagination.utils";
 import type { PaginatedParams } from "@shared/types/pagination.types";
-import { useInstructorsQuery } from "./hooks/useInstructorsQuery";
-import { useDeleteInstructorMutation } from "./hooks/useDeleteInstructorMutation";
 import { InstructorsTable } from "./components/InstructorsTable/InstructorsTable";
 import { InstructorFormModal } from "./components/InstructorFormModal/InstructorFormModal";
 import { InstructorsFilters } from "./components/InstructorsFilters/InstructorsFilters";
+import { useInstructorsQuery } from "./hooks/useInstructorsQuery";
+import { useCreateInstructorMutation } from "./hooks/mutations/useCreateInstructorMutation";
+import { useUpdateInstructorMutation } from "./hooks/mutations/useUpdateInstructorMutation";
+import { useDeleteInstructorMutation } from "./hooks/mutations/useDeleteInstructorMutation";
+import { useRestoreInstructorMutation } from "./hooks/mutations/useRestoreInstructorMutation";
+import type {
+  CreateInstructorSchema,
+  UpdateInstructorSchema,
+} from "./schemas/instructor.schema";
+import { ORDER_MAP } from "./constants/instructors.constants";
 import type { Instructor } from "./types";
-
-const ORDER_MAP: Record<
-  string,
-  { orderBy: string; orderType: "ASC" | "DESC" }
-> = {
-  recent: { orderBy: "id", orderType: "DESC" },
-  "name-asc": { orderBy: "name", orderType: "ASC" },
-  "name-desc": { orderBy: "name", orderType: "DESC" },
-};
 
 export default function InstructorsPage() {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -53,7 +52,10 @@ export default function InstructorsPage() {
   };
 
   const { data, isLoading, isPlaceholderData } = useInstructorsQuery(params);
+  const createMutation = useCreateInstructorMutation();
+  const updateMutation = useUpdateInstructorMutation();
   const deleteMutation = useDeleteInstructorMutation();
+  const restoreMutation = useRestoreInstructorMutation();
 
   const instructors = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
@@ -71,6 +73,20 @@ export default function InstructorsPage() {
   function handleCloseModal() {
     setModalOpen(false);
     setEditingInstructor(null);
+  }
+
+  function handleCreate(data: CreateInstructorSchema) {
+    createMutation.mutate(data, {
+      onSuccess: () => handleCloseModal(),
+    });
+  }
+
+  function handleUpdate(data: UpdateInstructorSchema) {
+    if (!editingInstructor) return;
+    updateMutation.mutate(
+      { id: editingInstructor.id, dto: data },
+      { onSuccess: () => handleCloseModal() },
+    );
   }
 
   function handleDelete(instructor: Instructor) {
@@ -94,6 +110,18 @@ export default function InstructorsPage() {
     });
   }
 
+  function handleRestore(instructor: Instructor) {
+    confirm({
+      intent: "warning",
+      title: "Restaurar profesor",
+      description: `¿Estas seguro que deseas restaurar a ${instructor.name} ${instructor.lastname}?`,
+      confirmLabel: "Restaurar",
+      onConfirm: () => {
+        restoreMutation.mutate({ id: instructor.id });
+      },
+    });
+  }
+
   const handleSearch = useCallback((value: string) => {
     setSearch(value);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -108,6 +136,8 @@ export default function InstructorsPage() {
     setOrderByValue(value);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
+
+  const activeMutation = editingInstructor ? updateMutation : createMutation;
 
   return (
     <div className="flex flex-col gap-6">
@@ -140,13 +170,27 @@ export default function InstructorsPage() {
         isLoading={isLoading && !isPlaceholderData}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
+        onRestore={handleRestore}
       />
 
-      <InstructorFormModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        instructor={editingInstructor ?? undefined}
-      />
+      {editingInstructor ? (
+        <InstructorFormModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          instructor={editingInstructor}
+          onSubmit={handleUpdate}
+          isPending={activeMutation.isPending}
+          mutation={activeMutation}
+        />
+      ) : (
+        <InstructorFormModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handleCreate}
+          isPending={activeMutation.isPending}
+          mutation={activeMutation}
+        />
+      )}
     </div>
   );
 }

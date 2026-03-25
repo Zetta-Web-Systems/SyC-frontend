@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { Pencil, UserX } from "lucide-react";
+import { Pencil, UserCheck, UserX } from "lucide-react";
 import { Button } from "@shared/ui";
 import { DataTable } from "@shared/components/DataTable";
 import { DataCardList } from "@shared/components/DataTable";
@@ -22,6 +22,7 @@ interface InstructorsTableProps {
   isLoading: boolean;
   onEdit: (instructor: Instructor) => void;
   onDelete: (instructor: Instructor) => void;
+  onRestore: (instructor: Instructor) => void;
 }
 
 export function InstructorsTable({
@@ -32,6 +33,7 @@ export function InstructorsTable({
   isLoading,
   onEdit,
   onDelete,
+  onRestore,
 }: InstructorsTableProps) {
   const columns = useMemo<ColumnDef<Instructor, unknown>[]>(
     () => [
@@ -44,30 +46,44 @@ export function InstructorsTable({
 
           return (
             <div className="flex place-content-center gap-1">
-              <Button
-                variant="ghost"
-                intent="secondary"
-                size="icon"
-                aria-label={`Editar profesor ${instructor.name} ${instructor.lastname}`}
-                onClick={() => onEdit(instructor)}
-              >
-                <Pencil size={16} aria-hidden="true" />
-              </Button>
-              <Button
-                variant="ghost"
-                intent="danger"
-                size="icon"
-                aria-label={`Eliminar profesor ${instructor.name} ${instructor.lastname}`}
-                onClick={() => onDelete(instructor)}
-              >
-                <UserX size={16} aria-hidden="true" />
-              </Button>
+              {instructor.isActive ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    intent="secondary"
+                    size="icon"
+                    aria-label={`Editar profesor ${instructor.name} ${instructor.lastname}`}
+                    onClick={() => onEdit(instructor)}
+                  >
+                    <Pencil size={16} aria-hidden="true" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    intent="danger"
+                    size="icon"
+                    aria-label={`Eliminar profesor ${instructor.name} ${instructor.lastname}`}
+                    onClick={() => onDelete(instructor)}
+                  >
+                    <UserX size={16} aria-hidden="true" />
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="ghost"
+                  intent="secondary"
+                  size="icon"
+                  aria-label={`Restaurar profesor ${instructor.name} ${instructor.lastname}`}
+                  onClick={() => onRestore(instructor)}
+                >
+                  <UserCheck size={16} aria-hidden="true" />
+                </Button>
+              )}
             </div>
           );
         },
       },
     ],
-    [onEdit, onDelete],
+    [onEdit, onDelete, onRestore],
   );
 
   const table = useReactTable({
@@ -108,6 +124,7 @@ export function InstructorsTable({
               instructor={instructor}
               onEdit={onEdit}
               onDelete={onDelete}
+              onRestore={onRestore}
             />
           )}
         />

@@ -1,16 +1,8 @@
 import { SearchInput, Select, Label } from "@shared/ui";
-
-const STATUS_OPTIONS = [
-  { label: "Todos", value: "" },
-  { label: "Activo", value: "true" },
-  { label: "Inactivo", value: "false" },
-] as const;
-
-const ORDER_OPTIONS = [
-  { label: "Mas recientes", value: "recent" },
-  { label: "Nombre A-Z", value: "name-asc" },
-  { label: "Nombre Z-A", value: "name-desc" },
-] as const;
+import {
+  ORDER_OPTIONS,
+  STATUS_OPTIONS,
+} from "../../constants/instructors.constants";
 
 interface InstructorsFiltersProps {
   onSearch: (value: string) => void;
