@@ -64,9 +64,6 @@ export function DataTablePagination<TData>({
 
   if (rowCount === 0) return null;
 
-  const startRow = pageIndex * pageSize + 1;
-  const endRow = Math.min(startRow + pageSize - 1, rowCount);
-
   const visiblePages = getVisiblePages(
     currentPage,
     pageCount,
@@ -79,14 +76,16 @@ export function DataTablePagination<TData>({
   );
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 md:flex-row md:gap-4">
-      <div className="hidden items-center gap-2 text-sm text-neutral-600 md:flex">
+    <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3">
+      <div className="flex items-center gap-2 text-sm text-neutral-600">
+        <span className="hidden whitespace-nowrap md:inline">
+          Items por pagina
+        </span>
         <div className="w-18">
           <Select
             value={String(pageSize)}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
             size="sm"
-            iconPosition="left"
           >
             {PAGE_SIZE_OPTIONS.map((size) => (
               <option key={size} value={String(size)}>
@@ -95,14 +94,7 @@ export function DataTablePagination<TData>({
             ))}
           </Select>
         </div>
-        <span className="whitespace-nowrap">Filas por pagina</span>
       </div>
-
-      <div className="flex-1" />
-
-      <span className="text-sm font-medium text-neutral-600">
-        {startRow} - {endRow} de {rowCount}
-      </span>
 
       <div className="flex items-center gap-1">
         <NavButton
@@ -118,7 +110,7 @@ export function DataTablePagination<TData>({
             page === -1 ? (
               <span
                 key={`ellipsis-${i}`}
-                className="flex h-8 w-6 items-center justify-center text-sm text-neutral-400"
+                className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
               >
                 ...
               </span>
@@ -138,7 +130,7 @@ export function DataTablePagination<TData>({
             page === -1 ? (
               <span
                 key={`ellipsis-m-${i}`}
-                className="flex h-8 w-6 items-center justify-center text-sm text-neutral-400"
+                className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
               >
                 ...
               </span>
