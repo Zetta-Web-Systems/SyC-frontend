@@ -45,7 +45,7 @@ export default function InstructorsPage() {
     orderType: order.orderType,
     search: search || undefined,
     ...(statusFilter && {
-      filters: ["isActive"],
+      filters: ["user.isActive"],
       filtersValues: [statusFilter],
     }),
   };

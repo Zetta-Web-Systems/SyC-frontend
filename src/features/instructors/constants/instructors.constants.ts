@@ -9,8 +9,8 @@ export const INSTRUCTORS_KEYS = {
 
 export const STATUS_TABS: ToolbarTab[] = [
   { label: "Todos", value: "" },
-  { label: "Activos", value: "true" },
-  { label: "Inactivos", value: "false" },
+  { label: "Activos", value: "1" },
+  { label: "Inactivos", value: "0" },
 ];
 
 export const ORDER_OPTIONS = [
