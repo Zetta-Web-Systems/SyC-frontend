@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { Button } from "@shared/ui";
+import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 
 interface InstructorHeaderProps {
   onCreate: () => void;
@@ -7,17 +8,15 @@ interface InstructorHeaderProps {
 
 export function InstructorHeader({ onCreate }: InstructorHeaderProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <h1>Profesores</h1>
-        <p className="mt-1 text-sm text-neutral-500">
-          Administra los profesores del gimnasio
-        </p>
-      </div>
-      <Button intent="primary" onClick={onCreate}>
-        <Plus size={16} aria-hidden="true" />
-        <span className="hidden sm:inline">Crear profesor</span>
-      </Button>
-    </div>
+    <PageHeader
+      title="Profesores"
+      description="Administra los profesores del gimnasio"
+      actions={
+        <Button intent="primary" onClick={onCreate}>
+          <Plus size={16} aria-hidden="true" />
+          <span className="hidden xs:inline">Crear profesor</span>
+        </Button>
+      }
+    />
   );
 }
