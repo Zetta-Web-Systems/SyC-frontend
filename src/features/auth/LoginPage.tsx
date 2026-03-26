@@ -4,7 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@shared/ui";
 import { Card } from "@shared/ui";
 import { Input } from "@shared/ui";
-import { Form, FormField } from "@shared/components/Form";
+import { Form, FormField, FormError } from "@shared/components/Form";
 import { useLoginMutation } from "./hooks/useLoginMutation";
 import { loginSchema } from "./schemas/login.schema";
 import type { LoginSchema } from "./schemas/login.schema";
@@ -26,7 +26,6 @@ export default function LoginPage() {
       <Form<LoginSchema>
         schema={loginSchema}
         onSubmit={onSubmit}
-        mutation={loginMutation}
         className="space-y-6"
       >
         <FormField<LoginSchema> name="email" required>
@@ -82,6 +81,8 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+
+        <FormError mutation={loginMutation} />
 
         <Button
           type="submit"

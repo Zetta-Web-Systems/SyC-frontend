@@ -1,6 +1,6 @@
 import { Mail, User, CreditCard } from "lucide-react";
 import { Button, Input, Label } from "@shared/ui";
-import { Form, FormField } from "@shared/components/Form";
+import { Form, FormField, FormError } from "@shared/components/Form";
 import type { MutationLike } from "@shared/types/mutations.types";
 import {
   registerInstructorSchema,
@@ -39,7 +39,6 @@ export function InstructorForm({
       <Form<UpdateInstructorSchema>
         schema={updateInstructorSchema}
         onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
-        mutation={mutation}
         defaultValues={{
           name: instructor.name,
           lastname: instructor.lastname,
@@ -102,6 +101,8 @@ export function InstructorForm({
           )}
         </FormField>
 
+        <FormError mutation={mutation} />
+
         <Button
           type="submit"
           intent="primary"
@@ -118,7 +119,6 @@ export function InstructorForm({
     <Form<RegisterInstructorSchema>
       schema={registerInstructorSchema}
       onSubmit={onSubmit as (data: RegisterInstructorSchema) => void}
-      mutation={mutation}
       className="flex flex-col gap-5"
     >
       <FormField<RegisterInstructorSchema> name="name" label="Nombre" required>
@@ -170,6 +170,8 @@ export function InstructorForm({
           />
         )}
       </FormField>
+
+      <FormError mutation={mutation} />
 
       <Button
         type="submit"
