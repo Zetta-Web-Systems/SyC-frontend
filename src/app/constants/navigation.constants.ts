@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Settings,
 } from "lucide-react";
+import { USER_ROLE } from "@features/auth";
 import type { NavGroup } from "@app/types/navigation.types";
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -46,12 +47,14 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/students",
         icon: Users,
         color: "text-pink-400",
+        roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
       {
         label: "Profesores",
         to: "/instructors",
         icon: GraduationCap,
         color: "text-amber-400",
+        roles: [USER_ROLE.ADMIN],
       },
     ],
   },
@@ -63,12 +66,14 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/plans",
         icon: ClipboardList,
         color: "text-emerald-400",
+        roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
       {
         label: "Ejercicios",
         to: "/exercises",
         icon: Dumbbell,
         color: "text-orange-400",
+        roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
     ],
   },
@@ -80,12 +85,14 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/billing",
         icon: Receipt,
         color: "text-emerald-500",
+        roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
       {
         label: "Planes",
         to: "/memberships",
         icon: CreditCard,
         color: "text-violet-400",
+        roles: [USER_ROLE.ADMIN],
       },
     ],
   },
@@ -97,18 +104,21 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/users",
         icon: UserCog,
         color: "text-sky-400",
+        roles: [USER_ROLE.ADMIN],
       },
       {
         label: "Auditoría",
         to: "/audit",
         icon: ShieldCheck,
         color: "text-rose-400",
+        roles: [USER_ROLE.ADMIN],
       },
       {
         label: "Configuración",
         to: "/settings",
         icon: Settings,
         color: "text-purple-400",
+        roles: [USER_ROLE.ADMIN],
       },
     ],
   },
