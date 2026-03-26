@@ -24,6 +24,8 @@ export function InstructorsFilters({
       searchPlaceholder="Buscar"
       onTabChange={onStatusChange}
       onSearch={onSearch}
+      // onExportExcel={() => {}}
+      // onExportPdf={() => {}}
       filterContent={
         <InstructorsFilterContent
           statusFilter={statusFilter}

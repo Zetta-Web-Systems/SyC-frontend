@@ -121,7 +121,7 @@ export function DataTableToolbar({
             >
               {onExportPdf && (
                 <PopoverItem
-                  icon={<FileText size={16} />}
+                  icon={<FileText size={16} color="red" />}
                   onClick={() => {
                     onExportPdf();
                     setMoreOpen(false);
@@ -133,7 +133,7 @@ export function DataTableToolbar({
               {onExportPdf && onExportExcel && <PopoverSeparator />}
               {onExportExcel && (
                 <PopoverItem
-                  icon={<FileSpreadsheet size={16} />}
+                  icon={<FileSpreadsheet size={16} color="green" />}
                   onClick={() => {
                     onExportExcel();
                     setMoreOpen(false);
