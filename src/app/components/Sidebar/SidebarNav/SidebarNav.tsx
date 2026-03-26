@@ -11,7 +11,12 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
   const { location } = useRouterState();
 
   return (
-    <nav className={cn("flex-1 py-4", collapsed ? "overflow-hidden" : "overflow-y-auto")}>
+    <nav
+      className={cn(
+        "flex-1 py-4",
+        collapsed ? "overflow-hidden" : "overflow-y-auto",
+      )}
+    >
       {NAV_GROUPS.map((group, groupIndex) => (
         <div key={group.title} className={cn(groupIndex > 0 && "mt-6")}>
           {!collapsed && (

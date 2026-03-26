@@ -38,9 +38,7 @@ export function SidebarUserMenu({ collapsed }: SidebarUserMenuProps) {
   }
 
   return (
-    <div
-      className={cn("border-t border-neutral-200 p-3", collapsed && "px-2")}
-    >
+    <div className={cn("border-t border-neutral-200 p-3", collapsed && "px-2")}>
       <div
         className={cn(
           "flex items-center gap-3 rounded-lg p-2",

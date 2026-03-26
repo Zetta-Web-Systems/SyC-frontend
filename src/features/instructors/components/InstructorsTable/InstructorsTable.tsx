@@ -55,7 +55,7 @@ export function InstructorsTable({
                     aria-label={`Editar profesor ${instructor.name} ${instructor.lastname}`}
                     onClick={() => onEdit(instructor)}
                   >
-                    <Pencil size={16} aria-hidden="true" />
+                    <Pencil size={16} aria-hidden="true" color="green" />
                   </Button>
                   <Button
                     variant="ghost"
