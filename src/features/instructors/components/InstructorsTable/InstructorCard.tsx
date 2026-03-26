@@ -1,5 +1,13 @@
-import { Pencil, UserCheck, UserX } from "lucide-react";
-import { Badge, Button } from "@shared/ui";
+import { useState } from "react";
+import { EllipsisVertical, Pencil, UserCheck, UserX } from "lucide-react";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Popover,
+  PopoverItem,
+  PopoverSeparator,
+} from "@shared/ui";
 import { formatDateTime } from "@shared/utils/date.utils";
 import type { Instructor } from "../../types";
 
@@ -16,13 +24,23 @@ export function InstructorCard({
   onDelete,
   onRestore,
 }: InstructorCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const initials = (
+    instructor.name.charAt(0) + instructor.lastname.charAt(0)
+  ).toUpperCase();
+
+  const fullName = `${instructor.name} ${instructor.lastname}`;
+
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-4 transition-colors hover:bg-primary-100/50">
-      <div className="flex items-start justify-between gap-3">
+    <div className="border-b border-neutral-200 pb-3">
+      <div className="flex items-start gap-3">
+        <Avatar size="md" color="primary" fallback={initials} />
+
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="truncate text-sm font-semibold text-primary-900">
-              {instructor.name} {instructor.lastname}
+            <p className="truncate text-sm font-semibold text-neutral-900">
+              {fullName}
             </p>
             <Badge
               intent={instructor.isActive ? "success" : "neutral"}
@@ -31,53 +49,74 @@ export function InstructorCard({
               {instructor.isActive ? "Activo" : "Inactivo"}
             </Badge>
           </div>
-          <p className="mt-1 truncate text-sm text-neutral-500">
+
+          <p className="mt-0.5 truncate text-xs text-neutral-500">
             {instructor.email}
           </p>
-          <p className="mt-0.5 text-xs text-neutral-400">
-            DNI: {instructor.dni}
-          </p>
-          <p className="mt-0.5 text-xs text-neutral-400">
-            Ultima conexion:{" "}
-            {instructor.lastLoginAt
-              ? formatDateTime(instructor.lastLoginAt)
-              : "Nunca"}
-          </p>
+
+          <div className="mt-1 flex items-center justify-between text-xs text-neutral-400">
+            <span>DNI: {instructor.dni}</span>
+            <span>
+              {instructor.lastLoginAt
+                ? formatDateTime(instructor.lastLoginAt)
+                : "Sin conexion"}
+            </span>
+          </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
-          {instructor.isActive ? (
-            <>
+        <div className="shrink-0">
+          <Popover
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            side="bottom"
+            align="end"
+            trigger={
               <Button
                 variant="ghost"
-                intent="secondary"
+                intent="neutral"
                 size="icon"
-                aria-label={`Editar profesor ${instructor.name} ${instructor.lastname}`}
-                onClick={() => onEdit(instructor)}
+                aria-label={`Opciones de ${fullName}`}
+                onClick={() => setMenuOpen((prev) => !prev)}
               >
-                <Pencil size={16} aria-hidden="true" />
+                <EllipsisVertical size={16} aria-hidden="true" />
               </Button>
-              <Button
-                variant="ghost"
-                intent="danger"
-                size="icon"
-                aria-label={`Eliminar profesor ${instructor.name} ${instructor.lastname}`}
-                onClick={() => onDelete(instructor)}
+            }
+          >
+            {instructor.isActive ? (
+              <>
+                <PopoverItem
+                  icon={<Pencil color="green" />}
+                  onClick={() => {
+                    onEdit(instructor);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Editar
+                </PopoverItem>
+                <PopoverSeparator />
+                <PopoverItem
+                  icon={<UserX />}
+                  variant="danger"
+                  onClick={() => {
+                    onDelete(instructor);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Eliminar
+                </PopoverItem>
+              </>
+            ) : (
+              <PopoverItem
+                icon={<UserCheck color="#90cbc5" />}
+                onClick={() => {
+                  onRestore(instructor);
+                  setMenuOpen(false);
+                }}
               >
-                <UserX size={16} aria-hidden="true" />
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="ghost"
-              intent="secondary"
-              size="icon"
-              aria-label={`Restaurar profesor ${instructor.name} ${instructor.lastname}`}
-              onClick={() => onRestore(instructor)}
-            >
-              <UserCheck size={16} aria-hidden="true" />
-            </Button>
-          )}
+                Restaurar
+              </PopoverItem>
+            )}
+          </Popover>
         </div>
       </div>
     </div>
