@@ -1,4 +1,6 @@
-import { PanelLeft } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { cn } from "@shared/lib/cn";
+import { Button } from "@shared/ui";
 import { SidebarLogo } from "../SidebarLogo/SidebarLogo";
 
 interface SidebarHeaderProps {
@@ -8,20 +10,23 @@ interface SidebarHeaderProps {
 
 export function SidebarHeader({ collapsed, onToggle }: SidebarHeaderProps) {
   return (
-    <div className="mb-6 flex items-center justify-between">
+    <div className="flex h-14 items-center justify-between border-b border-neutral-200 px-3">
       {!collapsed && (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <SidebarLogo />
         </div>
       )}
-      <button
-        type="button"
+
+      <Button
+        variant="ghost"
+        intent="neutral"
+        size="icon"
         onClick={onToggle}
+        className={cn("h-8 w-8", collapsed && "mx-auto")}
         aria-label={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-white"
       >
-        <PanelLeft size={18} />
-      </button>
+        {collapsed ? <Menu size={18} /> : <X size={18} />}
+      </Button>
     </div>
   );
 }
