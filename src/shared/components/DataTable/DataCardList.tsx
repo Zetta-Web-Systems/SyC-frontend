@@ -22,7 +22,7 @@ export function DataCardList<TData>({
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="animate-pulse rounded-xl border border-neutral-200 bg-white p-4"
+            className="animate-pulse rounded-xl border border-neutral-200 bg-primary-50 p-4"
           >
             <div className="h-4 w-3/4 rounded bg-neutral-200" />
             <div className="mt-2 h-3 w-1/2 rounded bg-neutral-100" />

@@ -1,5 +1,6 @@
 import { Pencil, UserCheck, UserX } from "lucide-react";
 import { Badge, Button } from "@shared/ui";
+import { formatDateTime } from "@shared/utils/date.utils";
 import type { Instructor } from "../../types";
 
 interface InstructorCardProps {
@@ -16,11 +17,11 @@ export function InstructorCard({
   onRestore,
 }: InstructorCardProps) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-4">
+    <div className="rounded-xl border border-neutral-200 bg-white p-4 transition-colors hover:bg-primary-100/50">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="truncate text-sm font-semibold text-neutral-900">
+            <p className="truncate text-sm font-semibold text-primary-900">
               {instructor.name} {instructor.lastname}
             </p>
             <Badge
@@ -35,6 +36,12 @@ export function InstructorCard({
           </p>
           <p className="mt-0.5 text-xs text-neutral-400">
             DNI: {instructor.dni}
+          </p>
+          <p className="mt-0.5 text-xs text-neutral-400">
+            Ultima conexion:{" "}
+            {instructor.lastLoginAt
+              ? formatDateTime(instructor.lastLoginAt)
+              : "Nunca"}
           </p>
         </div>
 
