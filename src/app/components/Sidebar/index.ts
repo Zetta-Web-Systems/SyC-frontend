@@ -1,2 +1,2 @@
 export { Sidebar } from "./Sidebar";
-export { MobileMenuButton } from "./MobileMenuButton/MobileMenuButton";
+export { MobileHeader } from "./MobileHeader/MobileHeader";
