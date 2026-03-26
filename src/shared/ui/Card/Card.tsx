@@ -6,7 +6,13 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   asChild?: boolean;
 }
 
-export function Card({ children, className, asChild: _asChild, ref, ...props }: CardProps) {
+export function Card({
+  children,
+  className,
+  asChild: _asChild,
+  ref,
+  ...props
+}: CardProps) {
   return (
     <div ref={ref} className={className} {...props}>
       {children}

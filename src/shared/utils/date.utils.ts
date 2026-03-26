@@ -2,7 +2,8 @@ const DEFAULT_LOCALE = "es-AR";
 
 /**
  * Formatea una fecha o un objeto Date en una cadena de fecha localizada.
- * Ejemplo: "23/03/2026"
+ * @example
+ * "23/03/2026"
  */
 export function formatDate(
   date: string | Date,
@@ -19,7 +20,8 @@ export function formatDate(
 
 /**
  * Formatea una cadena de fecha o un objeto Date en una cadena de fecha y hora localizada.
- * Ejemplo: "23/03/2026, 14:30"
+ * @example
+ * "23/03/2026, 14:30"
  */
 export function formatDateTime(
   date: string | Date,

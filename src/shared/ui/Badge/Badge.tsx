@@ -4,8 +4,7 @@ import { cn } from "@shared/lib/cn";
 import { badgeVariants } from "./Badge.variants";
 
 export interface BadgeProps
-  extends HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+  extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
   ref?: Ref<HTMLSpanElement>;
 }
 

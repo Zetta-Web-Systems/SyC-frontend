@@ -60,6 +60,7 @@ export function Modal({
     <dialog
       ref={dialogRef}
       onClick={handleBackdropClick}
+      onKeyDown={() => {}}
       className={cn(modalVariants({ size }), className)}
     >
       <button

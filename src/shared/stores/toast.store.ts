@@ -59,17 +59,15 @@ function createToast(
   title: string,
   options?: { description?: string; action?: ToastAction; duration?: number },
 ) {
-  return useToastStore
-    .getState()
-    .addToast(
-      {
-        intent,
-        title,
-        description: options?.description,
-        action: options?.action,
-      },
-      options?.duration,
-    );
+  return useToastStore.getState().addToast(
+    {
+      intent,
+      title,
+      description: options?.description,
+      action: options?.action,
+    },
+    options?.duration,
+  );
 }
 
 export const toast = {

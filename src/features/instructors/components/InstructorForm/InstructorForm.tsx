@@ -1,5 +1,5 @@
 import { Mail, User, CreditCard } from "lucide-react";
-import { Button, Input } from "@shared/ui";
+import { Button, Input, Label } from "@shared/ui";
 import { Form, FormField } from "@shared/components/Form";
 import type { MutationLike } from "@shared/types/mutations.types";
 import {
@@ -74,10 +74,11 @@ export function InstructorForm({
         </FormField>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+          <Label htmlFor="instructor-email" className="mb-1.5 block">
             Email
-          </label>
+          </Label>
           <Input
+            id="instructor-email"
             value={instructor.email}
             type="email"
             disabled

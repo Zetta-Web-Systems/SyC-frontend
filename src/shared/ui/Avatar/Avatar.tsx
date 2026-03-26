@@ -5,7 +5,8 @@ import { cn } from "@shared/lib/cn";
 import { avatarVariants } from "./Avatar.variants";
 
 export interface AvatarProps
-  extends Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "color">,
+  extends
+    Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "color">,
     VariantProps<typeof avatarVariants> {
   ref?: Ref<HTMLSpanElement>;
   src?: string | null;

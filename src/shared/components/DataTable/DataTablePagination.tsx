@@ -47,7 +47,7 @@ function getVisiblePages(
   }
 
   if (end < pageCount) {
-    if (end < pageCount - 1) pages.push(-1);
+    if (end < pageCount - 1) pages.push(-2);
     pages.push(pageCount);
   }
 
@@ -106,10 +106,10 @@ export function DataTablePagination<TData>({
         </NavButton>
 
         <div className="hidden items-center gap-1 md:flex">
-          {visiblePages.map((page, i) =>
-            page === -1 ? (
+          {visiblePages.map((page) =>
+            page < 0 ? (
               <span
-                key={`ellipsis-${i}`}
+                key={page}
                 className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
               >
                 ...
@@ -126,10 +126,10 @@ export function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-          {visiblePagesMobile.map((page, i) =>
-            page === -1 ? (
+          {visiblePagesMobile.map((page) =>
+            page < 0 ? (
               <span
-                key={`ellipsis-m-${i}`}
+                key={page}
                 className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
               >
                 ...
