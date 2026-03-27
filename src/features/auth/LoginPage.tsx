@@ -17,7 +17,7 @@ export default function LoginPage() {
     loginMutation.mutate(data);
   }
 
-  if (!isRedirecting) {
+  if (isRedirecting) {
     return (
       <Card className="rounded-xl border border-neutral-100 bg-white p-8 shadow-xl">
         <div className="flex flex-col items-center justify-center gap-4 py-16">
