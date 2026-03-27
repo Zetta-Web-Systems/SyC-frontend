@@ -37,8 +37,8 @@ export function InstructorsFilters({
       searchPlaceholder="Buscar"
       onSearch={onSearch}
       onClearAll={onClearAllFilters}
-      // onExportExcel={() => {}}
-      // onExportPdf={() => {}}
+      onExportExcel={() => {}}
+      onExportPDF={() => {}}
     />
   );
 }

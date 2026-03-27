@@ -22,7 +22,7 @@ export interface DataTableToolbarProps {
   filters: ToolbarFilterConfig[];
   searchPlaceholder?: string;
   onSearch: (value: string) => void;
-  onExportPdf?: () => void;
+  onExportPDF?: () => void;
   onExportExcel?: () => void;
   onClearAll?: () => void;
   moreFiltersContent?: ReactNode;
@@ -42,7 +42,7 @@ export function DataTableToolbar({
   filters,
   searchPlaceholder = "Buscar...",
   onSearch,
-  onExportPdf,
+  onExportPDF,
   onExportExcel,
   onClearAll,
   moreFiltersContent,
@@ -51,7 +51,7 @@ export function DataTableToolbar({
   const [moreOpen, setMoreOpen] = useState(false);
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
 
-  const hasOverflow = Boolean(onExportPdf || onExportExcel);
+  const hasOverflow = Boolean(onExportPDF || onExportExcel);
 
   const activeChips = useMemo<ActiveChip[]>(() => {
     const chips: ActiveChip[] = [];
@@ -145,18 +145,18 @@ export function DataTableToolbar({
                 </Button>
               }
             >
-              {onExportPdf && (
+              {onExportPDF && (
                 <PopoverItem
                   icon={<FileText size={16} color="red" />}
                   onClick={() => {
-                    onExportPdf();
+                    onExportPDF();
                     setMoreOpen(false);
                   }}
                 >
                   Exportar a PDF
                 </PopoverItem>
               )}
-              {onExportPdf && onExportExcel && <PopoverSeparator />}
+              {onExportPDF && onExportExcel && <PopoverSeparator />}
               {onExportExcel && (
                 <PopoverItem
                   icon={<FileSpreadsheet size={16} color="green" />}
