@@ -23,7 +23,7 @@ export function AttendanceDniDisplay({
           isFilled &&
             "border-primary-500 bg-white shadow-sm animate-[attendance-digit-pop_150ms_ease-out_both]",
           isActive && "border-primary-500 bg-primary-50",
-          !isFilled && !isActive && "border-primary-200 bg-white",
+          !isFilled && !isActive && "border-primary-300 bg-white",
         )}
       >
         {isFilled ? (
