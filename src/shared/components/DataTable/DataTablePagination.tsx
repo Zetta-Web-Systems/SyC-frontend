@@ -54,11 +54,13 @@ function getVisiblePages(
   return pages;
 }
 
-function renderPageButtons(
-  pages: number[],
-  currentPage: number,
-  onPageChange: (page: number) => void,
-) {
+interface PageButtonsProps {
+  pages: number[];
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
+function PageButtons({ pages, currentPage, onPageChange }: PageButtonsProps) {
   return pages.map((page) =>
     page < 0 ? (
       <span
@@ -121,11 +123,11 @@ export function DataTablePagination<TData>({
         </NavButton>
 
         <div className="hidden items-center gap-1 md:flex">
-          {renderPageButtons(visiblePages, currentPage, handlePageChange)}
+          <PageButtons pages={visiblePages} currentPage={currentPage} onPageChange={handlePageChange} />
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-          {renderPageButtons(visiblePagesMobile, currentPage, handlePageChange)}
+          <PageButtons pages={visiblePagesMobile} currentPage={currentPage} onPageChange={handlePageChange} />
         </div>
 
         <NavButton
