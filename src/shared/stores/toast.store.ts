@@ -20,36 +20,29 @@ interface Toast {
   title: string;
   description?: string;
   action?: ToastAction;
+  duration: number;
 }
 
 interface ToastState {
   toasts: Toast[];
-  addToast: (toast: Omit<Toast, "id">, duration?: number) => string;
+  addToast: (
+    toast: Omit<Toast, "id" | "duration">,
+    duration?: number,
+  ) => string;
   removeToast: (id: string) => void;
 }
 
 const DEFAULT_DURATION = 5000;
 
-const timers = new Map<string, ReturnType<typeof setTimeout>>();
-
 export const useToastStore = createStore<ToastState>("toast", (set, get) => ({
   toasts: [],
   addToast: (toast, duration = DEFAULT_DURATION) => {
     const id = crypto.randomUUID();
-    const newToast: Toast = { ...toast, id };
+    const newToast: Toast = { ...toast, id, duration };
     set({ toasts: [...get().toasts, newToast] });
-    const timer = setTimeout(() => {
-      get().removeToast(id);
-    }, duration);
-    timers.set(id, timer);
     return id;
   },
   removeToast: (id) => {
-    const timer = timers.get(id);
-    if (timer) {
-      clearTimeout(timer);
-      timers.delete(id);
-    }
     set({ toasts: get().toasts.filter((t) => t.id !== id) });
   },
 }));
