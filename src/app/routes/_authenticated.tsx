@@ -3,24 +3,31 @@ import { AxiosError } from "axios";
 import { AppLayout } from "@app/layouts/AppLayout";
 import { Forbidden, GenericError } from "@shared/components/Errors";
 import { queryClient } from "@shared/config/queryClient";
-import { getMe, useAuthStore } from "@features/auth";
+import { getMe, useAuthStore, USER_ROLE } from "@features/auth";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context, location }) => {
-    if (context.auth.isAuthenticated) return;
+    let currentUser = useAuthStore.getState().user;
 
-    try {
-      const user = await queryClient.ensureQueryData({
-        queryKey: ["me"],
-        queryFn: getMe,
-        staleTime: Infinity,
-      });
-      useAuthStore.getState().setUser(user);
-    } catch {
-      throw redirect({
-        to: "/login",
-        search: { redirect: location.href },
-      });
+    if (!context.auth.isAuthenticated && !currentUser) {
+      try {
+        const user = await queryClient.ensureQueryData({
+          queryKey: ["me"],
+          queryFn: getMe,
+          staleTime: Infinity,
+        });
+        useAuthStore.getState().setUser(user);
+        currentUser = user;
+      } catch {
+        throw redirect({
+          to: "/login",
+          search: { redirect: location.href },
+        });
+      }
+    }
+
+    if (currentUser?.role === USER_ROLE.ATTENDANCE) {
+      throw redirect({ to: "/attendance" });
     }
   },
   component: AuthenticatedLayoutRoute,
