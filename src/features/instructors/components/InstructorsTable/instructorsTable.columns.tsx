@@ -36,8 +36,8 @@ export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
       const isActive = row.original.isActive;
 
       return (
-        <Badge intent={isActive ? "success" : "neutral"}>
-          {isActive ? "Activo" : "Inactivo"}
+        <Badge intent={isActive ? "success" : "error"} size="md">
+          {isActive ? "ACTIVO" : "INACTIVO"}
         </Badge>
       );
     },

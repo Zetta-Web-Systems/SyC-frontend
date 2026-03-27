@@ -43,10 +43,11 @@ export function InstructorCard({
               {fullName}
             </p>
             <Badge
-              intent={instructor.isActive ? "success" : "neutral"}
+              intent={instructor.isActive ? "success" : "error"}
               size="sm"
+              className="mt-0.5"
             >
-              {instructor.isActive ? "Activo" : "Inactivo"}
+              {instructor.isActive ? "ACTIVO" : "INACTIVO"}
             </Badge>
           </div>
 

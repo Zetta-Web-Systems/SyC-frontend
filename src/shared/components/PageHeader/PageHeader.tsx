@@ -17,7 +17,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 border-b border-neutral-200 pb-4",
+        "flex items-start justify-between gap-4 border-b border-neutral-200 pb-4",
         className,
       )}
     >
@@ -31,7 +31,7 @@ export function PageHeader({
       </div>
 
       {actions && (
-        <div className="flex shrink-0 items-center gap-2">{actions}</div>
+        <div className="flex shrink-0 items-start gap-2 mt-1">{actions}</div>
       )}
     </div>
   );
