@@ -179,7 +179,7 @@ export function InstructorForm({
         className="mt-2 w-full"
         isLoading={isPending}
       >
-        Crear profesor
+        Registrar profesor
       </Button>
     </Form>
   );

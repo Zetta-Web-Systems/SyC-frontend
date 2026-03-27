@@ -35,7 +35,7 @@ export function InstructorFormModal({
   onSubmit,
 }: InstructorFormModalProps) {
   const isEditing = !!instructor;
-  const title = isEditing ? "Editar profesor" : "Crear profesor";
+  const title = isEditing ? "Editar profesor" : "Registrar profesor";
 
   return (
     <Modal open={open} onClose={onClose} size="md">

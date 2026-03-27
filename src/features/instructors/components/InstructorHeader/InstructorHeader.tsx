@@ -14,7 +14,7 @@ export function InstructorHeader({ onCreate }: InstructorHeaderProps) {
       actions={
         <Button intent="primary" onClick={onCreate}>
           <Plus size={16} aria-hidden="true" />
-          <span className="hidden xs:inline">Crear profesor</span>
+          <span className="hidden xs:inline">Registrar profesor</span>
         </Button>
       }
     />
