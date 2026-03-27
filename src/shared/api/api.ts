@@ -2,7 +2,6 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@shared/config/env";
 import { useAuthStore } from "@features/auth";
 import { queryClient } from "@shared/config/queryClient";
-
 export const api = axios.create({
   baseURL: env.API_URL,
   withCredentials: true,
@@ -28,6 +27,23 @@ function forceLogout() {
   queryClient.clear();
 }
 
+let isRefreshing = false;
+let failedRequestsQueue: Array<{
+  resolve: (value: unknown) => void;
+  reject: (reason?: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown | null) => {
+  failedRequestsQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(undefined);
+    }
+  });
+  failedRequestsQueue = [];
+};
+
 /**
  * Interceptor de Response (refresh)
  */
@@ -49,12 +65,25 @@ api.interceptors.response.use(
     }
 
     if (status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedRequestsQueue.push({ resolve, reject });
+        })
+          .then(() => api(originalRequest))
+          .catch((err) => Promise.reject(err));
+      }
       originalRequest._retry = true;
-
+      isRefreshing = true;
       try {
         await api.post("/users/refresh-token");
+
+        processQueue(null);
+        isRefreshing = false;
+
         return api(originalRequest);
       } catch (refreshError) {
+        processQueue(refreshError);
+        isRefreshing = false;
         forceLogout();
         return Promise.reject(refreshError);
       }
