@@ -2,6 +2,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@shared/config/env";
 import { useAuthStore } from "@features/auth";
 import { queryClient } from "@shared/config/queryClient";
+
 export const api = axios.create({
   baseURL: env.API_URL,
   withCredentials: true,
@@ -70,16 +71,16 @@ api.interceptors.response.use(
           failedRequestsQueue.push({ resolve, reject });
         })
           .then(() => api(originalRequest))
-          .catch((err) => Promise.reject(err));
+          .catch((err: unknown) => Promise.reject(err));
       }
+
       originalRequest._retry = true;
       isRefreshing = true;
+
       try {
         await api.post("/users/refresh-token");
-
         processQueue(null);
         isRefreshing = false;
-
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
