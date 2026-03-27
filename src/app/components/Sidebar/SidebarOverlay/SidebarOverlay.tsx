@@ -1,4 +1,5 @@
 import { cn } from "@shared/lib/cn";
+import { Button } from "@shared/ui";
 
 interface SidebarOverlayProps {
   visible: boolean;
@@ -7,15 +8,16 @@ interface SidebarOverlayProps {
 
 export function SidebarOverlay({ visible, onClose }: SidebarOverlayProps) {
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-40 bg-black/40 transition-opacity duration-300",
-        visible
-          ? "pointer-events-auto opacity-100"
-          : "pointer-events-none opacity-0",
-      )}
-      aria-hidden={!visible}
+    <Button
+      variant="ghost"
+      intent="neutral"
+      aria-label="Cerrar menú"
+      inert={!visible || undefined}
       onClick={onClose}
+      className={cn(
+        "fixed inset-0 z-40 h-full w-full rounded-none bg-black/40 transition-opacity duration-300 hover:bg-black/40 active:scale-100",
+        visible ? "opacity-100" : "opacity-0",
+      )}
     />
   );
 }
