@@ -1,39 +1,44 @@
+import { useMemo } from "react";
 import { DataTableToolbar } from "@shared/components/DataTable";
-import { InstructorsFilterContent } from "./InstructorsFilterContent";
-import { STATUS_TABS } from "../../constants/instructors.constants";
+import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
+import { STATUS_FILTER_OPTIONS } from "../../constants/instructors.constants";
 
 interface InstructorsFiltersProps {
   onSearch: (value: string) => void;
-  statusFilter: string;
-  onStatusChange: (value: string) => void;
-  orderByValue: string;
-  onOrderByChange: (value: string) => void;
+  statusFilter: string[];
+  onStatusChange: (selected: string[]) => void;
+  onClearAllFilters: () => void;
 }
 
 export function InstructorsFilters({
   onSearch,
   statusFilter,
   onStatusChange,
-  orderByValue,
-  onOrderByChange,
+  onClearAllFilters,
 }: InstructorsFiltersProps) {
+  const filters = useMemo<ToolbarFilterConfig[]>(
+    () => [
+      {
+        key: "status",
+        label: "Estado",
+        options: STATUS_FILTER_OPTIONS,
+        selected: statusFilter,
+        onChange: onStatusChange,
+        multiple: false,
+        searchable: false,
+      },
+    ],
+    [statusFilter, onStatusChange],
+  );
+
   return (
     <DataTableToolbar
-      tabs={STATUS_TABS}
-      activeTab={statusFilter}
+      filters={filters}
       searchPlaceholder="Buscar"
-      onTabChange={onStatusChange}
       onSearch={onSearch}
+      onClearAll={onClearAllFilters}
       // onExportExcel={() => {}}
       // onExportPdf={() => {}}
-      filterContent={
-        <InstructorsFilterContent
-          statusFilter={statusFilter}
-          onStatusChange={onStatusChange}
-          orderByValue={orderByValue}
-          onOrderByChange={onOrderByChange}
-        />
-      }
     />
   );
 }

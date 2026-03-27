@@ -10,12 +10,11 @@ export default function InstructorsPage() {
   const {
     params,
     pagination,
-    setPagination,
     statusFilter,
-    orderByValue,
+    setPagination,
     handleSearch,
     handleStatusChange,
-    handleOrderByChange,
+    handleClearAllFilters,
   } = useInstructorsFilters();
 
   const { data, isLoading, isPlaceholderData } = useInstructorsQuery(params);
@@ -45,8 +44,7 @@ export default function InstructorsPage() {
         onSearch={handleSearch}
         statusFilter={statusFilter}
         onStatusChange={handleStatusChange}
-        orderByValue={orderByValue}
-        onOrderByChange={handleOrderByChange}
+        onClearAllFilters={handleClearAllFilters}
       />
 
       <InstructorsTable

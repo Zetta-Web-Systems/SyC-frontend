@@ -54,6 +54,30 @@ function getVisiblePages(
   return pages;
 }
 
+function renderPageButtons(
+  pages: number[],
+  currentPage: number,
+  onPageChange: (page: number) => void,
+) {
+  return pages.map((page) =>
+    page < 0 ? (
+      <span
+        key={page}
+        className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
+      >
+        ...
+      </span>
+    ) : (
+      <PageButton
+        key={page}
+        page={page}
+        isActive={page === currentPage}
+        onClick={() => onPageChange(page - 1)}
+      />
+    ),
+  );
+}
+
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
@@ -63,6 +87,9 @@ export function DataTablePagination<TData>({
   const currentPage = pageIndex + 1;
 
   if (rowCount === 0) return null;
+
+  const rangeStart = pageIndex * pageSize + 1;
+  const rangeEnd = Math.min(currentPage * pageSize, rowCount);
 
   const visiblePages = getVisiblePages(
     currentPage,
@@ -75,11 +102,45 @@ export function DataTablePagination<TData>({
     MAX_VISIBLE_PAGES_MOBILE,
   );
 
+  const handlePageChange = (pageIdx: number) => table.setPageIndex(pageIdx);
+
   return (
-    <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3">
-      <div className="flex items-center gap-2 text-sm text-neutral-600">
-        <span className="hidden whitespace-nowrap md:inline">
-          Items por pagina
+    <div className="flex items-center justify-between px-1 py-3">
+      <span className="hidden whitespace-nowrap text-sm text-neutral-500 md:inline">
+        Mostrando {rangeStart}-{rangeEnd} de {rowCount}
+      </span>
+
+      <div className="flex items-center gap-1">
+        <NavButton
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          aria-label="Pagina anterior"
+        >
+          <ChevronLeft size={16} aria-hidden="true" />
+          <span className="hidden sm:inline">Anterior</span>
+        </NavButton>
+
+        <div className="hidden items-center gap-1 md:flex">
+          {renderPageButtons(visiblePages, currentPage, handlePageChange)}
+        </div>
+
+        <div className="flex items-center gap-1 md:hidden">
+          {renderPageButtons(visiblePagesMobile, currentPage, handlePageChange)}
+        </div>
+
+        <NavButton
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          aria-label="Pagina siguiente"
+        >
+          <span className="hidden sm:inline">Siguiente</span>
+          <ChevronRight size={16} aria-hidden="true" />
+        </NavButton>
+      </div>
+
+      <div className="flex items-center gap-2 text-sm text-neutral-500">
+        <span className="hidden whitespace-nowrap lg:inline">
+          Items por pagina:
         </span>
         <div className="w-18">
           <Select
@@ -94,64 +155,6 @@ export function DataTablePagination<TData>({
             ))}
           </Select>
         </div>
-      </div>
-
-      <div className="flex items-center gap-1">
-        <NavButton
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          aria-label="Pagina anterior"
-        >
-          <ChevronLeft size={16} aria-hidden="true" />
-        </NavButton>
-
-        <div className="hidden items-center gap-1 md:flex">
-          {visiblePages.map((page) =>
-            page < 0 ? (
-              <span
-                key={page}
-                className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
-              >
-                ...
-              </span>
-            ) : (
-              <PageButton
-                key={page}
-                page={page}
-                isActive={page === currentPage}
-                onClick={() => table.setPageIndex(page - 1)}
-              />
-            ),
-          )}
-        </div>
-
-        <div className="flex items-center gap-1 md:hidden">
-          {visiblePagesMobile.map((page) =>
-            page < 0 ? (
-              <span
-                key={page}
-                className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
-              >
-                ...
-              </span>
-            ) : (
-              <PageButton
-                key={page}
-                page={page}
-                isActive={page === currentPage}
-                onClick={() => table.setPageIndex(page - 1)}
-              />
-            ),
-          )}
-        </div>
-
-        <NavButton
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          aria-label="Pagina siguiente"
-        >
-          <ChevronRight size={16} aria-hidden="true" />
-        </NavButton>
       </div>
     </div>
   );

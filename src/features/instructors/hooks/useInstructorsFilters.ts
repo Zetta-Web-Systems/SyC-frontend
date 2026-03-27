@@ -11,7 +11,7 @@ export function useInstructorsFilters() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [orderByValue, setOrderByValue] = useState("recent");
 
   const order = ORDER_MAP[orderByValue] ?? ORDER_MAP.recent;
@@ -22,9 +22,9 @@ export function useInstructorsFilters() {
     orderBy: order.orderBy,
     orderType: order.orderType,
     search: search || undefined,
-    ...(statusFilter && {
+    ...(statusFilter.length > 0 && {
       filters: ["user.isActive"],
-      filtersValues: [statusFilter],
+      filtersValues: statusFilter,
     }),
   };
 
@@ -33,13 +33,18 @@ export function useInstructorsFilters() {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
-  const handleStatusChange = useCallback((value: string) => {
-    setStatusFilter(value);
+  const handleStatusChange = useCallback((values: string[]) => {
+    setStatusFilter(values);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
   const handleOrderByChange = useCallback((value: string) => {
     setOrderByValue(value);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setStatusFilter([]);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
@@ -53,5 +58,6 @@ export function useInstructorsFilters() {
     handleSearch,
     handleStatusChange,
     handleOrderByChange,
+    handleClearAllFilters,
   };
 }

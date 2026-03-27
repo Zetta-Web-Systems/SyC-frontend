@@ -6,6 +6,8 @@ export { buttonVariants } from "./Button/Button.variants";
 export type { ButtonProps } from "./Button/Button";
 export { Card } from "./Card/Card";
 export { Checkbox } from "./Checkbox/Checkbox";
+export { FilterDropdown } from "./FilterDropdown/FilterDropdown";
+export type { FilterDropdownProps } from "./FilterDropdown/FilterDropdown";
 export { Input } from "./Input/Input";
 export { Label } from "./Label/Label";
 export { Modal } from "./Modal/Modal";

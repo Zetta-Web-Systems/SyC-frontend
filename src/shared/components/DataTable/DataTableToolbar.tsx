@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { ReactNode } from "react";
 import {
   SlidersHorizontal,
   EllipsisVertical,
   FileText,
   FileSpreadsheet,
+  X,
 } from "lucide-react";
 import {
   Button,
@@ -12,65 +13,112 @@ import {
   Popover,
   PopoverItem,
   PopoverSeparator,
+  FilterDropdown,
 } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
-import type { ToolbarTab } from "@shared/types/datatable.types";
+import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
 
 export interface DataTableToolbarProps {
-  tabs: ToolbarTab[];
-  activeTab: string;
+  filters: ToolbarFilterConfig[];
   searchPlaceholder?: string;
-  onTabChange: (value: string) => void;
   onSearch: (value: string) => void;
   onExportPdf?: () => void;
   onExportExcel?: () => void;
+  onClearAll?: () => void;
+  moreFiltersContent?: ReactNode;
   className?: string;
-  filterContent?: ReactNode;
+}
+
+interface ActiveChip {
+  filterKey: string;
+  filterLabel: string;
+  value: string;
+  valueLabel: string;
+  onChange: (selected: string[]) => void;
+  currentSelected: string[];
 }
 
 export function DataTableToolbar({
-  tabs,
-  activeTab,
+  filters,
   searchPlaceholder = "Buscar...",
-  onTabChange,
   onSearch,
   onExportPdf,
   onExportExcel,
+  onClearAll,
+  moreFiltersContent,
   className,
-  filterContent,
 }: DataTableToolbarProps) {
-  const [filterOpen, setFilterOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
 
   const hasOverflow = Boolean(onExportPdf || onExportExcel);
 
+  const activeChips = useMemo<ActiveChip[]>(() => {
+    const chips: ActiveChip[] = [];
+    for (const filter of filters) {
+      for (const selectedValue of filter.selected) {
+        const option = filter.options.find((o) => o.value === selectedValue);
+        if (option) {
+          chips.push({
+            filterKey: filter.key,
+            filterLabel: filter.label,
+            value: selectedValue,
+            valueLabel: option.label,
+            onChange: filter.onChange,
+            currentSelected: filter.selected,
+          });
+        }
+      }
+    }
+    return chips;
+  }, [filters]);
+
+  const hasActiveFilters = activeChips.length > 0;
+
+  function handleRemoveChip(chip: ActiveChip) {
+    const next = chip.currentSelected.filter((v) => v !== chip.value);
+    chip.onChange(next);
+  }
+
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3",
-        className,
-      )}
-    >
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <nav
-          role="tablist"
-          className="hidden gap-1 overflow-x-auto scrollbar-hide sm:flex md:border-b-0"
-        >
-          {tabs.map((tab) => {
-            const isActive = tab.value === activeTab;
-            return (
-              <Button
-                key={tab.value}
-                role="tab"
-                variant={isActive ? "solid" : "outline"}
-                aria-selected={isActive}
-                onClick={() => onTabChange(tab.value)}
-              >
-                {tab.label}
-              </Button>
-            );
-          })}
-        </nav>
+    <div className={cn("flex flex-col gap-3", className)}>
+      <div className="flex flex-row gap-3 justify-between">
+        <div className="flex flex-wrap items-center gap-2">
+          {filters.map((filter) => (
+            <FilterDropdown
+              key={filter.key}
+              label={filter.label}
+              options={filter.options}
+              selected={filter.selected}
+              onChange={filter.onChange}
+              multiple={filter.multiple}
+              searchable={filter.searchable}
+            />
+          ))}
+
+          {moreFiltersContent != null && (
+            <Popover
+              open={moreFiltersOpen}
+              onClose={() => setMoreFiltersOpen(false)}
+              side="bottom"
+              align="start"
+              trigger={
+                <Button
+                  variant="outline"
+                  intent="neutral"
+                  onClick={() => setMoreFiltersOpen((prev) => !prev)}
+                  aria-label="Mas filtros"
+                  className="gap-2"
+                >
+                  <SlidersHorizontal size={16} aria-hidden="true" />
+                  Mas filtros
+                </Button>
+              }
+            >
+              <div className="p-3">{moreFiltersContent}</div>
+            </Popover>
+          )}
+        </div>
 
         <div className="flex items-center gap-2">
           <SearchInput
@@ -78,28 +126,6 @@ export function DataTableToolbar({
             onSearch={onSearch}
             className="flex-1 md:w-64 md:flex-initial"
           />
-
-          {filterContent != null && (
-            <Popover
-              open={filterOpen}
-              onClose={() => setFilterOpen(false)}
-              side="bottom"
-              align="end"
-              trigger={
-                <Button
-                  variant="outline"
-                  intent="neutral"
-                  size="icon"
-                  onClick={() => setFilterOpen((prev) => !prev)}
-                  aria-label="Filtros"
-                >
-                  <SlidersHorizontal size={16} aria-hidden="true" />
-                </Button>
-              }
-            >
-              <div className="p-3">{filterContent}</div>
-            </Popover>
-          )}
 
           {hasOverflow && (
             <Popover
@@ -146,6 +172,37 @@ export function DataTableToolbar({
           )}
         </div>
       </div>
+
+      {hasActiveFilters && (
+        <div className="flex flex-wrap items-center gap-2">
+          {activeChips.map((chip) => (
+            <span
+              key={`${chip.filterKey}-${chip.value}`}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700"
+            >
+              {chip.filterLabel}: {chip.valueLabel}
+              <button
+                type="button"
+                onClick={() => handleRemoveChip(chip)}
+                className="cursor-pointer rounded-full p-0.5 transition-colors hover:bg-primary-100"
+                aria-label={`Quitar filtro ${chip.filterLabel}: ${chip.valueLabel}`}
+              >
+                <X size={12} aria-hidden="true" />
+              </button>
+            </span>
+          ))}
+
+          {onClearAll && (
+            <button
+              type="button"
+              onClick={onClearAll}
+              className="cursor-pointer text-xs font-medium text-primary-600 transition-colors hover:text-primary-800"
+            >
+              Limpiar todo
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

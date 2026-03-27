@@ -42,7 +42,7 @@ export function DataCardList<TData>({
   }
 
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    <div className={cn("flex flex-col gap-3 mt-3", className)}>
       {data.map((item, index) => renderCard(item, index))}
     </div>
   );
