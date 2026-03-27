@@ -20,7 +20,11 @@ export default function LoginPage() {
   return (
     <Card className="p-8 bg-white rounded-xl border border-neutral-100 shadow-xl">
       <div className="flex justify-center mb-10">
-        <img src="icons/login-logo.png" alt="Logo" className="object-contain" />
+        <img
+          src="images/login/login-image.png"
+          alt="Logo"
+          className="object-contain"
+        />
       </div>
       {/* TODO: Hacer componentes de esta page */}
       <Form<LoginSchema>
