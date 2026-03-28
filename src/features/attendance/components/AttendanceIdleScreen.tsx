@@ -35,7 +35,7 @@ export function AttendanceIdleScreen({
         className="h-20 w-auto object-contain md:h-30"
       />
 
-      <AttendanceDniDisplay dni={dni} isValid={isValid} />
+      <AttendanceDniDisplay dni={dni} isValid={isValid} isError={isError} />
 
       <AttendanceNumericKeypad
         onDigit={onAddDigit}

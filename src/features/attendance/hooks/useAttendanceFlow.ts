@@ -25,33 +25,31 @@ export function useAttendanceFlow() {
   const dniState = useAttendanceDni();
   const mutation = useAttendanceMutation();
 
-  const reset = useCallback(() => {
+  const clearTimer = useCallback(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+  }, []);
+
+  const reset = useCallback(() => {
+    clearTimer();
     setState(INITIAL_STATE);
     dniState.clear();
-  }, [dniState]);
+  }, [clearTimer, dniState]);
 
   const startResetTimer = useCallback(
-    (status: "entry" | "exit" | "error") => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+    (status: "entry" | "exit") => {
+      clearTimer();
       timerRef.current = setTimeout(reset, RESET_TIMINGS[status]);
     },
-    [reset],
+    [clearTimer, reset],
   );
 
   const dismissError = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
+    clearTimer();
     setState(INITIAL_STATE);
-    dniState.clear();
-  }, [dniState]);
+  }, [clearTimer]);
 
   const addDigit = useCallback(
     (digit: string) => {
@@ -96,15 +94,19 @@ export function useAttendanceFlow() {
           err,
           "DNI no reconocido o error de conexión",
         );
+
+        dniState.clear();
+
         setState({
           status: ATTENDANCE_STATUS.ERROR,
           response: null,
           error: message,
         });
-        startResetTimer(ATTENDANCE_STATUS.ERROR);
+
+        // No auto-dismiss: el error permanece visible hasta que el usuario presione una tecla
       },
     });
-  }, [state.status, dniState.isValid, dniState.dni, mutation, startResetTimer]);
+  }, [state.status, dniState, mutation, startResetTimer]);
 
   return {
     status: state.status,
