@@ -3,10 +3,16 @@ import { AxiosError } from "axios";
 import { AppLayout } from "@app/layouts/AppLayout";
 import { Forbidden, GenericError } from "@shared/components/Errors";
 import { queryClient } from "@shared/config/queryClient";
+import { getIsLoggingOut } from "@shared/api/api";
 import { getMe, useAuthStore, USER_ROLE } from "@features/auth";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context, location }) => {
+    // Si se está cerrando sesión, redirigir sin intentar re-hidratar
+    if (getIsLoggingOut()) {
+      throw redirect({ to: "/login" });
+    }
+
     let currentUser = useAuthStore.getState().user;
 
     if (!context.auth.isAuthenticated && !currentUser) {

@@ -1,10 +1,16 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { getMe, useAuthStore, USER_ROLE } from "@features/auth";
 import { queryClient } from "@shared/config/queryClient";
+import { getIsLoggingOut } from "@shared/api/api";
 import { AttendanceLayout } from "@app/layouts/AttendanceLayout";
 
 export const Route = createFileRoute("/_attendance")({
   beforeLoad: async ({ context }) => {
+    // Si se está cerrando sesión, redirigir sin intentar re-hidratar
+    if (getIsLoggingOut()) {
+      throw redirect({ to: "/login" });
+    }
+
     let currentUser = useAuthStore.getState().user;
 
     if (!context.auth.isAuthenticated && !currentUser) {

@@ -2,6 +2,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@shared/config/env";
 import { useAuthStore } from "@features/auth";
 import { queryClient } from "@shared/config/queryClient";
+import { router } from "@app/router";
 
 export const api = axios.create({
   baseURL: env.API_URL,
@@ -17,15 +18,48 @@ export const api = axios.create({
 /**
  * Endpoints que no deben activar el flujo de refresh token.
  */
-const SKIP_REFRESH_ENDPOINTS = ["/users/login", "/users/refresh-token"];
+const SKIP_REFRESH_ENDPOINTS = [
+  "/users/login",
+  "/users/refresh-token",
+  "/users/logout",
+];
 
 function shouldSkipRefresh(url: string | undefined): boolean {
   return SKIP_REFRESH_ENDPOINTS.some((endpoint) => url === endpoint);
 }
 
-function forceLogout() {
+/**
+ * Flag que indica si se está cerrando sesión.
+ * Mientras esté activo, el interceptor no intentará refresh ni retry.
+ */
+let isLoggingOut = false;
+
+export function setLoggingOut(value: boolean) {
+  isLoggingOut = value;
+}
+
+export function getIsLoggingOut() {
+  return isLoggingOut;
+}
+
+/**
+ * Cierra sesión de forma forzada (sin llamar al backend).
+ * Usado por el interceptor cuando un refresh token falla.
+ */
+export function forceLogout() {
+  if (isLoggingOut) return;
+  isLoggingOut = true;
+
+  queryClient.cancelQueries();
   useAuthStore.getState().logout();
   queryClient.clear();
+
+  router.navigate({ to: "/login" });
+
+  // Reset para permitir re-login futuro
+  setTimeout(() => {
+    isLoggingOut = false;
+  }, 0);
 }
 
 let isRefreshing = false;
@@ -56,6 +90,10 @@ api.interceptors.response.use(
     };
 
     if (!error.response) {
+      return Promise.reject(error);
+    }
+
+    if (isLoggingOut) {
       return Promise.reject(error);
     }
 
