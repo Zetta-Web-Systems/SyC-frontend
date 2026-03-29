@@ -87,6 +87,17 @@
   }
 }
 
+@keyframes attendance-card-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes attendance-wave {
   0% {
     transform: rotate(0deg);

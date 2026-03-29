@@ -6,9 +6,9 @@ export function AttendanceProgressBar({
   duration,
 }: AttendanceProgressBarProps) {
   return (
-    <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/20">
+    <div className="mt-10 h-1.5 w-full max-w-md rounded-full bg-white/20 md:mt-12 md:max-w-lg">
       <div
-        className="h-full w-full origin-left bg-white/60 animate-[attendance-progress_linear_forwards]"
+        className="h-full w-full origin-left rounded-full bg-white/60 animate-[attendance-progress_linear_forwards]"
         style={{ animationDuration: `${duration}ms` }}
       />
     </div>

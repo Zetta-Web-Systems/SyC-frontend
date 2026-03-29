@@ -11,7 +11,7 @@ interface AttendanceFeedbackOverlayProps {
   response: AttendanceResponse | null;
 }
 
-const BACKGROUND_MAP: Record<string, string> = {
+const BACKGROUND_MAP: Partial<Record<AttendanceStatus, string>> = {
   [ATTENDANCE_STATUS.ENTRY]: "bg-success",
   [ATTENDANCE_STATUS.EXIT]: "bg-info",
 };
@@ -29,7 +29,7 @@ export function AttendanceFeedbackOverlay({
   return (
     <div
       className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center animate-[attendance-feedback-in_300ms_ease-out_both]",
+        "fixed inset-0 z-50 flex flex-col items-center justify-center px-6 animate-[attendance-feedback-in_300ms_ease-out_both]",
         bg,
       )}
     >

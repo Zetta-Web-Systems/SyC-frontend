@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getApiErrorMessage } from "@shared/api/apiError";
 import { ATTENDANCE_STATUS } from "../types";
 import type { AttendanceResponse, AttendanceStatus } from "../types";
@@ -22,7 +22,15 @@ export function useAttendanceFlow() {
   const [state, setState] = useState<FlowState>(INITIAL_STATE);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const dniState = useAttendanceDni();
+  const {
+    dni,
+    addDigit: dniAddDigit,
+    removeDigit: dniRemoveDigit,
+    clear: dniClear,
+    isValid,
+    canAddDigit,
+    isEmpty,
+  } = useAttendanceDni();
   const mutation = useAttendanceMutation();
 
   const clearTimer = useCallback(() => {
@@ -35,8 +43,8 @@ export function useAttendanceFlow() {
   const reset = useCallback(() => {
     clearTimer();
     setState(INITIAL_STATE);
-    dniState.clear();
-  }, [clearTimer, dniState]);
+    dniClear();
+  }, [clearTimer, dniClear]);
 
   const startResetTimer = useCallback(
     (status: "entry" | "exit") => {
@@ -56,21 +64,21 @@ export function useAttendanceFlow() {
       if (state.status === ATTENDANCE_STATUS.ERROR) {
         dismissError();
       }
-      dniState.addDigit(digit);
+      dniAddDigit(digit);
     },
-    [state.status, dismissError, dniState],
+    [state.status, dismissError, dniAddDigit],
   );
 
   const removeDigit = useCallback(() => {
     if (state.status === ATTENDANCE_STATUS.ERROR) {
       dismissError();
     }
-    dniState.removeDigit();
-  }, [state.status, dismissError, dniState]);
+    dniRemoveDigit();
+  }, [state.status, dismissError, dniRemoveDigit]);
 
   const submit = useCallback(() => {
     if (state.status !== ATTENDANCE_STATUS.IDLE) return;
-    if (!dniState.isValid) return;
+    if (!isValid) return;
     if (mutation.isPending) return;
 
     setState({
@@ -79,7 +87,7 @@ export function useAttendanceFlow() {
       error: null,
     });
 
-    mutation.mutate(dniState.dni, {
+    mutation.mutate(dni, {
       onSuccess: (response) => {
         const resultStatus =
           response.departureTime !== null
@@ -95,7 +103,7 @@ export function useAttendanceFlow() {
           "DNI no reconocido o error de conexión",
         );
 
-        dniState.clear();
+        dniClear();
 
         setState({
           status: ATTENDANCE_STATUS.ERROR,
@@ -103,22 +111,24 @@ export function useAttendanceFlow() {
           error: message,
         });
 
-        // No auto-dismiss: el error permanece visible hasta que el usuario presione una tecla
+        // TMP-MSG: No auto-dismiss: el error permanece visible hasta que el usuario presione una tecla
       },
     });
-  }, [state.status, dniState, mutation, startResetTimer]);
+  }, [state.status, dni, isValid, dniClear, mutation, startResetTimer]);
+
+  useEffect(() => clearTimer, [clearTimer]);
 
   return {
     status: state.status,
     response: state.response,
     error: state.error,
 
-    dni: dniState.dni,
+    dni,
     addDigit,
     removeDigit,
-    isValid: dniState.isValid,
-    canAddDigit: dniState.canAddDigit,
-    isEmpty: dniState.isEmpty,
+    isValid,
+    canAddDigit,
+    isEmpty,
 
     submit,
     reset,

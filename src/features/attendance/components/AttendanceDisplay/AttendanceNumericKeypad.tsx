@@ -55,8 +55,9 @@ export function AttendanceNumericKeypad({
       ))}
 
       <div className="flex justify-center gap-3 md:gap-4">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          intent="danger"
           disabled={disabled || isEmpty}
           onClick={onBackspace}
           className={cn(
@@ -68,10 +69,11 @@ export function AttendanceNumericKeypad({
           aria-label="Borrar último dígito"
         >
           <Delete className="h-7 w-7 md:h-8 md:w-8" />
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          intent="neutral"
           disabled={disabled || !canAddDigit}
           onClick={() => onDigit("0")}
           className={cn(
@@ -82,10 +84,11 @@ export function AttendanceNumericKeypad({
           )}
         >
           0
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="solid"
+          intent="secondary"
           disabled={disabled || !isValid}
           onClick={onSubmit}
           className={cn(
@@ -98,7 +101,7 @@ export function AttendanceNumericKeypad({
           aria-label="Registrar asistencia"
         >
           <ArrowRight className="h-7 w-7 md:h-8 md:w-8" />
-        </button>
+        </Button>
       </div>
     </div>
   );
