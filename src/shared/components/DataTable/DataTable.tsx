@@ -130,7 +130,7 @@ export function DataTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-neutral-100 transition-colors last:border-b-0 hover:bg-primary-50/50"
+                  className="border-b border-neutral-100 transition-colors last:border-b-0 hover:bg-primary-50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
