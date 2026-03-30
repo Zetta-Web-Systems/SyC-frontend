@@ -4,7 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@shared/ui";
 import { Card } from "@shared/ui";
 import { Input } from "@shared/ui";
-import { Form, FormField } from "@shared/components/Form";
+import { Form, FormField, FormError } from "@shared/components/Form";
 import { useLoginMutation } from "./hooks/useLoginMutation";
 import { loginSchema } from "./schemas/login.schema";
 import type { LoginSchema } from "./schemas/login.schema";
@@ -26,7 +26,6 @@ export default function LoginPage() {
       <Form<LoginSchema>
         schema={loginSchema}
         onSubmit={onSubmit}
-        mutation={loginMutation}
         className="space-y-6"
       >
         <FormField<LoginSchema> name="email" required>
@@ -53,20 +52,22 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 leftElement={<Lock size={16} aria-hidden="true" />}
                 rightElement={
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    intent="neutral"
+                    size="icon"
                     aria-label={
                       showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                     }
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="text-neutral-400 hover:text-neutral-600"
+                    className="h-auto w-auto p-0"
                   >
                     {showPassword ? (
                       <EyeOff size={16} aria-hidden="true" />
                     ) : (
                       <Eye size={16} aria-hidden="true" />
                     )}
-                  </button>
+                  </Button>
                 }
               />
             )}
@@ -80,6 +81,8 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+
+        <FormError mutation={loginMutation} />
 
         <Button
           type="submit"

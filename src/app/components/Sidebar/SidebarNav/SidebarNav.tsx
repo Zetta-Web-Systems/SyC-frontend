@@ -1,7 +1,9 @@
+import { useMemo } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import { NAV_ITEMS } from "@app/constants/navigation.constants";
+import { cn } from "@shared/lib/cn";
+import { useAuthorize } from "@shared/hooks/useAuthorize";
+import { NAV_GROUPS } from "@app/constants/navigation.constants";
 import { SidebarItem } from "./SidebarItem";
-import { SidebarGroup } from "./SidebarGroup";
 
 interface SidebarNavProps {
   collapsed: boolean;
@@ -9,29 +11,48 @@ interface SidebarNavProps {
 
 export function SidebarNav({ collapsed }: SidebarNavProps) {
   const { location } = useRouterState();
+  const { hasRole } = useAuthorize();
+
+  const visibleGroups = useMemo(
+    () =>
+      NAV_GROUPS.map((group) => ({
+        ...group,
+        items: group.items.filter((item) => !item.roles || hasRole(item.roles)),
+      })).filter((group) => group.items.length > 0),
+    [hasRole],
+  );
 
   return (
-    <nav className="flex flex-col gap-1">
-      {NAV_ITEMS.map((item) => {
-        if (item.children) {
-          return (
-            <SidebarGroup
-              key={item.label}
-              item={item}
-              pathname={location.pathname}
-              collapsed={collapsed}
-            />
-          );
-        }
-        return (
-          <SidebarItem
-            key={item.to}
-            item={item}
-            pathname={location.pathname}
-            collapsed={collapsed}
-          />
-        );
-      })}
+    <nav
+      className={cn(
+        "flex-1 py-4",
+        collapsed ? "overflow-hidden" : "overflow-y-auto",
+      )}
+    >
+      {visibleGroups.map((group, groupIndex) => (
+        <div key={group.title} className={cn(groupIndex > 0 && "mt-6")}>
+          {!collapsed && (
+            <h6 className="mb-2 px-4 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              {group.title}
+            </h6>
+          )}
+
+          {collapsed && groupIndex > 0 && (
+            <div className="mx-3 mb-3 border-t border-neutral-200" />
+          )}
+
+          <div className="space-y-0.5 px-2">
+            {group.items.map((item) => (
+              <SidebarItem
+                key={item.to}
+                item={item}
+                pathname={location.pathname}
+                collapsed={collapsed}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }

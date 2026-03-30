@@ -5,7 +5,8 @@ import { cn } from "@shared/lib/cn";
 import { buttonVariants } from "./Button.variants";
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   ref?: Ref<HTMLButtonElement>;
 }

@@ -9,9 +9,14 @@ export const selectVariants = cva(
         md: "h-10 pl-4 pr-10 text-sm",
         lg: "h-12 pl-4 pr-10 text-base",
       },
+      iconPosition: {
+        left: "pl-10 pr-3",
+        right: "pr-10 pl-3",
+      },
       isError: {
         true: "border-error bg-error/5 focus:border-error focus:ring-error/10",
-        false: "border-neutral-300 focus:border-primary-500 focus:ring-primary-500/10",
+        false:
+          "border-neutral-300 focus:border-primary-500 focus:ring-primary-500/10",
       },
       isDisabled: {
         true: "cursor-not-allowed",
