@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { EllipsisVertical, Pencil, UserCheck, UserX } from "lucide-react";
+import {
+  CalendarDays,
+  EllipsisVertical,
+  Pencil,
+  UserCheck,
+  UserX,
+} from "lucide-react";
+// import { useNavigate } from "@tanstack/react-router";
 import {
   Avatar,
   Badge,
@@ -25,6 +32,7 @@ export function InstructorCard({
   onRestore,
 }: InstructorCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  // const navigate = useNavigate();
 
   const initials = (
     instructor.name.charAt(0) + instructor.lastname.charAt(0)
@@ -93,6 +101,19 @@ export function InstructorCard({
                   }}
                 >
                   Editar
+                </PopoverItem>
+                <PopoverSeparator />
+                <PopoverItem
+                  icon={<CalendarDays color="#4ea49c" />}
+                  // onClick={() => {
+                  //   void navigate({
+                  //     to: "/instructors/attendance/$instructorId",
+                  //     params: { instructorId: instructor.id },
+                  //   });
+                  //   setMenuOpen(false);
+                  // }}
+                >
+                  Ver asistencias
                 </PopoverItem>
                 <PopoverSeparator />
                 <PopoverItem
