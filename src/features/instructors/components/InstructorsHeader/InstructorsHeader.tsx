@@ -7,7 +7,7 @@ interface InstructorHeaderProps {
   onCreate: () => void;
 }
 
-export function InstructorHeader({ onCreate }: InstructorHeaderProps) {
+export function InstructorsHeader({ onCreate }: InstructorHeaderProps) {
   return (
     <PageHeader
       title="Profesores"
