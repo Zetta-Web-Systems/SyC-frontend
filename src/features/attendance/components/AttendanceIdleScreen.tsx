@@ -28,11 +28,11 @@ export function AttendanceIdleScreen({
   onSubmit,
 }: AttendanceIdleScreenProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 px-6 md:gap-12">
+    <div className="flex h-full flex-col items-center justify-center gap-8 px-6 md:gap-12 lg:gap-8">
       <img
         src="/images/attendance/attendance-image.png"
         alt="Sano y Controlado"
-        className="h-20 w-auto object-contain md:h-30"
+        className="h-20 w-auto object-contain md:h-30 lg:h-24"
       />
 
       <AttendanceDniDisplay dni={dni} isValid={isValid} isError={isError} />

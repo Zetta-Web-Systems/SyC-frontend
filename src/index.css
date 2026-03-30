@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant landscape (@media (orientation: landscape));
+
 @theme {
   /* Colores (primary) */
   --color-primary-50: #edeff7;

@@ -19,7 +19,7 @@ const DIGIT_ROWS = [
 ];
 
 const BUTTON_BASE =
-  "flex min-h-18 min-w-18 items-center justify-center rounded-2xl shadow-sm transition-all duration-75 select-none md:min-h-22 md:min-w-22";
+  "flex min-h-18 min-w-18 items-center justify-center rounded-2xl shadow-sm transition-all duration-75 select-none md:min-h-22 md:min-w-22 lg:min-h-18 lg:min-w-18";
 
 export function AttendanceNumericKeypad({
   onDigit,
@@ -31,9 +31,9 @@ export function AttendanceNumericKeypad({
   disabled,
 }: AttendanceNumericKeypadProps) {
   return (
-    <div className="flex flex-col gap-3 md:gap-4">
+    <div className="flex flex-col gap-3 md:gap-4 lg:gap-3">
       {DIGIT_ROWS.map((row) => (
-        <div key={row.join("")} className="flex justify-center gap-3 md:gap-4">
+        <div key={row.join("")} className="flex justify-center gap-3 md:gap-4 lg:gap-3">
           {row.map((digit) => (
             <Button
               variant="ghost"
@@ -54,7 +54,7 @@ export function AttendanceNumericKeypad({
         </div>
       ))}
 
-      <div className="flex justify-center gap-3 md:gap-4">
+      <div className="flex justify-center gap-3 md:gap-4 lg:gap-3">
         <Button
           variant="ghost"
           intent="danger"
