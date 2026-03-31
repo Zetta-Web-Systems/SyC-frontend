@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Button } from "@shared/ui";
-import { Card } from "@shared/ui";
-import { Input } from "@shared/ui";
+import { Button, Card, Input, Spinner } from "@shared/ui";
 import { Form, FormField, FormError } from "@shared/components/Form";
 import { useLoginMutation } from "./hooks/useLoginMutation";
 import { loginSchema } from "./schemas/login.schema";
@@ -13,14 +11,31 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLoginMutation();
 
+  const isRedirecting = loginMutation.isSuccess;
+
   function onSubmit(data: LoginSchema) {
     loginMutation.mutate(data);
+  }
+
+  if (isRedirecting) {
+    return (
+      <Card className="rounded-xl border border-neutral-100 bg-white p-8 shadow-xl">
+        <div className="flex flex-col items-center justify-center gap-4 py-16">
+          <Spinner size="lg" />
+          <p className="text-sm font-medium text-primary-500">Ingresando...</p>
+        </div>
+      </Card>
+    );
   }
 
   return (
     <Card className="p-8 bg-white rounded-xl border border-neutral-100 shadow-xl">
       <div className="flex justify-center mb-10">
-        <img src="icons/login-logo.png" alt="Logo" className="object-contain" />
+        <img
+          src="images/login/login-image.png"
+          alt="Logo"
+          className="object-contain"
+        />
       </div>
       {/* TODO: Hacer componentes de esta page */}
       <Form<LoginSchema>

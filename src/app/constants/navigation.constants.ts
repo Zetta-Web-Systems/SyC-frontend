@@ -44,7 +44,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         label: "Alumnos",
-        to: "/students",
+        to: "/members",
         icon: Users,
         color: "text-pink-400",
         roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],

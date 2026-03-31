@@ -152,7 +152,7 @@ export function InstructorForm({
           <Input
             {...field}
             type="email"
-            placeholder="profesor@email.com"
+            placeholder="Email del profesor"
             leftElement={<Mail size={16} aria-hidden="true" />}
           />
         )}

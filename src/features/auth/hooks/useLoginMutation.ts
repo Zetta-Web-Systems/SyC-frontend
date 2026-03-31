@@ -1,8 +1,9 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "@shared/stores/toast.store";
+import { queryClient } from "@shared/config/queryClient";
 import { login } from "../services/auth.api";
 import { useAuthStore } from "../stores/auth.store";
+import { USER_ROLE } from "../types";
 
 export function useLoginMutation() {
   const setUser = useAuthStore((s) => s.setUser);
@@ -14,8 +15,14 @@ export function useLoginMutation() {
     mutationFn: login,
     onSuccess: (user) => {
       setUser(user);
-      navigate({ to: redirectTo ?? "/" });
-      toast.success("Sesión iniciada", {});
+      queryClient.setQueryData(["me"], user);
+
+      const destination =
+        user.role === USER_ROLE.ATTENDANCE
+          ? "/attendance"
+          : (redirectTo ?? "/");
+
+      navigate({ to: destination });
     },
   });
 }

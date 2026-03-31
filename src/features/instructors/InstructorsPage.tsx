@@ -1,4 +1,4 @@
-import { InstructorHeader } from "./components/InstructorHeader/InstructorHeader";
+import { InstructorsHeader } from "./components/InstructorsHeader/InstructorsHeader";
 import { InstructorsTable } from "./components/InstructorsTable/InstructorsTable";
 import { InstructorFormModal } from "./components/InstructorFormModal/InstructorFormModal";
 import { InstructorsFilters } from "./components/InstructorsFilters/InstructorsFilters";
@@ -38,7 +38,7 @@ export default function InstructorsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <InstructorHeader onCreate={handleOpenRegister} />
+      <InstructorsHeader onCreate={handleOpenRegister} />
 
       <InstructorsFilters
         onSearch={handleSearch}
