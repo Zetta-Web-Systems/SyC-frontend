@@ -9,6 +9,8 @@ const ATTENDANCE_STATUS = {
 type AttendanceStatus =
   (typeof ATTENDANCE_STATUS)[keyof typeof ATTENDANCE_STATUS];
 
+type AttendanceType = "INSTRUCTOR" | "MEMBER";
+
 interface AttendanceResponse {
   id: string;
   attendanceDate: string;
@@ -16,7 +18,7 @@ interface AttendanceResponse {
   name: string;
   lastname: string;
   dni: string;
-  type: string;
+  type: AttendanceType;
   departureTime: string | null;
   message: string | null;
 }
