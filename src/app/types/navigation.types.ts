@@ -1,14 +1,16 @@
 import type { LucideIcon } from "lucide-react";
-
-export interface NavChild {
-  label: string;
-  to: string;
-}
+import type { UserRole } from "@features/auth";
 
 export interface NavItem {
   label: string;
-  to?: string;
+  to: string;
   icon: LucideIcon;
   color?: string;
-  children?: NavChild[];
+  badge?: number | string;
+  roles?: UserRole[];
+}
+
+export interface NavGroup {
+  title: string;
+  items: NavItem[];
 }

@@ -22,7 +22,7 @@ export function PopoverItem({
       role="menuitem"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors",
         variant === "default" &&
           "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900",
         variant === "danger" && "text-error hover:bg-red-50",

@@ -1,6 +1,7 @@
 const USER_ROLE = {
   ADMIN: "ADMIN",
   INSTRUCTOR: "INSTRUCTOR",
+  ATTENDANCE: "ATTENDANCE",
 } as const;
 
 type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];

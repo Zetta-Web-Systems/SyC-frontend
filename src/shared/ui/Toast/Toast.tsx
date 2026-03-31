@@ -1,9 +1,15 @@
+import type { CSSProperties } from "react";
 import { X } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { Button } from "@shared/ui";
-import { toastVariants, toastIconVariants } from "./Toast.variants";
-import type { Toast as ToastType } from "@shared/stores/toast.store";
 import { INTENT_ICONS } from "@shared/constants/toast.constants";
+import { useToastTimer } from "@shared/hooks/useToastTimer";
+import type { Toast as ToastType } from "@shared/stores/toast.store";
+import {
+  toastVariants,
+  toastProgressVariants,
+  toastIconVariants,
+} from "./Toast.variants";
 
 interface ToastProps {
   toast: ToastType;
@@ -12,12 +18,22 @@ interface ToastProps {
 
 export function Toast({ toast: t, onDismiss }: ToastProps) {
   const Icon = INTENT_ICONS[t.intent];
+  const { isPaused, onMouseEnter, onMouseLeave } = useToastTimer(
+    t.id,
+    t.duration,
+    onDismiss,
+  );
 
   return (
     <div
       role="alert"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{ "--toast-duration": `${t.duration}ms` } as CSSProperties}
       className={cn(
         toastVariants({ intent: t.intent }),
+        toastProgressVariants({ intent: t.intent }),
+        isPaused && "after:[animation-play-state:paused]",
         !t.description && "items-center",
       )}
     >

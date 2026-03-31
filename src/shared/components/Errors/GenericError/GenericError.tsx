@@ -32,11 +32,7 @@ export function GenericError({ error, reset }: GenericErrorProps) {
         </p>
 
         <div className="mt-5">
-          <Button
-            intent="primary"
-            size="sm"
-            onClick={handleReset}
-          >
+          <Button intent="primary" size="sm" onClick={handleReset}>
             Intentar de nuevo
           </Button>
         </div>

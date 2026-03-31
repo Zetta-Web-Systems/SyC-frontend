@@ -7,7 +7,13 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
 }
 
-export function Label({ children, required, className, ref, ...props }: LabelProps) {
+export function Label({
+  children,
+  required,
+  className,
+  ref,
+  ...props
+}: LabelProps) {
   return (
     <label
       ref={ref}

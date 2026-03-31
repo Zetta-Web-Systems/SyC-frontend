@@ -5,7 +5,8 @@ import { cn } from "@shared/lib/cn";
 import { textareaVariants } from "./Textarea.variants";
 
 export interface TextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement>,
+  extends
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof textareaVariants> {
   ref?: Ref<HTMLTextAreaElement>;
   error?: boolean;
