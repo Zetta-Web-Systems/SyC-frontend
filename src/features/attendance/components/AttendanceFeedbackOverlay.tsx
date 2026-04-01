@@ -1,19 +1,25 @@
 import { cn } from "@shared/lib/cn";
-import { ATTENDANCE_STATUS } from "../types";
-import type { AttendanceResponse, AttendanceStatus } from "../types";
+import {
+  ATTENDANCE_ACTION,
+  type AttendanceAction,
+  type RequestStatus,
+} from "../constants";
+import type { AttendanceResponse } from "../types";
 import { RESET_TIMINGS } from "../constants";
 import { AttendanceEntryFeedback } from "./AttendanceFeedback/AttendanceEntryFeedback";
 import { AttendanceExitFeedback } from "./AttendanceFeedback/AttendanceExitFeedback";
 import { AttendanceProgressBar } from "./AttendanceFeedback/AttendanceProgressBar";
 
 interface AttendanceFeedbackOverlayProps {
-  status: AttendanceStatus;
+  status: AttendanceAction | RequestStatus;
   response: AttendanceResponse | null;
 }
 
-const BACKGROUND_MAP: Partial<Record<AttendanceStatus, string>> = {
-  [ATTENDANCE_STATUS.ENTRY]: "bg-success",
-  [ATTENDANCE_STATUS.EXIT]: "bg-info",
+const BACKGROUND_MAP: Partial<
+  Record<AttendanceAction | RequestStatus, string>
+> = {
+  [ATTENDANCE_ACTION.ENTRY]: "bg-success",
+  [ATTENDANCE_ACTION.EXIT]: "bg-info",
 };
 
 export function AttendanceFeedbackOverlay({
@@ -22,7 +28,7 @@ export function AttendanceFeedbackOverlay({
 }: AttendanceFeedbackOverlayProps) {
   const bg = BACKGROUND_MAP[status] ?? "bg-primary-900";
   const duration =
-    status === ATTENDANCE_STATUS.ENTRY || status === ATTENDANCE_STATUS.EXIT
+    status === ATTENDANCE_ACTION.ENTRY || status === ATTENDANCE_ACTION.EXIT
       ? RESET_TIMINGS[status]
       : RESET_TIMINGS.entry;
 
@@ -33,11 +39,11 @@ export function AttendanceFeedbackOverlay({
         bg,
       )}
     >
-      {status === ATTENDANCE_STATUS.ENTRY && response && (
+      {status === ATTENDANCE_ACTION.ENTRY && response && (
         <AttendanceEntryFeedback response={response} />
       )}
 
-      {status === ATTENDANCE_STATUS.EXIT && response && (
+      {status === ATTENDANCE_ACTION.EXIT && response && (
         <AttendanceExitFeedback response={response} />
       )}
 

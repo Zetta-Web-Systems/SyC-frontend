@@ -1,27 +1,20 @@
-const ATTENDANCE_STATUS = {
-  IDLE: "idle",
-  LOADING: "loading",
-  ENTRY: "entry",
-  EXIT: "exit",
-  ERROR: "error",
-} as const;
+export type AttendanceType = "INSTRUCTOR" | "MEMBER";
 
-type AttendanceStatus =
-  (typeof ATTENDANCE_STATUS)[keyof typeof ATTENDANCE_STATUS];
-
-type AttendanceType = "INSTRUCTOR" | "MEMBER";
-
-interface AttendanceResponse {
+interface BaseAttendance {
   id: string;
   attendanceDate: string;
   arrivalTime: string;
+  departureTime?: string | null;
+}
+
+export interface AttendanceResponse extends BaseAttendance {
   name: string;
-  lastname: string;
+  lastName: string;
   dni: string;
   type: AttendanceType;
-  departureTime: string | null;
   message: string | null;
 }
 
-export { ATTENDANCE_STATUS };
-export type { AttendanceStatus, AttendanceResponse };
+export interface AttendanceInstructorResponse extends BaseAttendance {
+  departureRegistered: boolean;
+}
