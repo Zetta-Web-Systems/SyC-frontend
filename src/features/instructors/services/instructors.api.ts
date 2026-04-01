@@ -15,11 +15,12 @@ function dtoToFormData(
 ): FormData {
   const formData = new FormData();
 
-  formData.append("name", dto.name);
-  formData.append("lastname", dto.lastname);
-  formData.append("dni", dto.dni);
+  if (dto.name != null) formData.append("name", dto.name);
+  if (dto.lastname != null) formData.append("lastname", dto.lastname);
+  if (dto.dni != null) formData.append("dni", dto.dni);
 
-  if ("email" in dto) formData.append("email", dto.email);
+  if ("email" in dto && dto.email != null) formData.append("email", dto.email);
+
   if (dto.phone != null) formData.append("phone", dto.phone);
   if (dto.emergencyPhone != null)
     formData.append("emergencyPhone", dto.emergencyPhone);
@@ -42,18 +43,13 @@ export async function registerInstructor(dto: RegisterInstructorDto) {
   const { data } = await api.post<Instructor>(
     "/instructors/register",
     formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    },
   );
   return data;
 }
 
 export async function updateInstructor(id: string, dto: UpdateInstructorDto) {
   const formData = dtoToFormData(dto);
-  const { data } = await api.patch<Instructor>(`/instructors/${id}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await api.patch<Instructor>(`/instructors/${id}`, formData);
   return data;
 }
 
