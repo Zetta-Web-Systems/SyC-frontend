@@ -10,6 +10,23 @@ import type {
   UpdateInstructorDto,
 } from "../types";
 
+function dtoToFormData(
+  dto: RegisterInstructorDto | UpdateInstructorDto,
+): FormData {
+  const formData = new FormData();
+
+  formData.append("name", dto.name);
+  formData.append("lastname", dto.lastname);
+  formData.append("dni", dto.dni);
+  formData.append("phone", dto.phone);
+
+  if ("email" in dto) formData.append("email", dto.email);
+  if (dto.address != null) formData.append("address", dto.address);
+  if (dto.image instanceof File) formData.append("image", dto.image);
+
+  return formData;
+}
+
 export async function getInstructorsPaginated(params: PaginatedParams) {
   const { data } = await api.get<PaginatedResponse<Instructor>>(
     "/instructors/list/paginated",
@@ -19,12 +36,22 @@ export async function getInstructorsPaginated(params: PaginatedParams) {
 }
 
 export async function registerInstructor(dto: RegisterInstructorDto) {
-  const { data } = await api.post<Instructor>("/instructors/register", dto);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.post<Instructor>(
+    "/instructors/register",
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    },
+  );
   return data;
 }
 
 export async function updateInstructor(id: string, dto: UpdateInstructorDto) {
-  const { data } = await api.patch<Instructor>(`/instructors/${id}`, dto);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.patch<Instructor>(`/instructors/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data;
 }
 

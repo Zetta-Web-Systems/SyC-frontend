@@ -2,7 +2,11 @@ import { useState } from "react";
 import {
   CalendarDays,
   EllipsisVertical,
+  IdCard,
+  Mail,
+  MapPin,
   Pencil,
+  Phone,
   UserCheck,
   UserX,
 } from "lucide-react";
@@ -15,8 +19,8 @@ import {
   PopoverItem,
   PopoverSeparator,
 } from "@shared/ui";
-import { formatDateTime } from "@shared/utils/date.utils";
 import type { Instructor } from "../../types";
+import { getLastLoginInfo } from "../../utils/instructors.utils";
 
 interface InstructorCardProps {
   instructor: Instructor;
@@ -40,10 +44,18 @@ export function InstructorCard({
 
   const fullName = `${instructor.name} ${instructor.lastname}`;
 
+  const lastLogin = getLastLoginInfo(instructor.lastLoginAt);
+
   return (
     <div className="border-b border-neutral-200 pb-3">
       <div className="flex items-start gap-3">
-        <Avatar size="md" color="primary" fallback={initials} />
+        <Avatar
+          size="md"
+          color="primary"
+          src={instructor.image ?? null}
+          fallback={initials}
+          alt={fullName}
+        />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -59,17 +71,33 @@ export function InstructorCard({
             </Badge>
           </div>
 
-          <p className="mt-0.5 truncate text-xs text-neutral-500">
-            {instructor.email}
-          </p>
+          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
+            <Mail size={12} className="text-info" aria-hidden="true" />
+            <span>{instructor.email}</span>
+          </div>
+
+          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
+            <Phone size={12} className="text-success" aria-hidden="true" />
+            <span>{instructor.phone || "Sin datos"}</span>
+          </div>
+
+          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
+            <MapPin size={12} className="text-warning" aria-hidden="true" />
+            <span>{instructor.address || "Sin datos"}</span>
+          </div>
 
           <div className="mt-1 flex items-center justify-between text-xs text-neutral-400">
-            <span>DNI: {instructor.dni}</span>
-            <span>
-              {instructor.lastLoginAt
-                ? formatDateTime(instructor.lastLoginAt)
-                : "Sin conexion"}
+            <span className="flex items-center gap-1">
+              <IdCard
+                size={12}
+                className="text-primary-400"
+                aria-hidden="true"
+              />
+              {instructor.dni}
             </span>
+            <Badge intent={lastLogin.intent} size="sm">
+              {lastLogin.label}
+            </Badge>
           </div>
         </div>
 
