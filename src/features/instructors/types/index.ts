@@ -1,34 +1,25 @@
-export interface Instructor {
-  id: string;
+interface BaseInstructor {
   name: string;
   lastname: string;
   dni: string;
-  email: string;
   phone?: string;
   emergencyPhone?: string;
   address?: string;
+}
+
+export interface Instructor extends BaseInstructor {
+  id: string;
+  email: string;
   image?: string;
   isActive: boolean;
   lastLoginAt: string;
 }
 
-export interface RegisterInstructorDto {
-  name: string;
-  lastname: string;
-  dni: string;
+export interface RegisterInstructorDto extends BaseInstructor {
   email: string;
-  phone?: string;
-  emergencyPhone?: string;
-  address?: string;
   image?: File;
 }
 
-export interface UpdateInstructorDto {
-  name: string;
-  lastname: string;
-  dni: string;
-  phone?: string;
-  emergencyPhone?: string;
-  address?: string;
+export interface UpdateInstructorDto extends Partial<BaseInstructor> {
   image?: File;
 }
