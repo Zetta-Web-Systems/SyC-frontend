@@ -8,6 +8,7 @@ export const modalVariants = cva(
         sm: "w-[calc(100%-2rem)] max-w-sm",
         md: "w-[calc(100%-2rem)] max-w-md",
         lg: "w-[calc(100%-2rem)] max-w-lg",
+        form: `w-[calc(100%-2rem)] max-w-4xl !max-h-none !overflow-visible`,
       },
     },
     defaultVariants: {

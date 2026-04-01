@@ -38,7 +38,7 @@ export function InstructorFormModal({
   const title = isEditing ? "Editar profesor" : "Registrar profesor";
 
   return (
-    <Modal open={open} onClose={onClose} size="md">
+    <Modal open={open} onClose={onClose} size="form">
       {open && (
         <div className="p-6">
           <h2 className="mb-6 text-lg font-semibold text-neutral-900">
