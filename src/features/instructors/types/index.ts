@@ -4,7 +4,7 @@ export interface Instructor {
   lastname: string;
   dni: string;
   email: string;
-  phone: string;
+  phone?: string;
   emergencyPhone?: string;
   address?: string;
   image?: string;
@@ -17,7 +17,7 @@ export interface RegisterInstructorDto {
   lastname: string;
   dni: string;
   email: string;
-  phone: string;
+  phone?: string;
   emergencyPhone?: string;
   address?: string;
   image?: File;
@@ -27,7 +27,7 @@ export interface UpdateInstructorDto {
   name: string;
   lastname: string;
   dni: string;
-  phone: string;
+  phone?: string;
   emergencyPhone?: string;
   address?: string;
   image?: File;

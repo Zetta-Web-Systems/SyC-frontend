@@ -109,11 +109,7 @@ export function InstructorForm({
             </p>
           </div>
 
-          <FormField<UpdateInstructorSchema>
-            name="phone"
-            label="Teléfono"
-            required
-          >
+          <FormField<UpdateInstructorSchema> name="phone" label="Teléfono">
             {(field) => (
               <Input
                 {...field}
@@ -237,11 +233,7 @@ export function InstructorForm({
           )}
         </FormField>
 
-        <FormField<RegisterInstructorSchema>
-          name="phone"
-          label="Teléfono"
-          required
-        >
+        <FormField<RegisterInstructorSchema> name="phone" label="Teléfono">
           {(field) => (
             <Input
               {...field}

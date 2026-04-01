@@ -18,9 +18,11 @@ function dtoToFormData(
   formData.append("name", dto.name);
   formData.append("lastname", dto.lastname);
   formData.append("dni", dto.dni);
-  formData.append("phone", dto.phone);
 
   if ("email" in dto) formData.append("email", dto.email);
+  if (dto.phone != null) formData.append("phone", dto.phone);
+  if (dto.emergencyPhone != null)
+    formData.append("emergencyPhone", dto.emergencyPhone);
   if (dto.address != null) formData.append("address", dto.address);
   if (dto.image instanceof File) formData.append("image", dto.image);
 
