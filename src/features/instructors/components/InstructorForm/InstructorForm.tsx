@@ -9,6 +9,7 @@ import {
   type UpdateInstructorSchema,
 } from "../../schemas/instructor.schema";
 import type { Instructor } from "../../types";
+import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 
 interface InstructorFormCreateProps {
   instructor?: undefined;
@@ -38,14 +39,16 @@ export function InstructorForm({
     return (
       <Form<UpdateInstructorSchema>
         schema={updateInstructorSchema}
-        onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
+        onSubmit={(data) =>
+          onSubmit(normalizeEmptyStrings(data) as UpdateInstructorSchema)
+        }
         defaultValues={{
           name: instructor.name,
           lastname: instructor.lastname,
           dni: instructor.dni,
-          phone: instructor.phone,
-          emergencyPhone: instructor.emergencyPhone,
-          address: instructor.address,
+          phone: instructor.phone ?? "",
+          emergencyPhone: instructor.emergencyPhone ?? "",
+          address: instructor.address ?? "",
         }}
         className="flex flex-col gap-5"
       >
@@ -171,7 +174,9 @@ export function InstructorForm({
   return (
     <Form<RegisterInstructorSchema>
       schema={registerInstructorSchema}
-      onSubmit={onSubmit as (data: RegisterInstructorSchema) => void}
+      onSubmit={(data) =>
+        onSubmit(normalizeEmptyStrings(data) as RegisterInstructorSchema)
+      }
       className="flex flex-col gap-5"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

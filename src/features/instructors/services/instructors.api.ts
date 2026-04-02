@@ -15,17 +15,29 @@ function dtoToFormData(
 ): FormData {
   const formData = new FormData();
 
-  if (dto.name != null) formData.append("name", dto.name);
-  if (dto.lastname != null) formData.append("lastname", dto.lastname);
-  if (dto.dni != null) formData.append("dni", dto.dni);
+  formData.append("name", dto.name!);
+  formData.append("lastname", dto.lastname!);
+  formData.append("dni", dto.dni!);
 
-  if ("email" in dto && dto.email != null) formData.append("email", dto.email);
+  if ("email" in dto) {
+    formData.append("email", dto.email!);
+  }
 
-  if (dto.phone != null) formData.append("phone", dto.phone);
-  if (dto.emergencyPhone != null)
+  if (dto.phone) {
+    formData.append("phone", dto.phone);
+  }
+
+  if (dto.emergencyPhone) {
     formData.append("emergencyPhone", dto.emergencyPhone);
-  if (dto.address != null) formData.append("address", dto.address);
-  if (dto.image instanceof File) formData.append("image", dto.image);
+  }
+
+  if (dto.address) {
+    formData.append("address", dto.address);
+  }
+
+  if (dto.image instanceof File) {
+    formData.append("image", dto.image);
+  }
 
   return formData;
 }
