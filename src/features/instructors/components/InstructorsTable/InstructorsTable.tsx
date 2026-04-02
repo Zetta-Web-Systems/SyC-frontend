@@ -5,7 +5,7 @@ import type {
   PaginationState,
 } from "@tanstack/react-table";
 import { CalendarDays, Pencil, UserCheck, UserX } from "lucide-react";
-// import { Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@shared/ui";
 import { DataTable } from "@shared/components/DataTable";
 import { DataCardList } from "@shared/components/DataTable";
@@ -58,19 +58,19 @@ export function InstructorsTable({
                   >
                     <Pencil size={16} aria-hidden="true" color="green" />
                   </Button>
-                  {/* <Link
+                  <Link
                     to="/instructors/attendance/$instructorId"
                     params={{ instructorId: instructor.id }}
-                  > */}
-                  <Button
-                    variant="ghost"
-                    intent="secondary"
-                    size="icon"
-                    aria-label={`Ver asistencias de ${instructor.name} ${instructor.lastname}`}
                   >
-                    <CalendarDays size={16} aria-hidden="true" />
-                  </Button>
-                  {/* </Link> */}
+                    <Button
+                      variant="ghost"
+                      intent="secondary"
+                      size="icon"
+                      aria-label={`Ver asistencias de ${instructor.name} ${instructor.lastname}`}
+                    >
+                      <CalendarDays size={16} aria-hidden="true" />
+                    </Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     intent="danger"

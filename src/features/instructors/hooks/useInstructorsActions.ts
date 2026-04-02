@@ -41,7 +41,11 @@ export function useInstructorsActions() {
   }
 
   function handleRegister(data: RegisterInstructorSchema) {
-    registerMutation.mutate(data, {
+    const normalized = {
+      ...data,
+      image: data.image ?? undefined,
+    };
+    registerMutation.mutate(normalized, {
       onSuccess: () => handleCloseModal(),
     });
   }
@@ -54,8 +58,12 @@ export function useInstructorsActions() {
       description: `¿Estas seguro que deseas modificar a ${data.name} ${data.lastname}?`,
       confirmLabel: "Modificar",
       onConfirm: () => {
+        const normalized = {
+          ...data,
+          image: data.image ?? undefined,
+        };
         updateMutation.mutate(
-          { id: editingInstructor.id, dto: data },
+          { id: editingInstructor.id, dto: normalized },
           { onSuccess: () => handleCloseModal() },
         );
       },
