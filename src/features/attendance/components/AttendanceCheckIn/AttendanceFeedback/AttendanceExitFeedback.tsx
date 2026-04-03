@@ -1,8 +1,8 @@
 import { Hand } from "lucide-react";
-import type { AttendanceResponse } from "../../types";
-import { FALLBACK_MESSAGES } from "../../constants";
 import { formatDuration, formatTimeShort } from "@shared/utils/date.utils";
 import { AttendanceInfoCard } from "./AttendanceInfoCard";
+import { FALLBACK_MESSAGES } from "../../../constants";
+import type { AttendanceResponse } from "../../../types";
 
 interface AttendanceExitFeedbackProps {
   response: AttendanceResponse;

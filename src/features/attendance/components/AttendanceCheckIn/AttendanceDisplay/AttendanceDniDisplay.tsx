@@ -1,5 +1,5 @@
 import { cn } from "@shared/lib/cn";
-import { DNI_MAX_LENGTH } from "../../constants";
+import { DNI_MAX_LENGTH } from "../../../constants";
 
 interface AttendanceDniDisplayProps {
   dni: string;

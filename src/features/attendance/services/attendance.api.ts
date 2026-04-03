@@ -10,15 +10,15 @@ import type {
 } from "../types";
 
 export async function registerAttendance(dni: string) {
-  const { data } = await api.post<AttendanceResponse>("/attendance", { dni });
+  const { data } = await api.post<AttendanceResponse>("/attendances", { dni });
   return data;
 }
 
-export async function getInstructorsAttendancePaginated(
-  params: PaginatedParams,
-) {
+export async function getAttendancesPaginated(params: PaginatedParams) {
   const { data } = await api.get<
     PaginatedResponse<AttendanceInstructorResponse>
-  >("/instructors/list/paginated", { params: buildPaginatedParams(params) });
+  >("attendances/list/paginated", {
+    params: buildPaginatedParams(params),
+  });
   return data;
 }

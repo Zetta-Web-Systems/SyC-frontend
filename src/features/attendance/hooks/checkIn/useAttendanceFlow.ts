@@ -3,13 +3,13 @@ import { getApiErrorMessage } from "@shared/api/apiError";
 import {
   ATTENDANCE_ACTION,
   REQUEST_STATUS,
+  RESET_TIMINGS,
   type AttendanceAction,
   type RequestStatus,
-} from "../constants";
-import type { AttendanceResponse } from "../types";
-import { RESET_TIMINGS } from "../constants";
+} from "../../constants";
+import type { AttendanceResponse } from "../../types";
 import { useAttendanceDni } from "./useAttendanceDni";
-import { useAttendanceMutation } from "./mutations/useAttendanceMutation";
+import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
 
 interface FlowState {
   status: RequestStatus | AttendanceAction;

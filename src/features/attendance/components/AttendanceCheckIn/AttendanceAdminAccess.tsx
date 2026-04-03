@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { cn } from "@shared/lib/cn";
 import { confirm } from "@shared/stores/confirm.store";
 import { useLogoutMutation } from "@features/auth";
-import { useAttendanceLongPress } from "../hooks/useAttendanceLongPress";
+import { useAttendanceLongPress } from "../../hooks/checkIn/useAttendanceLongPress";
 
 interface AttendanceAdminAccessProps {
   visible: boolean;

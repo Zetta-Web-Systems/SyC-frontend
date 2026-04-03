@@ -1,14 +1,14 @@
 import { cn } from "@shared/lib/cn";
+import { AttendanceEntryFeedback } from "./AttendanceFeedback/AttendanceEntryFeedback";
+import { AttendanceExitFeedback } from "./AttendanceFeedback/AttendanceExitFeedback";
+import { AttendanceProgressBar } from "./AttendanceFeedback/AttendanceProgressBar";
 import {
   ATTENDANCE_ACTION,
   type AttendanceAction,
   type RequestStatus,
-} from "../constants";
-import type { AttendanceResponse } from "../types";
-import { RESET_TIMINGS } from "../constants";
-import { AttendanceEntryFeedback } from "./AttendanceFeedback/AttendanceEntryFeedback";
-import { AttendanceExitFeedback } from "./AttendanceFeedback/AttendanceExitFeedback";
-import { AttendanceProgressBar } from "./AttendanceFeedback/AttendanceProgressBar";
+} from "../../constants";
+import type { AttendanceResponse } from "../../types";
+import { RESET_TIMINGS } from "../../constants";
 
 interface AttendanceFeedbackOverlayProps {
   status: AttendanceAction | RequestStatus;
