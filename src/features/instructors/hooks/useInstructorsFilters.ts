@@ -3,6 +3,7 @@ import type { PaginationState } from "@tanstack/react-table";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
 import { toApiPage } from "@shared/utils/pagination.utils";
 import type { PaginatedParams } from "@shared/types/pagination.types";
+import type { ViewMode } from "@shared/ui";
 import { ORDER_MAP } from "../constants/instructors.constants";
 
 export function useInstructorsFilters() {
@@ -13,6 +14,7 @@ export function useInstructorsFilters() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [orderByValue, setOrderByValue] = useState("recent");
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
 
   const order = ORDER_MAP[orderByValue] ?? ORDER_MAP.recent;
 
@@ -55,6 +57,8 @@ export function useInstructorsFilters() {
     search,
     statusFilter,
     orderByValue,
+    viewMode,
+    setViewMode,
     handleSearch,
     handleStatusChange,
     handleOrderByChange,

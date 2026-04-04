@@ -14,7 +14,7 @@ export function InstructorsHeader({ onCreate }: InstructorHeaderProps) {
       description="Administra los profesores del gimnasio"
       actions={
         <>
-          <Link to="/instructors/attendance">
+          <Link to="/attendances" search={{ type: "INSTRUCTOR" as const }}>
             <Button variant="outline" intent="neutral">
               <CalendarDays size={16} aria-hidden="true" />
               <span className="hidden xs:inline">Asistencias</span>

@@ -15,23 +15,31 @@ function dtoToFormData(
 ): FormData {
   const formData = new FormData();
 
-  formData.append("name", dto.name!);
-  formData.append("lastname", dto.lastname!);
-  formData.append("dni", dto.dni!);
-
-  if ("email" in dto) {
-    formData.append("email", dto.email!);
+  if (dto.name !== undefined) {
+    formData.append("name", dto.name);
   }
 
-  if (dto.phone) {
+  if (dto.lastname !== undefined) {
+    formData.append("lastname", dto.lastname);
+  }
+
+  if ("dni" in dto && dto.dni !== undefined) {
+    formData.append("dni", dto.dni);
+  }
+
+  if ("email" in dto && dto.email !== undefined) {
+    formData.append("email", dto.email);
+  }
+
+  if (dto.phone !== undefined) {
     formData.append("phone", dto.phone);
   }
 
-  if (dto.emergencyPhone) {
+  if (dto.emergencyPhone !== undefined) {
     formData.append("emergencyPhone", dto.emergencyPhone);
   }
 
-  if (dto.address) {
+  if (dto.address !== undefined) {
     formData.append("address", dto.address);
   }
 

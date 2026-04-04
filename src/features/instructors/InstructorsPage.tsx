@@ -1,3 +1,4 @@
+import { ViewToggle } from "@shared/ui";
 import { InstructorsHeader } from "./components/InstructorsHeader/InstructorsHeader";
 import { InstructorsTable } from "./components/InstructorsTable/InstructorsTable";
 import { InstructorFormModal } from "./components/InstructorFormModal/InstructorFormModal";
@@ -11,6 +12,8 @@ export default function InstructorsPage() {
     params,
     pagination,
     statusFilter,
+    viewMode,
+    setViewMode,
     setPagination,
     handleSearch,
     handleStatusChange,
@@ -45,6 +48,9 @@ export default function InstructorsPage() {
         statusFilter={statusFilter}
         onStatusChange={handleStatusChange}
         onClearAllFilters={handleClearAllFilters}
+        actions={
+          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        }
       />
 
       <InstructorsTable
@@ -53,6 +59,7 @@ export default function InstructorsPage() {
         pagination={pagination}
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
+        viewMode={viewMode}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onRestore={handleRestore}

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
   CalendarDays,
+  Clock,
   EllipsisVertical,
   IdCard,
-  Mail,
   MapPin,
   Pencil,
   Phone,
@@ -19,8 +19,8 @@ import {
   PopoverItem,
   PopoverSeparator,
 } from "@shared/ui";
+import { getLastLoginInfo } from "@shared/utils/date.utils";
 import type { Instructor } from "../../types";
-import { getLastLoginInfo } from "../../utils/instructors.utils";
 
 interface InstructorCardProps {
   instructor: Instructor;
@@ -41,67 +41,37 @@ export function InstructorCard({
   const initials = (
     instructor.name.charAt(0) + instructor.lastname.charAt(0)
   ).toUpperCase();
-
   const fullName = `${instructor.name} ${instructor.lastname}`;
-
   const lastLogin = getLastLoginInfo(instructor.lastLoginAt);
 
   return (
-    <div className="border-b border-neutral-200 pb-3">
+    <div className="w-full rounded-xl border border-neutral-200 bg-white p-4">
       <div className="flex items-start gap-3">
         <Avatar
-          size="md"
+          size="lg"
           color="primary"
           src={instructor.image ?? null}
           fallback={initials}
           alt={fullName}
         />
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="truncate text-sm font-semibold text-neutral-900">
-              {fullName}
-            </p>
-            <Badge
-              intent={instructor.isActive ? "success" : "error"}
-              size="sm"
-              className="mt-0.5"
-            >
-              {instructor.isActive ? "ACTIVO" : "INACTIVO"}
-            </Badge>
-          </div>
-
-          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
-            <Mail size={12} className="text-info" aria-hidden="true" />
-            <span>{instructor.email}</span>
-          </div>
-
-          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
-            <Phone size={12} className="text-success" aria-hidden="true" />
-            <span>{instructor.phone || "Sin datos"}</span>
-          </div>
-
-          <div className="mt-0.5 flex items-center gap-1 text-xs text-neutral-500">
-            <MapPin size={12} className="text-warning" aria-hidden="true" />
-            <span>{instructor.address || "Sin datos"}</span>
-          </div>
-
-          <div className="mt-1 flex items-center justify-between text-xs text-neutral-400">
-            <span className="flex items-center gap-1">
-              <IdCard
-                size={12}
-                className="text-primary-400"
-                aria-hidden="true"
-              />
-              {instructor.dni}
-            </span>
-            <Badge intent={lastLogin.intent} size="sm">
-              {lastLogin.label}
-            </Badge>
-          </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <p className="truncate text-sm font-semibold text-neutral-900">
+            {fullName}
+          </p>
+          <span className="flex items-center gap-1 text-xs text-neutral-500">
+            <IdCard size={12} className="text-primary-400" aria-hidden="true" />
+            DNI: {instructor.dni}
+          </span>
+          <span className="truncate text-xs text-primary-500">
+            {instructor.email}
+          </span>
         </div>
 
-        <div className="shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
+          <Badge intent={instructor.isActive ? "success" : "error"} size="sm">
+            {instructor.isActive ? "ACTIVO" : "INACTIVO"}
+          </Badge>
           <Popover
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
@@ -135,8 +105,11 @@ export function InstructorCard({
                   icon={<CalendarDays color="#4ea49c" />}
                   onClick={() => {
                     void navigate({
-                      to: "/instructors/attendance/$instructorId",
-                      params: { instructorId: instructor.id },
+                      to: "/attendances",
+                      search: {
+                        type: "INSTRUCTOR" as const,
+                        personId: instructor.id,
+                      },
                     });
                     setMenuOpen(false);
                   }}
@@ -168,6 +141,29 @@ export function InstructorCard({
             )}
           </Popover>
         </div>
+      </div>
+
+      <hr className="border-neutral-200 my-3" />
+
+      <div className="flex flex-col text-neutral-500 gap-1 text-xs">
+        <span className="flex items-center gap-1 justify-center">
+          <MapPin size={12} className="text-error" aria-hidden="true" />
+          {instructor.address || "Sin dirección registrada"}
+        </span>
+        <div className="flex items-center gap-4 justify-center">
+          <span className="flex items-center gap-1">
+            <Phone size={12} className="text-success" aria-hidden="true" />
+            {instructor.phone || "Sin registro"}
+          </span>
+          <span className="flex items-center gap-1">
+            <Phone size={12} className="text-info" aria-hidden="true" />
+            {instructor.emergencyPhone || "Sin registro"}
+          </span>
+        </div>
+        <span className="flex items-center gap-1 justify-center">
+          <Clock size={12} className="text-neutral-400" aria-hidden="true" />
+          Último ingreso: {lastLogin.label.toLowerCase()}
+        </span>
       </div>
     </div>
   );

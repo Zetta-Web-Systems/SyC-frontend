@@ -23,34 +23,34 @@ const lastnameField = z
 
 const phoneField = z
   .string({ error: "El teléfono es requerido" })
-  .min(
-    IV.phone.minLength,
-    `El teléfono debe tener al menos ${IV.phone.minLength} caracteres`,
-  )
-  .max(
-    IV.phone.maxLength,
-    `El teléfono debe tener como máximo ${IV.phone.maxLength} caracteres`,
-  )
+  // .min(
+  //   IV.phone.minLength,
+  //   `El teléfono debe tener al menos ${IV.phone.minLength} caracteres`,
+  // )
+  // .max(
+  //   IV.phone.maxLength,
+  //   `El teléfono debe tener como máximo ${IV.phone.maxLength} caracteres`,
+  // )
   .regex(
     IV.phone.regex,
-    "El teléfono debe tener el formato: código de área (2-4 dígitos) + número (7 dígitos), ej: 11-1234567",
+    "El teléfono debe tener el formato: código de área (2-4 dígitos) + número (6-8 dígitos), ej: 11-1234567",
   )
   .optional()
   .or(z.literal(""));
 
 const emergencyPhoneField = z
   .string({ error: "El teléfono de emergencia es requerido" })
-  .min(
-    IV.phone.minLength,
-    `El teléfono debe tener al menos ${IV.phone.minLength} caracteres`,
-  )
-  .max(
-    IV.phone.maxLength,
-    `El teléfono debe tener como máximo ${IV.phone.maxLength} caracteres`,
-  )
+  // .min(
+  //   IV.phone.minLength,
+  //   `El teléfono debe tener al menos ${IV.phone.minLength} caracteres`,
+  // )
+  // .max(
+  //   IV.phone.maxLength,
+  //   `El teléfono debe tener como máximo ${IV.phone.maxLength} caracteres`,
+  // )
   .regex(
     IV.phone.regex,
-    "El teléfono debe tener el formato: código de área (2-4 dígitos) + número (7 dígitos), ej: 11-1234567",
+    "El teléfono debe tener el formato: código de área (2-4 dígitos) + número (6-8 dígitos), ej: 11-1234567",
   )
   .optional()
   .or(z.literal(""));
@@ -82,7 +82,6 @@ export type RegisterInstructorSchema = z.infer<typeof registerInstructorSchema>;
 export const updateInstructorSchema = z.object({
   name: nameField,
   lastname: lastnameField,
-  dni: dniField,
   phone: phoneField,
   emergencyPhone: emergencyPhoneField,
   address: addressField,

@@ -1,7 +1,10 @@
-import { Mail, User, CreditCard, Home, Phone } from "lucide-react";
+import { Mail, User, CreditCard, Pin } from "lucide-react";
 import { Button, Input, Label } from "@shared/ui";
 import { Form, FormField, FormError, FormImage } from "@shared/components/Form";
+import { PhoneInput } from "@shared/components/VariousInputs/PhoneInput";
 import type { MutationLike } from "@shared/types/mutations.types";
+import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
+import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
 import {
   registerInstructorSchema,
   updateInstructorSchema,
@@ -9,7 +12,6 @@ import {
   type UpdateInstructorSchema,
 } from "../../schemas/instructor.schema";
 import type { Instructor } from "../../types";
-import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 
 interface InstructorFormCreateProps {
   instructor?: undefined;
@@ -39,13 +41,17 @@ export function InstructorForm({
     return (
       <Form<UpdateInstructorSchema>
         schema={updateInstructorSchema}
-        onSubmit={(data) =>
-          onSubmit(normalizeEmptyStrings(data) as UpdateInstructorSchema)
+        onSubmit={(data, form) =>
+          onSubmit(
+            pickDirtyFields(
+              data,
+              form.formState.dirtyFields,
+            ) as UpdateInstructorSchema,
+          )
         }
         defaultValues={{
           name: instructor.name,
           lastname: instructor.lastname,
-          dni: instructor.dni,
           phone: instructor.phone ?? "",
           emergencyPhone: instructor.emergencyPhone ?? "",
           address: instructor.address ?? "",
@@ -83,18 +89,21 @@ export function InstructorForm({
             )}
           </FormField>
 
-          <FormField<UpdateInstructorSchema> name="dni" label="DNI" required>
-            {(field) => (
-              <Input
-                {...field}
-                type="text"
-                placeholder="Documento del profesor"
-                inputMode="numeric"
-                maxLength={8}
-                leftElement={<CreditCard size={16} aria-hidden="true" />}
-              />
-            )}
-          </FormField>
+          <div>
+            <Label htmlFor="instructor-dni" className="mb-1.5 block">
+              DNI
+            </Label>
+            <Input
+              id="instructor-dni"
+              value={instructor.dni}
+              type="text"
+              disabled
+              leftElement={<Mail size={16} aria-hidden="true" />}
+            />
+            <p className="mt-1 text-xs text-neutral-400">
+              El DNI no se puede modificar.
+            </p>
+          </div>
 
           <div>
             <Label htmlFor="instructor-email" className="mb-1.5 block">
@@ -113,28 +122,14 @@ export function InstructorForm({
           </div>
 
           <FormField<UpdateInstructorSchema> name="phone" label="Teléfono">
-            {(field) => (
-              <Input
-                {...field}
-                type="text"
-                placeholder="Teléfono"
-                leftElement={<Phone size={16} aria-hidden="true" />}
-              />
-            )}
+            {(field) => <PhoneInput {...field} />}
           </FormField>
 
           <FormField<UpdateInstructorSchema>
             name="emergencyPhone"
             label="Teléfono de emergencia"
           >
-            {(field) => (
-              <Input
-                {...field}
-                type="text"
-                placeholder="Teléfono de emergencia"
-                leftElement={<Phone size={16} aria-hidden="true" />}
-              />
-            )}
+            {(field) => <PhoneInput {...field} />}
           </FormField>
 
           <FormField<UpdateInstructorSchema> name="address" label="Dirección">
@@ -143,18 +138,16 @@ export function InstructorForm({
                 {...field}
                 type="text"
                 placeholder="Dirección del profesor"
-                leftElement={<Home size={16} aria-hidden="true" />}
+                leftElement={<Pin size={16} aria-hidden="true" />}
               />
             )}
           </FormField>
 
-          <div className="col-span-1 md:col-span-2">
-            <FormImage<UpdateInstructorSchema>
-              name="image"
-              label="Foto de perfil"
-              initialPreview={instructor.image ?? null}
-            />
-          </div>
+          <FormImage<UpdateInstructorSchema>
+            name="image"
+            label="Foto de perfil"
+            initialPreview={instructor.image ?? null}
+          />
         </div>
 
         <FormError mutation={mutation} />
@@ -239,28 +232,14 @@ export function InstructorForm({
         </FormField>
 
         <FormField<RegisterInstructorSchema> name="phone" label="Teléfono">
-          {(field) => (
-            <Input
-              {...field}
-              type="text"
-              placeholder="Teléfono"
-              leftElement={<Phone size={16} aria-hidden="true" />}
-            />
-          )}
+          {(field) => <PhoneInput {...field} />}
         </FormField>
 
         <FormField<RegisterInstructorSchema>
           name="emergencyPhone"
           label="Teléfono de emergencia"
         >
-          {(field) => (
-            <Input
-              {...field}
-              type="text"
-              placeholder="Teléfono de emergencia"
-              leftElement={<Phone size={16} aria-hidden="true" />}
-            />
-          )}
+          {(field) => <PhoneInput {...field} />}
         </FormField>
 
         <FormField<RegisterInstructorSchema> name="address" label="Dirección">
@@ -269,17 +248,15 @@ export function InstructorForm({
               {...field}
               type="text"
               placeholder="Dirección del profesor"
-              leftElement={<Home size={16} aria-hidden="true" />}
+              leftElement={<Pin size={16} aria-hidden="true" />}
             />
           )}
         </FormField>
 
-        <div className="col-span-1 md:col-span-2">
-          <FormImage<RegisterInstructorSchema>
-            name="image"
-            label="Foto de perfil"
-          />
-        </div>
+        <FormImage<RegisterInstructorSchema>
+          name="image"
+          label="Foto de perfil"
+        />
       </div>
 
       <FormError mutation={mutation} />

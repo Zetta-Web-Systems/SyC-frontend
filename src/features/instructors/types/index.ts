@@ -1,7 +1,6 @@
 interface BaseInstructor {
   name: string;
   lastname: string;
-  dni: string;
   phone?: string;
   emergencyPhone?: string;
   address?: string;
@@ -9,6 +8,7 @@ interface BaseInstructor {
 
 export interface Instructor extends BaseInstructor {
   id: string;
+  dni: string;
   email: string;
   image?: string;
   isActive: boolean;
@@ -16,6 +16,7 @@ export interface Instructor extends BaseInstructor {
 }
 
 export interface RegisterInstructorDto extends BaseInstructor {
+  dni: string;
   email: string;
   image?: File;
 }

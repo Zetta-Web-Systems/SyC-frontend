@@ -4,9 +4,9 @@ export const INSTRUCTOR_VALIDATION = {
     maxLength: 8,
   },
   phone: {
-    minLength: 9,
-    maxLength: 15,
-    regex: /^\d{2,4}-\d{7}$/,
+    // minLength: 16,
+    // maxLength: 16,
+    regex: /^\+54 (?:\d{2} \d{4}-\d{4}|\d{3} \d{3}-\d{4}|\d{4} \d{3}-\d{3})$/,
   },
   address: {
     maxLength: 255,
