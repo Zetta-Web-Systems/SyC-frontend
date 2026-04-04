@@ -1,11 +1,11 @@
 import { Spinner } from "@shared/ui";
-import { AttendanceIdleScreen } from "./components/AttendanceCheckIn/AttendanceIdleScreen";
-import { AttendanceFeedbackOverlay } from "./components/AttendanceCheckIn/AttendanceFeedbackOverlay";
-import { AttendanceAdminAccess } from "./components/AttendanceCheckIn/AttendanceAdminAccess";
-import { REQUEST_STATUS, ATTENDANCE_ACTION } from "./constants";
-import { useAttendanceFlow } from "./hooks/checkIn/useAttendanceFlow";
+import { AttendanceIdleScreen } from "../components/AttendanceCheckIn/AttendanceIdleScreen";
+import { AttendanceFeedbackOverlay } from "../components/AttendanceCheckIn/AttendanceFeedbackOverlay";
+import { AttendanceAdminAccess } from "../components/AttendanceCheckIn/AttendanceAdminAccess";
+import { REQUEST_STATUS, ATTENDANCE_ACTION } from "../constants";
+import { useAttendanceFlow } from "../hooks/checkIn/useAttendanceFlow";
 
-export default function AttendancePage() {
+export default function AttendanceCheckInPage() {
   const flow = useAttendanceFlow();
 
   const isIdle = flow.status === REQUEST_STATUS.IDLE;

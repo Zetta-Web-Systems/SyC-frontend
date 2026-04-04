@@ -7,12 +7,12 @@ import {
   type AttendanceAction,
   type RequestStatus,
 } from "../../constants";
-import type { AttendanceResponse } from "../../types";
+import type { AttendanceCheckIn } from "../../types";
 import { RESET_TIMINGS } from "../../constants";
 
 interface AttendanceFeedbackOverlayProps {
   status: AttendanceAction | RequestStatus;
-  response: AttendanceResponse | null;
+  response: AttendanceCheckIn | null;
 }
 
 const BACKGROUND_MAP: Partial<

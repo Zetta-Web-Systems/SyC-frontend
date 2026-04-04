@@ -1,20 +1,25 @@
-export type AttendanceType = "INSTRUCTOR" | "MEMBER";
+import type { AttendanceType } from "../constants";
 
 interface BaseAttendance {
   id: string;
   attendanceDate: string;
   arrivalTime: string;
-  departureTime?: string | null;
 }
 
-export interface AttendanceResponse extends BaseAttendance {
+export interface AttendanceCheckIn extends BaseAttendance {
   name: string;
   lastName: string;
   dni: string;
   type: AttendanceType;
+  departureTime?: string | null;
   message: string | null;
 }
 
-export interface AttendanceInstructorResponse extends BaseAttendance {
-  departureRegistered: boolean;
+export interface Attendance extends BaseAttendance {
+  departureTime?: string;
+  personId: string;
+  name: string;
+  lastname: string;
+  dni: string;
+  type: AttendanceType;
 }

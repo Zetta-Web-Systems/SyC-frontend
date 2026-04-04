@@ -7,13 +7,13 @@ import {
   type AttendanceAction,
   type RequestStatus,
 } from "../../constants";
-import type { AttendanceResponse } from "../../types";
+import type { AttendanceCheckIn } from "../../types";
 import { useAttendanceDni } from "./useAttendanceDni";
 import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
 
 interface FlowState {
   status: RequestStatus | AttendanceAction;
-  response: AttendanceResponse | null;
+  response: AttendanceCheckIn | null;
   error: string | null;
 }
 
@@ -95,7 +95,7 @@ export function useAttendanceFlow() {
     mutation.mutate(dni, {
       onSuccess: (response) => {
         const resultStatus =
-          response.departureTime !== null
+          response.departureTime != null
             ? ATTENDANCE_ACTION.EXIT
             : ATTENDANCE_ACTION.ENTRY;
 

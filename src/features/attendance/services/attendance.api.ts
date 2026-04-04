@@ -4,21 +4,17 @@ import type {
   PaginatedResponse,
 } from "@shared/types/pagination.types";
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
-import type {
-  AttendanceResponse,
-  AttendanceInstructorResponse,
-} from "../types";
+import type { Attendance, AttendanceCheckIn } from "../types";
 
 export async function registerAttendance(dni: string) {
-  const { data } = await api.post<AttendanceResponse>("/attendances", { dni });
+  const { data } = await api.post<AttendanceCheckIn>("/attendances", { dni });
   return data;
 }
 
 export async function getAttendancesPaginated(params: PaginatedParams) {
-  const { data } = await api.get<
-    PaginatedResponse<AttendanceInstructorResponse>
-  >("attendances/list/paginated", {
-    params: buildPaginatedParams(params),
-  });
+  const { data } = await api.get<PaginatedResponse<Attendance>>(
+    "attendances/list/paginated",
+    { params: buildPaginatedParams(params) },
+  );
   return data;
 }
