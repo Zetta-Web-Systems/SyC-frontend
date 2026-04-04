@@ -38,31 +38,30 @@ export function InstructorFormModal({
   const title = isEditing ? "Editar profesor" : "Registrar profesor";
 
   return (
-    <Modal open={open} onClose={onClose} size="form">
-      {open && (
-        <div className="p-6">
-          <h2 className="mb-6 text-lg font-semibold text-neutral-900">
-            {title}
-          </h2>
-
-          {isEditing ? (
-            <InstructorForm
-              key={instructor.id}
-              instructor={instructor}
-              onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
-              isPending={isPending}
-              mutation={mutation}
-            />
-          ) : (
-            <InstructorForm
-              key="create"
-              onSubmit={onSubmit as (data: RegisterInstructorSchema) => void}
-              isPending={isPending}
-              mutation={mutation}
-            />
-          )}
-        </div>
-      )}
+    <Modal
+      open={open}
+      onClose={onClose}
+      size="form"
+      title={title}
+      bodyClassName="p-6"
+    >
+      {open &&
+        (isEditing ? (
+          <InstructorForm
+            key={instructor.id}
+            instructor={instructor}
+            onSubmit={onSubmit as (data: UpdateInstructorSchema) => void}
+            isPending={isPending}
+            mutation={mutation}
+          />
+        ) : (
+          <InstructorForm
+            key="create"
+            onSubmit={onSubmit as (data: RegisterInstructorSchema) => void}
+            isPending={isPending}
+            mutation={mutation}
+          />
+        ))}
     </Modal>
   );
 }
