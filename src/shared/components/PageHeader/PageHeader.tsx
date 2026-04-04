@@ -22,9 +22,9 @@ export function PageHeader({
       )}
     >
       <div className="min-w-0">
-        <h1 className="text-neutral-900">{title}</h1>
+        <h1 className="text-neutral-900 text-xl md:text-3xl">{title}</h1>
         {description && (
-          <p className="mt-1 text-xs text-neutral-500 xs:text-sm">
+          <p className="mt-1 text-[10px] text-neutral-500 xs:text-sm">
             {description}
           </p>
         )}
