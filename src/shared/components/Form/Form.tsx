@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import type {
   FieldValues,
-  SubmitHandler,
   UseFormReturn,
   DefaultValues,
 } from "react-hook-form";
@@ -13,7 +12,7 @@ export interface FormProps<TFields extends FieldValues> {
   schema: $ZodType<TFields, TFields>;
   className?: string;
   id?: string;
-  onSubmit: SubmitHandler<TFields>;
+  onSubmit: (data: TFields, form: UseFormReturn<TFields>) => void;
   defaultValues?: DefaultValues<TFields>;
   children: ReactNode | ((form: UseFormReturn<TFields>) => ReactNode);
 }
@@ -39,7 +38,7 @@ export function Form<TFields extends FieldValues>({
       <form
         id={id}
         className={className}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) => onSubmit(data, form))}
         noValidate
       >
         {typeof children === "function" ? children(form) : children}
