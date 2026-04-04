@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,11 +9,14 @@ import type {
   OnChangeFn,
   PaginationState,
   SortingState,
+  Table,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { LoadingState } from "@shared/components/LoadingState/LoadingState";
 import { DataTablePagination } from "./DataTablePagination";
+
+type ColumnVisibilityState = Record<string, boolean>;
 
 export interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -22,9 +26,12 @@ export interface DataTableProps<TData> {
   onPaginationChange: OnChangeFn<PaginationState>;
   sorting?: SortingState;
   onSortingChange?: OnChangeFn<SortingState>;
+  columnVisibility?: ColumnVisibilityState;
+  onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>;
   isLoading?: boolean;
   noResultsMessage?: string;
   showPagination?: boolean;
+  renderPagination?: (table: Table<TData>) => ReactNode;
 }
 
 export function DataTable<TData>({
@@ -35,11 +42,15 @@ export function DataTable<TData>({
   onPaginationChange,
   sorting,
   onSortingChange,
+  columnVisibility,
+  onColumnVisibilityChange,
   isLoading = false,
   noResultsMessage = "No se encontraron resultados.",
   showPagination = true,
+  renderPagination,
 }: DataTableProps<TData>) {
   const hasSorting = !!onSortingChange;
+  const hasColumnVisibility = !!columnVisibility;
 
   const table = useReactTable({
     data,
@@ -48,9 +59,11 @@ export function DataTable<TData>({
     state: {
       pagination,
       ...(hasSorting && { sorting }),
+      ...(hasColumnVisibility && { columnVisibility }),
     },
     onPaginationChange,
     ...(hasSorting && { onSortingChange }),
+    ...(hasColumnVisibility && { onColumnVisibilityChange }),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
@@ -69,6 +82,11 @@ export function DataTable<TData>({
                 {headerGroup.headers.map((header) => {
                   const canSort = hasSorting && header.column.getCanSort();
                   const sorted = header.column.getIsSorted();
+                  const metaClassName = (
+                    header.column.columnDef.meta as
+                      | { className?: string }
+                      | undefined
+                  )?.className;
 
                   return (
                     <th
@@ -78,6 +96,7 @@ export function DataTable<TData>({
                         "px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-white",
                         "border-l border-primary-100 first:border-l-0",
                         canSort && "cursor-pointer select-none",
+                        metaClassName,
                       )}
                       onClick={
                         canSort
@@ -132,20 +151,29 @@ export function DataTable<TData>({
                   key={row.id}
                   className="border-b border-neutral-100 transition-colors last:border-b-0 hover:bg-primary-50"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className={cn(
-                        "px-4 py-4 text-center text-neutral-700",
-                        "border-l border-neutral-200 first:border-l-0",
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const metaClassName = (
+                      cell.column.columnDef.meta as
+                        | { className?: string }
+                        | undefined
+                    )?.className;
+
+                    return (
+                      <td
+                        key={cell.id}
+                        className={cn(
+                          "px-4 py-4 text-center text-neutral-700",
+                          "border-l border-neutral-200 first:border-l-0",
+                          metaClassName,
+                        )}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))
             )}
@@ -153,7 +181,12 @@ export function DataTable<TData>({
         </table>
       </div>
 
-      {showPagination && <DataTablePagination table={table} />}
+      {showPagination &&
+        (renderPagination ? (
+          renderPagination(table)
+        ) : (
+          <DataTablePagination table={table} />
+        ))}
     </div>
   );
 }

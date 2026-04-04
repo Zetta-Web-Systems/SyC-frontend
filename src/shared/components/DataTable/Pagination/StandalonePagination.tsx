@@ -1,7 +1,7 @@
-import type { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "@shared/ui";
-import { PageButton, NavButton } from "@shared/components/DataTable";
+import { PageButton } from "./PageButton";
+import { NavButton } from "./NavButton";
 import {
   PAGE_SIZE_OPTIONS,
   MAX_VISIBLE_PAGES,
@@ -9,14 +9,18 @@ import {
 } from "@shared/constants/pagination.constants";
 import { getVisiblePages } from "@shared/utils/pagination.utils";
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
+export interface StandalonePaginationProps {
+  pageIndex: number;
+  pageSize: number;
+  rowCount: number;
+  onPageIndexChange: (pageIndex: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
 }
 
 interface PageButtonsProps {
   pages: number[];
   currentPage: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (pageIndex: number) => void;
 }
 
 function PageButtons({ pages, currentPage, onPageChange }: PageButtonsProps) {
@@ -39,18 +43,23 @@ function PageButtons({ pages, currentPage, onPageChange }: PageButtonsProps) {
   );
 }
 
-export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const pageCount = table.getPageCount();
-  const rowCount = table.getRowCount();
+export function StandalonePagination({
+  pageIndex,
+  pageSize,
+  rowCount,
+  onPageIndexChange,
+  onPageSizeChange,
+}: StandalonePaginationProps) {
+  const pageCount = Math.ceil(rowCount / pageSize);
   const currentPage = pageIndex + 1;
 
   if (rowCount === 0) return null;
 
   const rangeStart = pageIndex * pageSize + 1;
   const rangeEnd = Math.min(currentPage * pageSize, rowCount);
+
+  const canPreviousPage = pageIndex > 0;
+  const canNextPage = currentPage < pageCount;
 
   const visiblePages = getVisiblePages(
     currentPage,
@@ -63,8 +72,6 @@ export function DataTablePagination<TData>({
     MAX_VISIBLE_PAGES_MOBILE,
   );
 
-  const handlePageChange = (pageIdx: number) => table.setPageIndex(pageIdx);
-
   return (
     <div className="flex items-center justify-between px-1 py-3">
       <span className="hidden whitespace-nowrap text-sm text-neutral-500 md:inline">
@@ -73,8 +80,8 @@ export function DataTablePagination<TData>({
 
       <div className="flex items-center gap-1">
         <NavButton
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => onPageIndexChange(pageIndex - 1)}
+          disabled={!canPreviousPage}
           aria-label="Pagina anterior"
         >
           <ChevronLeft size={16} aria-hidden="true" />
@@ -85,7 +92,7 @@ export function DataTablePagination<TData>({
           <PageButtons
             pages={visiblePages}
             currentPage={currentPage}
-            onPageChange={handlePageChange}
+            onPageChange={onPageIndexChange}
           />
         </div>
 
@@ -93,13 +100,13 @@ export function DataTablePagination<TData>({
           <PageButtons
             pages={visiblePagesMobile}
             currentPage={currentPage}
-            onPageChange={handlePageChange}
+            onPageChange={onPageIndexChange}
           />
         </div>
 
         <NavButton
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => onPageIndexChange(pageIndex + 1)}
+          disabled={!canNextPage}
           aria-label="Pagina siguiente"
         >
           <span className="hidden sm:inline">Siguiente</span>
@@ -114,7 +121,7 @@ export function DataTablePagination<TData>({
         <div className="w-18">
           <Select
             value={String(pageSize)}
-            onChange={(e) => table.setPageSize(Number(e.target.value))}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
             size="sm"
           >
             {PAGE_SIZE_OPTIONS.map((size) => (
@@ -129,4 +136,4 @@ export function DataTablePagination<TData>({
   );
 }
 
-DataTablePagination.displayName = "DataTablePagination";
+StandalonePagination.displayName = "StandalonePagination";
