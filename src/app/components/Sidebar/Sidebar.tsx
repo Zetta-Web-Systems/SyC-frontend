@@ -15,7 +15,7 @@ export function Sidebar() {
   const closeMobile = useSidebarStore((s) => s.closeMobile);
 
   const isMobile = useMediaQuery("(max-width: 767px)");
-  const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 1023px)");
+  const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 1280px)");
 
   useEffect(() => {
     if (isTablet) collapse();
