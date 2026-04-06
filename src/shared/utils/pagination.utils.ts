@@ -1,4 +1,7 @@
-import type { PaginatedParams } from "@shared/types/pagination.types";
+import type {
+  FilterEntry,
+  PaginatedParams,
+} from "@shared/types/pagination.types";
 
 /**
  * Convierte un 0-based pageIndex de TanStack Table a un número de página 1-based para la API.
@@ -12,6 +15,19 @@ export function toApiPage(pageIndex: number): number {
  */
 export function toTablePageIndex(page: number): number {
   return page - 1;
+}
+
+/**
+ * Separa un array de FilterEntry en los dos arrays paralelos que espera la API.
+ */
+export function splitFilterEntries(
+  entries: FilterEntry[],
+): Pick<PaginatedParams, "filters" | "filtersValues"> {
+  if (entries.length === 0) return {};
+  return {
+    filters: entries.map((e) => e.key),
+    filtersValues: entries.map((e) => e.value),
+  };
 }
 
 /**

@@ -1,10 +1,13 @@
 import { useState, useCallback } from "react";
 import type { PaginationState } from "@tanstack/react-table";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
-import { toApiPage } from "@shared/utils/pagination.utils";
-import type { PaginatedParams } from "@shared/types/pagination.types";
+import type {
+  PaginatedParams,
+  FilterEntry,
+} from "@shared/types/pagination.types";
 import type { ViewMode } from "@shared/ui";
 import { formatDateToISO } from "@shared/utils/date.utils";
+import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 
 interface UseAttendanceFiltersOptions {
   type: "INSTRUCTOR" | "MEMBER";
@@ -22,38 +25,35 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
   const [prevMonth, setPrevMonth] = useState<string[]>([]);
   const [prevYear, setPrevYear] = useState<string[]>([]);
   const [dateFilter, setDateFilter] = useState<Date | null>(new Date());
-  const [viewMode, setViewMode] = useState<ViewMode>("card");
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
 
-  const filters: string[] = ["person.type"];
-  const filtersValues: string[] = [options.type];
+  const filterEntries: FilterEntry[] = [
+    { key: "person.type", value: options.type },
+  ];
 
   if (options.initialPersonId) {
-    filters.push("personId");
-    filtersValues.push(options.initialPersonId);
+    filterEntries.push({ key: "person.id", value: options.initialPersonId });
   }
 
   if (dateFilter) {
-    filters.push("attendanceDate");
-    filtersValues.push(formatDateToISO(dateFilter));
+    filterEntries.push({
+      key: "attendanceDate",
+      value: formatDateToISO(dateFilter),
+    });
   } else {
     if (monthFilter.length > 0) {
-      filters.push("month");
-      filtersValues.push(monthFilter[0]);
+      filterEntries.push({ key: "month", value: monthFilter[0] });
     }
     if (yearFilter.length > 0) {
-      filters.push("year");
-      filtersValues.push(yearFilter[0]);
+      filterEntries.push({ key: "year", value: yearFilter[0] });
     }
   }
 
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,
-    orderBy: "id",
-    orderType: "DESC",
     search: search || undefined,
-    filters,
-    filtersValues,
+    ...splitFilterEntries(filterEntries),
   };
 
   const handleSearch = useCallback((value: string) => {

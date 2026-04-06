@@ -23,3 +23,8 @@ export interface PaginatedResponse<T> {
   data: T[];
   pagination: PaginationMeta;
 }
+
+export interface FilterEntry {
+  key: string;
+  value: string;
+}

@@ -1,10 +1,12 @@
 import { useState, useCallback } from "react";
 import type { PaginationState } from "@tanstack/react-table";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
-import { toApiPage } from "@shared/utils/pagination.utils";
-import type { PaginatedParams } from "@shared/types/pagination.types";
+import type {
+  PaginatedParams,
+  FilterEntry,
+} from "@shared/types/pagination.types";
 import type { ViewMode } from "@shared/ui";
-import { ORDER_MAP } from "../constants/instructors.constants";
+import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 
 export function useInstructorsFilters() {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -12,22 +14,21 @@ export function useInstructorsFilters() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>(["1"]);
   const [orderByValue, setOrderByValue] = useState("recent");
   const [viewMode, setViewMode] = useState<ViewMode>("table");
 
-  const order = ORDER_MAP[orderByValue] ?? ORDER_MAP.recent;
+  const filterEntries: FilterEntry[] = [];
+
+  if (statusFilter.length > 0) {
+    filterEntries.push({ key: "user.isActive", value: statusFilter[0] });
+  }
 
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,
-    orderBy: order.orderBy,
-    orderType: order.orderType,
     search: search || undefined,
-    ...(statusFilter.length > 0 && {
-      filters: ["user.isActive"],
-      filtersValues: statusFilter,
-    }),
+    ...splitFilterEntries(filterEntries),
   };
 
   const handleSearch = useCallback((value: string) => {
