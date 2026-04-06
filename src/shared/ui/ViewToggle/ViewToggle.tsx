@@ -27,18 +27,6 @@ export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
       {...props}
     >
       <Button
-        variant={viewMode === "card" ? "solid" : "ghost"}
-        intent={viewMode === "card" ? "primary" : "neutral"}
-        size="icon"
-        role="radio"
-        aria-checked={viewMode === "card"}
-        aria-label="Vista tarjetas"
-        onClick={() => onViewModeChange("card")}
-        className="h-7 w-7"
-      >
-        <LayoutGrid size={14} aria-hidden="true" />
-      </Button>
-      <Button
         variant={viewMode === "table" ? "solid" : "ghost"}
         intent={viewMode === "table" ? "primary" : "neutral"}
         size="icon"
@@ -49,6 +37,18 @@ export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
         className="h-7 w-7"
       >
         <Table2 size={14} aria-hidden="true" />
+      </Button>
+      <Button
+        variant={viewMode === "card" ? "solid" : "ghost"}
+        intent={viewMode === "card" ? "primary" : "neutral"}
+        size="icon"
+        role="radio"
+        aria-checked={viewMode === "card"}
+        aria-label="Vista tarjetas"
+        onClick={() => onViewModeChange("card")}
+        className="h-7 w-7"
+      >
+        <LayoutGrid size={14} aria-hidden="true" />
       </Button>
     </div>
   ),

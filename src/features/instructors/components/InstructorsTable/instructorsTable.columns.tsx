@@ -34,7 +34,7 @@ export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
                 className="text-neutral-400"
                 aria-hidden="true"
               />
-              Último ingreso:{" "}
+              Última conexión:{" "}
               {
                 <Badge intent={lastLogin.intent} size="sm">
                   {lastLogin.label}

@@ -22,13 +22,17 @@ const dateTimeFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
 
 // Helper centralizado
 function parseDate(input: string | Date): Date {
-  const parsed = typeof input === "string" ? new Date(input) : input;
-
-  if (isNaN(parsed.getTime())) {
-    throw new Error(`Invalid date: ${input}`);
+  if (typeof input === "string") {
+    const normalized = /^\d{4}-\d{2}-\d{2}$/.test(input)
+      ? `${input}T00:00:00`
+      : input;
+    const parsed = new Date(normalized);
+    if (isNaN(parsed.getTime())) throw new Error(`Invalid date: ${input}`);
+    return parsed;
   }
 
-  return parsed;
+  if (isNaN(input.getTime())) throw new Error(`Invalid date: ${input}`);
+  return input;
 }
 
 /**

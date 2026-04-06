@@ -162,7 +162,7 @@ export function InstructorCard({
         </div>
         <span className="flex items-center gap-1 justify-center">
           <Clock size={12} className="text-neutral-400" aria-hidden="true" />
-          Último ingreso: {lastLogin.label.toLowerCase()}
+          Última conexión: {lastLogin.label.toLowerCase()}
         </span>
       </div>
     </div>
