@@ -19,7 +19,7 @@ interface AttendanceTableProps {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
-  viewMode: ViewMode;
+  viewMode?: ViewMode;
 }
 
 export function AttendanceTable({

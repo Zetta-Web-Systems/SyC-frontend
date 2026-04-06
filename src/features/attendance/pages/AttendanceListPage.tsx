@@ -1,4 +1,4 @@
-import { ViewToggle } from "@shared/ui";
+// import { ViewToggle } from "@shared/ui";
 import { AttendanceListHeader } from "../components/AttendanceList/AttendanceListHeader/AttendanceListHeader";
 import { AttendanceListFilters } from "../components/AttendanceList/AttendanceListFilters/AttendanceListFilters";
 import { AttendanceTable } from "../components/AttendanceList/AttendanceTable";
@@ -21,7 +21,7 @@ export default function AttendanceListPage({
     yearFilter,
     dateFilter,
     viewMode,
-    setViewMode,
+    // setViewMode,
     setPagination,
     handleSearch,
     handleMonthChange,
@@ -51,9 +51,9 @@ export default function AttendanceListPage({
         onYearChange={handleYearChange}
         onDateChange={handleDateChange}
         onClearAllFilters={handleClearAllFilters}
-        actions={
-          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        }
+        // actions={
+        //   <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        // }
       />
 
       <AttendanceTable
