@@ -147,6 +147,9 @@ export function InstructorForm({
             name="image"
             label="Foto de perfil"
             initialPreview={instructor.image ?? null}
+            deleteFieldName="deleteImage"
+            deleteFieldTitle="Eliminar foto de perfil"
+            deleteFieldDescription="¿Estás seguro que deseas eliminar la foto de perfil?"
           />
         </div>
 

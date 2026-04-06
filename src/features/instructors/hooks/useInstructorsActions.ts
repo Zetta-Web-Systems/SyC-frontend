@@ -70,10 +70,17 @@ export function useInstructorsActions() {
       description: `¿Estas seguro que deseas modificar a ${editingInstructor.name} ${editingInstructor.lastname}?`,
       confirmLabel: "Modificar",
       onConfirm: () => {
-        const normalized = {
-          ...data,
-          image: data.image ?? undefined,
+        const { deleteImage, ...rest } = data;
+        const normalized: Record<string, unknown> = {
+          ...rest,
+          image: rest.image ?? undefined,
         };
+
+        if (deleteImage) {
+          normalized.deleteImage = true;
+          delete normalized.image;
+        }
+
         updateMutation.mutate(
           { id: editingInstructor.id, dto: normalized },
           { onSuccess: () => handleCloseModal() },

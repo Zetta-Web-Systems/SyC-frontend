@@ -23,6 +23,5 @@ export interface RegisterInstructorDto extends BaseInstructor {
 
 export interface UpdateInstructorDto extends Partial<BaseInstructor> {
   image?: File;
+  deleteImage?: boolean;
 }
-
-export type AttendanceInstructor = Pick<Instructor, "id" | "name" | "lastname">;

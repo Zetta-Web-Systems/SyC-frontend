@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { INSTRUCTOR_VALIDATION as IV } from "./instructor.validation";
 
+const nameField = z
+  .string({ error: "El nombre es requerido" })
+  .min(1, "El nombre es requerido");
+
+const lastnameField = z
+  .string({ error: "El apellido es requerido" })
+  .min(1, "El apellido es requerido");
+
 const dniField = z
   .string({ error: "El DNI es requerido" })
   .regex(/^\d+$/, "El DNI solo debe contener números")
@@ -13,13 +21,7 @@ const dniField = z
     `El DNI debe tener como máximo ${IV.dni.maxLength} caracteres`,
   );
 
-const nameField = z
-  .string({ error: "El nombre es requerido" })
-  .min(1, "El nombre es requerido");
-
-const lastnameField = z
-  .string({ error: "El apellido es requerido" })
-  .min(1, "El apellido es requerido");
+const emailField = z.email("Ingresa un email válido");
 
 const phoneField = z
   .string({ error: "El teléfono es requerido" })
@@ -66,11 +68,13 @@ const addressField = z
 
 const imageField = z.instanceof(File).optional().nullable();
 
+const deleteImageField = z.boolean().optional();
+
 export const registerInstructorSchema = z.object({
   name: nameField,
   lastname: lastnameField,
   dni: dniField,
-  email: z.email("Ingresa un email válido"),
+  email: emailField,
   phone: phoneField,
   emergencyPhone: emergencyPhoneField,
   address: addressField,
@@ -86,6 +90,7 @@ export const updateInstructorSchema = z.object({
   emergencyPhone: emergencyPhoneField,
   address: addressField,
   image: imageField,
+  deleteImage: deleteImageField,
 });
 
 export type UpdateInstructorSchema = z.infer<typeof updateInstructorSchema>;

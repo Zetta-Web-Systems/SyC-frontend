@@ -47,6 +47,10 @@ function dtoToFormData(
     formData.append("image", dto.image);
   }
 
+  if ("deleteImage" in dto && dto.deleteImage === true) {
+    formData.append("deleteImage", "true");
+  }
+
   return formData;
 }
 
