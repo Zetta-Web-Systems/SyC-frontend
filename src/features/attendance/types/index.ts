@@ -22,4 +22,5 @@ export interface Attendance extends BaseAttendance {
   lastname: string;
   dni: string;
   type: AttendanceType;
+  profileImageUrl?: string;
 }

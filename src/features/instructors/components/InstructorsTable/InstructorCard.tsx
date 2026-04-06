@@ -108,7 +108,7 @@ export function InstructorCard({
                       to: "/attendances",
                       search: {
                         type: "INSTRUCTOR" as const,
-                        personId: instructor.id,
+                        personId: instructor.personId,
                       },
                     });
                     setMenuOpen(false);

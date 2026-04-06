@@ -10,7 +10,7 @@ export const attendanceColumns: ColumnDef<Attendance, unknown>[] = [
     id: "name",
     header: "Nombre",
     cell: ({ row }) => {
-      const { name, lastname, dni } = row.original;
+      const { name, lastname, dni, profileImageUrl } = row.original;
       const initials = (name.charAt(0) + lastname.charAt(0)).toUpperCase();
       const fullName = `${name} ${lastname}`;
 
@@ -19,7 +19,7 @@ export const attendanceColumns: ColumnDef<Attendance, unknown>[] = [
           <Avatar
             size="md"
             color="primary"
-            // src={image ?? null}
+            src={profileImageUrl ?? null}
             fallback={initials}
             alt={fullName}
           />
@@ -33,7 +33,7 @@ export const attendanceColumns: ColumnDef<Attendance, unknown>[] = [
                 className="text-primary-400"
                 aria-hidden="true"
               />
-              {dni}
+              DNI: {dni}
             </span>
           </div>
         </div>

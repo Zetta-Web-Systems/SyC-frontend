@@ -73,7 +73,7 @@ export function InstructorsTable({
                     to="/attendances"
                     search={{
                       type: "INSTRUCTOR" as const,
-                      personId: instructor.id,
+                      personId: instructor.personId,
                     }}
                   >
                     <Button

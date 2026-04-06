@@ -29,7 +29,7 @@ export const INSTRUCTOR_TABLE_VISIBILITY: ColumnVisibilityConfig = {
 
 export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
-    name: false,
+    name: true,
     attendanceDate: true,
     arrivalTime: true,
     departureTime: true,

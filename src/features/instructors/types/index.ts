@@ -7,6 +7,7 @@ interface BaseInstructor {
 }
 
 export interface Instructor extends BaseInstructor {
+  personId: string;
   id: string;
   dni: string;
   email: string;
