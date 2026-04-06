@@ -1,4 +1,4 @@
-import { Mail, User, CreditCard, Pin } from "lucide-react";
+import { Mail, User, CreditCard, Home } from "lucide-react";
 import { Button, Input, Label } from "@shared/ui";
 import { Form, FormField, FormError, FormImage } from "@shared/components/Form";
 import { PhoneInput } from "@shared/components/VariousInputs/PhoneInput";
@@ -138,7 +138,7 @@ export function InstructorForm({
                 {...field}
                 type="text"
                 placeholder="Dirección del profesor"
-                leftElement={<Pin size={16} aria-hidden="true" />}
+                leftElement={<Home size={16} aria-hidden="true" />}
               />
             )}
           </FormField>
@@ -248,7 +248,7 @@ export function InstructorForm({
               {...field}
               type="text"
               placeholder="Dirección del profesor"
-              leftElement={<Pin size={16} aria-hidden="true" />}
+              leftElement={<Home size={16} aria-hidden="true" />}
             />
           )}
         </FormField>
