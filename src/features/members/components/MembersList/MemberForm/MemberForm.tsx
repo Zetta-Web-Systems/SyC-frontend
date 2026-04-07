@@ -124,14 +124,18 @@ export function MemberForm({
           )}
 
           <FormField<UpdateMemberSchema> name="phone" label="Teléfono">
-            {(field) => <PhoneInput {...field} />}
+            {(field) => (
+              <PhoneInput {...field} placeholder="Teléfono del alumno" />
+            )}
           </FormField>
 
           <FormField<UpdateMemberSchema>
             name="emergencyPhone"
             label="Teléfono de emergencia"
           >
-            {(field) => <PhoneInput {...field} />}
+            {(field) => (
+              <PhoneInput {...field} placeholder="Teléfono de emergencia" />
+            )}
           </FormField>
 
           <FormField<UpdateMemberSchema> name="address" label="Dirección">
@@ -284,14 +288,18 @@ export function MemberForm({
         </FormField>
 
         <FormField<RegisterMemberSchema> name="phone" label="Teléfono">
-          {(field) => <PhoneInput {...field} />}
+          {(field) => (
+            <PhoneInput {...field} placeholder="Teléfono del alumno" />
+          )}
         </FormField>
 
         <FormField<RegisterMemberSchema>
           name="emergencyPhone"
           label="Teléfono de emergencia"
         >
-          {(field) => <PhoneInput {...field} />}
+          {(field) => (
+            <PhoneInput {...field} placeholder="Teléfono de emergencia" />
+          )}
         </FormField>
 
         <FormField<RegisterMemberSchema> name="address" label="Dirección">
