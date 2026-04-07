@@ -2,10 +2,10 @@ import { ArrowLeft, CalendarDays } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { Button } from "@shared/ui";
-import { PERSON_TYPE_LABELS } from "@features/attendance/constants";
+import { PERSON_TYPE_LABELS, type AttendanceType } from "../../../constants";
 
 interface AttendanceListHeaderProps {
-  type: "INSTRUCTOR" | "MEMBER";
+  type: AttendanceType;
 }
 
 export function AttendanceListHeader({ type }: AttendanceListHeaderProps) {

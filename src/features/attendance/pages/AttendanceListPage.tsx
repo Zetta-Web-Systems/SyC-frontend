@@ -2,11 +2,12 @@
 import { AttendanceListHeader } from "../components/AttendanceList/AttendanceListHeader/AttendanceListHeader";
 import { AttendanceListFilters } from "../components/AttendanceList/AttendanceListFilters/AttendanceListFilters";
 import { AttendanceTable } from "../components/AttendanceList/AttendanceTable";
+import type { AttendanceType } from "../constants";
 import { useAttendanceQuery } from "../hooks/list/useAttendanceQuery";
 import { useAttendanceFilters } from "../hooks/list/useAttendanceFilters";
 
 interface AttendanceListPageProps {
-  type: "INSTRUCTOR" | "MEMBER";
+  type: AttendanceType;
   personId?: string;
 }
 

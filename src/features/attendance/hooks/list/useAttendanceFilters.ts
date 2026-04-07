@@ -8,9 +8,10 @@ import type {
 import type { ViewMode } from "@shared/ui";
 import { formatDateToISO } from "@shared/utils/date.utils";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
+import type { AttendanceType } from "../../constants";
 
 interface UseAttendanceFiltersOptions {
-  type: "INSTRUCTOR" | "MEMBER";
+  type: AttendanceType;
   initialPersonId?: string;
 }
 
