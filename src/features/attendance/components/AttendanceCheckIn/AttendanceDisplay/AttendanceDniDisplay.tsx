@@ -12,14 +12,18 @@ export function AttendanceDniDisplay({
   isValid,
   isError,
 }: AttendanceDniDisplayProps) {
-  const boxes = Array.from({ length: DNI_MAX_LENGTH }, (_, i) => {
-    const digit = dni[i] ?? null;
-    const isFilled = digit !== null;
-    const isActive = !isFilled && i === dni.length;
+  const slots = Array.from({ length: DNI_MAX_LENGTH }, (_, i) => ({
+    position: i,
+    digit: (dni[i] as string | undefined) ?? null,
+  }));
+
+  const boxes = slots.map((slot) => {
+    const isFilled = slot.digit !== null;
+    const isActive = !isFilled && slot.position === dni.length;
 
     return (
       <div
-        key={i}
+        key={slot.position}
         className={cn(
           "flex h-16 w-14 items-center justify-center rounded-xl border-2 transition-all duration-150 md:h-20 md:w-18 lg:h-16 lg:w-12",
           isError && "border-error bg-white",
@@ -32,7 +36,7 @@ export function AttendanceDniDisplay({
       >
         {isFilled ? (
           <span className="text-3xl font-bold text-primary-800 md:text-4xl lg:text-3xl">
-            {digit}
+            {slot.digit}
           </span>
         ) : isActive && !isError ? (
           <span className="inline-block h-2 w-2 rounded-full bg-primary-500 animate-[attendance-pulse-cursor_1s_ease-in-out_infinite] md:h-2.5 md:w-2.5 lg:h-2 lg:w-2" />
