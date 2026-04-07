@@ -24,7 +24,7 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
   const [yearFilter, setYearFilter] = useState<string[]>([]);
   const [prevMonth, setPrevMonth] = useState<string[]>([]);
   const [prevYear, setPrevYear] = useState<string[]>([]);
-  const [dateFilter, setDateFilter] = useState<Date | null>(new Date());
+  const [dateFilter, setDateFilter] = useState<Date | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
 
   const filterEntries: FilterEntry[] = [
