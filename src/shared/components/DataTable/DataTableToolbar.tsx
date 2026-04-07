@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { ReactNode } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import {
@@ -11,7 +11,10 @@ import {
 } from "@shared/ui";
 import type { DateFilterDropdownProps } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
-import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
+import type {
+  ToolbarFilterConfig,
+  ExtraFilterChip,
+} from "@shared/types/datatable.types";
 import { ActiveFilterChips } from "./Toolbar/ActiveFilterChips";
 import { ExportMenu } from "./Toolbar/ExportMenu";
 
@@ -19,10 +22,13 @@ export interface DataTableToolbarProps {
   filters: ToolbarFilterConfig[];
   dateFilter?: Omit<DateFilterDropdownProps, "className">;
   searchPlaceholder?: string;
+  searchValue?: string;
   onSearch: (value: string) => void;
+  onSearchClear?: () => void;
   onExportPDF?: () => void;
   onExportExcel?: () => void;
   onClearAll?: () => void;
+  extraChips?: ExtraFilterChip[];
   moreFiltersContent?: ReactNode;
   actions?: ReactNode;
   className?: string;
@@ -32,10 +38,13 @@ export function DataTableToolbar({
   filters,
   dateFilter,
   searchPlaceholder = "Buscar...",
+  searchValue,
   onSearch,
+  onSearchClear,
   onExportPDF,
   onExportExcel,
   onClearAll,
+  extraChips: consumerExtraChips,
   moreFiltersContent,
   actions,
   className,
@@ -43,9 +52,37 @@ export function DataTableToolbar({
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const builtExtraChips = useMemo<ExtraFilterChip[]>(() => {
+    const chips: ExtraFilterChip[] = [];
+
+    if (dateFilter?.value) {
+      chips.push({
+        key: "__date",
+        label: dateFilter.label,
+        value: dateFilter.value.toLocaleDateString("es-AR"),
+        onRemove: () => dateFilter.onChange(null),
+      });
+    }
+
+    if (searchValue) {
+      chips.push({
+        key: "__search",
+        label: "Búsqueda",
+        value: searchValue,
+        onRemove: () => onSearchClear?.(),
+      });
+    }
+
+    if (consumerExtraChips) {
+      chips.push(...consumerExtraChips);
+    }
+
+    return chips;
+  }, [dateFilter, searchValue, onSearchClear, consumerExtraChips]);
+
   const activeFilterCount =
     filters.reduce((sum, f) => sum + f.selected.length, 0) +
-    (dateFilter?.value ? 1 : 0);
+    builtExtraChips.length;
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
@@ -143,8 +180,9 @@ export function DataTableToolbar({
               ))}
 
               {onClearAll && activeFilterCount > 0 && (
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  intent="primary"
                   onClick={() => {
                     onClearAll();
                     setMobileFiltersOpen(false);
@@ -152,7 +190,7 @@ export function DataTableToolbar({
                   className="w-full cursor-pointer text-center text-xs font-medium text-primary-600 transition-colors hover:text-primary-800"
                 >
                   Limpiar todo
-                </button>
+                </Button>
               )}
             </div>
           </Popover>
@@ -161,6 +199,7 @@ export function DataTableToolbar({
         <div className="flex items-center gap-2">
           <SearchInput
             placeholder={searchPlaceholder}
+            externalValue={searchValue}
             onSearch={onSearch}
             className="flex-1 md:w-64 md:flex-initial"
           />
@@ -171,7 +210,11 @@ export function DataTableToolbar({
         </div>
       </div>
 
-      <ActiveFilterChips filters={filters} onClearAll={onClearAll} />
+      <ActiveFilterChips
+        filters={filters}
+        extraChips={builtExtraChips}
+        onClearAll={onClearAll}
+      />
     </div>
   );
 }

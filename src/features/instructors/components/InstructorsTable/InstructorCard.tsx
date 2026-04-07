@@ -109,6 +109,7 @@ export function InstructorCard({
                       search: {
                         type: "INSTRUCTOR" as const,
                         personId: instructor.personId,
+                        personName: `${instructor.name} ${instructor.lastname}`,
                       },
                     });
                     setMenuOpen(false);

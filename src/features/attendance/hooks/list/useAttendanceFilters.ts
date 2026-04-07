@@ -93,12 +93,18 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     [monthFilter, yearFilter, prevMonth, prevYear],
   );
 
+  const clearSearch = useCallback(() => {
+    setSearch("");
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
   const handleClearAllFilters = useCallback(() => {
     setPrevMonth([]);
     setPrevYear([]);
     setMonthFilter([]);
     setYearFilter([]);
     setDateFilter(null);
+    setSearch("");
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
@@ -106,12 +112,14 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     params,
     pagination,
     setPagination,
+    search,
     monthFilter,
     yearFilter,
     dateFilter,
     viewMode,
     setViewMode,
     handleSearch,
+    clearSearch,
     handleMonthChange,
     handleYearChange,
     handleDateChange,

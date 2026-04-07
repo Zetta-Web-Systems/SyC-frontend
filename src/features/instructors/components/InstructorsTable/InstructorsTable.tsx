@@ -74,6 +74,7 @@ export function InstructorsTable({
                     search={{
                       type: "INSTRUCTOR" as const,
                       personId: instructor.personId,
+                      personName: `${instructor.name} ${instructor.lastname}`,
                     }}
                   >
                     <Button

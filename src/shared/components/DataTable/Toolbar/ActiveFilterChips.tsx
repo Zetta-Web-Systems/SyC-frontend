@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import { X } from "lucide-react";
-import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
+import { Button } from "@shared/ui";
+import type {
+  ToolbarFilterConfig,
+  ExtraFilterChip,
+} from "@shared/types/datatable.types";
 
 interface ActiveChip {
   filterKey: string;
@@ -13,11 +17,13 @@ interface ActiveChip {
 
 interface ActiveFilterChipsProps {
   filters: ToolbarFilterConfig[];
+  extraChips?: ExtraFilterChip[];
   onClearAll?: () => void;
 }
 
 export function ActiveFilterChips({
   filters,
+  extraChips = [],
   onClearAll,
 }: ActiveFilterChipsProps) {
   const activeChips = useMemo<ActiveChip[]>(() => {
@@ -40,7 +46,7 @@ export function ActiveFilterChips({
     return chips;
   }, [filters]);
 
-  if (activeChips.length === 0) return null;
+  if (activeChips.length === 0 && extraChips.length === 0) return null;
 
   function handleRemoveChip(chip: ActiveChip) {
     const next = chip.currentSelected.filter((v) => v !== chip.value);
@@ -66,14 +72,38 @@ export function ActiveFilterChips({
         </span>
       ))}
 
+      {extraChips.map((chip) => (
+        <span
+          key={chip.key}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700"
+        >
+          {chip.label}: {chip.value}
+          <Button
+            variant="ghost"
+            intent="primary"
+            onClick={chip.onRemove}
+            className="cursor-pointer rounded-full p-0.5 transition-colors hover:bg-primary-100"
+            aria-label={`Quitar filtro ${chip.label}: ${chip.value}`}
+          >
+            <X size={12} aria-hidden="true" />
+          </Button>
+        </span>
+      ))}
+
       {onClearAll && (
-        <button
-          type="button"
-          onClick={onClearAll}
+        <Button
+          variant="ghost"
+          intent="primary"
+          onClick={() => {
+            for (const chip of extraChips) {
+              chip.onRemove();
+            }
+            onClearAll();
+          }}
           className="cursor-pointer text-xs font-medium text-primary-600 transition-colors hover:text-primary-800"
         >
           Limpiar todo
-        </button>
+        </Button>
       )}
     </div>
   );

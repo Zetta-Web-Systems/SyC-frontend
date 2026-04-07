@@ -9,15 +9,20 @@ import { useAttendanceFilters } from "../hooks/list/useAttendanceFilters";
 interface AttendanceListPageProps {
   type: AttendanceType;
   personId?: string;
+  personName?: string;
+  onPersonClear?: () => void;
 }
 
 export default function AttendanceListPage({
   type,
   personId,
+  personName,
+  onPersonClear,
 }: AttendanceListPageProps) {
   const {
     params,
     pagination,
+    search,
     monthFilter,
     yearFilter,
     dateFilter,
@@ -25,6 +30,7 @@ export default function AttendanceListPage({
     // setViewMode,
     setPagination,
     handleSearch,
+    clearSearch,
     handleMonthChange,
     handleYearChange,
     handleDateChange,
@@ -44,7 +50,9 @@ export default function AttendanceListPage({
       <AttendanceListHeader type={type} />
 
       <AttendanceListFilters
+        searchValue={search}
         onSearch={handleSearch}
+        onSearchClear={clearSearch}
         monthFilter={monthFilter}
         yearFilter={yearFilter}
         dateFilter={dateFilter}
@@ -52,6 +60,9 @@ export default function AttendanceListPage({
         onYearChange={handleYearChange}
         onDateChange={handleDateChange}
         onClearAllFilters={handleClearAllFilters}
+        personName={personName}
+        onPersonClear={onPersonClear}
+        type={type}
         // actions={
         //   <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         // }
