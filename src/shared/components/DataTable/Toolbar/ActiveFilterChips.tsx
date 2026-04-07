@@ -78,15 +78,14 @@ export function ActiveFilterChips({
           className="inline-flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700"
         >
           {chip.label}: {chip.value}
-          <Button
-            variant="ghost"
-            intent="primary"
+          <button
+            type="button"
             onClick={chip.onRemove}
             className="cursor-pointer rounded-full p-0.5 transition-colors hover:bg-primary-100"
             aria-label={`Quitar filtro ${chip.label}: ${chip.value}`}
           >
             <X size={12} aria-hidden="true" />
-          </Button>
+          </button>
         </span>
       ))}
 
