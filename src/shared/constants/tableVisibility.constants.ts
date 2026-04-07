@@ -27,6 +27,39 @@ export const INSTRUCTOR_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
 };
 
+export const MEMBER_TABLE_VISIBILITY: ColumnVisibilityConfig = {
+  sm: {
+    name: true,
+    dni: true,
+    contact: false,
+    trainingGoal: false,
+    bornDate: false,
+    currentWeight: false,
+    estado: false,
+    actions: true,
+  },
+  md: {
+    name: true,
+    dni: true,
+    contact: true,
+    trainingGoal: true,
+    bornDate: false,
+    currentWeight: false,
+    estado: true,
+    actions: true,
+  },
+  lg: {
+    name: true,
+    dni: true,
+    contact: true,
+    trainingGoal: true,
+    bornDate: true,
+    currentWeight: true,
+    estado: true,
+    actions: true,
+  },
+};
+
 export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
