@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useReducer, useRef, useCallback } from "react";
 import type { ChangeEvent, Ref } from "react";
 import Cropper from "react-easy-crop";
 import { ImagePlus, X, ZoomIn, Loader2, Undo2 } from "lucide-react";
@@ -12,6 +12,7 @@ import {
   validateImageFile,
   type CroppedAreaPixels,
 } from "@shared/utils/image.utils";
+import { cropReducer, initialCropState } from "./AvatarUploader.reducer";
 
 export interface AvatarUploaderProps {
   ref?: Ref<HTMLDivElement>;
@@ -37,37 +38,27 @@ export function AvatarUploader({
   onRestore,
 }: AvatarUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] =
-    useState<CroppedAreaPixels | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [state, dispatch] = useReducer(cropReducer, initialCropState);
+  const { imageSrc, crop, zoom, croppedAreaPixels, isModalOpen, error, isProcessing } = state;
 
   const handleFileSelect = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      setError(null);
+      dispatch({ type: "CLEAR_ERROR" });
 
       const validationError = validateImageFile(file, maxSizeMB);
       if (validationError) {
-        setError(validationError);
+        dispatch({ type: "SET_ERROR", error: validationError });
         return;
       }
 
       try {
         const url = await readFileAsUrl(file);
-        setImageSrc(url);
-        setIsModalOpen(true);
-        setCrop({ x: 0, y: 0 });
-        setZoom(1);
+        dispatch({ type: "OPEN_MODAL", imageSrc: url });
       } catch {
-        setError("Error al leer la imagen");
+        dispatch({ type: "SET_ERROR", error: "Error al leer la imagen" });
       }
 
       if (inputRef.current) {
@@ -79,7 +70,7 @@ export function AvatarUploader({
 
   const handleCropComplete = useCallback(
     (_croppedArea: unknown, croppedAreaPixelsArg: CroppedAreaPixels) => {
-      setCroppedAreaPixels(croppedAreaPixelsArg);
+      dispatch({ type: "SET_CROPPED_AREA", croppedAreaPixels: croppedAreaPixelsArg });
     },
     [],
   );
@@ -87,7 +78,7 @@ export function AvatarUploader({
   const handleConfirm = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
 
-    setIsProcessing(true);
+    dispatch({ type: "START_PROCESSING" });
     try {
       const croppedFile = await getCroppedImg(
         imageSrc,
@@ -96,20 +87,16 @@ export function AvatarUploader({
         0.8,
       );
       onChange(croppedFile);
-      setIsModalOpen(false);
-      setImageSrc(null);
+      dispatch({ type: "CLOSE_MODAL" });
     } catch {
-      setError("Error al procesar la imagen");
+      dispatch({ type: "SET_ERROR", error: "Error al procesar la imagen" });
     } finally {
-      setIsProcessing(false);
+      dispatch({ type: "FINISH_PROCESSING" });
     }
   }, [imageSrc, croppedAreaPixels, onChange]);
 
   const handleCancel = useCallback(() => {
-    setIsModalOpen(false);
-    setImageSrc(null);
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
+    dispatch({ type: "CLOSE_MODAL" });
   }, []);
 
   const handleReset = useCallback(() => {
@@ -118,8 +105,7 @@ export function AvatarUploader({
       return;
     }
     onChange(null);
-    setImageSrc(null);
-    setError(null);
+    dispatch({ type: "RESET" });
   }, [onChange, onRemove, value, initialPreview]);
 
   const openFilePicker = useCallback(() => {
@@ -227,8 +213,8 @@ export function AvatarUploader({
                 aspect={1}
                 cropShape="round"
                 showGrid={false}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
+                onCropChange={(c) => dispatch({ type: "SET_CROP", crop: c })}
+                onZoomChange={(z) => dispatch({ type: "SET_ZOOM", zoom: z })}
                 onCropComplete={handleCropComplete}
               />
             )}
@@ -243,7 +229,7 @@ export function AvatarUploader({
                 max={3}
                 step={0.1}
                 value={zoom}
-                onChange={(e) => setZoom(Number(e.target.value))}
+                onChange={(e) => dispatch({ type: "SET_ZOOM", zoom: Number(e.target.value) })}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-neutral-200 accent-primary-500"
                 aria-label="Zoom"
               />
