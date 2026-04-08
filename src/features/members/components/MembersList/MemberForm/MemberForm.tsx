@@ -53,6 +53,7 @@ export function MemberForm({
         defaultValues={{
           name: member.name,
           lastname: member.lastname,
+          email: member.email ?? "",
           phone: member.phone ?? "",
           emergencyPhone: member.emergencyPhone ?? "",
           address: member.address ?? "",
@@ -105,7 +106,7 @@ export function MemberForm({
             </p>
           </div>
 
-          {member.email && (
+          {member.email ? (
             <div>
               <Label htmlFor="member-email" className="mb-1.5 block">
                 Email
@@ -121,6 +122,17 @@ export function MemberForm({
                 El email no se puede modificar.
               </p>
             </div>
+          ) : (
+            <FormField<UpdateMemberSchema> name="email" label="Email">
+              {(field) => (
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="Email del alumno"
+                  leftElement={<Mail size={16} aria-hidden="true" />}
+                />
+              )}
+            </FormField>
           )}
 
           <FormField<UpdateMemberSchema> name="phone" label="Teléfono">
@@ -276,7 +288,7 @@ export function MemberForm({
           )}
         </FormField>
 
-        <FormField<RegisterMemberSchema> name="email" label="Email" required>
+        <FormField<RegisterMemberSchema> name="email" label="Email">
           {(field) => (
             <Input
               {...field}

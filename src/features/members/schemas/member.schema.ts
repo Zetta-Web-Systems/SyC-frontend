@@ -103,6 +103,7 @@ export type RegisterMemberSchema = z.infer<typeof registerMemberSchema>;
 export const updateMemberSchema = z.object({
   name: nameField,
   lastname: lastnameField,
+  email: emailField,
   phone: phoneField,
   emergencyPhone: emergencyPhoneField,
   address: addressField,

@@ -38,12 +38,21 @@ export const membersColumns: ColumnDef<Member, unknown>[] = [
     header: "Contacto",
     cell: ({ row }) => {
       const { email, phone, emergencyPhone } = row.original;
+      const hasEmail = Boolean(email);
       const hasPhone = Boolean(phone);
       const hasEmergency = Boolean(emergencyPhone);
 
       return (
         <div className="flex flex-col items-center gap-1 text-center">
-          <span className="text-sm font-medium text-neutral-900">{email}</span>
+          {hasEmail ? (
+            <span className="text-sm font-medium text-neutral-900">
+              {email}
+            </span>
+          ) : (
+            <span className="text-xs italic text-neutral-400">
+              Sin email registrado
+            </span>
+          )}
           {hasPhone || hasEmergency ? (
             <div className="flex items-center gap-2 text-xs text-neutral-500">
               {hasPhone && (
