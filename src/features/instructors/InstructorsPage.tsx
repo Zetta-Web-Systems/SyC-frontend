@@ -11,12 +11,12 @@ export default function InstructorsPage() {
   const {
     params,
     pagination,
-    statusFilter,
+    filters,
     viewMode,
     setViewMode,
     setPagination,
     handleSearch,
-    handleStatusChange,
+    handleFilterChange,
     handleClearAllFilters,
   } = useInstructorsFilters();
 
@@ -45,8 +45,8 @@ export default function InstructorsPage() {
 
       <InstructorsFilters
         onSearch={handleSearch}
-        statusFilter={statusFilter}
-        onStatusChange={handleStatusChange}
+        filters={filters}
+        onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
         actions={
           <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />

@@ -1,9 +1,6 @@
-export interface ToolbarTab {
-  label: string;
-  value: string;
-}
+import type { FilterOption } from "@shared/types/filters.types";
 
-export interface FilterOption {
+export interface ToolbarTab {
   label: string;
   value: string;
 }

@@ -1,5 +1,5 @@
 import type { PaginatedParams } from "@shared/types/pagination.types";
-import type { FilterOption } from "@shared/types/datatable.types";
+import type { FilterOption, FilterSchema } from "@shared/types/filters.types";
 
 export const MEMBERS_KEYS = {
   all: ["members"] as const,
@@ -25,3 +25,12 @@ export const TRAINING_GOAL_LABELS: Record<TrainingGoal, string> = {
   [TrainingGoal.GENERAL_HEALTH]: "Salud general",
   [TrainingGoal.FUNCTIONAL_INDEPENDENCE]: "Independencia funcional",
 };
+
+export const TRAINING_GOAL_FILTER_OPTIONS: FilterOption[] = Object.entries(
+  TRAINING_GOAL_LABELS,
+).map(([value, label]) => ({ label, value }));
+
+export const MEMBERS_FILTER_SCHEMA = {
+  status: { apiKey: "user.isActive", initial: ["1"] },
+  trainingGoal: { apiKey: "trainingGoal", initial: [] },
+} as const satisfies FilterSchema;

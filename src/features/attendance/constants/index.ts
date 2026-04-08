@@ -1,4 +1,4 @@
-import type { FilterOption } from "@shared/types/datatable.types";
+import type { FilterOption } from "@shared/types/filters.types";
 import type { PaginatedParams } from "@shared/types/pagination.types";
 
 export const ATTENDANCE_KEYS = {

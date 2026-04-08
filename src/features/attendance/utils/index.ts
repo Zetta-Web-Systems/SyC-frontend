@@ -1,4 +1,4 @@
-import type { FilterOption } from "@shared/types/datatable.types";
+import type { FilterOption } from "@shared/types/filters.types";
 
 export function getYearOptions(): FilterOption[] {
   const currentYear = new Date().getFullYear();
