@@ -106,34 +106,16 @@ export function MemberForm({
             </p>
           </div>
 
-          {member.email ? (
-            <div>
-              <Label htmlFor="member-email" className="mb-1.5 block">
-                Email
-              </Label>
+          <FormField<UpdateMemberSchema> name="email" label="Email">
+            {(field) => (
               <Input
-                id="member-email"
-                value={member.email}
+                {...field}
                 type="email"
-                disabled
+                placeholder="Email del alumno"
                 leftElement={<Mail size={16} aria-hidden="true" />}
               />
-              <p className="mt-1 text-xs text-neutral-400">
-                El email no se puede modificar.
-              </p>
-            </div>
-          ) : (
-            <FormField<UpdateMemberSchema> name="email" label="Email">
-              {(field) => (
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder="Email del alumno"
-                  leftElement={<Mail size={16} aria-hidden="true" />}
-                />
-              )}
-            </FormField>
-          )}
+            )}
+          </FormField>
 
           <FormField<UpdateMemberSchema> name="phone" label="Teléfono">
             {(field) => (
