@@ -1,3 +1,8 @@
+interface LastLoginInfo {
+  label: string;
+  intent: "success" | "info" | "warning" | "error" | "neutral";
+}
+
 const DEFAULT_LOCALE = "es-AR";
 
 // Cache de formatters (mejora performance)
@@ -17,13 +22,17 @@ const dateTimeFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
 
 // Helper centralizado
 function parseDate(input: string | Date): Date {
-  const parsed = typeof input === "string" ? new Date(input) : input;
-
-  if (isNaN(parsed.getTime())) {
-    throw new Error(`Invalid date: ${input}`);
+  if (typeof input === "string") {
+    const normalized = /^\d{4}-\d{2}-\d{2}$/.test(input)
+      ? `${input}T00:00:00`
+      : input;
+    const parsed = new Date(normalized);
+    if (isNaN(parsed.getTime())) throw new Error(`Invalid date: ${input}`);
+    return parsed;
   }
 
-  return parsed;
+  if (isNaN(input.getTime())) throw new Error(`Invalid date: ${input}`);
+  return input;
 }
 
 /**
@@ -104,4 +113,74 @@ export function formatTimeShort(time: string): string {
   }
 
   return time.slice(0, 5);
+}
+
+/**
+ * Normaliza una fecha a medianoche en hora local, eliminando la componente horaria.
+ * Esto es esencial para calcular diferencias en días calendario de forma correcta,
+ * independientemente de la zona horaria o la hora del día.
+ */
+function startOfDay(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+/**
+ * Utilidad para formatear la información de la última conexión / fecha relativa.
+ *
+ * @example
+ * - "HOY a las HH:MM" (verde) si fue hoy y tiene hora.
+ * - "HOY" (verde) si es una fecha sin hora y es hoy.
+ * - "Hace 1 día" (azul) si fue ayer.
+ */
+export function getLastLoginInfo(lastLoginAt: string | null): LastLoginInfo {
+  if (!lastLoginAt) {
+    return { label: "NUNCA", intent: "error" };
+  }
+
+  const loginDate = new Date(lastLoginAt);
+  const now = new Date();
+
+  const diffDays = Math.round(
+    (startOfDay(now).getTime() - startOfDay(loginDate).getTime()) / MS_PER_DAY,
+  );
+
+  if (diffDays === 0) {
+    const hasTime = lastLoginAt.includes("T") || lastLoginAt.includes(" ");
+    if (hasTime) {
+      const time = loginDate.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return { label: `HOY a las ${time}`, intent: "success" };
+    }
+    return { label: "HOY", intent: "success" };
+  }
+
+  if (diffDays >= 1 && diffDays <= 5) {
+    return {
+      label: `Hace ${diffDays} día${diffDays > 1 ? "s" : ""}`,
+      intent: "info",
+    };
+  }
+
+  if (diffDays >= 6 && diffDays <= 29) {
+    return { label: `Hace ${diffDays} días`, intent: "warning" };
+  }
+
+  return { label: "Hace 30+ días", intent: "error" };
+}
+
+/**
+ * Formatea una fecha a formato ISO (YYYY-MM-DD) en hora local.
+ * @param date Fecha a formatear. Puede ser un objeto Date o un string parseable por el constructor de Date.
+ */
+export function formatDateToISO(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }

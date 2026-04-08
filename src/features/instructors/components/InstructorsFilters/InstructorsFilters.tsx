@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import type { ReactNode } from "react";
 import { DataTableToolbar } from "@shared/components/DataTable";
 import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
 import { STATUS_FILTER_OPTIONS } from "../../constants/instructors.constants";
@@ -8,6 +9,7 @@ interface InstructorsFiltersProps {
   statusFilter: string[];
   onStatusChange: (selected: string[]) => void;
   onClearAllFilters: () => void;
+  actions?: ReactNode;
 }
 
 export function InstructorsFilters({
@@ -15,6 +17,7 @@ export function InstructorsFilters({
   statusFilter,
   onStatusChange,
   onClearAllFilters,
+  actions,
 }: InstructorsFiltersProps) {
   const filters = useMemo<ToolbarFilterConfig[]>(
     () => [
@@ -36,9 +39,10 @@ export function InstructorsFilters({
       filters={filters}
       searchPlaceholder="Buscar"
       onSearch={onSearch}
+      // onExportPDF={() => {}}
+      // onExportExcel={() => {}}
       onClearAll={onClearAllFilters}
-      onExportExcel={() => {}}
-      onExportPDF={() => {}}
+      actions={actions}
     />
   );
 }

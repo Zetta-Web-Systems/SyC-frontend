@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LONG_PRESS_DURATION } from "../constants";
+
+const DEFAULT_LONG_PRESS_DURATION = 500;
 
 function createProgressLoop(
   startTime: number,
@@ -27,9 +28,9 @@ function createProgressLoop(
   };
 }
 
-export function useAttendanceLongPress(
+export function useLongPress(
   onLongPress: () => void,
-  duration: number = LONG_PRESS_DURATION,
+  duration: number = DEFAULT_LONG_PRESS_DURATION,
 ) {
   const [isPressed, setIsPressed] = useState(false);
   const [progress, setProgress] = useState(0);

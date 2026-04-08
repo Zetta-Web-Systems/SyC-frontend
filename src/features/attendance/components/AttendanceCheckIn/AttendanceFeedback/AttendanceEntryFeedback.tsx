@@ -1,10 +1,10 @@
 import { CircleCheckBig } from "lucide-react";
-import type { AttendanceResponse } from "../../types";
-import { FALLBACK_MESSAGES } from "../../constants";
 import { AttendanceInfoCard } from "./AttendanceInfoCard";
+import { FALLBACK_MESSAGES } from "../../../constants";
+import type { AttendanceCheckIn } from "../../../types";
 
 interface AttendanceEntryFeedbackProps {
-  response: AttendanceResponse;
+  response: AttendanceCheckIn;
 }
 
 export function AttendanceEntryFeedback({

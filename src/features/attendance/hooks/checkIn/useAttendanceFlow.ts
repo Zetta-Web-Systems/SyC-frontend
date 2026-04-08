@@ -1,19 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getApiErrorMessage } from "@shared/api/apiError";
-import { ATTENDANCE_STATUS } from "../types";
-import type { AttendanceResponse, AttendanceStatus } from "../types";
-import { RESET_TIMINGS } from "../constants";
+import {
+  ATTENDANCE_ACTION,
+  REQUEST_STATUS,
+  RESET_TIMINGS,
+  type AttendanceAction,
+  type RequestStatus,
+} from "../../constants";
+import type { AttendanceCheckIn } from "../../types";
 import { useAttendanceDni } from "./useAttendanceDni";
-import { useAttendanceMutation } from "./mutations/useAttendanceMutation";
+import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
 
 interface FlowState {
-  status: AttendanceStatus;
-  response: AttendanceResponse | null;
+  status: RequestStatus | AttendanceAction;
+  response: AttendanceCheckIn | null;
   error: string | null;
 }
 
 const INITIAL_STATE: FlowState = {
-  status: ATTENDANCE_STATUS.IDLE,
+  status: REQUEST_STATUS.IDLE,
   response: null,
   error: null,
 };
@@ -61,7 +66,7 @@ export function useAttendanceFlow() {
 
   const addDigit = useCallback(
     (digit: string) => {
-      if (state.status === ATTENDANCE_STATUS.ERROR) {
+      if (state.status === REQUEST_STATUS.ERROR) {
         dismissError();
       }
       dniAddDigit(digit);
@@ -70,19 +75,19 @@ export function useAttendanceFlow() {
   );
 
   const removeDigit = useCallback(() => {
-    if (state.status === ATTENDANCE_STATUS.ERROR) {
+    if (state.status === REQUEST_STATUS.ERROR) {
       dismissError();
     }
     dniRemoveDigit();
   }, [state.status, dismissError, dniRemoveDigit]);
 
   const submit = useCallback(() => {
-    if (state.status !== ATTENDANCE_STATUS.IDLE) return;
+    if (state.status !== REQUEST_STATUS.IDLE) return;
     if (!isValid) return;
     if (mutation.isPending) return;
 
     setState({
-      status: ATTENDANCE_STATUS.LOADING,
+      status: REQUEST_STATUS.LOADING,
       response: null,
       error: null,
     });
@@ -90,9 +95,9 @@ export function useAttendanceFlow() {
     mutation.mutate(dni, {
       onSuccess: (response) => {
         const resultStatus =
-          response.departureTime !== null
-            ? ATTENDANCE_STATUS.EXIT
-            : ATTENDANCE_STATUS.ENTRY;
+          response.departureTime != null
+            ? ATTENDANCE_ACTION.EXIT
+            : ATTENDANCE_ACTION.ENTRY;
 
         setState({ status: resultStatus, response, error: null });
         startResetTimer(resultStatus);
@@ -106,7 +111,7 @@ export function useAttendanceFlow() {
         dniClear();
 
         setState({
-          status: ATTENDANCE_STATUS.ERROR,
+          status: REQUEST_STATUS.ERROR,
           response: null,
           error: message,
         });

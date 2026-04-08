@@ -17,3 +17,10 @@ export interface ToolbarFilterConfig {
   multiple?: boolean;
   searchable?: boolean;
 }
+
+export interface ExtraFilterChip {
+  key: string;
+  label: string;
+  value: string;
+  onRemove: () => void;
+}

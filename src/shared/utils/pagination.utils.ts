@@ -1,4 +1,7 @@
-import type { PaginatedParams } from "@shared/types/pagination.types";
+import type {
+  FilterEntry,
+  PaginatedParams,
+} from "@shared/types/pagination.types";
 
 /**
  * Convierte un 0-based pageIndex de TanStack Table a un número de página 1-based para la API.
@@ -12,6 +15,19 @@ export function toApiPage(pageIndex: number): number {
  */
 export function toTablePageIndex(page: number): number {
   return page - 1;
+}
+
+/**
+ * Separa un array de FilterEntry en los dos arrays paralelos que espera la API.
+ */
+export function splitFilterEntries(
+  entries: FilterEntry[],
+): Pick<PaginatedParams, "filters" | "filtersValues"> {
+  if (entries.length === 0) return {};
+  return {
+    filters: entries.map((e) => e.key),
+    filtersValues: entries.map((e) => e.value),
+  };
 }
 
 /**
@@ -47,4 +63,49 @@ export function buildPaginatedParams(
   }
 
   return query;
+}
+
+/**
+ * Calcula qué números de página mostrar en la paginación
+ */
+export function getVisiblePages(
+  currentPage: number,
+  pageCount: number,
+  maxVisible: number,
+): number[] {
+  if (pageCount <= maxVisible) {
+    return Array.from({ length: pageCount }, (_, i) => i + 1);
+  }
+
+  const half = Math.floor(maxVisible / 2);
+  let start = currentPage - half;
+  let end = currentPage + half;
+
+  if (start < 1) {
+    start = 1;
+    end = maxVisible;
+  }
+
+  if (end > pageCount) {
+    end = pageCount;
+    start = pageCount - maxVisible + 1;
+  }
+
+  const pages: number[] = [];
+
+  if (start > 1) {
+    pages.push(1);
+    if (start > 2) pages.push(-1);
+  }
+
+  for (let i = start; i <= end; i++) {
+    if (!pages.includes(i)) pages.push(i);
+  }
+
+  if (end < pageCount) {
+    if (end < pageCount - 1) pages.push(-2);
+    pages.push(pageCount);
+  }
+
+  return pages;
 }

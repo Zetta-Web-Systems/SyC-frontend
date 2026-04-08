@@ -7,51 +7,10 @@ import {
   MAX_VISIBLE_PAGES,
   MAX_VISIBLE_PAGES_MOBILE,
 } from "@shared/constants/pagination.constants";
+import { getVisiblePages } from "@shared/utils/pagination.utils";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-}
-
-function getVisiblePages(
-  currentPage: number,
-  pageCount: number,
-  maxVisible: number,
-): number[] {
-  if (pageCount <= maxVisible) {
-    return Array.from({ length: pageCount }, (_, i) => i + 1);
-  }
-
-  const half = Math.floor(maxVisible / 2);
-  let start = currentPage - half;
-  let end = currentPage + half;
-
-  if (start < 1) {
-    start = 1;
-    end = maxVisible;
-  }
-
-  if (end > pageCount) {
-    end = pageCount;
-    start = pageCount - maxVisible + 1;
-  }
-
-  const pages: number[] = [];
-
-  if (start > 1) {
-    pages.push(1);
-    if (start > 2) pages.push(-1);
-  }
-
-  for (let i = start; i <= end; i++) {
-    if (!pages.includes(i)) pages.push(i);
-  }
-
-  if (end < pageCount) {
-    if (end < pageCount - 1) pages.push(-2);
-    pages.push(pageCount);
-  }
-
-  return pages;
 }
 
 interface PageButtonsProps {
@@ -123,11 +82,19 @@ export function DataTablePagination<TData>({
         </NavButton>
 
         <div className="hidden items-center gap-1 md:flex">
-          <PageButtons pages={visiblePages} currentPage={currentPage} onPageChange={handlePageChange} />
+          <PageButtons
+            pages={visiblePages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-          <PageButtons pages={visiblePagesMobile} currentPage={currentPage} onPageChange={handlePageChange} />
+          <PageButtons
+            pages={visiblePagesMobile}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
 
         <NavButton

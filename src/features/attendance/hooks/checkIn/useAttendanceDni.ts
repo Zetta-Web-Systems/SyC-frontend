@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { DNI_MAX_LENGTH, DNI_MIN_LENGTH } from "../constants";
+import { DNI_MAX_LENGTH, DNI_MIN_LENGTH } from "../../constants";
 
 const DIGIT_REGEX = /^[0-9]$/;
 

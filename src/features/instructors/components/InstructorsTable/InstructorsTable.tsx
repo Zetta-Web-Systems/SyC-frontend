@@ -1,16 +1,21 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import type {
   ColumnDef,
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
 import { CalendarDays, Pencil, UserCheck, UserX } from "lucide-react";
-// import { Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@shared/ui";
-import { DataTable } from "@shared/components/DataTable";
-import { DataCardList } from "@shared/components/DataTable";
-import { DataTablePagination } from "@shared/components/DataTable";
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
+import type { ViewMode } from "@shared/ui";
+import {
+  DataTable,
+  DataCardList,
+  DataTablePagination,
+  StandalonePagination,
+} from "@shared/components/DataTable";
+import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
+import { INSTRUCTOR_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
 import type { Instructor } from "../../types";
 import { instructorsColumns } from "./instructorsTable.columns";
 import { InstructorCard } from "./InstructorCard";
@@ -21,6 +26,7 @@ interface InstructorsTableProps {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
+  viewMode: ViewMode;
   onEdit: (instructor: Instructor) => void;
   onDelete: (instructor: Instructor) => void;
   onRestore: (instructor: Instructor) => void;
@@ -32,10 +38,15 @@ export function InstructorsTable({
   pagination,
   onPaginationChange,
   isLoading,
+  viewMode,
   onEdit,
   onDelete,
   onRestore,
 }: InstructorsTableProps) {
+  const { columnVisibility, setColumnVisibility } = useColumnVisibility({
+    config: INSTRUCTOR_TABLE_VISIBILITY,
+  });
+
   const columns = useMemo<ColumnDef<Instructor, unknown>[]>(
     () => [
       ...instructorsColumns,
@@ -58,19 +69,23 @@ export function InstructorsTable({
                   >
                     <Pencil size={16} aria-hidden="true" color="green" />
                   </Button>
-                  {/* <Link
-                    to="/instructors/attendance/$instructorId"
-                    params={{ instructorId: instructor.id }}
-                  > */}
-                  <Button
-                    variant="ghost"
-                    intent="secondary"
-                    size="icon"
-                    aria-label={`Ver asistencias de ${instructor.name} ${instructor.lastname}`}
+                  <Link
+                    to="/attendances"
+                    search={{
+                      type: "INSTRUCTOR" as const,
+                      personId: instructor.personId,
+                      personName: `${instructor.name} ${instructor.lastname}`,
+                    }}
                   >
-                    <CalendarDays size={16} aria-hidden="true" />
-                  </Button>
-                  {/* </Link> */}
+                    <Button
+                      variant="ghost"
+                      intent="secondary"
+                      size="icon"
+                      aria-label={`Ver asistencias de ${instructor.name} ${instructor.lastname}`}
+                    >
+                      <CalendarDays size={16} aria-hidden="true" />
+                    </Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     intent="danger"
@@ -100,51 +115,73 @@ export function InstructorsTable({
     [onEdit, onDelete, onRestore],
   );
 
-  const table = useReactTable({
-    data,
-    columns,
-    rowCount,
-    state: { pagination },
-    onPaginationChange,
-    getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
-  });
+  const handlePageIndexChange = useCallback(
+    (pageIndex: number) => {
+      onPaginationChange((prev) => ({ ...prev, pageIndex }));
+    },
+    [onPaginationChange],
+  );
 
-  return (
-    <div className="flex flex-col gap-3">
-      {/* Desktop */}
-      <div className="hidden md:block">
-        <DataTable
-          columns={columns}
-          data={data}
-          rowCount={rowCount}
-          pagination={pagination}
-          onPaginationChange={onPaginationChange}
-          isLoading={isLoading}
-          noResultsMessage="No se encontraron profesores."
-          showPagination={false}
-        />
-      </div>
+  const handlePageSizeChange = useCallback(
+    (pageSize: number) => {
+      onPaginationChange({ pageIndex: 0, pageSize });
+    },
+    [onPaginationChange],
+  );
 
-      {/* Mobile */}
-      <div className="md:hidden">
-        <DataCardList
-          data={data}
-          isLoading={isLoading}
-          noResultsMessage="No se encontraron profesores."
-          renderCard={(instructor) => (
+  const cardList = (
+    <>
+      <DataCardList
+        data={data}
+        isLoading={isLoading}
+        noResultsMessage="No se encontraron profesores."
+        className="flex-row flex-wrap justify-center"
+        renderCard={(instructor) => (
+          <div key={instructor.id} className="w-full sm:w-80">
             <InstructorCard
-              key={instructor.id}
               instructor={instructor}
               onEdit={onEdit}
               onDelete={onDelete}
               onRestore={onRestore}
             />
-          )}
-        />
+          </div>
+        )}
+      />
+      <StandalonePagination
+        pageIndex={pagination.pageIndex}
+        pageSize={pagination.pageSize}
+        rowCount={rowCount}
+        onPageIndexChange={handlePageIndexChange}
+        onPageSizeChange={handlePageSizeChange}
+      />
+    </>
+  );
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* Desktop */}
+      <div className="hidden md:block">
+        {viewMode === "table" ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            rowCount={rowCount}
+            pagination={pagination}
+            onPaginationChange={onPaginationChange}
+            columnVisibility={columnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
+            isLoading={isLoading}
+            noResultsMessage="No se encontraron profesores."
+            showPagination={true}
+            renderPagination={(table) => <DataTablePagination table={table} />}
+          />
+        ) : (
+          cardList
+        )}
       </div>
 
-      <DataTablePagination table={table} />
+      {/* Mobile */}
+      <div className="md:hidden">{cardList}</div>
     </div>
   );
 }
