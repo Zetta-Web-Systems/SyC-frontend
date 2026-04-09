@@ -60,6 +60,21 @@ export const MEMBER_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
 };
 
+export const RISK_FLAG_TABLE_VISIBILITY: ColumnVisibilityConfig = {
+  sm: {
+    name: true,
+    estado: true,
+  },
+  md: {
+    name: true,
+    estado: true,
+  },
+  lg: {
+    name: true,
+    estado: true,
+  },
+};
+
 export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
