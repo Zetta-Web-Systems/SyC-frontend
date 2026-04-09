@@ -13,5 +13,5 @@ export const STATUS_FILTER_OPTIONS: FilterOption[] = [
 ];
 
 export const INSTRUCTORS_FILTER_SCHEMA = {
-  status: { apiKey: "user.isActive", initial: ["1"] },
+  status: { apiKey: "isActive", initial: ["1"] },
 } as const satisfies FilterSchema;

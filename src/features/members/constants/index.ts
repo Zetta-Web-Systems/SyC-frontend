@@ -31,6 +31,6 @@ export const TRAINING_GOAL_FILTER_OPTIONS: FilterOption[] = Object.entries(
 ).map(([value, label]) => ({ label, value }));
 
 export const MEMBERS_FILTER_SCHEMA = {
-  status: { apiKey: "user.isActive", initial: ["1"] },
+  status: { apiKey: "isActive", initial: ["1"] },
   trainingGoal: { apiKey: "trainingGoal", initial: [] },
 } as const satisfies FilterSchema;
