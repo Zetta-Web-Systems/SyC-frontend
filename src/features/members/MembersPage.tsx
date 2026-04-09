@@ -1,13 +1,13 @@
 import { ViewToggle } from "@shared/ui";
-import { InstructorsHeader } from "./components/InstructorsHeader/InstructorsHeader";
-import { InstructorsTable } from "./components/InstructorsTable/InstructorsTable";
-import { InstructorFormModal } from "./components/InstructorFormModal/InstructorFormModal";
-import { InstructorsFilters } from "./components/InstructorsFilters/InstructorsFilters";
-import { useInstructorsQuery } from "./hooks/useInstructorsQuery";
-import { useInstructorsFilters } from "./hooks/useInstructorsFilters";
-import { useInstructorsActions } from "./hooks/useInstructorsActions";
+import { MembersHeader } from "./components/MembersList/MembersHeader/MembersHeader";
+import { MembersTable } from "./components/MembersList/MembersTable";
+import { MemberFormModal } from "./components/MembersList/MemberFormModal/MemberFormModal";
+import { MembersFilters } from "./components/MembersList/MembersFilters/MembersFilters";
+import { useMembersQuery } from "./hooks/useMembersQuery";
+import { useMembersFilters } from "./hooks/useMembersFilters";
+import { useMembersActions } from "./hooks/useMembersActions";
 
-export default function InstructorsPage() {
+export default function MembersPage() {
   const {
     params,
     pagination,
@@ -18,13 +18,13 @@ export default function InstructorsPage() {
     handleSearch,
     handleFilterChange,
     handleClearAllFilters,
-  } = useInstructorsFilters();
+  } = useMembersFilters();
 
-  const { data, isLoading, isPlaceholderData } = useInstructorsQuery(params);
+  const { data, isLoading, isPlaceholderData } = useMembersQuery(params);
 
   const {
     modalOpen,
-    editingInstructor,
+    editingMember,
     isPending,
     activeMutation,
     handleOpenRegister,
@@ -34,16 +34,16 @@ export default function InstructorsPage() {
     handleUpdate,
     handleDelete,
     handleRestore,
-  } = useInstructorsActions();
+  } = useMembersActions();
 
-  const instructors = data?.data ?? [];
+  const members = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
 
   return (
     <div className="flex flex-col gap-4">
-      <InstructorsHeader onCreate={handleOpenRegister} />
+      <MembersHeader onCreate={handleOpenRegister} />
 
-      <InstructorsFilters
+      <MembersFilters
         onSearch={handleSearch}
         filters={filters}
         onFilterChange={handleFilterChange}
@@ -53,8 +53,8 @@ export default function InstructorsPage() {
         }
       />
 
-      <InstructorsTable
-        data={instructors}
+      <MembersTable
+        data={members}
         rowCount={rowCount}
         pagination={pagination}
         onPaginationChange={setPagination}
@@ -65,17 +65,17 @@ export default function InstructorsPage() {
         onRestore={handleRestore}
       />
 
-      {editingInstructor ? (
-        <InstructorFormModal
+      {editingMember ? (
+        <MemberFormModal
           open={modalOpen}
           onClose={handleCloseModal}
-          instructor={editingInstructor}
+          member={editingMember}
           onSubmit={handleUpdate}
           isPending={isPending}
           mutation={activeMutation}
         />
       ) : (
-        <InstructorFormModal
+        <MemberFormModal
           open={modalOpen}
           onClose={handleCloseModal}
           onSubmit={handleRegister}

@@ -122,14 +122,18 @@ export function InstructorForm({
           </div>
 
           <FormField<UpdateInstructorSchema> name="phone" label="Teléfono">
-            {(field) => <PhoneInput {...field} />}
+            {(field) => (
+              <PhoneInput {...field} placeholder="Teléfono del profesor" />
+            )}
           </FormField>
 
           <FormField<UpdateInstructorSchema>
             name="emergencyPhone"
             label="Teléfono de emergencia"
           >
-            {(field) => <PhoneInput {...field} />}
+            {(field) => (
+              <PhoneInput {...field} placeholder="Teléfono de emergencia" />
+            )}
           </FormField>
 
           <FormField<UpdateInstructorSchema> name="address" label="Dirección">
@@ -235,14 +239,18 @@ export function InstructorForm({
         </FormField>
 
         <FormField<RegisterInstructorSchema> name="phone" label="Teléfono">
-          {(field) => <PhoneInput {...field} />}
+          {(field) => (
+            <PhoneInput {...field} placeholder="Teléfono del profesor" />
+          )}
         </FormField>
 
         <FormField<RegisterInstructorSchema>
           name="emergencyPhone"
           label="Teléfono de emergencia"
         >
-          {(field) => <PhoneInput {...field} />}
+          {(field) => (
+            <PhoneInput {...field} placeholder="Teléfono de emergencia" />
+          )}
         </FormField>
 
         <FormField<RegisterInstructorSchema> name="address" label="Dirección">

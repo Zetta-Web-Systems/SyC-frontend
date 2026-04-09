@@ -2,9 +2,12 @@ import { useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
 import { DataTableToolbar } from "@shared/components/DataTable";
 import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
-import { STATUS_FILTER_OPTIONS } from "../../constants/instructors.constants";
+import {
+  STATUS_FILTER_OPTIONS,
+  TRAINING_GOAL_FILTER_OPTIONS,
+} from "../../../constants";
 
-interface InstructorsFiltersProps {
+interface MembersFiltersProps {
   onSearch: (value: string) => void;
   filters: Record<string, string[]>;
   onFilterChange: (key: string, values: string[]) => void;
@@ -12,13 +15,13 @@ interface InstructorsFiltersProps {
   actions?: ReactNode;
 }
 
-export function InstructorsFilters({
+export function MembersFilters({
   onSearch,
   filters,
   onFilterChange,
   onClearAllFilters,
   actions,
-}: InstructorsFiltersProps) {
+}: MembersFiltersProps) {
   const handleChange = useCallback(
     (key: string) => (values: string[]) => onFilterChange(key, values),
     [onFilterChange],
@@ -32,6 +35,15 @@ export function InstructorsFilters({
         options: STATUS_FILTER_OPTIONS,
         selected: filters.status ?? [],
         onChange: handleChange("status"),
+        multiple: false,
+        searchable: false,
+      },
+      {
+        key: "trainingGoal",
+        label: "Objetivo",
+        options: TRAINING_GOAL_FILTER_OPTIONS,
+        selected: filters.trainingGoal ?? [],
+        onChange: handleChange("trainingGoal"),
         multiple: false,
         searchable: false,
       },
@@ -50,4 +62,4 @@ export function InstructorsFilters({
   );
 }
 
-InstructorsFilters.displayName = "InstructorsFilters";
+MembersFilters.displayName = "MembersFilters";

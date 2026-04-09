@@ -11,6 +11,7 @@ export interface PhoneInputProps {
   id?: string;
   ref?: Ref<HTMLInputElement>;
   error?: boolean;
+  placeholder?: string;
   disabled?: boolean;
   "aria-describedby"?: string;
   className?: string;
@@ -72,6 +73,7 @@ export function PhoneInput({
   id,
   ref,
   error,
+  placeholder,
   disabled,
   "aria-describedby": ariaDescribedBy,
   className,
@@ -105,7 +107,7 @@ export function PhoneInput({
       onBlur={handleBlur}
       disabled={disabled}
       error={error}
-      placeholder="Teléfono del profesor"
+      placeholder={placeholder}
       aria-describedby={ariaDescribedBy}
       className={className}
       leftElement={<Phone size={16} aria-hidden="true" />}

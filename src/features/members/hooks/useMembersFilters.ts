@@ -5,9 +5,9 @@ import type { PaginatedParams } from "@shared/types/pagination.types";
 import type { ViewMode } from "@shared/ui";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 import { useFilters } from "@shared/hooks/useFilters";
-import { INSTRUCTORS_FILTER_SCHEMA } from "../constants/instructors.constants";
+import { MEMBERS_FILTER_SCHEMA } from "../constants";
 
-export function useInstructorsFilters() {
+export function useMembersFilters() {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -21,7 +21,7 @@ export function useInstructorsFilters() {
     filterEntries,
     handleFilterChange: baseFilterChange,
     handleClearAllFilters: baseClearAll,
-  } = useFilters(INSTRUCTORS_FILTER_SCHEMA);
+  } = useFilters(MEMBERS_FILTER_SCHEMA);
 
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
@@ -44,7 +44,7 @@ export function useInstructorsFilters() {
 
   const handleFilterChange = useCallback(
     (key: string, values: string[]) => {
-      baseFilterChange(key as keyof typeof INSTRUCTORS_FILTER_SCHEMA, values);
+      baseFilterChange(key as keyof typeof MEMBERS_FILTER_SCHEMA, values);
       resetPage();
     },
     [baseFilterChange, resetPage],
