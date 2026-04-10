@@ -10,8 +10,8 @@ export function useDeleteRiskFlagMutation() {
     mutationFn: ({ id }: { id: string }) => deleteRiskFlag(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RISK_FLAGS_KEYS.all });
-      toast.success("Riesgo eliminado", {
-        description: "El riesgo fue eliminado correctamente.",
+      toast.success("Bandera de riesgo eliminada", {
+        description: "La bandera de riesgo fue eliminada correctamente.",
       });
     },
   });

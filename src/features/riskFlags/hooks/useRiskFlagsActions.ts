@@ -41,8 +41,8 @@ export function useRiskFlagsActions() {
   function handleRegister(data: RegisterRiskFlagSchema) {
     confirm({
       intent: "info",
-      title: "Registrar riesgo",
-      description: `¿Estas seguro que deseas registrar el riesgo?`,
+      title: "Registrar bandera de riesgo",
+      description: `¿Estas seguro que deseas registrar la bandera de riesgo?`,
       confirmLabel: "Registrar",
       onConfirm: () => {
         registerMutation.mutate(data, {
@@ -60,8 +60,8 @@ export function useRiskFlagsActions() {
     }
     confirm({
       intent: "warning",
-      title: "Modificar riesgo",
-      description: `¿Estas seguro que deseas el riesgo ${editingRiskFlag.name}?`,
+      title: "Modificar bandera de riesgo",
+      description: `¿Estas seguro que deseas la bandera de riesgo ${editingRiskFlag.name}?`,
       confirmLabel: "Modificar",
       onConfirm: () => {
         updateMutation.mutate(
@@ -75,8 +75,8 @@ export function useRiskFlagsActions() {
   function handleDelete(riskFlag: RiskFlag) {
     confirm({
       intent: "danger",
-      title: "Eliminar riesgo",
-      description: `¿Estas seguro que deseas eliminar el riesgo ${riskFlag.name}?`,
+      title: "Eliminar bandera de riesgo",
+      description: `¿Estas seguro que deseas eliminar la bandera de riesgo ${riskFlag.name}?`,
       confirmLabel: "Eliminar",
       onConfirm: () => {
         deleteMutation.mutate({ id: riskFlag.id });
@@ -87,8 +87,8 @@ export function useRiskFlagsActions() {
   function handleRestore(riskFlag: RiskFlag) {
     confirm({
       intent: "warning",
-      title: "Restaurar riesgo",
-      description: `¿Estas seguro que deseas restaurar el riesgo ${riskFlag.name}?`,
+      title: "Restaurar bandera de riesgo",
+      description: `¿Estas seguro que deseas restaurar la bandera de riesgo ${riskFlag.name}?`,
       confirmLabel: "Restaurar",
       onConfirm: () => {
         restoreMutation.mutate({ id: riskFlag.id });

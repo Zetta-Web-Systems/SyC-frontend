@@ -10,8 +10,8 @@ export function useRestoreRiskFlagMutation() {
     mutationFn: ({ id }: { id: string }) => restoreRiskFlag(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RISK_FLAGS_KEYS.all });
-      toast.success("Riesgo restaurado", {
-        description: "El riesgo fue restaurado correctamente.",
+      toast.success("Bandera de riesgo restaurada", {
+        description: "La bandera de riesgo fue restaurada correctamente.",
       });
     },
   });

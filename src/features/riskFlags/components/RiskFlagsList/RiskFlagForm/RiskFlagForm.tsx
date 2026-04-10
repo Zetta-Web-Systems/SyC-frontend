@@ -59,7 +59,7 @@ export function RiskFlagForm({
               <Input
                 {...field}
                 type="text"
-                placeholder="Nombre del flag de riesgo"
+                placeholder="Nombre de bandera de riesgo"
                 leftElement={<User size={16} aria-hidden="true" />}
               />
             )}
@@ -94,7 +94,7 @@ export function RiskFlagForm({
             <Input
               {...field}
               type="text"
-              placeholder="Nombre del flag de riesgo"
+              placeholder="Nombre de bandera de riesgo"
               leftElement={<User size={16} aria-hidden="true" />}
             />
           )}
@@ -109,7 +109,7 @@ export function RiskFlagForm({
         className="mt-2 w-full"
         isLoading={isPending}
       >
-        Registrar flag de riesgo
+        Registrar bandera de riesgo
       </Button>
     </Form>
   );

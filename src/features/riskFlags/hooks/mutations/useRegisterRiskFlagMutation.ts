@@ -10,8 +10,8 @@ export function useRegisterRiskFlagMutation() {
     mutationFn: registerRiskFlag,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RISK_FLAGS_KEYS.all });
-      toast.success("Riesgo creado", {
-        description: "El riesgo fue registrado correctamente.",
+      toast.success("Bandera de riesgo creada", {
+        description: "La bandera de riesgo fue registrada correctamente.",
       });
     },
   });

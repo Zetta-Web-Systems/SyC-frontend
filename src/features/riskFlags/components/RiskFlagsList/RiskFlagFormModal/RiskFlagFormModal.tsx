@@ -38,8 +38,8 @@ export function RiskFlagFormModal({
 }: RiskFlagFormModalProps) {
   const isEditing = !!riskFlag;
   const title = isEditing
-    ? "Editar flag de riesgo"
-    : "Registrar flag de riesgo";
+    ? "Editar bandera de riesgo"
+    : "Registrar bandera de riesgo";
 
   return (
     <Modal

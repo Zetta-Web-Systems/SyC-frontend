@@ -12,8 +12,8 @@ export function useUpdateRiskFlagMutation() {
       updateRiskFlag(id, dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RISK_FLAGS_KEYS.all });
-      toast.success("Riesgo actualizado", {
-        description: "El riesgo fue actualizado correctamente.",
+      toast.success("Bandera de riesgo actualizada", {
+        description: "La bandera de riesgo fue actualizada correctamente.",
       });
     },
   });

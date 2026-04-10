@@ -1,6 +1,8 @@
+import type { BodyZone } from "../constants";
+
 interface BaseRiskFlag {
   name: string;
-  affectedZones?: string[];
+  affectedZones?: BodyZone[];
   medicalGuideline?: string;
 }
 
