@@ -1,6 +1,6 @@
 import { RotateCw, X } from "lucide-react";
 import { Body } from "@shared/components/BodyHighlighter";
-import { Button, Checkbox } from "@shared/ui";
+import { Accordion, AccordionItem, Badge, Button, Checkbox } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import {
   BODY_ZONE_GROUPS,
@@ -106,43 +106,55 @@ export function BodyZoneSelector({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {BODY_ZONE_GROUPS.map((group) => (
-            <fieldset key={group.label} className="flex flex-col gap-2">
-              <legend className="text-sm font-semibold text-neutral-800">
-                {group.label}
-              </legend>
-
-              <div className="grid grid-cols-2 gap-x-3 gap-y-2">
-                {group.zones.map((zone) => {
-                  const checkboxId = `zone-${zone}`;
-                  const checked = isSelected(zone);
-                  return (
-                    <label
-                      key={zone}
-                      htmlFor={checkboxId}
-                      className={cn(
-                        "flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm transition-colors",
-                        "hover:bg-neutral-50",
-                        disabled && "cursor-not-allowed opacity-60",
-                      )}
-                    >
-                      <Checkbox
-                        id={checkboxId}
-                        checked={checked}
-                        disabled={disabled}
-                        onChange={() => toggleZone(zone)}
-                      />
-                      <span className="select-none text-neutral-700">
-                        {BODY_ZONE_LABELS[zone]}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-          ))}
-        </div>
+        <Accordion>
+          {BODY_ZONE_GROUPS.map((group) => {
+            const activeCount = group.zones.reduce(
+              (acc, zone) => (isSelected(zone) ? acc + 1 : acc),
+              0,
+            );
+            return (
+              <AccordionItem
+                key={group.label}
+                title={group.label}
+                trailing={
+                  activeCount > 0 ? (
+                    <Badge variant="solid" intent="info" size="sm">
+                      {activeCount}
+                    </Badge>
+                  ) : null
+                }
+              >
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-3">
+                  {group.zones.map((zone) => {
+                    const checkboxId = `zone-${zone}`;
+                    const checked = isSelected(zone);
+                    return (
+                      <label
+                        key={zone}
+                        htmlFor={checkboxId}
+                        className={cn(
+                          "flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm transition-colors",
+                          "hover:bg-neutral-50",
+                          disabled && "cursor-not-allowed opacity-60",
+                        )}
+                      >
+                        <Checkbox
+                          id={checkboxId}
+                          checked={checked}
+                          disabled={disabled}
+                          onChange={() => toggleZone(zone)}
+                        />
+                        <span className="select-none text-neutral-700">
+                          {BODY_ZONE_LABELS[zone]}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       </div>
 
       {normalizedValue.length > 0 && (
