@@ -63,15 +63,21 @@ export const MEMBER_TABLE_VISIBILITY: ColumnVisibilityConfig = {
 export const RISK_FLAG_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
+    affectedZones: false,
     estado: true,
+    actions: true,
   },
   md: {
     name: true,
+    affectedZones: true,
     estado: true,
+    actions: true,
   },
   lg: {
     name: true,
+    affectedZones: true,
     estado: true,
+    actions: true,
   },
 };
 
