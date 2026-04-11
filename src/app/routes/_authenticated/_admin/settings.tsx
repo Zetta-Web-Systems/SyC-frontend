@@ -1,14 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/_admin/settings")({
-  component: SettingsPage,
+  component: SettingsLayout,
 });
 
-function SettingsPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-neutral-900">Configuración</h1>
-      <p className="mt-2 text-neutral-500">Sección en desarrollo.</p>
-    </div>
-  );
+function SettingsLayout() {
+  return <Outlet />;
 }
