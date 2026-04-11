@@ -6,7 +6,6 @@ import type {
 } from "@tanstack/react-table";
 import { Pencil, UserCheck, UserX } from "lucide-react";
 import { Button } from "@shared/ui";
-import type { ViewMode } from "@shared/ui";
 import {
   DataTable,
   DataCardList,
@@ -18,6 +17,7 @@ import { RISK_FLAG_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.co
 import type { RiskFlag } from "../../types";
 import { riskFlagsColumns } from "./RiskFlagsTable.columns";
 import { RiskFlagCard } from "./RiskFlagCard";
+import { GuidelineButton } from "./RiskFlagContent/GuidelineButton";
 
 interface RiskFlagsTableProps {
   data: RiskFlag[];
@@ -25,7 +25,6 @@ interface RiskFlagsTableProps {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
-  viewMode: ViewMode;
   onEdit: (riskFlag: RiskFlag) => void;
   onDelete: (riskFlag: RiskFlag) => void;
   onRestore: (riskFlag: RiskFlag) => void;
@@ -37,7 +36,6 @@ export function RiskFlagsTable({
   pagination,
   onPaginationChange,
   isLoading,
-  viewMode,
   onEdit,
   onDelete,
   onRestore,
@@ -68,6 +66,10 @@ export function RiskFlagsTable({
                   >
                     <Pencil size={16} aria-hidden="true" color="green" />
                   </Button>
+                  <GuidelineButton
+                    guideline={riskFlag.medicalGuideline}
+                    riskFlagName={riskFlag.name}
+                  />
                   <Button
                     variant="ghost"
                     intent="danger"
@@ -143,23 +145,19 @@ export function RiskFlagsTable({
     <div className="flex flex-col gap-3">
       {/* Desktop */}
       <div className="hidden md:block">
-        {viewMode === "table" ? (
-          <DataTable
-            columns={columns}
-            data={data}
-            rowCount={rowCount}
-            pagination={pagination}
-            onPaginationChange={onPaginationChange}
-            columnVisibility={columnVisibility}
-            onColumnVisibilityChange={setColumnVisibility}
-            isLoading={isLoading}
-            noResultsMessage="No se encontraron banderas de riesgo."
-            showPagination={true}
-            renderPagination={(table) => <DataTablePagination table={table} />}
-          />
-        ) : (
-          cardList
-        )}
+        <DataTable
+          columns={columns}
+          data={data}
+          rowCount={rowCount}
+          pagination={pagination}
+          onPaginationChange={onPaginationChange}
+          columnVisibility={columnVisibility}
+          onColumnVisibilityChange={setColumnVisibility}
+          isLoading={isLoading}
+          noResultsMessage="No se encontraron banderas de riesgo."
+          showPagination={true}
+          renderPagination={(table) => <DataTablePagination table={table} />}
+        />
       </div>
 
       {/* Mobile */}

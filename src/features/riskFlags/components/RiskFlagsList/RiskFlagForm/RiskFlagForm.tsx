@@ -1,9 +1,14 @@
 import { User } from "lucide-react";
+import { useFormContext, useFormState } from "react-hook-form";
 import { Button, Input } from "@shared/ui";
 import { Form, FormField, FormError } from "@shared/components/Form";
+import { MarkdownEditor } from "@shared/components/MarkdownEditor/";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
+import { useUnsavedChangesPrompt } from "@shared/hooks/useUnsavedChangesPrompt";
+import { BodyZoneSelector } from "../../BodyZoneSelector/BodyZoneSelector";
+import type { BodyZone } from "../../../constants";
 import {
   registerRiskFlagSchema,
   updateRiskFlagSchema,
@@ -15,24 +20,37 @@ import type { RiskFlag } from "../../../types";
 interface RiskFlagFormCreateProps {
   riskFlag?: undefined;
   onSubmit: (data: RegisterRiskFlagSchema) => void;
+  onCancel: () => void;
   isPending: boolean;
   mutation: MutationLike;
+  guardUnsavedChanges?: boolean;
 }
 
 interface RiskFlagFormEditProps {
   riskFlag: RiskFlag;
   onSubmit: (data: UpdateRiskFlagSchema) => void;
+  onCancel: () => void;
   isPending: boolean;
   mutation: MutationLike;
+  guardUnsavedChanges?: boolean;
 }
 
 type RiskFlagFormProps = RiskFlagFormCreateProps | RiskFlagFormEditProps;
 
+function UnsavedChangesGuard({ active }: { active: boolean }) {
+  const { control } = useFormContext();
+  const { isDirty } = useFormState({ control });
+  useUnsavedChangesPrompt({ when: active && isDirty });
+  return null;
+}
+
 export function RiskFlagForm({
   riskFlag,
   onSubmit,
+  onCancel,
   isPending,
   mutation,
+  guardUnsavedChanges = false,
 }: RiskFlagFormProps) {
   const isEditing = !!riskFlag;
 
@@ -50,32 +68,72 @@ export function RiskFlagForm({
         }
         defaultValues={{
           name: riskFlag.name,
+          affectedZones: riskFlag.affectedZones ?? [],
+          medicalGuideline: riskFlag.medicalGuideline ?? "",
         }}
         className="flex flex-col gap-5"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField<UpdateRiskFlagSchema> name="name" label="Nombre" required>
-            {(field) => (
-              <Input
-                {...field}
-                type="text"
-                placeholder="Nombre de bandera de riesgo"
-                leftElement={<User size={16} aria-hidden="true" />}
-              />
-            )}
-          </FormField>
-        </div>
+        <FormField<UpdateRiskFlagSchema> name="name" label="Nombre" required>
+          {(field) => (
+            <Input
+              {...field}
+              type="text"
+              placeholder="Nombre de bandera de riesgo"
+              leftElement={<User size={16} aria-hidden="true" />}
+            />
+          )}
+        </FormField>
+
+        <FormField<UpdateRiskFlagSchema>
+          name="affectedZones"
+          label="Zonas afectadas"
+        >
+          {(field) => (
+            <BodyZoneSelector
+              id={field.id}
+              value={(field.value as BodyZone[] | undefined) ?? []}
+              onChange={field.onChange}
+              error={field.error}
+              aria-describedby={field["aria-describedby"]}
+              disabled={field.disabled}
+            />
+          )}
+        </FormField>
+
+        <FormField<UpdateRiskFlagSchema>
+          name="medicalGuideline"
+          label="Guía médica"
+        >
+          {(field) => (
+            <MarkdownEditor
+              id={field.id}
+              value={(field.value as string | undefined) ?? ""}
+              onChange={field.onChange}
+              error={field.error}
+              aria-describedby={field["aria-describedby"]}
+              disabled={field.disabled}
+              placeholder="Indicaciones para el profesional…"
+            />
+          )}
+        </FormField>
+
+        <UnsavedChangesGuard active={guardUnsavedChanges} />
 
         <FormError mutation={mutation} />
 
-        <Button
-          type="submit"
-          intent="primary"
-          className="mt-2 w-full"
-          isLoading={isPending}
-        >
-          Guardar cambios
-        </Button>
+        <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            intent="neutral"
+            variant="outline"
+            onClick={onCancel}
+          >
+            Volver
+          </Button>
+          <Button type="submit" intent="primary" isLoading={isPending}>
+            Guardar cambios
+          </Button>
+        </div>
       </Form>
     );
   }
@@ -88,29 +146,65 @@ export function RiskFlagForm({
       }
       className="flex flex-col gap-5"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField<RegisterRiskFlagSchema> name="name" label="Nombre" required>
-          {(field) => (
-            <Input
-              {...field}
-              type="text"
-              placeholder="Nombre de bandera de riesgo"
-              leftElement={<User size={16} aria-hidden="true" />}
-            />
-          )}
-        </FormField>
-      </div>
+      <FormField<RegisterRiskFlagSchema> name="name" label="Nombre" required>
+        {(field) => (
+          <Input
+            {...field}
+            type="text"
+            placeholder="Nombre de bandera de riesgo"
+            leftElement={<User size={16} aria-hidden="true" />}
+          />
+        )}
+      </FormField>
+
+      <FormField<RegisterRiskFlagSchema>
+        name="affectedZones"
+        label="Zonas afectadas"
+      >
+        {(field) => (
+          <BodyZoneSelector
+            id={field.id}
+            value={(field.value as BodyZone[] | undefined) ?? []}
+            onChange={field.onChange}
+            error={field.error}
+            aria-describedby={field["aria-describedby"]}
+            disabled={field.disabled}
+          />
+        )}
+      </FormField>
+
+      <FormField<RegisterRiskFlagSchema>
+        name="medicalGuideline"
+        label="Guía médica"
+      >
+        {(field) => (
+          <MarkdownEditor
+            id={field.id}
+            value={(field.value as string | undefined) ?? ""}
+            onChange={field.onChange}
+            error={field.error}
+            aria-describedby={field["aria-describedby"]}
+            disabled={field.disabled}
+            placeholder="Indicaciones para el profesional…"
+          />
+        )}
+      </FormField>
 
       <FormError mutation={mutation} />
 
-      <Button
-        type="submit"
-        intent="primary"
-        className="mt-2 w-full"
-        isLoading={isPending}
-      >
-        Registrar bandera de riesgo
-      </Button>
+      <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <Button
+          type="button"
+          intent="neutral"
+          variant="outline"
+          onClick={onCancel}
+        >
+          Volver
+        </Button>
+        <Button type="submit" intent="primary" isLoading={isPending}>
+          Registrar bandera de riesgo
+        </Button>
+      </div>
     </Form>
   );
 }

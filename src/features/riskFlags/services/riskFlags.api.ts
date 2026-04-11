@@ -14,6 +14,11 @@ export async function getRiskFlagsPaginated(params: PaginatedParams) {
   return data;
 }
 
+export async function getRiskFlagById(id: string) {
+  const { data } = await api.get<RiskFlag>(`/risk-flags/${id}`);
+  return data;
+}
+
 export async function registerRiskFlag(dto: RegisterRiskFlag) {
   const { data } = await api.post<RiskFlag>("/risk-flags/register", dto);
   return data;

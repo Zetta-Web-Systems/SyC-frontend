@@ -14,3 +14,8 @@ export interface RiskFlag extends BaseRiskFlag {
 export interface RegisterRiskFlag extends BaseRiskFlag {}
 
 export interface UpdateRiskFlag extends Partial<BaseRiskFlag> {}
+
+export interface AffectedGroup {
+  label: string;
+  zones: BodyZone[];
+}

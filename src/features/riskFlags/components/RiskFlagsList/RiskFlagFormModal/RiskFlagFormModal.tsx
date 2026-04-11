@@ -55,6 +55,7 @@ export function RiskFlagFormModal({
             key={riskFlag.id}
             riskFlag={riskFlag}
             onSubmit={onSubmit as (data: UpdateRiskFlagSchema) => void}
+            onCancel={onClose}
             isPending={isPending}
             mutation={mutation}
           />
@@ -62,6 +63,7 @@ export function RiskFlagFormModal({
           <RiskFlagForm
             key="create"
             onSubmit={onSubmit as (data: RegisterRiskFlagSchema) => void}
+            onCancel={onClose}
             isPending={isPending}
             mutation={mutation}
           />

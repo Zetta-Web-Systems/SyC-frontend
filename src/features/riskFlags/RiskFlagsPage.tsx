@@ -1,88 +1,50 @@
-import { ViewToggle } from "@shared/ui";
-import { MembersHeader } from "./components/MembersList/MembersHeader/MembersHeader";
-import { MembersTable } from "./components/MembersList/MembersTable";
-import { MemberFormModal } from "./components/MembersList/MemberFormModal/MemberFormModal";
-import { MembersFilters } from "./components/MembersList/MembersFilters/MembersFilters";
-import { useMembersQuery } from "./hooks/useMembersQuery";
-import { useMembersFilters } from "./hooks/useMembersFilters";
-import { useMembersActions } from "./hooks/useMembersActions";
+import { RiskFlagsHeader } from "./components/RiskFlagsList/RiskFlagsHeader/RiskFlagsHeader";
+import { RiskFlagsTable } from "./components/RiskFlagsList/RiskFlagsTable";
+import { RiskFlagsFilters } from "./components/RiskFlagsList/RiskFlagsFilters/RiskFlagsFilters";
+import { useRiskFlagsQuery } from "./hooks/useRiskFlagsQuery";
+import { useRiskFlagsFilters } from "./hooks/useRiskFlagsFilters";
+import { useRiskFlagsActions } from "./hooks/useRiskFlagsActions";
 
 export default function RiskFlagsPage() {
   const {
     params,
     pagination,
     filters,
-    viewMode,
-    setViewMode,
     setPagination,
     handleSearch,
     handleFilterChange,
     handleClearAllFilters,
-  } = useMembersFilters();
+  } = useRiskFlagsFilters();
 
-  const { data, isLoading, isPlaceholderData } = useMembersQuery(params);
+  const { data, isLoading, isPlaceholderData } = useRiskFlagsQuery(params);
 
-  const {
-    modalOpen,
-    editingMember,
-    isPending,
-    activeMutation,
-    handleOpenRegister,
-    handleOpenEdit,
-    handleCloseModal,
-    handleRegister,
-    handleUpdate,
-    handleDelete,
-    handleRestore,
-  } = useMembersActions();
+  const { handleOpenRegister, handleOpenEdit, handleDelete, handleRestore } =
+    useRiskFlagsActions();
 
-  const members = data?.data ?? [];
+  const riskFlags = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
 
   return (
     <div className="flex flex-col gap-4">
-      <MembersHeader onCreate={handleOpenRegister} />
+      <RiskFlagsHeader onCreate={handleOpenRegister} />
 
-      <MembersFilters
+      <RiskFlagsFilters
         onSearch={handleSearch}
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
-        actions={
-          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        }
       />
 
-      <MembersTable
-        data={members}
+      <RiskFlagsTable
+        data={riskFlags}
         rowCount={rowCount}
         pagination={pagination}
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
-        viewMode={viewMode}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onRestore={handleRestore}
       />
-
-      {editingMember ? (
-        <MemberFormModal
-          open={modalOpen}
-          onClose={handleCloseModal}
-          member={editingMember}
-          onSubmit={handleUpdate}
-          isPending={isPending}
-          mutation={activeMutation}
-        />
-      ) : (
-        <MemberFormModal
-          open={modalOpen}
-          onClose={handleCloseModal}
-          onSubmit={handleRegister}
-          isPending={isPending}
-          mutation={activeMutation}
-        />
-      )}
     </div>
   );
 }

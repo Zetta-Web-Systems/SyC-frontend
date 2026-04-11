@@ -8,6 +8,7 @@ import {
   PopoverSeparator,
 } from "@shared/ui";
 import type { RiskFlag } from "../../types";
+import { AffectedZonesBadges } from "./RiskFlagContent/AffectedZonesBadges";
 
 interface RiskFlagCardProps {
   riskFlag: RiskFlag;
@@ -94,42 +95,14 @@ export function RiskFlagCard({
 
       <hr className="border-neutral-200 my-3" />
 
-      {/* <div className="flex flex-col text-neutral-500 gap-1 text-xs">
-        <span className="flex items-center gap-1 justify-center">
-          <MapPin size={12} className="text-error" aria-hidden="true" />
-          {member.address || "Sin dirección registrada"}
-        </span>
-        <div className="flex items-center gap-4 justify-center">
-          <span className="flex items-center gap-1">
-            <Phone size={12} className="text-success" aria-hidden="true" />
-            {member.phone || "Sin registro"}
+      <div className="flex flex-col gap-3 text-xs text-neutral-500">
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+            Zonas afectadas
           </span>
-          <span className="flex items-center gap-1">
-            <Phone size={12} className="text-info" aria-hidden="true" />
-            {member.emergencyPhone || "Sin registro"}
-          </span>
+          <AffectedZonesBadges zones={riskFlag.affectedZones} max={3} />
         </div>
-        <div className="flex items-center gap-4 justify-center">
-          <span className="flex items-center gap-1">
-            <CalendarDays
-              size={12}
-              className="text-neutral-400"
-              aria-hidden="true"
-            />
-            {member.bornDate ? formatDate(member.bornDate) : "Sin fecha"}
-          </span>
-          <span className="flex items-center gap-1">
-            <Weight size={12} className="text-warning" aria-hidden="true" />
-            {member.currentWeight ? `${member.currentWeight} kg` : "Sin peso"}
-          </span>
-        </div>
-        <span className="flex items-center gap-1 justify-center">
-          <Target size={12} className="text-primary-400" aria-hidden="true" />
-          {member.trainingGoal
-            ? TRAINING_GOAL_LABELS[member.trainingGoal]
-            : "Sin objetivo"}
-        </span>
-      </div> */}
+      </div>
     </div>
   );
 }
