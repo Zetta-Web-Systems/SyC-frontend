@@ -10,6 +10,8 @@ import type {
   Slug,
 } from "@shared/types/bodyHighlighter.types";
 
+const EMPTY_SLUGS: Slug[] = [];
+
 export interface BodyProps {
   data: ReadonlyArray<ExtendedBodyPart>;
   side?: BodySide;
@@ -46,8 +48,8 @@ function BodyComponent({
   colors = BODY_HIGHLIGHTER_DEFAULTS.COLORS,
   onBodyPartPress,
   border = BODY_HIGHLIGHTER_DEFAULTS.BORDER,
-  disabledParts = [],
-  hiddenParts = [],
+  disabledParts = EMPTY_SLUGS,
+  hiddenParts = EMPTY_SLUGS,
   defaultFill = BODY_HIGHLIGHTER_DEFAULTS.FILL,
   defaultStroke = BODY_HIGHLIGHTER_DEFAULTS.STROKE,
   defaultStrokeWidth = 0,
@@ -105,9 +107,9 @@ function BodyComponent({
 
           return (
             <g key={`${part.slug}-${pathSide}`}>
-              {paths.map((d, i) => (
+              {paths.map((d) => (
                 <path
-                  key={`${part.slug}-${pathSide}-${i}`}
+                  key={`${part.slug}-${pathSide}-${d}`}
                   d={d}
                   fill={fill}
                   stroke={stroke}

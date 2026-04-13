@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
-import type { HTMLAttributes, ReactNode, Ref, SyntheticEvent } from "react";
+import { useRef } from "react";
+import type { HTMLAttributes, ReactNode, Ref } from "react";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@shared/lib/cn";
 import {
@@ -31,17 +31,19 @@ export function AccordionItem({
   children,
   ...props
 }: AccordionItemProps) {
-  const [open, setOpen] = useState(defaultOpen);
-
-  const handleToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
-    setOpen(event.currentTarget.open);
+  const initialized = useRef(false);
+  const setInitialOpen = (el: HTMLDetailsElement | null) => {
+    if (el && !initialized.current) {
+      initialized.current = true;
+      if (defaultOpen) el.open = true;
+    }
+    if (typeof ref === "function") ref(el);
+    else if (ref) ref.current = el;
   };
 
   return (
     <details
-      ref={ref}
-      open={open}
-      onToggle={handleToggle}
+      ref={setInitialOpen}
       className={cn(accordionItemVariants({ variant }), className)}
       {...props}
     >
