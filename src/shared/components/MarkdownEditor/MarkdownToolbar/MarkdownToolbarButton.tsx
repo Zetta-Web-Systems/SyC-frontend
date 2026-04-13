@@ -1,6 +1,8 @@
+import type { Ref } from "react";
 import { cn } from "@shared/lib/cn";
 
 interface MarkdownToolbarButtonProps {
+  ref?: Ref<HTMLButtonElement>;
   onClick: () => void;
   active?: boolean;
   disabled?: boolean;
@@ -9,6 +11,7 @@ interface MarkdownToolbarButtonProps {
 }
 
 export function MarkdownToolbarButton({
+  ref,
   onClick,
   active,
   disabled,
@@ -17,6 +20,7 @@ export function MarkdownToolbarButton({
 }: MarkdownToolbarButtonProps) {
   return (
     <button
+      ref={ref}
       type="button"
       onClick={onClick}
       disabled={disabled}

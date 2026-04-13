@@ -1,6 +1,7 @@
 import { EditorContent } from "@tiptap/react";
 import { cn } from "@shared/lib/cn";
 import { useMarkdownEditor } from "@shared/hooks/useMarkdownEditor";
+import { ME_CONTENT_CLASSNAME } from "@shared/constants/markdownEditor.constants";
 import { MarkdownToolbar } from "./MarkdownToolbar/MarkdownToolbar";
 
 export interface MarkdownEditorProps {
@@ -48,15 +49,8 @@ export function MarkdownEditor({
         data-placeholder={placeholder}
         className={cn(
           "min-h-45 px-4 py-3 text-sm text-neutral-900",
-          "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-40",
-          "[&_.ProseMirror_h2]:text-lg [&_.ProseMirror_h2]:font-semibold [&_.ProseMirror_h2]:mt-3 [&_.ProseMirror_h2]:mb-1",
-          "[&_.ProseMirror_h3]:text-base [&_.ProseMirror_h3]:font-semibold [&_.ProseMirror_h3]:mt-2 [&_.ProseMirror_h3]:mb-1",
-          "[&_.ProseMirror_p]:my-1",
-          "[&_.ProseMirror_ul]:list-disc [&_.ProseMirror_ul]:pl-5",
-          "[&_.ProseMirror_ol]:list-decimal [&_.ProseMirror_ol]:pl-5",
-          "[&_.ProseMirror_strong]:font-semibold",
-          "[&_.ProseMirror_em]:italic",
-          "[&_.ProseMirror_s]:line-through",
+          "[&_.ProseMirror]:min-h-40",
+          ME_CONTENT_CLASSNAME,
         )}
       />
     </div>
