@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
@@ -21,11 +22,10 @@ export default function UpdateRiskFlagPage({
   const { data: riskFlag, isLoading, isError } = useRiskFlagQuery(riskFlagId);
   const [navigating, setNavigating] = useState(false);
 
-  useEffect(() => {
-    if (navigating) {
-      navigate({ to: "/settings/risk-flags" });
-    }
-  }, [navigating, navigate]);
+  function goToList() {
+    flushSync(() => setNavigating(true));
+    navigate({ to: "/settings/risk-flags" });
+  }
 
   function handleBack() {
     navigate({ to: "/settings/risk-flags" });
@@ -34,7 +34,7 @@ export default function UpdateRiskFlagPage({
   function handleUpdate(data: UpdateRiskFlagSchema) {
     if (!riskFlag) return;
     if (Object.keys(data).length === 0) {
-      setNavigating(true);
+      goToList();
       return;
     }
     confirm({
@@ -45,7 +45,7 @@ export default function UpdateRiskFlagPage({
       onConfirm: () => {
         mutation.mutate(
           { id: riskFlag.id, dto: data },
-          { onSuccess: () => setNavigating(true) },
+          { onSuccess: () => goToList() },
         );
       },
     });

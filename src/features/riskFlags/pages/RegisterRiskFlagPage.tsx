@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@shared/ui";
@@ -13,11 +14,10 @@ export default function RegisterRiskFlagPage() {
   const mutation = useRegisterRiskFlagMutation();
   const [navigating, setNavigating] = useState(false);
 
-  useEffect(() => {
-    if (navigating) {
-      navigate({ to: "/settings/risk-flags" });
-    }
-  }, [navigating, navigate]);
+  function goToList() {
+    flushSync(() => setNavigating(true));
+    navigate({ to: "/settings/risk-flags" });
+  }
 
   function handleBack() {
     navigate({ to: "/settings/risk-flags" });
@@ -31,7 +31,7 @@ export default function RegisterRiskFlagPage() {
       confirmLabel: "Registrar",
       onConfirm: () => {
         mutation.mutate(data, {
-          onSuccess: () => setNavigating(true),
+          onSuccess: () => goToList(),
         });
       },
     });
