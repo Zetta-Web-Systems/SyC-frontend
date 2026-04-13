@@ -91,11 +91,11 @@ export const ALL_BODY_ZONES: BodyZone[] = BODY_ZONE_GROUPS.flatMap(
 
 export const BODY_ZONE_GROUP_INTENT: Record<
   string,
-  "info" | "warning" | "success"
+  "info" | "warning" | "error"
 > = {
   "Tren superior": "info",
   Core: "warning",
-  "Tren inferior": "success",
+  "Tren inferior": "error",
 };
 
 export const BODY_ZONE_TO_GROUP_LABEL: Record<BodyZone, string> =

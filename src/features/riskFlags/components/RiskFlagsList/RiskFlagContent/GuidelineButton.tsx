@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { FileText } from "lucide-react";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { Markdown } from "tiptap-markdown";
+import { EditorContent } from "@tiptap/react";
+import { cn } from "@shared/lib/cn";
+import { useMarkdownEditor } from "@shared/hooks/useMarkdownEditor";
+import { ME_CONTENT_CLASSNAME } from "@shared/constants/markdownEditor.constants";
 import { Button, Modal } from "@shared/ui";
 
 interface GuidelineButtonProps {
@@ -11,19 +12,47 @@ interface GuidelineButtonProps {
 }
 
 function GuidelineViewer({ value }: { value: string }) {
-  const editor = useEditor({
-    extensions: [StarterKit, Markdown.configure({ html: false })],
-    content: value,
+  const { editor } = useMarkdownEditor({
+    value,
+    onChange: () => {},
     editable: false,
   });
 
   return (
     <EditorContent
       editor={editor}
-      className="prose prose-sm max-w-none px-6 py-4 text-sm text-neutral-900 [&_.ProseMirror]:outline-none [&_.ProseMirror_h2]:mb-1 [&_.ProseMirror_h2]:mt-3 [&_.ProseMirror_h2]:text-lg [&_.ProseMirror_h2]:font-semibold [&_.ProseMirror_h3]:mb-1 [&_.ProseMirror_h3]:mt-2 [&_.ProseMirror_h3]:text-base [&_.ProseMirror_h3]:font-semibold [&_.ProseMirror_ol]:list-decimal [&_.ProseMirror_ol]:pl-5 [&_.ProseMirror_p]:my-1 [&_.ProseMirror_strong]:font-semibold [&_.ProseMirror_ul]:list-disc [&_.ProseMirror_ul]:pl-5"
+      className={cn("px-6 py-4 text-sm text-neutral-900", ME_CONTENT_CLASSNAME)}
     />
   );
 }
+
+interface GuidelineModalProps {
+  open: boolean;
+  onClose: () => void;
+  guideline: string | undefined;
+  riskFlagName: string;
+}
+
+export function GuidelineModal({
+  open,
+  onClose,
+  guideline,
+  riskFlagName,
+}: GuidelineModalProps) {
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      closeOnBackdropClick
+      size="lg"
+      title={`Documentación médica — ${riskFlagName}`}
+    >
+      {open && <GuidelineViewer value={guideline ?? ""} />}
+    </Modal>
+  );
+}
+
+GuidelineModal.displayName = "GuidelineModal";
 
 export function GuidelineButton({
   guideline,
@@ -62,15 +91,12 @@ export function GuidelineButton({
         </Button>
       </div>
 
-      <Modal
+      <GuidelineModal
         open={open}
         onClose={() => setOpen(false)}
-        closeOnBackdropClick
-        size="lg"
-        title={`Documentación médica — ${riskFlagName}`}
-      >
-        {open && <GuidelineViewer value={guideline ?? ""} />}
-      </Modal>
+        guideline={guideline}
+        riskFlagName={riskFlagName}
+      />
     </>
   );
 }

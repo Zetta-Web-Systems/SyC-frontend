@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { EllipsisVertical, Pencil, UserCheck, UserX } from "lucide-react";
+import {
+  EllipsisVertical,
+  FileText,
+  MapPin,
+  Pencil,
+  UserCheck,
+  UserX,
+} from "lucide-react";
 import {
   Badge,
   Button,
@@ -9,6 +16,7 @@ import {
 } from "@shared/ui";
 import type { RiskFlag } from "../../types";
 import { AffectedZonesBadges } from "./RiskFlagContent/AffectedZonesBadges";
+import { GuidelineModal } from "./RiskFlagContent/GuidelineButton";
 
 interface RiskFlagCardProps {
   riskFlag: RiskFlag;
@@ -24,6 +32,16 @@ export function RiskFlagCard({
   onRestore,
 }: RiskFlagCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [guidelineOpen, setGuidelineOpen] = useState(false);
+  const hasGuideline = Boolean(
+    riskFlag.medicalGuideline && riskFlag.medicalGuideline.trim().length > 0,
+  );
+
+  const zonesCount = riskFlag.affectedZones?.length ?? 0;
+  const zonesSubtitle =
+    zonesCount === 0
+      ? "Sin zonas"
+      : `${zonesCount} ${zonesCount === 1 ? "zona afectada" : "zonas afectadas"}`;
 
   return (
     <div className="w-full rounded-xl border border-neutral-200 bg-white p-4">
@@ -32,6 +50,10 @@ export function RiskFlagCard({
           <p className="truncate text-sm font-semibold text-neutral-900">
             {riskFlag.name}
           </p>
+          <span className="flex items-center gap-1 text-xs text-neutral-500">
+            <MapPin size={12} className="text-red-400" aria-hidden="true" />
+            {zonesSubtitle}
+          </span>
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
@@ -67,6 +89,20 @@ export function RiskFlagCard({
                   Editar
                 </PopoverItem>
                 <PopoverSeparator />
+                {hasGuideline && (
+                  <>
+                    <PopoverItem
+                      icon={<FileText color="#4ea49c" />}
+                      onClick={() => {
+                        setGuidelineOpen(true);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      Ver documentación
+                    </PopoverItem>
+                    <PopoverSeparator />
+                  </>
+                )}
                 <PopoverItem
                   icon={<UserX />}
                   variant="danger"
@@ -79,29 +115,50 @@ export function RiskFlagCard({
                 </PopoverItem>
               </>
             ) : (
-              <PopoverItem
-                icon={<UserCheck color="#90cbc5" />}
-                onClick={() => {
-                  onRestore(riskFlag);
-                  setMenuOpen(false);
-                }}
-              >
-                Restaurar
-              </PopoverItem>
+              <>
+                {hasGuideline && (
+                  <>
+                    <PopoverItem
+                      icon={<FileText color="#4ea49c" />}
+                      onClick={() => {
+                        setGuidelineOpen(true);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      Ver documentación
+                    </PopoverItem>
+                    <PopoverSeparator />
+                  </>
+                )}
+                <PopoverItem
+                  icon={<UserCheck color="#90cbc5" />}
+                  onClick={() => {
+                    onRestore(riskFlag);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Restaurar
+                </PopoverItem>
+              </>
             )}
           </Popover>
         </div>
       </div>
 
+      <GuidelineModal
+        open={guidelineOpen}
+        onClose={() => setGuidelineOpen(false)}
+        guideline={riskFlag.medicalGuideline}
+        riskFlagName={riskFlag.name}
+      />
+
       <hr className="border-neutral-200 my-3" />
 
-      <div className="flex flex-col gap-3 text-xs text-neutral-500">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
-            Zonas afectadas
-          </span>
-          <AffectedZonesBadges zones={riskFlag.affectedZones} max={3} />
-        </div>
+      <div className="flex flex-col gap-1 text-xs text-neutral-500">
+        <span className="text-center text-xs font-semibold uppercase tracking-wide text-neutral-400">
+          Zonas afectadas
+        </span>
+        <AffectedZonesBadges zones={riskFlag.affectedZones} max={3} />
       </div>
     </div>
   );
