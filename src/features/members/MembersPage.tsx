@@ -1,7 +1,6 @@
 import { ViewToggle } from "@shared/ui";
 import { MembersHeader } from "./components/MembersList/MembersHeader/MembersHeader";
 import { MembersTable } from "./components/MembersList/MembersTable";
-import { MemberFormModal } from "./components/MembersList/MemberFormModal/MemberFormModal";
 import { MembersFilters } from "./components/MembersList/MembersFilters/MembersFilters";
 import { useMembersQuery } from "./hooks/useMembersQuery";
 import { useMembersFilters } from "./hooks/useMembersFilters";
@@ -22,19 +21,8 @@ export default function MembersPage() {
 
   const { data, isLoading, isPlaceholderData } = useMembersQuery(params);
 
-  const {
-    modalOpen,
-    editingMember,
-    isPending,
-    activeMutation,
-    handleOpenRegister,
-    handleOpenEdit,
-    handleCloseModal,
-    handleRegister,
-    handleUpdate,
-    handleDelete,
-    handleRestore,
-  } = useMembersActions();
+  const { handleOpenRegister, handleOpenEdit, handleDelete, handleRestore } =
+    useMembersActions();
 
   const members = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
@@ -64,25 +52,6 @@ export default function MembersPage() {
         onDelete={handleDelete}
         onRestore={handleRestore}
       />
-
-      {editingMember ? (
-        <MemberFormModal
-          open={modalOpen}
-          onClose={handleCloseModal}
-          member={editingMember}
-          onSubmit={handleUpdate}
-          isPending={isPending}
-          mutation={activeMutation}
-        />
-      ) : (
-        <MemberFormModal
-          open={modalOpen}
-          onClose={handleCloseModal}
-          onSubmit={handleRegister}
-          isPending={isPending}
-          mutation={activeMutation}
-        />
-      )}
     </div>
   );
 }

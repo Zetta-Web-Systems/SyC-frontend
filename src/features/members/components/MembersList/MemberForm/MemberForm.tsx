@@ -1,5 +1,9 @@
 import { Button } from "@shared/ui";
-import { Form, FormError } from "@shared/components/Form";
+import {
+  Form,
+  FormError,
+  FormUnsavedChangesGuard,
+} from "@shared/components/Form";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
@@ -15,15 +19,19 @@ import { MemberFormFields } from "./MemberFormFields";
 interface MemberFormCreateProps {
   member?: undefined;
   onSubmit: (data: RegisterMemberSchema) => void;
+  onCancel: () => void;
   isPending: boolean;
   mutation: MutationLike;
+  guardUnsavedChanges?: boolean;
 }
 
 interface MemberFormEditProps {
   member: Member;
   onSubmit: (data: UpdateMemberSchema) => void;
+  onCancel: () => void;
   isPending: boolean;
   mutation: MutationLike;
+  guardUnsavedChanges?: boolean;
 }
 
 type MemberFormProps = MemberFormCreateProps | MemberFormEditProps;
@@ -31,8 +39,10 @@ type MemberFormProps = MemberFormCreateProps | MemberFormEditProps;
 export function MemberForm({
   member,
   onSubmit,
+  onCancel,
   isPending,
   mutation,
+  guardUnsavedChanges = false,
 }: MemberFormProps) {
   if (member) {
     return (
@@ -61,16 +71,23 @@ export function MemberForm({
       >
         <MemberFormFields mode="edit" dni={member.dni} />
 
+        <FormUnsavedChangesGuard active={guardUnsavedChanges} />
+
         <FormError mutation={mutation} />
 
-        <Button
-          type="submit"
-          intent="primary"
-          className="mt-2 w-full"
-          isLoading={isPending}
-        >
-          Guardar cambios
-        </Button>
+        <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            intent="neutral"
+            variant="outline"
+            onClick={onCancel}
+          >
+            Volver
+          </Button>
+          <Button type="submit" intent="primary" isLoading={isPending}>
+            Guardar cambios
+          </Button>
+        </div>
       </Form>
     );
   }
@@ -85,16 +102,23 @@ export function MemberForm({
     >
       <MemberFormFields mode="create" />
 
+      <FormUnsavedChangesGuard active={guardUnsavedChanges} />
+
       <FormError mutation={mutation} />
 
-      <Button
-        type="submit"
-        intent="primary"
-        className="mt-2 w-full"
-        isLoading={isPending}
-      >
-        Registrar alumno
-      </Button>
+      <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <Button
+          type="button"
+          intent="neutral"
+          variant="outline"
+          onClick={onCancel}
+        >
+          Volver
+        </Button>
+        <Button type="submit" intent="primary" isLoading={isPending}>
+          Registrar alumno
+        </Button>
+      </div>
     </Form>
   );
 }

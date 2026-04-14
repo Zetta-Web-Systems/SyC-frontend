@@ -5,6 +5,7 @@ export const MEMBERS_KEYS = {
   all: ["members"] as const,
   list: (params: PaginatedParams) =>
     [...MEMBERS_KEYS.all, "list", params] as const,
+  detail: (id: string) => [...MEMBERS_KEYS.all, "detail", id] as const,
 } as const;
 
 export const STATUS_FILTER_OPTIONS: FilterOption[] = [

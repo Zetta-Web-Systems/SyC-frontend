@@ -16,7 +16,7 @@ export function MemberFormFields({ mode, dni }: MemberFormFieldsProps) {
   const isEditing = mode === "edit";
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <FormField<MemberFormValues> name="name" label="Nombre" required>
         {(field) => (
           <Input
@@ -82,9 +82,7 @@ export function MemberFormFields({ mode, dni }: MemberFormFieldsProps) {
       </FormField>
 
       <FormField<MemberFormValues> name="phone" label="Teléfono">
-        {(field) => (
-          <PhoneInput {...field} placeholder="Teléfono del alumno" />
-        )}
+        {(field) => <PhoneInput {...field} placeholder="Teléfono del alumno" />}
       </FormField>
 
       <FormField<MemberFormValues>
@@ -107,10 +105,7 @@ export function MemberFormFields({ mode, dni }: MemberFormFieldsProps) {
         )}
       </FormField>
 
-      <FormField<MemberFormValues>
-        name="bornDate"
-        label="Fecha de nacimiento"
-      >
+      <FormField<MemberFormValues> name="bornDate" label="Fecha de nacimiento">
         {(field) => (
           <Input
             {...field}

@@ -68,6 +68,11 @@ export async function getMembersPaginated(params: PaginatedParams) {
   return data;
 }
 
+export async function getMemberById(id: string) {
+  const { data } = await api.get<Member>(`/members/${id}`);
+  return data;
+}
+
 export async function registerMember(dto: RegisterMember) {
   const formData = dtoToFormData(dto);
   const { data } = await api.post<Member>("/members/register", formData);
