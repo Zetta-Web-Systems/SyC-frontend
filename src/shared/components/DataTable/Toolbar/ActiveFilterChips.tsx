@@ -6,6 +6,8 @@ import type {
   ExtraFilterChip,
 } from "@shared/types/datatable.types";
 
+const EMPTY_EXTRA_CHIPS: ExtraFilterChip[] = [];
+
 interface ActiveChip {
   filterKey: string;
   filterLabel: string;
@@ -23,7 +25,7 @@ interface ActiveFilterChipsProps {
 
 export function ActiveFilterChips({
   filters,
-  extraChips = [],
+  extraChips = EMPTY_EXTRA_CHIPS,
   onClearAll,
 }: ActiveFilterChipsProps) {
   const activeChips = useMemo<ActiveChip[]>(() => {

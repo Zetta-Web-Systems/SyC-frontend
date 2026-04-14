@@ -5,7 +5,7 @@ import { Popover } from "@shared/ui/Popover/Popover";
 import { Checkbox } from "@shared/ui/Checkbox/Checkbox";
 import { Input } from "@shared/ui/Input/Input";
 import { cn } from "@shared/lib/cn";
-import type { FilterOption } from "@shared/types/datatable.types";
+import type { FilterOption } from "@shared/types/filters.types";
 import { filterDropdownTriggerVariants } from "./FilterDropdown.variants";
 
 export interface FilterDropdownProps {

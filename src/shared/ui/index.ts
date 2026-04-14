@@ -1,3 +1,5 @@
+export type { AccordionProps } from "./Accordion/Accordion";
+export type { AccordionItemProps } from "./Accordion/AccordionItem";
 export type { AvatarUploaderProps } from "./AvatarUploader/AvatarUploader";
 export type { ButtonProps } from "./Button/Button";
 export type { DateFilterDropdownProps } from "./DateFilterDropdown/DateFilterDropdown";
@@ -6,6 +8,8 @@ export type { PopoverProps } from "./Popover/Popover";
 export type { SpinnerProps } from "./Spinner/Spinner";
 export type { PortalProps } from "./Portal/Portal";
 export type { ViewToggleProps, ViewMode } from "./ViewToggle/ViewToggle";
+export { Accordion } from "./Accordion/Accordion";
+export { AccordionItem } from "./Accordion/AccordionItem";
 export { Avatar } from "./Avatar/Avatar";
 export { AvatarUploader } from "./AvatarUploader/AvatarUploader";
 export { Badge } from "./Badge/Badge";
