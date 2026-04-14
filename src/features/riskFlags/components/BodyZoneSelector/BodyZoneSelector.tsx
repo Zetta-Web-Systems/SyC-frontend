@@ -36,6 +36,7 @@ export function BodyZoneSelector({
     bodyData,
     handleBodyPartPress,
     defaultFill,
+    hoverFill,
   } = useBodyZoneSelector({ value: normalizedValue, onChange });
 
   return (
@@ -71,7 +72,7 @@ export function BodyZoneSelector({
               side={side}
               scale={1.3}
               defaultFill={defaultFill}
-              hoverFill="#438e87"
+              hoverFill={hoverFill}
               onBodyPartPress={disabled ? undefined : handleBodyPartPress}
             />
           </div>

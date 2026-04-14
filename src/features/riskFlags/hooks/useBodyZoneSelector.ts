@@ -7,7 +7,8 @@ import type {
 import type { BodyZone } from "../constants";
 
 const HIGHLIGHT_COLOR = "#4b5db4";
-const NEUTRAL_FILL = "#90cbc5";
+const BODY_FILL = "#90cbc5";
+const HOVER_FILL = "#438e87";
 
 interface UseBodyZoneSelectorArgs {
   value: BodyZone[];
@@ -71,6 +72,7 @@ export function useBodyZoneSelector({
     clearAll,
     bodyData,
     handleBodyPartPress,
-    defaultFill: NEUTRAL_FILL,
+    defaultFill: BODY_FILL,
+    hoverFill: HOVER_FILL,
   };
 }
