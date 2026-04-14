@@ -1,12 +1,15 @@
 import { User } from "lucide-react";
-import { useFormContext, useFormState } from "react-hook-form";
 import { Button, Input } from "@shared/ui";
-import { Form, FormField, FormError } from "@shared/components/Form";
+import {
+  Form,
+  FormField,
+  FormError,
+  FormUnsavedChangesGuard,
+} from "@shared/components/Form";
 import { MarkdownEditor } from "@shared/components/MarkdownEditor/";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
-import { useUnsavedChangesPrompt } from "@shared/hooks/useUnsavedChangesPrompt";
 import { BodyZoneSelector } from "../../BodyZoneSelector/BodyZoneSelector";
 import type { BodyZone } from "../../../constants";
 import {
@@ -36,13 +39,6 @@ interface RiskFlagFormEditProps {
 }
 
 type RiskFlagFormProps = RiskFlagFormCreateProps | RiskFlagFormEditProps;
-
-function UnsavedChangesGuard({ active }: { active: boolean }) {
-  const { control } = useFormContext();
-  const { isDirty } = useFormState({ control });
-  useUnsavedChangesPrompt({ when: active && isDirty });
-  return null;
-}
 
 export function RiskFlagForm({
   riskFlag,
@@ -117,7 +113,7 @@ export function RiskFlagForm({
           )}
         </FormField>
 
-        <UnsavedChangesGuard active={guardUnsavedChanges} />
+        <FormUnsavedChangesGuard active={guardUnsavedChanges} />
 
         <FormError mutation={mutation} />
 
