@@ -10,8 +10,8 @@ import { MarkdownEditor } from "@shared/components/MarkdownEditor/";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
-import { BodyZoneSelector } from "../../BodyZoneSelector/BodyZoneSelector";
-import type { BodyZone } from "../../../constants";
+import { BodyZoneSelector } from "@shared/components/BodyZoneSelector";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 import {
   registerRiskFlagSchema,
   updateRiskFlagSchema,

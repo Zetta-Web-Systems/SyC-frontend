@@ -1,4 +1,4 @@
-import type { BodyZone } from "../constants";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 
 interface BaseRiskFlag {
   name: string;
@@ -11,9 +11,9 @@ export interface RiskFlag extends BaseRiskFlag {
   isActive: boolean;
 }
 
-export interface RegisterRiskFlag extends BaseRiskFlag {}
+export type RegisterRiskFlag = BaseRiskFlag;
 
-export interface UpdateRiskFlag extends Partial<BaseRiskFlag> {}
+export type UpdateRiskFlag = Partial<BaseRiskFlag>;
 
 export interface AffectedGroup {
   label: string;

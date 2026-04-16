@@ -4,8 +4,8 @@ import {
   BODY_ZONE_LABELS,
   BODY_ZONE_TO_GROUP_LABEL,
   GROUP_DOT_CLASS,
-  type BodyZone,
-} from "../../constants";
+} from "@shared/constants/bodyZones";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 import { Badge } from "@shared/ui";
 import type { RiskFlag, AffectedGroup } from "../../types";
 

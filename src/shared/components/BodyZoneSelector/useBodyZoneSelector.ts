@@ -4,20 +4,24 @@ import type {
   ExtendedBodyPart,
   Slug,
 } from "@shared/types/bodyHighlighter.types";
-import type { BodyZone } from "../constants";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 
 const HIGHLIGHT_COLOR = "#4b5db4";
 const BODY_FILL = "#90cbc5";
 const HOVER_FILL = "#438e87";
 
+export type BodyZoneSelectorMode = "single" | "multi";
+
 interface UseBodyZoneSelectorArgs {
   value: BodyZone[];
   onChange: (zones: BodyZone[]) => void;
+  mode?: BodyZoneSelectorMode;
 }
 
 export function useBodyZoneSelector({
   value,
   onChange,
+  mode = "multi",
 }: UseBodyZoneSelectorArgs) {
   const [side, setSide] = useState<BodySide>("front");
 
@@ -25,12 +29,20 @@ export function useBodyZoneSelector({
 
   const toggleZone = useCallback(
     (zone: BodyZone) => {
+      if (mode === "single") {
+        if (selectedSet.has(zone) && selectedSet.size === 1) {
+          onChange([]);
+          return;
+        }
+        onChange([zone]);
+        return;
+      }
       const next = new Set(selectedSet);
       if (next.has(zone)) next.delete(zone);
       else next.add(zone);
       onChange([...next]);
     },
-    [selectedSet, onChange],
+    [selectedSet, onChange, mode],
   );
 
   const isSelected = useCallback(
