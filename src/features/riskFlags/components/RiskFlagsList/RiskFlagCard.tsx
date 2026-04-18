@@ -14,9 +14,9 @@ import {
   PopoverItem,
   PopoverSeparator,
 } from "@shared/ui";
+import { GuidelineModal } from "@shared/components/Guideline";
 import type { RiskFlag } from "../../types";
 import { AffectedZonesBadges } from "./RiskFlagContent/AffectedZonesBadges";
-import { GuidelineModal } from "./RiskFlagContent/GuidelineButton";
 
 interface RiskFlagCardProps {
   riskFlag: RiskFlag;

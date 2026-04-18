@@ -22,6 +22,7 @@ import type { RiskFlag } from "../../../types";
 
 interface RiskFlagFormCreateProps {
   riskFlag?: undefined;
+  defaultName?: string;
   onSubmit: (data: RegisterRiskFlagSchema) => void;
   onCancel: () => void;
   isPending: boolean;
@@ -31,6 +32,7 @@ interface RiskFlagFormCreateProps {
 
 interface RiskFlagFormEditProps {
   riskFlag: RiskFlag;
+  defaultName?: string;
   onSubmit: (data: UpdateRiskFlagSchema) => void;
   onCancel: () => void;
   isPending: boolean;
@@ -42,6 +44,7 @@ type RiskFlagFormProps = RiskFlagFormCreateProps | RiskFlagFormEditProps;
 
 export function RiskFlagForm({
   riskFlag,
+  defaultName,
   onSubmit,
   onCancel,
   isPending,
@@ -140,6 +143,7 @@ export function RiskFlagForm({
       onSubmit={(data) =>
         onSubmit(normalizeEmptyStrings(data) as RegisterRiskFlagSchema)
       }
+      defaultValues={{ name: defaultName ?? "" }}
       className="flex flex-col gap-5"
     >
       <FormField<RegisterRiskFlagSchema> name="name" label="Nombre" required>
