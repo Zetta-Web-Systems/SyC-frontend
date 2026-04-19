@@ -54,10 +54,10 @@ export function MemberRiskFlagsSection({
           <section className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <h3 className="text-base font-semibold text-neutral-800">
-                Risk flags del alumno
+                Banderas de riesgo del alumno
               </h3>
               <p className="text-xs text-neutral-500">
-                Buscá y asociá risk flags al perfil clínico del alumno.
+                Buscá y asociá bandera de riesgos al perfil clínico del alumno.
               </p>
             </div>
 
