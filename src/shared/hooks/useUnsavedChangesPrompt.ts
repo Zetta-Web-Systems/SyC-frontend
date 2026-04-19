@@ -4,6 +4,7 @@ import { confirm } from "@shared/stores/confirm.store";
 
 interface UseUnsavedChangesPromptOptions {
   when: boolean;
+  allowNavigationTo?: string[];
   title?: string;
   description?: string;
   confirmLabel?: string;
@@ -12,13 +13,22 @@ interface UseUnsavedChangesPromptOptions {
 
 export function useUnsavedChangesPrompt({
   when,
+  allowNavigationTo,
   title = "Cambios sin guardar",
   description = "Hay cambios sin guardar. Si sales ahora los perderás.",
   confirmLabel = "Salir sin guardar",
   cancelLabel = "Seguir editando",
 }: UseUnsavedChangesPromptOptions) {
   const resolver = useBlocker({
-    shouldBlockFn: () => when,
+    shouldBlockFn: ({ next }) => {
+      if (!when) return false;
+      if (
+        allowNavigationTo?.some((path) => next.fullPath.startsWith(path))
+      ) {
+        return false;
+      }
+      return true;
+    },
     enableBeforeUnload: when,
     withResolver: true,
   });
