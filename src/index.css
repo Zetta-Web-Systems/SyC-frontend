@@ -35,6 +35,14 @@
   --color-warning: #ee9145;
   --color-info: #3b82f6;
 
+  /* Colores (perfil clínico) */
+  --color-clinical-none: var(--color-secondary-500);
+  --color-clinical-very-low: #f59e0b;
+  --color-clinical-low: #f97316;
+  --color-clinical-mid: #e64a1e;
+  --color-clinical-high: #dc2626;
+  --color-clinical-very-high: #991b1b;
+
   /* Breakpoints */
   --breakpoint-xs: 488px;
   --breakpoint-sm: 640px;
