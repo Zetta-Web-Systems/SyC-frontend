@@ -36,9 +36,9 @@ export function MemberRiskFlagCardActions({
     e.preventDefault();
     confirm({
       intent: "danger",
-      title: "Eliminar risk flag",
+      title: "Eliminar bandera de riesgo",
       description:
-        "¿Estás seguro que deseas eliminar este risk flag del perfil?",
+        "¿Estás seguro que deseas eliminar esta bandera de riesgo del perfil?",
       confirmLabel: "Eliminar",
       onConfirm: onRemove,
     });

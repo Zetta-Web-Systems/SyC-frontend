@@ -10,9 +10,9 @@ export function MissingRiskFlagCard({ onRemove }: MissingRiskFlagCardProps) {
   function handleRemove() {
     confirm({
       intent: "danger",
-      title: "Eliminar risk flag",
+      title: "Eliminar bandera de riesgo",
       description:
-        "¿Estás seguro que deseas eliminar este risk flag del perfil?",
+        "¿Estás seguro que deseas eliminar esta bandera de riesgo del perfil?",
       confirmLabel: "Eliminar",
       onConfirm: onRemove,
     });
@@ -22,7 +22,7 @@ export function MissingRiskFlagCard({ onRemove }: MissingRiskFlagCardProps) {
     <div className="flex items-center justify-between rounded-xl border border-dashed border-warning/50 bg-warning/5 px-4 py-3">
       <div className="flex items-center gap-2 text-sm text-warning">
         <AlertTriangle size={16} aria-hidden="true" />
-        <span>Risk flag no encontrado</span>
+        <span>Bandera de riesgo no encontrada</span>
       </div>
       <Button
         type="button"
