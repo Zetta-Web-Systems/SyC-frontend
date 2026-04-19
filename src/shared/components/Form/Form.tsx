@@ -38,7 +38,10 @@ export function Form<TFields extends FieldValues>({
       <form
         id={id}
         className={className}
-        onSubmit={form.handleSubmit((data) => onSubmit(data, form))}
+        onSubmit={(e) => {
+          e.stopPropagation();
+          void form.handleSubmit((data) => onSubmit(data, form))(e);
+        }}
         noValidate
       >
         {typeof children === "function" ? children(form) : children}

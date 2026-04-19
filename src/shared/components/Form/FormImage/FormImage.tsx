@@ -82,7 +82,7 @@ export function FormImage<TFields extends FieldValues>({
         });
       },
     });
-  }, [name, deleteFieldName, setValue]);
+  }, [name, deleteFieldName, deleteFieldTitle, deleteFieldDescription, setValue]);
 
   const handleRestore = useCallback(() => {
     if (!deleteFieldName) return;
