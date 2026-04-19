@@ -73,12 +73,12 @@ const currentWeightField = z
   .optional()
   .nullable();
 
-const trainingGoalField = z.nativeEnum(TrainingGoal, {
+const trainingGoalField = z.enum(TrainingGoal, {
   error: "Selecciona un objetivo de entrenamiento",
 });
 
 const trainingGoalOptionalField = z
-  .nativeEnum(TrainingGoal, {
+  .enum(TrainingGoal, {
     error: "Selecciona un objetivo de entrenamiento válido",
   })
   .optional()

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Stethoscope } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
@@ -101,6 +101,24 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
           isPending={mutation.isPending}
           mutation={mutation}
           guardUnsavedChanges={!navigating}
+          guardAllowNavigationTo={["/members/$memberId/clinical-profile"]}
+          clinicalProfileSlot={
+            <div className="flex justify-start">
+              <Button
+                intent="neutral"
+                variant="outline"
+                onClick={() =>
+                  navigate({
+                    to: "/members/$memberId/clinical-profile",
+                    params: { memberId: member.id },
+                  })
+                }
+              >
+                <Stethoscope size={16} aria-hidden="true" />
+                Perfil clínico
+              </Button>
+            </div>
+          }
         />
       )}
     </div>

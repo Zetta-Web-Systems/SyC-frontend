@@ -5,8 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
+import { toClinicalProfileRegisterPayload } from "@features/clinicalProfiles";
 import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
+import { ClinicalProfileSlotButton } from "../components/MembersList/MemberForm/ClinicalProfileSlotButton";
 import { useRegisterMemberMutation } from "../hooks/mutations/useRegisterMemberMutation";
+import { useMemberRegistrationDraft } from "../stores/memberRegistrationDraft.store";
 import type { RegisterMemberSchema } from "../schemas/member.schema";
 
 export default function RegisterMemberPage() {
@@ -14,12 +17,18 @@ export default function RegisterMemberPage() {
   const mutation = useRegisterMemberMutation();
   const [navigating, setNavigating] = useState(false);
 
+  const memberFields = useMemberRegistrationDraft((s) => s.memberFields);
+  const clinicalProfile = useMemberRegistrationDraft((s) => s.clinicalProfile);
+  const reset = useMemberRegistrationDraft((s) => s.reset);
+
   function goToList() {
+    reset();
     flushSync(() => setNavigating(true));
     navigate({ to: "/members" });
   }
 
   function handleBack() {
+    reset();
     navigate({ to: "/members" });
   }
 
@@ -34,6 +43,9 @@ export default function RegisterMemberPage() {
           ...data,
           image: data.image ?? undefined,
           currentWeight: data.currentWeight ?? undefined,
+          clinicalProfile: clinicalProfile
+            ? toClinicalProfileRegisterPayload(clinicalProfile)
+            : {},
         };
         mutation.mutate(normalized, {
           onSuccess: () => goToList(),
@@ -61,6 +73,9 @@ export default function RegisterMemberPage() {
         isPending={mutation.isPending}
         mutation={mutation}
         guardUnsavedChanges={!navigating}
+        guardAllowNavigationTo={["/members/register/clinical-profile"]}
+        defaultValues={memberFields ?? undefined}
+        clinicalProfileSlot={<ClinicalProfileSlotButton />}
       />
     </div>
   );

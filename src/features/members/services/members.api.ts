@@ -57,6 +57,10 @@ function dtoToFormData(dto: RegisterMember | UpdateMember): FormData {
     formData.append("trainingGoal", dto.trainingGoal);
   }
 
+  if ("clinicalProfile" in dto && dto.clinicalProfile) {
+    formData.append("clinicalProfile", JSON.stringify(dto.clinicalProfile));
+  }
+
   return formData;
 }
 

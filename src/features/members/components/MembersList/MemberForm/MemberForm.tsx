@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import type { DefaultValues } from "react-hook-form";
 import { Button } from "@shared/ui";
 import {
   Form,
@@ -23,6 +25,9 @@ interface MemberFormCreateProps {
   isPending: boolean;
   mutation: MutationLike;
   guardUnsavedChanges?: boolean;
+  guardAllowNavigationTo?: string[];
+  clinicalProfileSlot?: ReactNode;
+  defaultValues?: DefaultValues<RegisterMemberSchema>;
 }
 
 interface MemberFormEditProps {
@@ -32,6 +37,8 @@ interface MemberFormEditProps {
   isPending: boolean;
   mutation: MutationLike;
   guardUnsavedChanges?: boolean;
+  guardAllowNavigationTo?: string[];
+  clinicalProfileSlot?: ReactNode;
 }
 
 type MemberFormProps = MemberFormCreateProps | MemberFormEditProps;
@@ -43,7 +50,13 @@ export function MemberForm({
   isPending,
   mutation,
   guardUnsavedChanges = false,
+  guardAllowNavigationTo,
+  clinicalProfileSlot,
+  ...rest
 }: MemberFormProps) {
+  const createDefaults = !member
+    ? (rest as MemberFormCreateProps).defaultValues
+    : undefined;
   if (member) {
     return (
       <Form<UpdateMemberSchema>
@@ -71,17 +84,17 @@ export function MemberForm({
       >
         <MemberFormFields mode="edit" dni={member.dni} />
 
-        <FormUnsavedChangesGuard active={guardUnsavedChanges} />
+        {clinicalProfileSlot}
+
+        <FormUnsavedChangesGuard
+          active={guardUnsavedChanges}
+          allowNavigationTo={guardAllowNavigationTo}
+        />
 
         <FormError mutation={mutation} />
 
         <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={onCancel}
-          >
+          <Button intent="neutral" variant="outline" onClick={onCancel}>
             Volver
           </Button>
           <Button type="submit" intent="primary" isLoading={isPending}>
@@ -98,11 +111,17 @@ export function MemberForm({
       onSubmit={(data) =>
         onSubmit(normalizeEmptyStrings(data) as RegisterMemberSchema)
       }
+      defaultValues={createDefaults}
       className="flex flex-col gap-5"
     >
       <MemberFormFields mode="create" />
 
-      <FormUnsavedChangesGuard active={guardUnsavedChanges} />
+      {clinicalProfileSlot}
+
+      <FormUnsavedChangesGuard
+        active={guardUnsavedChanges}
+        allowNavigationTo={guardAllowNavigationTo}
+      />
 
       <FormError mutation={mutation} />
 
