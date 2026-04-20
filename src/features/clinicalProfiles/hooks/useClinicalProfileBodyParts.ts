@@ -28,6 +28,7 @@ export function useClinicalProfileBodyParts(): ExtendedBodyPart[] {
     const partMap = new Map<string, ExtendedBodyPart>();
 
     for (const mrf of memberRiskFlags) {
+      if (!mrf.isActive) continue;
       for (const cs of mrf.currentStatus) {
         if (!cs.bodyZone) continue;
         const key = cs.side ? `${cs.bodyZone}-${cs.side}` : cs.bodyZone;
