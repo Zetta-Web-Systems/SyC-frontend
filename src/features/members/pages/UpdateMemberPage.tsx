@@ -66,12 +66,7 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
         title="Editar alumno"
         description="Modifica la información del alumno."
         actions={
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={handleBack}
-          >
+          <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
             <span className="hidden xs:inline">Volver</span>
           </Button>

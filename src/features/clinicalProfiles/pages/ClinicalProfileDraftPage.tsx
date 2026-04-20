@@ -44,12 +44,7 @@ export default function ClinicalProfileDraftPage() {
         title="Perfil clínico"
         description="Completá la información clínica del alumno."
         actions={
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={handleBack}
-          >
+          <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
             <span className="hidden xs:inline">Volver al registro</span>
           </Button>

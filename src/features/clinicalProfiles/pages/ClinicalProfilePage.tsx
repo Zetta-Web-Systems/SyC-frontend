@@ -51,12 +51,7 @@ export default function ClinicalProfilePage({
             : "Información clínica del alumno."
         }
         actions={
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={goBack}
-          >
+          <Button intent="neutral" variant="outline" onClick={goBack}>
             <ArrowLeft size={16} aria-hidden="true" />
             <span className="hidden xs:inline">Volver al alumno</span>
           </Button>

@@ -67,6 +67,7 @@ export function SearchableCombobox<T>({
       aria-expanded={isOpen}
       aria-haspopup="listbox"
       aria-owns={listboxId}
+      aria-controls={listboxId}
     >
       <SearchInput
         placeholder={placeholder}

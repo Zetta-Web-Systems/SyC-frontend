@@ -25,7 +25,6 @@ export function MissingRiskFlagCard({ onRemove }: MissingRiskFlagCardProps) {
         <span>Bandera de riesgo no encontrada</span>
       </div>
       <Button
-        type="button"
         size="sm"
         variant="ghost"
         intent="danger"

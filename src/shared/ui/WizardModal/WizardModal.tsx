@@ -121,7 +121,6 @@ export function WizardModal({
         <>
           {wizard.isFirst ? (
             <Button
-              type="button"
               variant="ghost"
               intent="neutral"
               onClick={handleClose}
@@ -131,7 +130,6 @@ export function WizardModal({
             </Button>
           ) : (
             <Button
-              type="button"
               variant="ghost"
               intent="neutral"
               onClick={wizard.back}
@@ -141,7 +139,7 @@ export function WizardModal({
               {backLabel}
             </Button>
           )}
-          <Button type="button" onClick={handleAdvance} isLoading={busy}>
+          <Button onClick={handleAdvance} isLoading={busy}>
             {advanceLabel}
             {!wizard.isLast && <ArrowRight size={14} aria-hidden="true" />}
           </Button>

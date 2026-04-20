@@ -190,10 +190,9 @@ export function BodyZoneSelector({
 
           {!isSingle && (
             <Button
-              type="button"
-              size="sm"
               variant="ghost"
               intent="neutral"
+              size="sm"
               onClick={clearAll}
               disabled={disabled}
               className="ml-auto"

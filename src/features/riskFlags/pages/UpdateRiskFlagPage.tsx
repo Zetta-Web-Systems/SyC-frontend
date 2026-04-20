@@ -57,12 +57,7 @@ export default function UpdateRiskFlagPage({
         title="Editar bandera de riesgo"
         description="Modifica la información de la bandera de riesgo."
         actions={
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={handleBack}
-          >
+          <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
             <span className="hidden xs:inline">Volver</span>
           </Button>

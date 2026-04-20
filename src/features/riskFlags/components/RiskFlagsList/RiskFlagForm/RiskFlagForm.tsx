@@ -121,12 +121,7 @@ export function RiskFlagForm({
         <FormError mutation={mutation} />
 
         <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={onCancel}
-          >
+          <Button intent="neutral" variant="outline" onClick={onCancel}>
             Volver
           </Button>
           <Button type="submit" intent="primary" isLoading={isPending}>
@@ -193,12 +188,7 @@ export function RiskFlagForm({
       <FormError mutation={mutation} />
 
       <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Button
-          type="button"
-          intent="neutral"
-          variant="outline"
-          onClick={onCancel}
-        >
+        <Button intent="neutral" variant="outline" onClick={onCancel}>
           Volver
         </Button>
         <Button type="submit" intent="primary" isLoading={isPending}>
