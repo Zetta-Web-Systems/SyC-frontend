@@ -25,19 +25,19 @@ export function useClinicalProfileOpExecutor({
 }: {
   memberId: string;
 }) {
-  const updateProfile = useUpdateClinicalProfileMutation();
-  const updateFlag = useUpdateMemberRiskFlagMutation();
-  const deleteFlag = useDeleteMemberRiskFlagMutation();
-  const restoreFlag = useRestoreMemberRiskFlagMutation();
-  const updateStatus = useUpdateCurrentStatusMutation();
-  const addStatus = useAddCurrentStatusMutation();
-  const addFlag = useAddMemberRiskFlagMutation();
+  const updateClinicalProfile = useUpdateClinicalProfileMutation();
+  const updateMemberRiskFlag = useUpdateMemberRiskFlagMutation();
+  const deleteMemberRiskFlag = useDeleteMemberRiskFlagMutation();
+  const restoreMemberRiskFlag = useRestoreMemberRiskFlagMutation();
+  const updateCurrentStatus = useUpdateCurrentStatusMutation();
+  const addCurrentStatus = useAddCurrentStatusMutation();
+  const addMemberRiskFlag = useAddMemberRiskFlagMutation();
 
   return useCallback(
     async (op: ClinicalProfileOp, { snapshot, form }: ExecCtx) => {
       switch (op.kind) {
-        case "updateProfile": {
-          await updateProfile.mutateAsync({
+        case "updateClinicalProfile": {
+          await updateClinicalProfile.mutateAsync({
             clinicalProfileId: op.clinicalProfileId,
             memberId,
             dto: op.dto,
@@ -45,8 +45,8 @@ export function useClinicalProfileOpExecutor({
           applyOpToSnapshot(op, snapshot);
           return;
         }
-        case "updateFlagNotes": {
-          await updateFlag.mutateAsync({
+        case "updateMemberRiskFlag": {
+          await updateMemberRiskFlag.mutateAsync({
             memberRiskFlagId: op.memberRiskFlagId,
             memberId,
             dto: op.dto,
@@ -54,24 +54,24 @@ export function useClinicalProfileOpExecutor({
           applyOpToSnapshot(op, snapshot);
           return;
         }
-        case "deleteFlag": {
-          await deleteFlag.mutateAsync({
+        case "deleteMemberRiskFlag": {
+          await deleteMemberRiskFlag.mutateAsync({
             memberRiskFlagId: op.memberRiskFlagId,
             memberId,
           });
           applyOpToSnapshot(op, snapshot);
           return;
         }
-        case "restoreFlag": {
-          await restoreFlag.mutateAsync({
+        case "restoreMemberRiskFlag": {
+          await restoreMemberRiskFlag.mutateAsync({
             memberRiskFlagId: op.memberRiskFlagId,
             memberId,
           });
           applyOpToSnapshot(op, snapshot);
           return;
         }
-        case "updateStatus": {
-          await updateStatus.mutateAsync({
+        case "updateCurrentStatus": {
+          await updateCurrentStatus.mutateAsync({
             currentStatusId: op.currentStatusId,
             memberId,
             dto: op.dto,
@@ -79,8 +79,8 @@ export function useClinicalProfileOpExecutor({
           applyOpToSnapshot(op, snapshot);
           return;
         }
-        case "addStatus": {
-          const created = await addStatus.mutateAsync({
+        case "addCurrentStatus": {
+          const created = await addCurrentStatus.mutateAsync({
             memberRiskFlagId: op.memberRiskFlagId,
             memberId,
             dto: op.dto,
@@ -93,8 +93,8 @@ export function useClinicalProfileOpExecutor({
           applyOpToSnapshot(op, snapshot, { status: created });
           return;
         }
-        case "addFlag": {
-          const created = await addFlag.mutateAsync({
+        case "addMemberRiskFlag": {
+          const created = await addMemberRiskFlag.mutateAsync({
             clinicalProfileId: snapshot.id,
             memberId,
             dto: op.dto,
@@ -126,14 +126,14 @@ export function useClinicalProfileOpExecutor({
       }
     },
     [
-      addFlag,
-      addStatus,
-      deleteFlag,
+      addMemberRiskFlag,
+      addCurrentStatus,
+      deleteMemberRiskFlag,
       memberId,
-      restoreFlag,
-      updateFlag,
-      updateProfile,
-      updateStatus,
+      restoreMemberRiskFlag,
+      updateMemberRiskFlag,
+      updateClinicalProfile,
+      updateCurrentStatus,
     ],
   );
 }

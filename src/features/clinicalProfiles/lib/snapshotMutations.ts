@@ -31,14 +31,14 @@ export function applyOpToSnapshot(
   created?: CreatedOpResult,
 ): void {
   switch (op.kind) {
-    case "updateProfile": {
+    case "updateClinicalProfile": {
       snapshot.generalObservations =
         op.dto.generalObservations === ""
           ? null
           : (op.dto.generalObservations ?? null);
       return;
     }
-    case "updateFlagNotes": {
+    case "updateMemberRiskFlag": {
       const flag = snapshot.memberRiskFlags.find(
         (f) => f.id === op.memberRiskFlagId,
       );
@@ -47,21 +47,21 @@ export function applyOpToSnapshot(
       }
       return;
     }
-    case "deleteFlag": {
+    case "deleteMemberRiskFlag": {
       const flag = snapshot.memberRiskFlags.find(
         (f) => f.id === op.memberRiskFlagId,
       );
       if (flag) flag.isActive = false;
       return;
     }
-    case "restoreFlag": {
+    case "restoreMemberRiskFlag": {
       const flag = snapshot.memberRiskFlags.find(
         (f) => f.id === op.memberRiskFlagId,
       );
       if (flag) flag.isActive = true;
       return;
     }
-    case "updateStatus": {
+    case "updateCurrentStatus": {
       for (const flag of snapshot.memberRiskFlags) {
         const status = flag.currentStatus.find(
           (cs) => cs.id === op.currentStatusId,
@@ -79,7 +79,7 @@ export function applyOpToSnapshot(
       }
       return;
     }
-    case "addStatus": {
+    case "addCurrentStatus": {
       if (!created?.status) return;
       const flag = snapshot.memberRiskFlags.find(
         (f) => f.id === op.memberRiskFlagId,
@@ -87,7 +87,7 @@ export function applyOpToSnapshot(
       if (flag) flag.currentStatus.push({ ...created.status });
       return;
     }
-    case "addFlag": {
+    case "addMemberRiskFlag": {
       if (!created?.flag) return;
       snapshot.memberRiskFlags.push(snapshotFromMemberFlag(created.flag));
       return;

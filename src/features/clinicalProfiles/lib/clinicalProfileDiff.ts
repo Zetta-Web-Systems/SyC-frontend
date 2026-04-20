@@ -13,37 +13,37 @@ import type { ClinicalProfile, CurrentStatus, MemberRiskFlag } from "../types";
 
 export type ClinicalProfileOp =
   | {
-      kind: "updateProfile";
+      kind: "updateClinicalProfile";
       clinicalProfileId: string;
       dto: ClinicalProfileUpdateSchema;
     }
   | {
-      kind: "updateFlagNotes";
+      kind: "updateMemberRiskFlag";
       memberRiskFlagId: string;
       dto: MemberRiskFlagUpdateSchema;
     }
   | {
-      kind: "deleteFlag";
+      kind: "deleteMemberRiskFlag";
       memberRiskFlagId: string;
     }
   | {
-      kind: "restoreFlag";
+      kind: "restoreMemberRiskFlag";
       memberRiskFlagId: string;
     }
   | {
-      kind: "updateStatus";
+      kind: "updateCurrentStatus";
       currentStatusId: string;
       dto: CurrentStatusUpdateSchema;
     }
   | {
-      kind: "addStatus";
+      kind: "addCurrentStatus";
       memberRiskFlagId: string;
       dto: CurrentStatusCreateSchema;
       flagIndex: number;
       statusIndex: number;
     }
   | {
-      kind: "addFlag";
+      kind: "addMemberRiskFlag";
       dto: MemberRiskFlagRegisterSchema;
       flagIndex: number;
     };
@@ -118,7 +118,7 @@ export function buildClinicalProfileOps(
       : next.generalObservations;
   if (initialObs !== nextObs) {
     ops.push({
-      kind: "updateProfile",
+      kind: "updateClinicalProfile",
       clinicalProfileId: initial.id,
       dto: { generalObservations: nextObs ?? "" },
     });
@@ -131,7 +131,7 @@ export function buildClinicalProfileOps(
   next.memberRiskFlags.forEach((nextFlag, flagIndex) => {
     if (!nextFlag.id) {
       ops.push({
-        kind: "addFlag",
+        kind: "addMemberRiskFlag",
         dto: toFlagRegisterDto(nextFlag),
         flagIndex,
       });
@@ -142,19 +142,22 @@ export function buildClinicalProfileOps(
     if (!initialFlag) return;
 
     if (initialFlag.isActive && !nextFlag.isActive) {
-      ops.push({ kind: "deleteFlag", memberRiskFlagId: nextFlag.id });
+      ops.push({ kind: "deleteMemberRiskFlag", memberRiskFlagId: nextFlag.id });
       return;
     }
 
     if (!initialFlag.isActive && nextFlag.isActive) {
-      ops.push({ kind: "restoreFlag", memberRiskFlagId: nextFlag.id });
+      ops.push({
+        kind: "restoreMemberRiskFlag",
+        memberRiskFlagId: nextFlag.id,
+      });
     }
 
     const initialNotes = normalizeTrimmedText(initialFlag.notes);
     const nextNotes = normalizeTrimmedText(nextFlag.notes);
     if (initialNotes !== nextNotes) {
       ops.push({
-        kind: "updateFlagNotes",
+        kind: "updateMemberRiskFlag",
         memberRiskFlagId: nextFlag.id,
         dto: { notes: nextNotes ?? "" },
       });
@@ -167,7 +170,7 @@ export function buildClinicalProfileOps(
     nextFlag.currentStatus.forEach((nextStatus, statusIndex) => {
       if (!nextStatus.id) {
         ops.push({
-          kind: "addStatus",
+          kind: "addCurrentStatus",
           memberRiskFlagId: nextFlag.id as string,
           dto: toStatusCreateDto(nextStatus),
           flagIndex,
@@ -182,7 +185,7 @@ export function buildClinicalProfileOps(
       const dto = flagStatusDiff(initialStatus, nextStatus);
       if (dto) {
         ops.push({
-          kind: "updateStatus",
+          kind: "updateCurrentStatus",
           currentStatusId: nextStatus.id,
           dto,
         });
