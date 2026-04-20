@@ -10,7 +10,7 @@ export const switchTrackVariants = cva(
       },
       checked: {
         true: "bg-primary-600",
-        false: "bg-neutral-200",
+        false: "bg-neutral-400",
       },
       error: {
         true: "",

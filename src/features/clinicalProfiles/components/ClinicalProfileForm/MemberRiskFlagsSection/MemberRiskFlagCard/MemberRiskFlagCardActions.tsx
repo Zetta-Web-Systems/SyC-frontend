@@ -3,6 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { Button, Switch } from "@shared/ui";
 import { GuidelineButton } from "@shared/components/Guideline";
+import { cn } from "@shared/lib/cn";
 import { confirm } from "@shared/stores/confirm.store";
 import { memberRiskFlagPaths } from "../../../../lib/pathBuilders";
 import type { ClinicalProfileFormSchema } from "../../../../schemas/clinicalProfile.schema";
@@ -63,7 +64,7 @@ export function MemberRiskFlagCardActions({
 
       <GuidelineButton guideline={guideline} riskFlagName={riskFlagName} />
 
-      <div className="ml-2 flex flex-col items-center">
+      <div className="ml-2 flex w-16 flex-col items-center gap-0.5">
         <Switch
           checked={isActive}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -71,8 +72,15 @@ export function MemberRiskFlagCardActions({
           }
           size="sm"
         />
-        <span className="text-[10px] text-neutral-400">
-          {isActive ? "Activo" : "Inact."}
+        <span
+          className={cn(
+            "rounded-full px-1.75 py-0.5 text-center text-[10px] font-bold uppercase tracking-wider",
+            isActive
+              ? "bg-success/15 text-success"
+              : "bg-neutral-100 text-neutral-500",
+          )}
+        >
+          {isActive ? "Activo" : "Inactivo"}
         </span>
       </div>
     </div>

@@ -40,19 +40,27 @@ export function MemberRiskFlagCard({
     ? (BODY_ZONE_GROUP_ACCENT_CLASS[dominantGroup] ?? "border-l-neutral-300")
     : "border-l-neutral-300";
 
+  const dimContentClass = cn(
+    "transition-opacity duration-200",
+    !isActive && "opacity-45",
+  );
+
   return (
     <div
       className={cn(
-        "flex flex-col rounded-xl border bg-white p-4 transition-all",
-        accentClass,
-        isActive ? "border-neutral-200" : "border-neutral-200 opacity-80",
+        "flex flex-col rounded-xl border p-4 transition-all",
+        isActive
+          ? cn("border-neutral-200 bg-white", accentClass)
+          : "border-neutral-300 border-l-neutral-300 bg-neutral-50",
       )}
     >
       <div className="flex items-start justify-between gap-4">
-        <MemberRiskFlagCardHeader
-          name={riskFlag.name}
-          affectedZones={affectedZones}
-        />
+        <div className={dimContentClass}>
+          <MemberRiskFlagCardHeader
+            name={riskFlag.name}
+            affectedZones={affectedZones}
+          />
+        </div>
         <MemberRiskFlagCardActions
           index={index}
           riskFlagName={riskFlag.name}
@@ -62,9 +70,11 @@ export function MemberRiskFlagCard({
         />
       </div>
 
-      <ZoneBadgeList zones={affectedZones} max={MAX_VISIBLE_ZONES} />
-      <StatusesByZone index={index} />
-      <NotesPreview index={index} />
+      <div className={cn("flex flex-col", dimContentClass)}>
+        <ZoneBadgeList zones={affectedZones} max={MAX_VISIBLE_ZONES} />
+        <StatusesByZone index={index} />
+        <NotesPreview index={index} />
+      </div>
 
       <CurrentStatusModal
         open={editModalOpen}
