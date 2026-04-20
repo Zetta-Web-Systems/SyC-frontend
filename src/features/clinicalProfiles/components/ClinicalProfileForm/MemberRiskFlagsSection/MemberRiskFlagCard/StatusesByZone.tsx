@@ -66,11 +66,11 @@ export function StatusesByZone({ index }: StatusesByZoneProps) {
               </div>
 
               <div className="flex flex-wrap gap-2">
-{items.map((status) => (
-                    <div
-                      key={`${status.bodyZone}-${status.side ?? "none"}-${status.movementPhase ?? "none"}`}
-                      className="flex items-center gap-1.5 text-[11px] text-neutral-500"
-                    >
+                {items.map((status) => (
+                  <div
+                    key={`${status.bodyZone}-${status.side ?? "none"}-${status.movementPhase ?? "none"}`}
+                    className="flex items-center gap-1.5 text-[11px] text-neutral-500"
+                  >
                     <PainRing level={status.painLevel} size="sm" />
                     <span>
                       {status.side
