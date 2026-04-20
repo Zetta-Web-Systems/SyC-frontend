@@ -73,13 +73,9 @@ const currentWeightField = z
   .optional()
   .nullable();
 
-const trainingGoalField = z.enum(TrainingGoal, {
-  error: "Selecciona un objetivo de entrenamiento",
-});
-
-const trainingGoalOptionalField = z
+const trainingGoalField = z
   .enum(TrainingGoal, {
-    error: "Selecciona un objetivo de entrenamiento válido",
+    error: "Selecciona un objetivo de entrenamiento",
   })
   .optional()
   .nullable();
@@ -111,7 +107,7 @@ export const updateMemberSchema = z.object({
   deleteImage: deleteImageField,
   bornDate: bornDateField,
   currentWeight: currentWeightField,
-  trainingGoal: trainingGoalOptionalField,
+  trainingGoal: trainingGoalField,
 });
 
 export type UpdateMemberSchema = z.infer<typeof updateMemberSchema>;

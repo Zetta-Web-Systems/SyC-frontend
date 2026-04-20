@@ -30,7 +30,7 @@ export interface RegisterMember extends BaseMember {
   email?: string;
   bornDate?: string;
   currentWeight?: number;
-  trainingGoal: TrainingGoal;
+  trainingGoal?: TrainingGoal;
   image?: File;
   clinicalProfile: ClinicalProfileRegisterSchema;
 }

@@ -138,7 +138,6 @@ export function MemberFormFields({ mode, dni }: MemberFormFieldsProps) {
       <FormField<MemberFormValues>
         name="trainingGoal"
         label="Objetivo de entrenamiento"
-        required={!isEditing}
       >
         {(field) => (
           <Select
