@@ -59,9 +59,12 @@ function BodyComponent({
   const [hoveredSlug, setHoveredSlug] = useState<Slug | null>(null);
 
   const dataBySlug = useMemo(() => {
-    const map = new Map<Slug, ExtendedBodyPart>();
+    const map = new Map<Slug, ExtendedBodyPart[]>();
     for (const d of data) {
-      if (d.slug) map.set(d.slug, d);
+      if (!d.slug) continue;
+      const arr = map.get(d.slug);
+      if (arr) arr.push(d);
+      else map.set(d.slug, [d]);
     }
     return map;
   }, [data]);
@@ -71,7 +74,7 @@ function BodyComponent({
       {parts.flatMap((part: BodyPart) => {
         if (hiddenParts.includes(part.slug)) return [];
 
-        const ext = dataBySlug.get(part.slug);
+        const exts = dataBySlug.get(part.slug) ?? [];
         const isDisabled = disabledParts.includes(part.slug);
         const isInteractive = !isDisabled && !!onBodyPartPress;
 
@@ -81,22 +84,36 @@ function BodyComponent({
         if (part.path.common?.length) sides.push("common");
 
         const isHovered = isInteractive && hoveredSlug === part.slug;
-        const isSelected = !!ext && !isDisabled;
 
         return sides.map((pathSide) => {
           const paths = part.path[pathSide] ?? [];
-          const extSideMatches =
-            pathSide === "common" || !ext?.side || ext.side === pathSide;
-          const baseFill =
-            isDisabled || !extSideMatches
-              ? defaultFill
-              : resolveFill(ext, colors, defaultFill);
+          const anatomicalPathSide: PathSide =
+            pathSide === "common"
+              ? "common"
+              : side === "front"
+                ? pathSide === "left"
+                  ? "right"
+                  : "left"
+                : pathSide;
+          const ext =
+            anatomicalPathSide === "common"
+              ? (exts.find((e) => !e.side) ?? exts[0])
+              : (exts.find((e) => e.side === anatomicalPathSide) ??
+                exts.find((e) => !e.side));
+          const isSelected = !!ext && !isDisabled;
+          const baseFill = isDisabled
+            ? defaultFill
+            : resolveFill(ext, colors, defaultFill);
           const fill = isHovered && !isSelected ? hoverFill : baseFill;
           const stroke = ext?.styles?.stroke ?? defaultStroke;
           const strokeWidth = ext?.styles?.strokeWidth ?? defaultStrokeWidth;
 
           const handleClick = isInteractive
-            ? () => onBodyPartPress?.(ext ?? { slug: part.slug }, pathSide)
+            ? () =>
+                onBodyPartPress?.(
+                  ext ?? { slug: part.slug },
+                  anatomicalPathSide,
+                )
             : undefined;
           const handleMouseEnter = isInteractive
             ? () => setHoveredSlug(part.slug)
