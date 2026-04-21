@@ -10,12 +10,15 @@ import {
 import { useBodyPartsFiltered } from "../../hooks/useBodyPartsFiltered";
 import { ClinicalProfileBodyLegend } from "./ClinicalProfileBodyLegend";
 
-interface Props {
+interface ClinicalProfileBodyModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export function ClinicalProfileBodyModal({ open, onClose }: Props) {
+export function ClinicalProfileBodyModal({
+  open,
+  onClose,
+}: ClinicalProfileBodyModalProps) {
   const {
     bodyParts,
     withoutIntensity,
@@ -28,13 +31,23 @@ export function ClinicalProfileBodyModal({ open, onClose }: Props) {
     topZones,
   } = useBodyPartsFiltered();
 
-  const summaryItems: { label: string; count: number; muted?: boolean }[] = [
-    { label: "sin dolor", count: none.length, muted: true },
-    { label: "muy leves", count: veryLow.length },
-    { label: "leves", count: low.length },
-    { label: "moderadas", count: mid.length },
-    { label: "altas", count: high.length },
-    { label: "muy altas", count: veryHigh.length },
+  const summaryItems: {
+    singular: string;
+    plural: string;
+    count: number;
+    muted?: boolean;
+  }[] = [
+    {
+      singular: "sin dolor",
+      plural: "sin dolor",
+      count: none.length,
+      muted: true,
+    },
+    { singular: "muy leve", plural: "muy leves", count: veryLow.length },
+    { singular: "leve", plural: "leves", count: low.length },
+    { singular: "moderada", plural: "moderadas", count: mid.length },
+    { singular: "alta", plural: "altas", count: high.length },
+    { singular: "muy alta", plural: "muy altas", count: veryHigh.length },
   ];
 
   return (
@@ -77,10 +90,10 @@ export function ClinicalProfileBodyModal({ open, onClose }: Props) {
             .filter((item) => item.count > 0)
             .map((item) => (
               <span
-                key={item.label}
+                key={item.singular}
                 className={item.muted ? "text-neutral-400" : undefined}
               >
-                {item.count} {item.label}
+                {item.count} {item.count === 1 ? item.singular : item.plural}
               </span>
             ))}
           {withoutIntensity.length > 0 && (
