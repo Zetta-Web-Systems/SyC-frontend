@@ -1,8 +1,22 @@
+import type { BodyLaterality, BodyZone } from "@shared/types/bodyZone.types";
 import type {
   ClinicalProfile,
   ClinicalProfileRegisterSchema,
 } from "@features/clinicalProfiles";
 import type { TrainingGoal } from "../constants";
+
+export interface CurrentStatusLike {
+  bodyZone: BodyZone;
+  side?: BodyLaterality | null;
+  painLevel: number;
+}
+
+export interface MemberRiskFlagLike {
+  id: string;
+  name?: string;
+  isActive: boolean;
+  currentStatus: CurrentStatusLike[];
+}
 
 interface BaseMember {
   name: string;

@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Stethoscope } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
 import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
+import { ClinicalProfileCard } from "../components/MembersList/MemberForm/MemberFormFields";
 import { useMemberQuery } from "../hooks/useMemberQuery";
 import { useUpdateMemberMutation } from "../hooks/mutations/useUpdateMemberMutation";
 import type { UpdateMemberSchema } from "../schemas/member.schema";
+import type { MemberRiskFlagLike } from "../types";
 
 interface UpdateMemberPageProps {
   memberId: string;
@@ -19,6 +21,21 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
   const mutation = useUpdateMemberMutation();
   const { data: member, isLoading, isError } = useMemberQuery(memberId);
   const [navigating, setNavigating] = useState(false);
+
+  const memberRiskFlags = useMemo<MemberRiskFlagLike[]>(
+    () =>
+      member?.clinicalProfile?.memberRiskFlags.map((mrf) => ({
+        id: mrf.id,
+        name: mrf.riskFlag.name,
+        isActive: mrf.isActive,
+        currentStatus: mrf.currentStatus.map((cs) => ({
+          bodyZone: cs.bodyZone,
+          side: cs.side ?? null,
+          painLevel: cs.painLevel,
+        })),
+      })) ?? [],
+    [member?.clinicalProfile?.memberRiskFlags],
+  );
 
   function goToList() {
     flushSync(() => setNavigating(true));
@@ -98,21 +115,16 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
           guardUnsavedChanges={!navigating}
           guardAllowNavigationTo={["/members/$memberId/clinical-profile"]}
           clinicalProfileSlot={
-            <div className="flex justify-start">
-              <Button
-                intent="neutral"
-                variant="outline"
-                onClick={() =>
-                  navigate({
-                    to: "/members/$memberId/clinical-profile",
-                    params: { memberId: member.id },
-                  })
-                }
-              >
-                <Stethoscope size={16} aria-hidden="true" />
-                Perfil clínico
-              </Button>
-            </div>
+            <ClinicalProfileCard
+              mode="edit"
+              memberRiskFlags={memberRiskFlags}
+              onOpen={() =>
+                navigate({
+                  to: "/members/$memberId/clinical-profile",
+                  params: { memberId: member.id },
+                })
+              }
+            />
           }
         />
       )}

@@ -1,7 +1,14 @@
 export { default as ClinicalProfilePage } from "./pages/ClinicalProfilePage";
 export { default as ClinicalProfileDraftPage } from "./pages/ClinicalProfileDraftPage";
 export { ClinicalProfileForm } from "./components/ClinicalProfileForm";
-export { CLINICAL_PROFILES_KEYS } from "./constants";
+export {
+  CLINICAL_PROFILES_KEYS,
+  BODY_PREVIEW_FILL,
+  PAIN_VERY_LOW_MAX,
+  PAIN_LOW_MAX,
+  PAIN_MID_MAX,
+  PAIN_HIGH_MAX,
+} from "./constants";
 export { toClinicalProfileRegisterPayload } from "./lib/clinicalProfileDiff";
 export { useUpdateClinicalProfileMutation } from "./hooks/mutations/useUpdateClinicalProfileMutation";
 export { useAddMemberRiskFlagMutation } from "./hooks/mutations/useAddMemberRiskFlagMutation";
