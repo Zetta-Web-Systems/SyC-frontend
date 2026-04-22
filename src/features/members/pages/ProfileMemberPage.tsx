@@ -1,11 +1,9 @@
 import { useMemo } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
-import { Button, Spinner } from "@shared/ui";
-import { PageHeader } from "@shared/components/PageHeader/PageHeader";
+import { Spinner } from "@shared/ui";
 import { ClinicalProfileCard } from "../components/common";
 import { MemberProfile } from "../components/MemberProfile/MemberProfile";
 import { useMemberQuery } from "../hooks/useMemberQuery";
+import { useMembersActions } from "../hooks/useMembersActions";
 import type { MemberRiskFlagLike } from "../types";
 
 interface ProfileMemberPageProps {
@@ -15,8 +13,9 @@ interface ProfileMemberPageProps {
 export default function ProfileMemberPage({
   memberId,
 }: ProfileMemberPageProps) {
-  const navigate = useNavigate();
   const { data: member, isLoading, isError } = useMemberQuery(memberId);
+
+  const { handleOpenEdit } = useMembersActions();
 
   const memberRiskFlags = useMemo<MemberRiskFlagLike[]>(
     () =>
@@ -33,23 +32,8 @@ export default function ProfileMemberPage({
     [member?.clinicalProfile?.memberRiskFlags],
   );
 
-  function handleBack() {
-    navigate({ to: "/members" });
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader
-        title={`Ficha completa: ${member?.name} ${member?.lastname}`}
-        description="hola"
-        actions={
-          <Button intent="neutral" variant="outline" onClick={handleBack}>
-            <ArrowLeft size={16} aria-hidden="true" />
-            <span className="hidden xs:inline">Volver</span>
-          </Button>
-        }
-      />
-
       {isLoading && (
         <div className="flex items-center justify-center py-12">
           <Spinner />
@@ -68,13 +52,13 @@ export default function ProfileMemberPage({
       {member && (
         <MemberProfile
           member={member}
-          onCancel={handleBack}
           clinicalProfileSlot={
             <ClinicalProfileCard
               mode="profile"
               memberRiskFlags={memberRiskFlags}
             />
           }
+          onEdit={handleOpenEdit}
         />
       )}
     </div>

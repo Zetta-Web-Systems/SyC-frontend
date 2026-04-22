@@ -81,7 +81,7 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Editar alumno"
-        description="Modifica la información del alumno."
+        description="Modifica la información del alumno"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
