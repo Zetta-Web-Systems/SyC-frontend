@@ -1,5 +1,3 @@
-# AGENTS.md — SyC Frontend
-
 Internal gym management platform (Sano & Controlado). React 19 + Vite 7 + TypeScript 5.9,
 feature-based architecture.
 

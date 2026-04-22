@@ -3,8 +3,8 @@ import {
   BODY_ZONE_GROUP_INTENT,
   BODY_ZONE_LABELS,
   BODY_ZONE_TO_GROUP_LABEL,
-  type BodyZone,
-} from "../../../constants";
+} from "@shared/constants/bodyZones";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 
 interface AffectedZonesBadgesProps {
   zones: BodyZone[] | undefined;

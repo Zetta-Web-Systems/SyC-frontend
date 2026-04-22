@@ -12,12 +12,12 @@ import {
   DataTablePagination,
   StandalonePagination,
 } from "@shared/components/DataTable";
+import { GuidelineButton } from "@shared/components/Guideline";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
 import { RISK_FLAG_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
 import type { RiskFlag } from "../../types";
 import { riskFlagsColumns } from "./RiskFlagsTable.columns";
 import { RiskFlagCard } from "./RiskFlagCard";
-import { GuidelineButton } from "./RiskFlagContent/GuidelineButton";
 
 interface RiskFlagsTableProps {
   data: RiskFlag[];

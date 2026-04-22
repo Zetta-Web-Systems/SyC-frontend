@@ -57,6 +57,10 @@ function dtoToFormData(dto: RegisterMember | UpdateMember): FormData {
     formData.append("trainingGoal", dto.trainingGoal);
   }
 
+  if ("clinicalProfile" in dto && dto.clinicalProfile) {
+    formData.append("clinicalProfile", JSON.stringify(dto.clinicalProfile));
+  }
+
   return formData;
 }
 
@@ -65,6 +69,11 @@ export async function getMembersPaginated(params: PaginatedParams) {
     "/members/list/paginated",
     { params: buildPaginatedParams(params) },
   );
+  return data;
+}
+
+export async function getMemberById(id: string) {
+  const { data } = await api.get<Member>(`/members/${id}`);
   return data;
 }
 

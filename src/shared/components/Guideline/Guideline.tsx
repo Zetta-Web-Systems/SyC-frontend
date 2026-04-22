@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FileText } from "lucide-react";
 import { EditorContent } from "@tiptap/react";
-import { cn } from "@shared/lib/cn";
-import { useMarkdownEditor } from "@shared/hooks/useMarkdownEditor";
-import { ME_CONTENT_CLASSNAME } from "@shared/constants/markdownEditor.constants";
 import { Button, Modal } from "@shared/ui";
+import { cn } from "@shared/lib/cn";
+import { ME_CONTENT_CLASSNAME } from "@shared/constants/markdownEditor.constants";
+import { useMarkdownEditor } from "@shared/hooks/useMarkdownEditor";
 
 interface GuidelineButtonProps {
   guideline: string | undefined;

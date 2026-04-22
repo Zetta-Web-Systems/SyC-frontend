@@ -1,3 +1,7 @@
+import type {
+  ClinicalProfile,
+  ClinicalProfileRegisterSchema,
+} from "@features/clinicalProfiles";
 import type { TrainingGoal } from "../constants";
 
 interface BaseMember {
@@ -18,6 +22,7 @@ export interface Member extends BaseMember {
   currentWeight?: number;
   trainingGoal?: TrainingGoal | null;
   image?: string;
+  clinicalProfile?: ClinicalProfile;
 }
 
 export interface RegisterMember extends BaseMember {
@@ -25,8 +30,9 @@ export interface RegisterMember extends BaseMember {
   email?: string;
   bornDate?: string;
   currentWeight?: number;
-  trainingGoal: TrainingGoal;
+  trainingGoal?: TrainingGoal;
   image?: File;
+  clinicalProfile: ClinicalProfileRegisterSchema;
 }
 
 export interface UpdateMember extends Partial<RegisterMember> {

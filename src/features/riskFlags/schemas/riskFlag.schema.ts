@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { ALL_BODY_ZONES, type BodyZone } from "../constants";
+import { ALL_BODY_ZONES } from "@shared/constants/bodyZones";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 
 const bodyZoneEnum = z.enum(ALL_BODY_ZONES as [BodyZone, ...BodyZone[]]);
 

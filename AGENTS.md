@@ -1,7 +1,7 @@
 # AGENTS.md — SyC Frontend
 
 Internal gym management platform (Sano & Controlado). React 19 + Vite 7 + TypeScript 5.9,
-feature-based architecture. Early-stage project — `features/` is not yet populated.
+feature-based architecture.
 
 ---
 
@@ -11,36 +11,13 @@ feature-based architecture. Early-stage project — `features/` is not yet popul
 npm run dev        # Start Vite dev server
 npm run build      # Production build (ONLY when explicitly requested)
 npm run lint       # Run ESLint on all .ts / .tsx files
-npm run preview    # Preview the production build locally
 ```
 
-Agents must NOT run npm run build automatically.
+*npm run build* must be executed only if the user explicitly requests a build.
 Validation for code changes consists only of:
 ```bash
 npm run lint
 ```
-
-*npm run build* must be executed only if the user explicitly requests a build.
-
----
-# Agent Skills
-
-The following global skills define the main implementation patterns:
-
-- `frontend-architecture` — project structure, feature modules, API layer, state management patterns
-- `react-19` — React 19 patterns with React Compiler
-- `typescript` — strict TypeScript patterns
-- `tailwind-4` — Tailwind CSS 4 styling rules
-- `skill-creator` — creating and documenting new agent skills
-
-### Skill usage rules
-
-Agents should follow these rules:
-
-1. During **task planning**, consult relevant skills if the task involves their domain.
-2. During **task execution**, do not repeatedly re-read or re-evaluate skills unless necessary.
-3. Skills are **reference documentation**, not mandatory execution steps.
-4. Do not load or analyze all skills by default — only the ones relevant to the task.
 
 ---
 
@@ -121,30 +98,6 @@ type Status = (typeof STATUS)[keyof typeof STATUS];
 
 ## Component Patterns
 
-All design system primitives must follow this structure:
-
-```tsx
-// Button/Button.tsx
-import { forwardRef } from "react";
-import type { ButtonHTMLAttributes } from "react";
-import type { VariantProps } from "class-variance-authority";
-import { cn } from "@shared/lib/cn";
-import { buttonVariants } from "./Button.variants";
-
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, ...props }, ref) => (
-    <button ref={ref} className={cn(buttonVariants({ variant, className }))} {...props} />
-  ),
-);
-Button.displayName = "Button";
-```
-
-Rules:
-- Use `forwardRef` on every primitive — always set `displayName`.
 - Props interface extends the corresponding HTML element attributes type.
 - CVA variant logic lives in a co-located `ComponentName.variants.ts` file.
 - Always use `cn()` for class composition — never string concatenation.
@@ -165,14 +118,6 @@ Accessibility requirements on form inputs:
 
 Tailwind is integrated as a Vite plugin (`@tailwindcss/vite`). There is **no `tailwind.config.js`**.
 Design tokens are defined in `src/index.css` inside the `@theme {}` block.
-
-Available custom tokens (use these — never hardcode colors):
-
-```
-Primary palette:   bg-primary-{50…950}, text-primary-{50…950}
-Secondary palette: bg-secondary-{50…950}
-Semantic:          text-error, bg-success, text-warning, text-info
-```
 
 Rules:
 - **Never** use `var(--color-*)` inside `className`. Use the semantic Tailwind class directly.
@@ -227,9 +172,9 @@ Zustand manages all **client-side** state: auth session, UI state, notifications
 
 ### Store location — hybrid convention
 
-| Scope | Location |
-| ------------- | ----------------------------------------------- |
-| Global/shared | `src/shared/stores/<name>.store.ts` |
+| Scope         | Location                                       |
+| ------------- | ---------------------------------------------- |
+| Global/shared | `src/shared/stores/<name>.store.ts`            |
 | Feature-local | `src/features/<domain>/stores/<name>.store.ts` |
 
 ### Naming
@@ -286,27 +231,6 @@ const logout = useAuthStore((s) => s.logout);
 
 ---
 
-## Forms
-
-```typescript
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
-type LoginSchema = z.infer<typeof loginSchema>;
-
-const form = useForm<LoginSchema>({ resolver: zodResolver(loginSchema) });
-```
-
-- Define the Zod schema first, derive the TypeScript type with `z.infer`.
-- Schema files live next to the form component or in `features/<domain>/types/`.
-
----
-
 ## Environment Variables
 
 Access environment variables **only** through `@shared/config/env.ts`. Never use `import.meta.env` directly in components or services.
@@ -354,6 +278,5 @@ Always use `import type` for type-only imports.
 
 The following tools are in the architecture plan but have **not** been added yet:
 - **Playwright** — E2E testing
-- **Phosphor Icons** — icon library
 
 Do not install these unless explicitly instructed.

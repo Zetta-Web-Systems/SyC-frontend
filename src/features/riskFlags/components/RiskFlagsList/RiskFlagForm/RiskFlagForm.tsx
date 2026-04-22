@@ -1,14 +1,17 @@
 import { User } from "lucide-react";
-import { useFormContext, useFormState } from "react-hook-form";
 import { Button, Input } from "@shared/ui";
-import { Form, FormField, FormError } from "@shared/components/Form";
+import {
+  Form,
+  FormField,
+  FormError,
+  FormUnsavedChangesGuard,
+} from "@shared/components/Form";
 import { MarkdownEditor } from "@shared/components/MarkdownEditor/";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
-import { useUnsavedChangesPrompt } from "@shared/hooks/useUnsavedChangesPrompt";
-import { BodyZoneSelector } from "../../BodyZoneSelector/BodyZoneSelector";
-import type { BodyZone } from "../../../constants";
+import { BodyZoneSelector } from "@shared/components/BodyZoneSelector";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 import {
   registerRiskFlagSchema,
   updateRiskFlagSchema,
@@ -19,6 +22,7 @@ import type { RiskFlag } from "../../../types";
 
 interface RiskFlagFormCreateProps {
   riskFlag?: undefined;
+  defaultName?: string;
   onSubmit: (data: RegisterRiskFlagSchema) => void;
   onCancel: () => void;
   isPending: boolean;
@@ -28,6 +32,7 @@ interface RiskFlagFormCreateProps {
 
 interface RiskFlagFormEditProps {
   riskFlag: RiskFlag;
+  defaultName?: string;
   onSubmit: (data: UpdateRiskFlagSchema) => void;
   onCancel: () => void;
   isPending: boolean;
@@ -37,15 +42,9 @@ interface RiskFlagFormEditProps {
 
 type RiskFlagFormProps = RiskFlagFormCreateProps | RiskFlagFormEditProps;
 
-function UnsavedChangesGuard({ active }: { active: boolean }) {
-  const { control } = useFormContext();
-  const { isDirty } = useFormState({ control });
-  useUnsavedChangesPrompt({ when: active && isDirty });
-  return null;
-}
-
 export function RiskFlagForm({
   riskFlag,
+  defaultName,
   onSubmit,
   onCancel,
   isPending,
@@ -117,17 +116,12 @@ export function RiskFlagForm({
           )}
         </FormField>
 
-        <UnsavedChangesGuard active={guardUnsavedChanges} />
+        <FormUnsavedChangesGuard active={guardUnsavedChanges} />
 
         <FormError mutation={mutation} />
 
         <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            intent="neutral"
-            variant="outline"
-            onClick={onCancel}
-          >
+          <Button intent="neutral" variant="outline" onClick={onCancel}>
             Volver
           </Button>
           <Button type="submit" intent="primary" isLoading={isPending}>
@@ -144,6 +138,7 @@ export function RiskFlagForm({
       onSubmit={(data) =>
         onSubmit(normalizeEmptyStrings(data) as RegisterRiskFlagSchema)
       }
+      defaultValues={{ name: defaultName ?? "" }}
       className="flex flex-col gap-5"
     >
       <FormField<RegisterRiskFlagSchema> name="name" label="Nombre" required>
@@ -193,12 +188,7 @@ export function RiskFlagForm({
       <FormError mutation={mutation} />
 
       <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Button
-          type="button"
-          intent="neutral"
-          variant="outline"
-          onClick={onCancel}
-        >
+        <Button intent="neutral" variant="outline" onClick={onCancel}>
           Volver
         </Button>
         <Button type="submit" intent="primary" isLoading={isPending}>

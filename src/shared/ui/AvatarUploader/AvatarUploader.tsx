@@ -39,7 +39,15 @@ export function AvatarUploader({
 }: AvatarUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [state, dispatch] = useReducer(cropReducer, initialCropState);
-  const { imageSrc, crop, zoom, croppedAreaPixels, isModalOpen, error, isProcessing } = state;
+  const {
+    imageSrc,
+    crop,
+    zoom,
+    croppedAreaPixels,
+    isModalOpen,
+    error,
+    isProcessing,
+  } = state;
 
   const handleFileSelect = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +78,10 @@ export function AvatarUploader({
 
   const handleCropComplete = useCallback(
     (_croppedArea: unknown, croppedAreaPixelsArg: CroppedAreaPixels) => {
-      dispatch({ type: "SET_CROPPED_AREA", croppedAreaPixels: croppedAreaPixelsArg });
+      dispatch({
+        type: "SET_CROPPED_AREA",
+        croppedAreaPixels: croppedAreaPixelsArg,
+      });
     },
     [],
   );
@@ -229,7 +240,9 @@ export function AvatarUploader({
                 max={3}
                 step={0.1}
                 value={zoom}
-                onChange={(e) => dispatch({ type: "SET_ZOOM", zoom: Number(e.target.value) })}
+                onChange={(e) =>
+                  dispatch({ type: "SET_ZOOM", zoom: Number(e.target.value) })
+                }
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-neutral-200 accent-primary-500"
                 aria-label="Zoom"
               />
@@ -241,7 +254,6 @@ export function AvatarUploader({
 
           <div className="flex gap-3 pt-2">
             <Button
-              type="button"
               variant="outline"
               className="flex-1"
               onClick={(e) => {
@@ -253,7 +265,6 @@ export function AvatarUploader({
               Cancelar
             </Button>
             <Button
-              type="button"
               intent="primary"
               className="flex-1"
               onClick={handleConfirm}

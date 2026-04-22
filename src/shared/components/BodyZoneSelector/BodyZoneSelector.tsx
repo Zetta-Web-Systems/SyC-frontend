@@ -1,13 +1,16 @@
 import { RotateCw, X } from "lucide-react";
 import { Body } from "@shared/components/BodyHighlighter";
-import { Accordion, AccordionItem, Badge, Button, Checkbox } from "@shared/ui";
-import { cn } from "@shared/lib/cn";
 import {
   BODY_ZONE_GROUPS,
   BODY_ZONE_LABELS,
-  type BodyZone,
-} from "../../constants";
-import { useBodyZoneSelector } from "../../hooks/useBodyZoneSelector";
+} from "@shared/constants/bodyZones";
+import { Accordion, AccordionItem, Badge, Button, Checkbox } from "@shared/ui";
+import { cn } from "@shared/lib/cn";
+import type { BodyZone } from "@shared/types/bodyZone.types";
+import {
+  useBodyZoneSelector,
+  type BodyZoneSelectorMode,
+} from "./useBodyZoneSelector";
 
 export interface BodyZoneSelectorProps {
   value: BodyZone[];
@@ -16,6 +19,7 @@ export interface BodyZoneSelectorProps {
   error?: boolean;
   "aria-describedby"?: string;
   disabled?: boolean;
+  mode?: BodyZoneSelectorMode;
 }
 
 export function BodyZoneSelector({
@@ -25,6 +29,7 @@ export function BodyZoneSelector({
   error,
   "aria-describedby": ariaDescribedBy,
   disabled,
+  mode = "multi",
 }: BodyZoneSelectorProps) {
   const normalizedValue = Array.isArray(value) ? value : [];
   const {
@@ -37,7 +42,9 @@ export function BodyZoneSelector({
     handleBodyPartPress,
     defaultFill,
     hoverFill,
-  } = useBodyZoneSelector({ value: normalizedValue, onChange });
+  } = useBodyZoneSelector({ value: normalizedValue, onChange, mode });
+
+  const isSingle = mode === "single";
 
   return (
     <div
@@ -161,8 +168,9 @@ export function BodyZoneSelector({
       {normalizedValue.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 border-t border-neutral-200 pt-3">
           <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            {normalizedValue.length} seleccionada
-            {normalizedValue.length === 1 ? "" : "s"}
+            {isSingle
+              ? "Zona seleccionada"
+              : `${normalizedValue.length} seleccionada${normalizedValue.length === 1 ? "" : "s"}`}
           </span>
 
           <div className="flex flex-wrap gap-1.5">
@@ -180,17 +188,18 @@ export function BodyZoneSelector({
             ))}
           </div>
 
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            intent="neutral"
-            onClick={clearAll}
-            disabled={disabled}
-            className="ml-auto"
-          >
-            Limpiar
-          </Button>
+          {!isSingle && (
+            <Button
+              variant="ghost"
+              intent="neutral"
+              size="sm"
+              onClick={clearAll}
+              disabled={disabled}
+              className="ml-auto"
+            >
+              Limpiar
+            </Button>
+          )}
         </div>
       )}
     </div>
