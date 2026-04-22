@@ -12,6 +12,12 @@ export function useMembersActions() {
 
   const handleOpenRegister = () => navigate({ to: "/members/register" });
 
+  const handleOpenProfile = (member: Member) =>
+    navigate({
+      to: "/members/profile/$memberId",
+      params: { memberId: member.id },
+    });
+
   const handleOpenEdit = (member: Member) =>
     navigate({
       to: "/members/update/$memberId",
@@ -45,6 +51,7 @@ export function useMembersActions() {
   return {
     handleOpenRegister,
     handleOpenEdit,
+    handleOpenProfile,
     handleDelete,
     handleRestore,
   };
