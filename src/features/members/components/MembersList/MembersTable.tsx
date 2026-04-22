@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { CalendarDays, Pencil, UserCheck, UserX } from "lucide-react";
+import { CalendarDays, FileUser, Pencil, UserCheck, UserX } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@shared/ui";
 import type { ViewMode } from "@shared/ui";
@@ -27,6 +27,7 @@ interface MembersTableProps {
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
   viewMode: ViewMode;
+  onProfile: (member: Member) => void;
   onEdit: (member: Member) => void;
   onDelete: (member: Member) => void;
   onRestore: (member: Member) => void;
@@ -39,6 +40,7 @@ export function MembersTable({
   onPaginationChange,
   isLoading,
   viewMode,
+  onProfile,
   onEdit,
   onDelete,
   onRestore,
@@ -60,6 +62,15 @@ export function MembersTable({
             <div className="flex place-content-center gap-1">
               {member.isActive ? (
                 <>
+                  <Button
+                    variant="ghost"
+                    intent="primary"
+                    size="icon"
+                    aria-label={`Ver perfil de alumno ${member.name} ${member.lastname}`}
+                    onClick={() => onProfile(member)}
+                  >
+                    <FileUser size={16} aria-hidden="true" />
+                  </Button>
                   <Button
                     variant="ghost"
                     intent="secondary"
@@ -140,6 +151,7 @@ export function MembersTable({
           <div key={member.id} className="w-full sm:w-80">
             <MemberCard
               member={member}
+              onProfile={onProfile}
               onEdit={onEdit}
               onDelete={onDelete}
               onRestore={onRestore}

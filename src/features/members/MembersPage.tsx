@@ -21,8 +21,13 @@ export default function MembersPage() {
 
   const { data, isLoading, isPlaceholderData } = useMembersQuery(params);
 
-  const { handleOpenRegister, handleOpenEdit, handleDelete, handleRestore } =
-    useMembersActions();
+  const {
+    handleOpenRegister,
+    handleOpenEdit,
+    handleOpenProfile,
+    handleDelete,
+    handleRestore,
+  } = useMembersActions();
 
   const members = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
@@ -48,6 +53,7 @@ export default function MembersPage() {
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
         viewMode={viewMode}
+        onProfile={handleOpenProfile}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onRestore={handleRestore}

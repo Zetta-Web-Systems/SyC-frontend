@@ -10,6 +10,7 @@ import {
   Weight,
   UserCheck,
   UserX,
+  FileUser,
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -26,6 +27,7 @@ import { TRAINING_GOAL_LABELS } from "../../constants";
 
 interface MemberCardProps {
   member: Member;
+  onProfile: (member: Member) => void;
   onEdit: (member: Member) => void;
   onDelete: (member: Member) => void;
   onRestore: (member: Member) => void;
@@ -33,6 +35,7 @@ interface MemberCardProps {
 
 export function MemberCard({
   member,
+  onProfile,
   onEdit,
   onDelete,
   onRestore,
@@ -94,6 +97,16 @@ export function MemberCard({
           >
             {member.isActive ? (
               <>
+                <PopoverItem
+                  icon={<FileUser color="#3e4c93" />}
+                  onClick={() => {
+                    onProfile(member);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Editar
+                </PopoverItem>
+                <PopoverSeparator />
                 <PopoverItem
                   icon={<Pencil color="green" />}
                   onClick={() => {

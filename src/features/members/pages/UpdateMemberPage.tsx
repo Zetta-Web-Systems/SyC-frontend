@@ -6,7 +6,7 @@ import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
 import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
-import { ClinicalProfileCard } from "../components/MembersList/MemberForm/MemberFormFields";
+import { ClinicalProfileCard } from "../components/common";
 import { useMemberQuery } from "../hooks/useMemberQuery";
 import { useUpdateMemberMutation } from "../hooks/mutations/useUpdateMemberMutation";
 import type { UpdateMemberSchema } from "../schemas/member.schema";

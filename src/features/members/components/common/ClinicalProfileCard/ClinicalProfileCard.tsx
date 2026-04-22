@@ -3,13 +3,13 @@ import { AlertTriangle, Pencil, Plus } from "lucide-react";
 import { Badge, Button, Card } from "@shared/ui";
 import { Body } from "@shared/components/BodyHighlighter";
 import { BODY_PREVIEW_FILL } from "@features/clinicalProfiles";
-import { computeBodyParts } from "../../../../lib/clinicalProfilePreview";
-import type { MemberRiskFlagLike } from "../../../../types";
+import { computeBodyParts } from "../../../lib/clinicalProfilePreview";
+import type { MemberRiskFlagLike } from "../../../types";
 
 export interface ClinicalProfileCardProps {
-  mode: "create" | "edit";
-  onOpen: () => void;
+  mode: "create" | "edit" | "profile";
   memberRiskFlags?: MemberRiskFlagLike[] | null;
+  onOpen?: () => void;
 }
 
 export function ClinicalProfileCard({
@@ -18,6 +18,7 @@ export function ClinicalProfileCard({
   memberRiskFlags,
 }: ClinicalProfileCardProps) {
   const isEditing = mode === "edit";
+  const isProfile = mode === "profile";
 
   const { bodyParts, activeNamedFlags, activeFlagCount } = useMemo(() => {
     const flags = memberRiskFlags ?? [];
@@ -41,7 +42,7 @@ export function ClinicalProfileCard({
         <h6 className="flex items-center gap-1.5 text-neutral-500">
           Perfil clínico
         </h6>
-        {hasData && (
+        {hasData && !isProfile && (
           <Button variant="solid" intent="primary" size="sm" onClick={onOpen}>
             <Pencil size={12} aria-hidden="true" />
             {isEditing ? "Editar" : "Modificar"}

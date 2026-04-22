@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMemberRegistrationDraft } from "../../../stores/memberRegistrationDraft.store";
 import type { RegisterMemberSchema } from "../../../schemas/member.schema";
 import { mapClinicalProfileToRiskFlagLikes } from "../../../lib/memberFormTransformers";
-import { ClinicalProfileCard } from "./MemberFormFields";
+import { ClinicalProfileCard } from "../../common";
 
 export function ClinicalProfileSlotButton() {
   const { getValues } = useFormContext<RegisterMemberSchema>();
