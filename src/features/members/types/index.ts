@@ -33,6 +33,7 @@ export interface Member extends BaseMember {
   isActive: boolean;
   email?: string;
   bornDate?: string;
+  age?: string;
   currentWeight?: number;
   trainingGoal?: TrainingGoal | null;
   image?: string;

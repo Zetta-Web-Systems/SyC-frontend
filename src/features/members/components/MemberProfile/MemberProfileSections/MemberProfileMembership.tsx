@@ -46,7 +46,7 @@ export function MemberProfileMembership({
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold uppercase tracking-wide text-neutral-500">
-            Membresía
+            Plan
           </span>
 
           <Badge size="sm" intent={status.intent}>

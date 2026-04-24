@@ -86,19 +86,19 @@ export const buttonVariants = cva(
         variant: "ghost",
         intent: "primary",
         className:
-          "text-primary-600 hover:bg-primary-50 active:bg-primary-100 focus-visible:ring-primary-500",
+          "text-primary-600 hover:bg-primary-100/50 active:bg-primary-100 focus-visible:ring-primary-500",
       },
       {
         variant: "ghost",
         intent: "secondary",
         className:
-          "text-secondary-600 hover:bg-secondary-50 active:bg-secondary-100 focus-visible:ring-secondary-300",
+          "text-secondary-600 hover:bg-secondary-100/50 active:bg-secondary-100 focus-visible:ring-secondary-300",
       },
       {
         variant: "ghost",
         intent: "danger",
         className:
-          "text-error hover:bg-red-50 active:bg-red-100 focus-visible:ring-error",
+          "text-error hover:bg-red-100/50 active:bg-red-100 focus-visible:ring-error",
       },
       {
         variant: "ghost",

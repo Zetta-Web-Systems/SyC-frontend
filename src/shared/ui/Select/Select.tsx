@@ -57,11 +57,7 @@ export function Select({
           data-invalid={hasError ? "true" : undefined}
           {...props}
         >
-          {placeholder && (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          )}
+          {placeholder && <option value="">{placeholder}</option>}
           {children}
         </select>
 

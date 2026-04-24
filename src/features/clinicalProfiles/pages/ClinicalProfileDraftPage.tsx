@@ -42,7 +42,7 @@ export default function ClinicalProfileDraftPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Perfil clínico"
-        description="Completá la información clínica del alumno."
+        description="Completá la información clínica del alumno"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

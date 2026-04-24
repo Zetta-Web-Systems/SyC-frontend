@@ -48,7 +48,7 @@ export default function ClinicalProfilePage({
         description={
           memberFullName
             ? `Información clínica de ${memberFullName}.`
-            : "Información clínica del alumno."
+            : "Información clínica del alumno"
         }
         actions={
           <Button intent="neutral" variant="outline" onClick={goBack}>

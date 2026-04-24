@@ -42,7 +42,7 @@ export function InstructorsFilters({
   return (
     <DataTableToolbar
       filters={filterConfigs}
-      searchPlaceholder="Buscar"
+      searchPlaceholder="Buscar por nombre"
       onSearch={onSearch}
       onClearAll={onClearAllFilters}
       actions={actions}

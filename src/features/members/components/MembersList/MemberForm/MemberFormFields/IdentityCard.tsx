@@ -42,7 +42,7 @@ export function IdentityCard({
             </h6>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <FormField<MemberFormValues> name="name" label="Nombre" required>
               {(field) => (
                 <Input
@@ -68,9 +68,7 @@ export function IdentityCard({
                 />
               )}
             </FormField>
-          </div>
 
-          <div className="sm:max-w-xs">
             {isEditing ? (
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="member-dni">DNI</Label>
@@ -83,9 +81,6 @@ export function IdentityCard({
                   </span>
                   <span className="flex-1 text-sm font-semibold text-neutral-600">
                     {dni ?? ""}
-                  </span>
-                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-neutral-500 uppercase">
-                    No editable
                   </span>
                 </div>
                 <p className="text-xs text-neutral-400">

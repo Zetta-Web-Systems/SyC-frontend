@@ -54,7 +54,7 @@ export function MembersFilters({
   return (
     <DataTableToolbar
       filters={filterConfigs}
-      searchPlaceholder="Buscar"
+      searchPlaceholder="Buscar por nombre o DNI"
       onSearch={onSearch}
       onClearAll={onClearAllFilters}
       actions={actions}
