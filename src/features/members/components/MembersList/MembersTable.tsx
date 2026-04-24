@@ -71,15 +71,6 @@ export function MembersTable({
                   >
                     <FileUser size={16} aria-hidden="true" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    intent="secondary"
-                    size="icon"
-                    aria-label={`Editar alumno ${member.name} ${member.lastname}`}
-                    onClick={() => onEdit(member)}
-                  >
-                    <Pencil size={16} aria-hidden="true" color="green" />
-                  </Button>
                   <Link
                     to="/attendances"
                     search={{
@@ -97,6 +88,15 @@ export function MembersTable({
                       <CalendarDays size={16} aria-hidden="true" />
                     </Button>
                   </Link>
+                  <Button
+                    variant="ghost"
+                    intent="secondary"
+                    size="icon"
+                    aria-label={`Editar alumno ${member.name} ${member.lastname}`}
+                    onClick={() => onEdit(member)}
+                  >
+                    <Pencil size={16} aria-hidden="true" color="green" />
+                  </Button>
                   <Button
                     variant="ghost"
                     intent="danger"

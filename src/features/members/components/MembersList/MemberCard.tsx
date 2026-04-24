@@ -104,17 +104,7 @@ export function MemberCard({
                     setMenuOpen(false);
                   }}
                 >
-                  Editar
-                </PopoverItem>
-                <PopoverSeparator />
-                <PopoverItem
-                  icon={<Pencil color="green" />}
-                  onClick={() => {
-                    onEdit(member);
-                    setMenuOpen(false);
-                  }}
-                >
-                  Editar
+                  Ver ficha completa
                 </PopoverItem>
                 <PopoverSeparator />
                 <PopoverItem
@@ -133,6 +123,16 @@ export function MemberCard({
                 >
                   Asistencias
                 </PopoverItem>
+                <PopoverItem
+                  icon={<Pencil color="green" />}
+                  onClick={() => {
+                    onEdit(member);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Editar
+                </PopoverItem>
+                <PopoverSeparator />
                 <PopoverSeparator />
                 <PopoverItem
                   icon={<UserX />}
