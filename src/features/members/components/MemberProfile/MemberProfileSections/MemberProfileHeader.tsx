@@ -60,7 +60,7 @@ export function MemberProfileHeader({
 
   return (
     <Card className="rounded-xl border border-neutral-200 bg-white p-6">
-      <div className="flex flex-start gap-6 flex-wrap">
+      <div className="flex gap-6 flex-wrap">
         <Avatar
           size="xl"
           color="primary"
@@ -71,7 +71,7 @@ export function MemberProfileHeader({
         />
 
         <div className="flex-1 min-w-0">
-          <div className="flex flex-start justify-between gap-4 flex-wrap">
+          <div className="flex justify-between gap-4 flex-wrap">
             <div>
               <h2 className="text-2xl font-bold tracking-tight leading-tight text-neutral-900">
                 {fullName}

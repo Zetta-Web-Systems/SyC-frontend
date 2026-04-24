@@ -23,7 +23,7 @@ export function MemberProfilePlan({ plans }: MemberProfilePlanProps) {
     <Card className="rounded-xl border border-neutral-200 bg-white p-4 h-full">
       <div className="flex flex-col gap-3 h-full">
         <span className="text-[11px] font-bold uppercase tracking-wide text-neutral-500">
-          Programa actual
+          Planificación de Entrenamiento
         </span>
         <div className="flex items-start gap-3 w-full">
           <div className="flex size-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400 shrink-0">
