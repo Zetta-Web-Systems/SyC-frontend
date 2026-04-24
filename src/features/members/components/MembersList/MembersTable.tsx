@@ -90,7 +90,7 @@ export function MembersTable({
                   </Link>
                   <Button
                     variant="ghost"
-                    intent="secondary"
+                    intent="success"
                     size="icon"
                     aria-label={`Editar alumno ${member.name} ${member.lastname}`}
                     onClick={() => onEdit(member)}

@@ -12,6 +12,7 @@ export const buttonVariants = cva(
       intent: {
         primary: "",
         secondary: "",
+        success: "",
         danger: "",
         neutral: "",
       },
@@ -46,6 +47,12 @@ export const buttonVariants = cva(
       },
       {
         variant: "solid",
+        intent: "success",
+        className:
+          "bg-success text-white hover:opacity-90 active:opacity-80 focus-visible:ring-success",
+      },
+      {
+        variant: "solid",
         intent: "danger",
         className:
           "bg-error text-white hover:opacity-90 active:opacity-80 focus-visible:ring-error",
@@ -71,6 +78,12 @@ export const buttonVariants = cva(
       },
       {
         variant: "outline",
+        intent: "success",
+        className:
+          "border-success text-success hover:bg-green-50 active:bg-green-100 focus-visible:ring-success",
+      },
+      {
+        variant: "outline",
         intent: "danger",
         className:
           "border-error text-error hover:bg-red-50 active:bg-red-100 focus-visible:ring-error",
@@ -93,6 +106,12 @@ export const buttonVariants = cva(
         intent: "secondary",
         className:
           "text-secondary-600 hover:bg-secondary-100/50 active:bg-secondary-100 focus-visible:ring-secondary-300",
+      },
+      {
+        variant: "ghost",
+        intent: "success",
+        className:
+          "text-success hover:bg-green-100/50 active:bg-green-100 focus-visible:ring-success",
       },
       {
         variant: "ghost",

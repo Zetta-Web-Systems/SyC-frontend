@@ -59,7 +59,7 @@ export function RiskFlagsTable({
                 <>
                   <Button
                     variant="ghost"
-                    intent="secondary"
+                    intent="success"
                     size="icon"
                     aria-label={`Editar bandera de riesgo ${riskFlag.name}`}
                     onClick={() => onEdit(riskFlag)}
