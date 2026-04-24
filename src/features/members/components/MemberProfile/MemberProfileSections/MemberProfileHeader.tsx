@@ -59,8 +59,8 @@ export function MemberProfileHeader({
   const planBadge = getPlanBadge(plans?.current);
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-6">
-      <div className="flex gap-6 flex-wrap">
+    <Card className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
         <Avatar
           size="xl"
           color="primary"
@@ -70,15 +70,15 @@ export function MemberProfileHeader({
           className="border-2 border-primary-200"
         />
 
-        <div className="flex-1 min-w-0">
-          <div className="flex justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight leading-tight text-neutral-900">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-4">
+            <div className="min-w-0 text-center sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-neutral-900 wrap-break-word">
                 {fullName}
               </h2>
 
-              <div className="flex items-center gap-3 mt-2 flex-wrap">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 mt-2 flex-wrap">
+                <div className="hidden sm:flex items-center gap-2">
                   <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide">
                     Alumno:
                   </span>
@@ -92,7 +92,7 @@ export function MemberProfileHeader({
 
                 {membershipBadge && (
                   <>
-                    <div className="w-px h-4 bg-neutral-300" />
+                    <div className="hidden sm:block w-px h-4 bg-neutral-300" />
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide">
                         Plan:
@@ -123,7 +123,8 @@ export function MemberProfileHeader({
             <div className="flex gap-2">
               <Link to="/attendances" search={{ type: "MEMBER" as const }}>
                 <Button variant="outline" intent="primary" size="md">
-                  <Calendar size={14} /> Ver asistencias
+                  <Calendar size={14} aria-hidden="true" />
+                  <span className="hidden xs:inline">Ver asistencias</span>
                 </Button>
               </Link>
 
@@ -133,7 +134,8 @@ export function MemberProfileHeader({
                 size="md"
                 onClick={() => onEdit(member)}
               >
-                <Pencil size={14} /> Editar alumno
+                <Pencil size={14} aria-hidden="true" />
+                <span className="hidden xs:inline">Editar alumno</span>
               </Button>
             </div>
           </div>

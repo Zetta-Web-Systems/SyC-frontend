@@ -123,7 +123,7 @@ export function MembersTable({
         },
       },
     ],
-    [onEdit, onDelete, onRestore],
+    [onProfile, onEdit, onDelete, onRestore],
   );
 
   const handlePageIndexChange = useCallback(
