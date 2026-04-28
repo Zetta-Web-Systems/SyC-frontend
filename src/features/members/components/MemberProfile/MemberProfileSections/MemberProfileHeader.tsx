@@ -121,7 +121,14 @@ export function MemberProfileHeader({
             </div>
 
             <div className="flex gap-2">
-              <Link to="/attendances" search={{ type: "MEMBER" as const }}>
+              <Link
+                to="/attendances"
+                search={{
+                  type: "MEMBER" as const,
+                  personId: member.personId,
+                  personName: `${member.name} ${member.lastname}`,
+                }}
+              >
                 <Button variant="outline" intent="primary" size="md">
                   <Calendar size={14} aria-hidden="true" />
                   <span className="hidden xs:inline">Ver asistencias</span>
