@@ -1,4 +1,4 @@
-import { ViewToggle } from "@shared/ui";
+// import { ViewToggle } from "@shared/ui";
 import { MembersHeader } from "./components/MembersList/MembersHeader/MembersHeader";
 import { MembersTable } from "./components/MembersList/MembersTable";
 import { MembersFilters } from "./components/MembersList/MembersFilters/MembersFilters";
@@ -12,7 +12,7 @@ export default function MembersPage() {
     pagination,
     filters,
     viewMode,
-    setViewMode,
+    // setViewMode,
     setPagination,
     handleSearch,
     handleFilterChange,
@@ -41,9 +41,9 @@ export default function MembersPage() {
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
-        actions={
-          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        }
+        // actions={
+        //   <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        // }
       />
 
       <MembersTable
