@@ -107,4 +107,5 @@ export const PAIRED_BODY_ZONES: ReadonlySet<BodyZone> = new Set<BodyZone>([
   "knees",
   "ankles",
   "feet",
+  "abs",
 ]);
