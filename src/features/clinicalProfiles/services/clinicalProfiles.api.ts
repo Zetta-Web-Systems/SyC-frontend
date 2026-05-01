@@ -54,11 +54,11 @@ export async function restoreMemberRiskFlag(memberRiskFlagId: string) {
 
 export async function addCurrentStatus(
   memberRiskFlagId: string,
-  dto: CurrentStatusCreateSchema,
+  dtos: CurrentStatusCreateSchema[],
 ) {
-  const { data } = await api.post<CurrentStatus>(
+  const { data } = await api.post<MemberRiskFlag>(
     `/clinical-profile/member-risk-flags/${memberRiskFlagId}/current-status`,
-    dto,
+    dtos,
   );
   return data;
 }
