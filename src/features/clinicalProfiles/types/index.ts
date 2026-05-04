@@ -6,7 +6,8 @@ export interface CurrentStatus {
   painLevel: number;
   movementPhase?: string | null;
   bodyZone: BodyZone;
-  side?: BodyLaterality | null;
+  side: BodyLaterality;
+  createdAt?: string;
 }
 
 export type MemberRiskFlagRiskFlag = Pick<

@@ -1,6 +1,11 @@
 export { default as ClinicalProfilePage } from "./pages/ClinicalProfilePage";
 export { default as ClinicalProfileDraftPage } from "./pages/ClinicalProfileDraftPage";
 export { ClinicalProfileForm } from "./components/ClinicalProfileForm";
+export { NewStatusesPreviewList } from "./components/ClinicalProfileForm/NewStatusesPreviewList";
+export {
+  buildNewStatusesPreview,
+  groupNewStatusesByRiskFlag,
+} from "./lib/newStatusesPreview";
 export {
   CLINICAL_PROFILES_KEYS,
   BODY_PREVIEW_FILL,

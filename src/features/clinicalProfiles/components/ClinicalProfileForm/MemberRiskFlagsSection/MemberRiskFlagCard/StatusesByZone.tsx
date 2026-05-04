@@ -1,5 +1,9 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { BODY_ZONE_LABELS } from "@shared/constants/bodyZones";
+import {
+  BODY_ZONE_LABELS,
+  PAIRED_BODY_ZONES,
+} from "@shared/constants/bodyZones";
+import type { BodyZone } from "@shared/types/bodyZone.types";
 import { cn } from "@shared/lib/cn";
 import { MAX_VISIBLE_ZONES, SIDE_LABELS } from "../../../../constants";
 import { groupAndSortStatuses } from "../../../../lib/bodyZoneGrouping";
@@ -66,24 +70,29 @@ export function StatusesByZone({ index }: StatusesByZoneProps) {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {items.map((status) => (
-                  <div
-                    key={`${status.bodyZone}-${status.side ?? "none"}-${status.movementPhase ?? "none"}`}
-                    className="flex items-center gap-1.5 text-[11px] text-neutral-500"
-                  >
-                    <PainRing level={status.painLevel} size="sm" />
-                    <span>
-                      {status.side
-                        ? SIDE_LABELS[status.side as keyof typeof SIDE_LABELS]
-                        : "Sin lateralidad"}
-                    </span>
-                    {status.movementPhase && (
-                      <span className="text-neutral-400">
-                        · {status.movementPhase}
+                {items.map((status) => {
+                  const isPaired = PAIRED_BODY_ZONES.has(
+                    status.bodyZone as BodyZone,
+                  );
+                  return (
+                    <div
+                      key={`${status.bodyZone}-${status.side ?? "none"}-${status.movementPhase ?? "none"}`}
+                      className="flex items-center gap-1.5 text-[11px] text-neutral-500"
+                    >
+                      <PainRing level={status.painLevel} size="sm" />
+                      <span>
+                        {isPaired && status.side
+                          ? SIDE_LABELS[status.side as keyof typeof SIDE_LABELS]
+                          : "Sin lateralidad"}
                       </span>
-                    )}
-                  </div>
-                ))}
+                      {status.movementPhase && (
+                        <span className="text-neutral-400">
+                          · {status.movementPhase}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );

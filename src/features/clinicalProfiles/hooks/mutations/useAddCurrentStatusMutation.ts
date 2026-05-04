@@ -5,15 +5,15 @@ import { createClinicalProfileMutation } from "./createClinicalProfileMutation";
 interface Vars {
   memberRiskFlagId: string;
   memberId: string;
-  dto: CurrentStatusCreateSchema;
+  dtos: CurrentStatusCreateSchema[];
 }
 
 export const useAddCurrentStatusMutation = createClinicalProfileMutation<
   Vars,
   Awaited<ReturnType<typeof addCurrentStatus>>
 >({
-  mutationFn: ({ memberRiskFlagId, dto }) =>
-    addCurrentStatus(memberRiskFlagId, dto),
-  successMessage: "Estado agregado",
+  mutationFn: ({ memberRiskFlagId, dtos }) =>
+    addCurrentStatus(memberRiskFlagId, dtos),
+  successMessage: "Estados agregados",
   getMemberId: (v) => v.memberId,
 });

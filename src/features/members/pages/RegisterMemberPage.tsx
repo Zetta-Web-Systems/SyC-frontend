@@ -5,7 +5,12 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
-import { toClinicalProfileRegisterPayload } from "@features/clinicalProfiles";
+import {
+  buildNewStatusesPreview,
+  NewStatusesPreviewList,
+  toClinicalProfileRegisterPayload,
+} from "@features/clinicalProfiles";
+import { useRiskFlagsQuery } from "@features/riskFlags";
 import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
 import { ClinicalProfileSlotButton } from "../components/MembersList/MemberForm/ClinicalProfileSlotButton";
 import { useRegisterMemberMutation } from "../hooks/mutations/useRegisterMemberMutation";
@@ -21,6 +26,8 @@ export default function RegisterMemberPage() {
   const clinicalProfile = useMemberRegistrationDraft((s) => s.clinicalProfile);
   const reset = useMemberRegistrationDraft((s) => s.reset);
 
+  const riskFlagsQuery = useRiskFlagsQuery({ page: 1, size: 200 });
+
   function goToList() {
     reset();
     flushSync(() => setNavigating(true));
@@ -32,26 +39,51 @@ export default function RegisterMemberPage() {
     navigate({ to: "/members" });
   }
 
+  function performRegister(data: RegisterMemberSchema) {
+    const normalized = {
+      ...data,
+      image: data.image ?? undefined,
+      currentWeight: data.currentWeight ?? undefined,
+      trainingGoal: data.trainingGoal ?? undefined,
+      clinicalProfile: clinicalProfile
+        ? toClinicalProfileRegisterPayload(clinicalProfile)
+        : {},
+    };
+    mutation.mutate(normalized, {
+      onSuccess: () => goToList(),
+    });
+  }
+
   function handleRegister(data: RegisterMemberSchema) {
+    const newStatuses = clinicalProfile
+      ? buildNewStatusesPreview({
+          data: clinicalProfile,
+          snapshot: null,
+          availableRiskFlags: riskFlagsQuery.data?.data ?? [],
+        })
+      : [];
+
+    if (newStatuses.length > 0) {
+      confirm({
+        intent: "warning",
+        size: "md",
+        title: "Confirmar estados clínicos",
+        description:
+          "Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.",
+        body: <NewStatusesPreviewList newStatuses={newStatuses} />,
+        confirmLabel: "Confirmar y registrar",
+        cancelLabel: "Volver a editar",
+        onConfirm: () => performRegister(data),
+      });
+      return;
+    }
+
     confirm({
       intent: "info",
       title: "Registrar alumno",
       description: "¿Estás seguro que deseas registrar el alumno?",
       confirmLabel: "Registrar",
-      onConfirm: () => {
-        const normalized = {
-          ...data,
-          image: data.image ?? undefined,
-          currentWeight: data.currentWeight ?? undefined,
-          trainingGoal: data.trainingGoal ?? undefined,
-          clinicalProfile: clinicalProfile
-            ? toClinicalProfileRegisterPayload(clinicalProfile)
-            : {},
-        };
-        mutation.mutate(normalized, {
-          onSuccess: () => goToList(),
-        });
-      },
+      onConfirm: () => performRegister(data),
     });
   }
 

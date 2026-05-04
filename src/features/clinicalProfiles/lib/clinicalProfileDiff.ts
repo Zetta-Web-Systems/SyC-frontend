@@ -38,9 +38,9 @@ export type ClinicalProfileOp =
   | {
       kind: "addCurrentStatus";
       memberRiskFlagId: string;
-      dto: CurrentStatusCreateSchema;
+      dtos: CurrentStatusCreateSchema[];
       flagIndex: number;
-      statusIndex: number;
+      statusIndexes: number[];
     }
   | {
       kind: "addMemberRiskFlag";
@@ -167,15 +167,13 @@ export function buildClinicalProfileOps(
       initialFlag.currentStatus.map((cs) => [cs.id, cs]),
     );
 
+    const newStatusDtos: CurrentStatusCreateSchema[] = [];
+    const newStatusIndexes: number[] = [];
+
     nextFlag.currentStatus.forEach((nextStatus, statusIndex) => {
       if (!nextStatus.id) {
-        ops.push({
-          kind: "addCurrentStatus",
-          memberRiskFlagId: nextFlag.id as string,
-          dto: toStatusCreateDto(nextStatus),
-          flagIndex,
-          statusIndex,
-        });
+        newStatusDtos.push(toStatusCreateDto(nextStatus));
+        newStatusIndexes.push(statusIndex);
         return;
       }
 
@@ -191,6 +189,16 @@ export function buildClinicalProfileOps(
         });
       }
     });
+
+    if (newStatusDtos.length > 0) {
+      ops.push({
+        kind: "addCurrentStatus",
+        memberRiskFlagId: nextFlag.id as string,
+        dtos: newStatusDtos,
+        flagIndex,
+        statusIndexes: newStatusIndexes,
+      });
+    }
   });
 
   return ops;

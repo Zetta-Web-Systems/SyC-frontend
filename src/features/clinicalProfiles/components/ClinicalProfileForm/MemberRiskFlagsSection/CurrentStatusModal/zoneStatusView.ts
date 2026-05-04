@@ -47,8 +47,6 @@ export function buildZoneStatusViews(
         view.rightStatusIndex === undefined
       ) {
         view.rightStatusIndex = index;
-      } else if (!status.side && view.singleStatusIndex === undefined) {
-        view.singleStatusIndex = index;
       }
     } else if (view.singleStatusIndex === undefined) {
       view.singleStatusIndex = index;

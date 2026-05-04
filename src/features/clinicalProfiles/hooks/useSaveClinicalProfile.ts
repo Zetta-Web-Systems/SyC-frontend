@@ -16,7 +16,7 @@ interface UseSaveClinicalProfileParams {
 }
 
 interface UseSaveClinicalProfileResult {
-  submit: (
+  save: (
     data: ClinicalProfileFormSchema,
     form: UseFormReturn<ClinicalProfileFormSchema>,
   ) => Promise<void>;
@@ -33,7 +33,7 @@ export function useSaveClinicalProfile({
   const [saveError, setSaveError] = useState<unknown>(null);
   const exec = useClinicalProfileOpExecutor({ memberId });
 
-  const submit = useCallback(
+  const save = useCallback(
     async (
       data: ClinicalProfileFormSchema,
       form: UseFormReturn<ClinicalProfileFormSchema>,
@@ -71,7 +71,7 @@ export function useSaveClinicalProfile({
   );
 
   return {
-    submit,
+    save,
     isSaving,
     mutation: { isError: !!saveError, error: saveError },
   };

@@ -7,11 +7,13 @@ import { memberRiskFlagPaths } from "../../../../lib/pathBuilders";
 import type { ZoneStatusView } from "../../../../types";
 import { MovementPhaseField } from "../common/MovementPhaseField";
 import { PainLevelField } from "../common/PainLevelField";
+import { PairedSidesPanel } from "./PairedSidesPanel";
 import { ZoneStatusSidePanel } from "./ZoneStatusSidePanel";
 
 interface ZoneStatusBlockProps {
   riskFlagIndex: number;
   view: ZoneStatusView;
+  isStatusPersisted: (statusIndex: number) => boolean;
   onAddSide: (side: BodyLaterality) => void;
   onRemoveStatus: (statusIndex: number) => void;
 }
@@ -19,6 +21,7 @@ interface ZoneStatusBlockProps {
 export function ZoneStatusBlock({
   riskFlagIndex,
   view,
+  isStatusPersisted,
   onAddSide,
   onRemoveStatus,
 }: ZoneStatusBlockProps) {
@@ -30,6 +33,11 @@ export function ZoneStatusBlock({
     rightStatusIndex,
     singleStatusIndex,
   } = view;
+
+  const noSides =
+    leftStatusIndex === undefined && rightStatusIndex === undefined;
+  const bothSidesActive =
+    leftStatusIndex !== undefined && rightStatusIndex !== undefined;
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-neutral-50/50 p-4">
@@ -55,11 +63,19 @@ export function ZoneStatusBlock({
                 const statusIndex =
                   side === "left" ? leftStatusIndex : rightStatusIndex;
                 const active = statusIndex !== undefined;
+                const locked =
+                  active && isStatusPersisted(statusIndex as number);
                 return (
                   <button
                     key={side}
                     type="button"
                     aria-pressed={active}
+                    disabled={locked}
+                    title={
+                      locked
+                        ? "Este lado ya está guardado y no puede deseleccionarse"
+                        : undefined
+                    }
                     onClick={() =>
                       active
                         ? onRemoveStatus(statusIndex as number)
@@ -70,6 +86,7 @@ export function ZoneStatusBlock({
                       active
                         ? "border-primary-600 bg-primary-600 text-white"
                         : "border-neutral-300 bg-white text-neutral-600 hover:bg-neutral-50",
+                      locked && "cursor-not-allowed opacity-80",
                     )}
                   >
                     {SIDE_LABELS[side]}
@@ -79,41 +96,41 @@ export function ZoneStatusBlock({
             </div>
           </div>
 
-          {leftStatusIndex !== undefined && (
-            <ZoneStatusSidePanel
-              side="left"
+          {noSides && (
+            <p
+              role="alert"
+              className="rounded-md border border-error/30 bg-error/5 px-3 py-2 text-xs text-error"
+            >
+              Seleccioná al menos un lado afectado
+            </p>
+          )}
+
+          {bothSidesActive && (
+            <PairedSidesPanel
               riskFlagIndex={riskFlagIndex}
-              statusIndex={leftStatusIndex}
+              leftStatusIndex={leftStatusIndex as number}
+              rightStatusIndex={rightStatusIndex as number}
             />
           )}
-          {rightStatusIndex !== undefined && (
-            <ZoneStatusSidePanel
-              side="right"
-              riskFlagIndex={riskFlagIndex}
-              statusIndex={rightStatusIndex}
-            />
+
+          {!noSides && !bothSidesActive && (
+            <>
+              {leftStatusIndex !== undefined && (
+                <ZoneStatusSidePanel
+                  side="left"
+                  riskFlagIndex={riskFlagIndex}
+                  statusIndex={leftStatusIndex}
+                />
+              )}
+              {rightStatusIndex !== undefined && (
+                <ZoneStatusSidePanel
+                  side="right"
+                  riskFlagIndex={riskFlagIndex}
+                  statusIndex={rightStatusIndex}
+                />
+              )}
+            </>
           )}
-          {singleStatusIndex !== undefined &&
-            leftStatusIndex === undefined &&
-            rightStatusIndex === undefined && (
-              <div className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-white p-3">
-                <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                  Sin lateralidad
-                </span>
-                <PainLevelField
-                  name={memberRiskFlagPaths.painLevel(
-                    riskFlagIndex,
-                    singleStatusIndex,
-                  )}
-                />
-                <MovementPhaseField
-                  name={memberRiskFlagPaths.movementPhase(
-                    riskFlagIndex,
-                    singleStatusIndex,
-                  )}
-                />
-              </div>
-            )}
         </>
       ) : (
         singleStatusIndex !== undefined && (

@@ -1,12 +1,17 @@
 import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
+import type { UseFormReturn } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
+import { confirm } from "@shared/stores/confirm.store";
 import { ClinicalProfileForm } from "../components/ClinicalProfileForm";
+import { NewStatusesPreviewList } from "../components/ClinicalProfileForm/NewStatusesPreviewList";
 import { useClinicalProfileSnapshot } from "../hooks/useClinicalProfileSnapshot";
 import { useSaveClinicalProfile } from "../hooks/useSaveClinicalProfile";
+import { buildNewStatusesPreview } from "../lib/newStatusesPreview";
+import type { ClinicalProfileFormSchema } from "../schemas/clinicalProfile.schema";
 import { useClinicalProfilePageData } from "./useClinicalProfilePageData";
 
 interface ClinicalProfilePageProps {
@@ -35,11 +40,40 @@ export default function ClinicalProfilePage({
     navigate({ to: "/members/update/$memberId", params: { memberId } });
   }, [memberId, navigate]);
 
-  const { submit, isSaving, mutation } = useSaveClinicalProfile({
+  const { save, isSaving, mutation } = useSaveClinicalProfile({
     memberId,
     snapshotRef,
     onSuccess: goBack,
   });
+
+  const submit = useCallback(
+    (
+      data: ClinicalProfileFormSchema,
+      form: UseFormReturn<ClinicalProfileFormSchema>,
+    ) => {
+      const newStatuses = buildNewStatusesPreview({
+        data,
+        snapshot: profile,
+        availableRiskFlags,
+      });
+      if (newStatuses.length > 0) {
+        confirm({
+          intent: "warning",
+          size: "md",
+          title: "Confirmar estados clínicos",
+          description:
+            "Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.",
+          body: <NewStatusesPreviewList newStatuses={newStatuses} />,
+          confirmLabel: "Confirmar y guardar",
+          cancelLabel: "Volver a editar",
+          onConfirm: () => save(data, form),
+        });
+        return;
+      }
+      void save(data, form);
+    },
+    [availableRiskFlags, profile, save],
+  );
 
   return (
     <div className="flex flex-col gap-4">

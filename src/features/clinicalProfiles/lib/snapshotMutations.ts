@@ -21,7 +21,7 @@ export function snapshotFromMemberFlag(flag: MemberRiskFlag): MemberRiskFlag {
 }
 
 export interface CreatedOpResult {
-  status?: CurrentStatus;
+  statuses?: CurrentStatus[];
   flag?: MemberRiskFlag;
 }
 
@@ -80,11 +80,15 @@ export function applyOpToSnapshot(
       return;
     }
     case "addCurrentStatus": {
-      if (!created?.status) return;
+      if (!created?.statuses) return;
       const flag = snapshot.memberRiskFlags.find(
         (f) => f.id === op.memberRiskFlagId,
       );
-      if (flag) flag.currentStatus.push({ ...created.status });
+      if (flag) {
+        for (const status of created.statuses) {
+          flag.currentStatus.push({ ...status });
+        }
+      }
       return;
     }
     case "addMemberRiskFlag": {
