@@ -63,13 +63,20 @@ export default function RegisterMemberPage() {
         })
       : [];
 
+    const missingPhones: string[] = [];
+    if (!data.phone) missingPhones.push("teléfono");
+    if (!data.emergencyPhone) missingPhones.push("teléfono de emergencia");
+    const missingPhonesNotice =
+      missingPhones.length > 0
+        ? ` Estás registrando al alumno sin ${missingPhones.join(" y sin ")}.`
+        : "";
+
     if (newStatuses.length > 0) {
       confirm({
         intent: "warning",
         size: "md",
         title: "Confirmar estados clínicos",
-        description:
-          "Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.",
+        description: `Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.${missingPhonesNotice}`,
         body: <NewStatusesPreviewList newStatuses={newStatuses} />,
         confirmLabel: "Confirmar y registrar",
         cancelLabel: "Volver a editar",
@@ -79,9 +86,9 @@ export default function RegisterMemberPage() {
     }
 
     confirm({
-      intent: "info",
+      intent: missingPhones.length > 0 ? "warning" : "info",
       title: "Registrar alumno",
-      description: "¿Estás seguro que deseas registrar el alumno?",
+      description: `¿Estás seguro que deseas registrar el alumno?${missingPhonesNotice}`,
       confirmLabel: "Registrar",
       onConfirm: () => performRegister(data),
     });
