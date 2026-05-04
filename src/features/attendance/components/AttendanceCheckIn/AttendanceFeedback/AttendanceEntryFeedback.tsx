@@ -5,21 +5,33 @@ import type { AttendanceCheckIn } from "../../../types";
 
 interface AttendanceEntryFeedbackProps {
   response: AttendanceCheckIn;
+  subtitle?: string;
+  profileImageUrl?: string | null;
 }
 
 export function AttendanceEntryFeedback({
   response,
+  subtitle,
+  profileImageUrl,
 }: AttendanceEntryFeedbackProps) {
-  const subtitle = FALLBACK_MESSAGES.entry();
+  const resolvedSubtitle = subtitle ?? FALLBACK_MESSAGES.entry();
 
   return (
     <div className="flex flex-col items-center text-center">
       <div className="animate-[attendance-icon-bounce_500ms_ease-out_both]">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm md:h-24 md:w-24">
-          <CircleCheckBig
-            className="h-10 w-10 text-white md:h-12 md:w-12"
-            strokeWidth={1.8}
-          />
+        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-white/20 backdrop-blur-sm md:h-24 md:w-24">
+          {profileImageUrl ? (
+            <img
+              src={profileImageUrl}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <CircleCheckBig
+              className="h-10 w-10 text-white md:h-12 md:w-12"
+              strokeWidth={1.8}
+            />
+          )}
         </div>
       </div>
 
@@ -37,7 +49,7 @@ export function AttendanceEntryFeedback({
         style={{ animationDelay: "850ms" }}
       >
         <p className="max-w-md text-lg text-white/80 md:max-w-lg md:text-xl">
-          {subtitle}
+          {resolvedSubtitle}
         </p>
       </div>
 
