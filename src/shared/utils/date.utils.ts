@@ -20,6 +20,11 @@ const dateTimeFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
   minute: "2-digit",
 });
 
+const dateShortFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
+  day: "2-digit",
+  month: "short",
+});
+
 // Helper centralizado
 function parseDate(input: string | Date): Date {
   if (typeof input === "string") {
@@ -53,6 +58,16 @@ export function formatDate(date: string | Date): string {
  */
 export function formatDateTime(date: string | Date): string {
   return dateTimeFormatter.format(parseDate(date));
+}
+
+/**
+ * Formatea una fecha en formato corto día + mes abreviado.
+ * Útil para ejes temporales en gráficos.
+ * @example
+ * formatDateShort("2026-03-23") => "23 mar"
+ */
+export function formatDateShort(date: string | Date): string {
+  return dateShortFormatter.format(parseDate(date));
 }
 
 /**

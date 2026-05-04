@@ -1,5 +1,9 @@
 import { useMemo } from "react";
 import { Spinner } from "@shared/ui";
+import {
+  PainEvolutionChart,
+  WeightEvolutionChart,
+} from "@features/memberHistory";
 import { ClinicalProfileCard } from "../components/common";
 import { MemberProfile } from "../components/MemberProfile/MemberProfile";
 import { useMemberQuery } from "../hooks/useMemberQuery";
@@ -48,6 +52,8 @@ export default function ProfileMemberPage({
               memberRiskFlags={memberRiskFlags}
             />
           }
+          painEvolutionSlot={<PainEvolutionChart memberId={memberId} />}
+          weightEvolutionSlot={<WeightEvolutionChart memberId={memberId} />}
           onEdit={handleOpenEdit}
         />
       )}

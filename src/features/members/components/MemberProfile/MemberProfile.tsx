@@ -12,12 +12,16 @@ import {
 interface MemberProfileProps {
   member: Member;
   clinicalProfileSlot?: ReactNode;
+  painEvolutionSlot?: ReactNode;
+  weightEvolutionSlot?: ReactNode;
   onEdit: (member: Member) => void;
 }
 
 export function MemberProfile({
   member,
   clinicalProfileSlot,
+  painEvolutionSlot,
+  weightEvolutionSlot,
   onEdit,
 }: MemberProfileProps) {
   return (
@@ -37,6 +41,9 @@ export function MemberProfile({
             <MemberProfileMembership membership={mockMembership} />
             <MemberProfilePlan plans={mockTrainingPlans} />
           </div>
+
+          {painEvolutionSlot}
+          {weightEvolutionSlot}
         </div>
 
         {clinicalProfileSlot && (
