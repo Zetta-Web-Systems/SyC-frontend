@@ -4,7 +4,7 @@ import { ClinicalProfileCard } from "../components/common";
 import { MemberProfile } from "../components/MemberProfile/MemberProfile";
 import { useMemberQuery } from "../hooks/useMemberQuery";
 import { useMembersActions } from "../hooks/useMembersActions";
-import type { MemberRiskFlagLike } from "../types";
+import { mapClinicalProfileToRiskFlagLikes } from "../lib/memberFormTransformers";
 
 interface ProfileMemberPageProps {
   memberId: string;
@@ -17,19 +17,9 @@ export default function ProfileMemberPage({
 
   const { handleOpenEdit } = useMembersActions();
 
-  const memberRiskFlags = useMemo<MemberRiskFlagLike[]>(
-    () =>
-      member?.clinicalProfile?.memberRiskFlags.map((mrf) => ({
-        id: mrf.id,
-        name: mrf.riskFlag.name,
-        isActive: mrf.isActive,
-        currentStatus: mrf.currentStatus.map((cs) => ({
-          bodyZone: cs.bodyZone,
-          side: cs.side ?? null,
-          painLevel: cs.painLevel,
-        })),
-      })) ?? [],
-    [member?.clinicalProfile?.memberRiskFlags],
+  const memberRiskFlags = useMemo(
+    () => mapClinicalProfileToRiskFlagLikes(member?.clinicalProfile),
+    [member?.clinicalProfile],
   );
 
   return (

@@ -15,6 +15,7 @@ export interface MemberRiskFlagLike {
   id: string;
   name?: string;
   isActive: boolean;
+  notes?: string | null;
   currentStatus: CurrentStatusLike[];
 }
 

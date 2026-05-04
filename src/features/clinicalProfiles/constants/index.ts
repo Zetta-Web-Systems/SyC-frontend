@@ -68,6 +68,15 @@ export const PAIN_TEXT_CLASS: Record<PainPhase, string> = {
   veryHigh: "text-clinical-very-high",
 };
 
+export const PAIN_BG_CLASS: Record<PainPhase, string> = {
+  none: "bg-clinical-none",
+  veryLow: "bg-clinical-very-low",
+  low: "bg-clinical-low",
+  mid: "bg-clinical-mid",
+  high: "bg-clinical-high",
+  veryHigh: "bg-clinical-very-high",
+};
+
 export const WIZARD_STEP = {
   ZONES: "zones",
   NOTES: "notes",

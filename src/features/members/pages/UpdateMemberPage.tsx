@@ -9,8 +9,8 @@ import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
 import { ClinicalProfileCard } from "../components/common";
 import { useMemberQuery } from "../hooks/useMemberQuery";
 import { useUpdateMemberMutation } from "../hooks/mutations/useUpdateMemberMutation";
+import { mapClinicalProfileToRiskFlagLikes } from "../lib/memberFormTransformers";
 import type { UpdateMemberSchema } from "../schemas/member.schema";
-import type { MemberRiskFlagLike } from "../types";
 
 interface UpdateMemberPageProps {
   memberId: string;
@@ -22,19 +22,9 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
   const { data: member, isLoading, isError } = useMemberQuery(memberId);
   const [navigating, setNavigating] = useState(false);
 
-  const memberRiskFlags = useMemo<MemberRiskFlagLike[]>(
-    () =>
-      member?.clinicalProfile?.memberRiskFlags.map((mrf) => ({
-        id: mrf.id,
-        name: mrf.riskFlag.name,
-        isActive: mrf.isActive,
-        currentStatus: mrf.currentStatus.map((cs) => ({
-          bodyZone: cs.bodyZone,
-          side: cs.side ?? null,
-          painLevel: cs.painLevel,
-        })),
-      })) ?? [],
-    [member?.clinicalProfile?.memberRiskFlags],
+  const memberRiskFlags = useMemo(
+    () => mapClinicalProfileToRiskFlagLikes(member?.clinicalProfile),
+    [member?.clinicalProfile],
   );
 
   function goToList() {

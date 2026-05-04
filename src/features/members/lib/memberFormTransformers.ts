@@ -29,11 +29,13 @@ export function mapClinicalProfileToRiskFlagLikes(
 
   return profile.memberRiskFlags.map((mrf, i) => {
     const name = "riskFlag" in mrf ? mrf.riskFlag.name : undefined;
+    const notes = "notes" in mrf ? mrf.notes : undefined;
 
     return {
       id: mrf.id ?? `draft-${i}`,
       name,
       isActive: mrf.isActive,
+      notes,
       currentStatus: mrf.currentStatus.map((cs) => ({
         bodyZone: cs.bodyZone,
         side: cs.side ?? null,

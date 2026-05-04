@@ -22,7 +22,7 @@ export function RiskFlagSearchField({
       getKey={(rf) => rf.id}
       getLabel={(rf) => rf.name}
       excludeIds={excludeIds}
-      placeholder="Buscar bandera de riesgo para agregar..."
+      placeholder="Buscar bandera de riesgo para agregar"
       listboxId="risk-flag-search-listbox"
       onSelect={onSelect}
       onCreate={onCreateNew}

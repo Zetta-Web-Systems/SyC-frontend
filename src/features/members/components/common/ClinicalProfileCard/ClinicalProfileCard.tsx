@@ -1,16 +1,20 @@
 import { useMemo } from "react";
-import { AlertTriangle, Pencil, Plus } from "lucide-react";
-import { Badge, Button, Card } from "@shared/ui";
+import { Pencil, Plus } from "lucide-react";
+import { Button, Card } from "@shared/ui";
 import { Body } from "@shared/components/BodyHighlighter";
 import { BODY_PREVIEW_FILL } from "@features/clinicalProfiles";
 import { computeBodyParts } from "../../../lib/clinicalProfilePreview";
 import type { MemberRiskFlagLike } from "../../../types";
+import { RiskFlagItem } from "./RiskFlagItem";
+import { SeverityLegend } from "./SeverityLegend";
 
 export interface ClinicalProfileCardProps {
   mode: "create" | "edit" | "profile";
   memberRiskFlags?: MemberRiskFlagLike[] | null;
   onOpen?: () => void;
 }
+
+type NamedFlag = MemberRiskFlagLike & { name: string };
 
 export function ClinicalProfileCard({
   mode,
@@ -20,21 +24,23 @@ export function ClinicalProfileCard({
   const isEditing = mode === "edit";
   const isProfile = mode === "profile";
 
-  const { bodyParts, activeNamedFlags, activeFlagCount } = useMemo(() => {
+  const { bodyParts, namedFlags } = useMemo(() => {
     const flags = memberRiskFlags ?? [];
-    const active = flags.filter((f) => f.isActive);
+    const named = flags.filter(
+      (f): f is NamedFlag => typeof f.name === "string" && f.name.length > 0,
+    );
+    const sorted = [...named].sort((a, b) => {
+      if (a.isActive === b.isActive) return 0;
+      return a.isActive ? -1 : 1;
+    });
     return {
       bodyParts: computeBodyParts(flags),
-      activeNamedFlags: active.filter(
-        (f): f is MemberRiskFlagLike & { name: string } =>
-          typeof f.name === "string" && f.name.length > 0,
-      ),
-      activeFlagCount: active.length,
+      namedFlags: sorted,
     };
   }, [memberRiskFlags]);
 
   const zoneCount = bodyParts.length;
-  const hasData = zoneCount > 0 || activeFlagCount > 0;
+  const hasData = zoneCount > 0 || namedFlags.length > 0;
 
   return (
     <Card className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
@@ -42,12 +48,14 @@ export function ClinicalProfileCard({
         <h6 className="flex items-center gap-1.5 text-neutral-500">
           Perfil clínico
         </h6>
-        {hasData && !isProfile && (
-          <Button variant="solid" intent="primary" size="sm" onClick={onOpen}>
-            <Pencil size={12} aria-hidden="true" />
-            {isEditing ? "Editar" : "Modificar"}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {hasData && !isProfile && (
+            <Button variant="solid" intent="primary" size="sm" onClick={onOpen}>
+              <Pencil size={12} aria-hidden="true" />
+              {isEditing ? "Editar" : "Modificar"}
+            </Button>
+          )}
+        </div>
       </div>
 
       {hasData ? (
@@ -77,33 +85,19 @@ export function ClinicalProfileCard({
                 />
               </div>
             </div>
+            <SeverityLegend bodyParts={bodyParts} />
           </div>
 
-          {activeNamedFlags.length > 0 && (
+          {namedFlags.length > 0 && (
             <div className="flex flex-col gap-1.5">
               <p className="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">
-                Banderas de riesgo activas
+                Banderas de riesgo
               </p>
-              <ul className="flex flex-col gap-1.5">
-                {activeNamedFlags.map((flag) => (
-                  <li
-                    key={flag.id}
-                    className="flex items-start gap-2 rounded-lg border border-error/15 bg-error/5 px-2.5 py-2"
-                  >
-                    <AlertTriangle
-                      size={14}
-                      aria-hidden="true"
-                      className="mt-0.5 shrink-0 text-error"
-                    />
-                    <span className="flex-1 text-xs font-medium text-neutral-800">
-                      {flag.name}
-                    </span>
-                    <Badge intent="success" size="sm">
-                      Activo
-                    </Badge>
-                  </li>
+              <div className="flex flex-col gap-2">
+                {namedFlags.map((flag) => (
+                  <RiskFlagItem key={flag.id} flag={flag} />
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </>
