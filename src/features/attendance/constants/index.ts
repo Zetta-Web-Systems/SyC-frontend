@@ -53,7 +53,7 @@ export type Mood = (typeof MOOD)[keyof typeof MOOD];
 
 export const MOOD_LABELS: Record<Mood, string> = {
   motivated: "Motivado",
-  energetic: "Con energía",
+  energetic: "Enérgico",
   tired: "Cansado",
   sore: "Dolorido",
   unmotivated: "Desganado",
@@ -69,10 +69,10 @@ export const MOOD_EMOJIS: Record<Mood, string> = {
 
 export const MOOD_MESSAGES: Record<Mood, string> = {
   motivated: "¡Hoy es tu día, dale con todo!",
-  energetic: "A romperla en el entrenamiento.",
-  tired: "Vamos tranquilo, lo importante es estar acá.",
-  sore: "Cuidá la zona, escuchá a tu cuerpo.",
-  unmotivated: "Un paso a la vez, ya estás acá.",
+  energetic: "A romperla en el entrenamiento",
+  tired: "Vamos tranquilo, lo importante es estar acá",
+  sore: "Cuidá la zona, escuchá a tu cuerpo",
+  unmotivated: "Un paso a la vez, ya estás acá",
 };
 
 export const PERSON_TYPE = {

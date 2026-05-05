@@ -29,13 +29,10 @@ export function AttendanceMoodSelector({
         <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-5xl">
           ¿Cómo te sentís hoy, {personName}?
         </h2>
-        <p className="mt-3 text-center text-lg text-white/70 md:text-xl">
-          Elegí una opción para continuar
-        </p>
       </div>
 
       <div
-        className="mt-10 grid w-full max-w-3xl grid-cols-2 gap-4 animate-[attendance-card-up_450ms_ease-out_both] md:mt-14 md:grid-cols-5 md:gap-6"
+        className="mt-10 grid w-full max-w-4xl grid-cols-2 gap-4 animate-[attendance-card-up_450ms_ease-out_both] md:mt-14 md:grid-cols-5 md:gap-6"
         style={{ animationDelay: "350ms" }}
       >
         {MOOD_ORDER.map((mood) => (
