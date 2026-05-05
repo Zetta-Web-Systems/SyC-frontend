@@ -5,12 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
-import {
-  buildNewStatusesPreview,
-  NewStatusesPreviewList,
-  toClinicalProfileRegisterPayload,
-} from "@features/clinicalProfiles";
-import { useRiskFlagsQuery } from "@features/riskFlags";
+import { toClinicalProfileRegisterPayload } from "@features/clinicalProfiles";
 import { MemberForm } from "../components/MembersList/MemberForm/MemberForm";
 import { ClinicalProfileSlotButton } from "../components/MembersList/MemberForm/ClinicalProfileSlotButton";
 import { useRegisterMemberMutation } from "../hooks/mutations/useRegisterMemberMutation";
@@ -25,8 +20,6 @@ export default function RegisterMemberPage() {
   const memberFields = useMemberRegistrationDraft((s) => s.memberFields);
   const clinicalProfile = useMemberRegistrationDraft((s) => s.clinicalProfile);
   const reset = useMemberRegistrationDraft((s) => s.reset);
-
-  const riskFlagsQuery = useRiskFlagsQuery({ page: 1, size: 200 });
 
   function goToList() {
     reset();
@@ -55,14 +48,6 @@ export default function RegisterMemberPage() {
   }
 
   function handleRegister(data: RegisterMemberSchema) {
-    const newStatuses = clinicalProfile
-      ? buildNewStatusesPreview({
-          data: clinicalProfile,
-          snapshot: null,
-          availableRiskFlags: riskFlagsQuery.data?.data ?? [],
-        })
-      : [];
-
     const missingPhones: string[] = [];
     if (!data.phone) missingPhones.push("teléfono");
     if (!data.emergencyPhone) missingPhones.push("teléfono de emergencia");
@@ -70,20 +55,6 @@ export default function RegisterMemberPage() {
       missingPhones.length > 0
         ? ` Estás registrando al alumno sin ${missingPhones.join(" y sin ")}.`
         : "";
-
-    if (newStatuses.length > 0) {
-      confirm({
-        intent: "warning",
-        size: "md",
-        title: "Confirmar estados clínicos",
-        description: `Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.${missingPhonesNotice}`,
-        body: <NewStatusesPreviewList newStatuses={newStatuses} />,
-        confirmLabel: "Confirmar y registrar",
-        cancelLabel: "Volver a editar",
-        onConfirm: () => performRegister(data),
-      });
-      return;
-    }
 
     confirm({
       intent: missingPhones.length > 0 ? "warning" : "info",

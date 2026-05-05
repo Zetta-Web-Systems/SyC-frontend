@@ -5,9 +5,12 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
+import { confirm } from "@shared/stores/confirm.store";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { ClinicalProfileForm } from "../components/ClinicalProfileForm";
+import { NewStatusesPreviewList } from "../components/ClinicalProfileForm/NewStatusesPreviewList";
 import { useClinicalProfileDraftGuard } from "../hooks/useClinicalProfileDraftGuard";
+import { buildNewStatusesPreview } from "../lib/newStatusesPreview";
 import type { ClinicalProfileFormSchema } from "../schemas/clinicalProfile.schema";
 import { useClinicalProfilePageData } from "./useClinicalProfilePageData";
 
@@ -28,7 +31,7 @@ export default function ClinicalProfileDraftPage() {
     navigate({ to: "/members/register" });
   }
 
-  function handleSubmit(
+  function persist(
     data: ClinicalProfileFormSchema,
     form: UseFormReturn<ClinicalProfileFormSchema>,
   ) {
@@ -36,6 +39,32 @@ export default function ClinicalProfileDraftPage() {
     form.reset(data);
     flushSync(() => setNavigating(true));
     navigate({ to: "/members/register" });
+  }
+
+  function handleSubmit(
+    data: ClinicalProfileFormSchema,
+    form: UseFormReturn<ClinicalProfileFormSchema>,
+  ) {
+    const newStatuses = buildNewStatusesPreview({
+      data,
+      snapshot: null,
+      availableRiskFlags,
+    });
+    if (newStatuses.length > 0) {
+      confirm({
+        intent: "warning",
+        size: "md",
+        title: "Confirmar estados clínicos",
+        description:
+          "Una vez guardados, el lado (izquierda/derecha) no se puede editar. Verificá los lados antes de continuar.",
+        body: <NewStatusesPreviewList newStatuses={newStatuses} />,
+        confirmLabel: "Confirmar y guardar",
+        cancelLabel: "Volver a editar",
+        onConfirm: () => persist(data, form),
+      });
+      return;
+    }
+    persist(data, form);
   }
 
   return (
