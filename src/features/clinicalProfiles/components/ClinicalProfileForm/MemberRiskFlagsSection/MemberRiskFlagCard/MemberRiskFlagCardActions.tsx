@@ -64,25 +64,28 @@ export function MemberRiskFlagCardActions({
 
       <GuidelineButton guideline={guideline} riskFlagName={riskFlagName} />
 
-      <div className="ml-2 flex w-16 flex-col items-center gap-0.5">
-        <Switch
-          checked={isActive}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(isActiveName, e.target.checked, { shouldDirty: true })
-          }
-          size="sm"
-        />
-        <span
-          className={cn(
-            "rounded-full px-1.75 py-0.5 text-center text-[10px] font-bold uppercase tracking-wider",
-            isActive
-              ? "bg-success/15 text-success"
-              : "bg-neutral-100 text-neutral-500",
-          )}
-        >
-          {isActive ? "Activo" : "Inactivo"}
-        </span>
-      </div>
+      {isExisting && (
+        <div className="ml-2 flex w-16 flex-col items-center gap-0.5">
+          <Switch
+            checked={isActive}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setValue(isActiveName, e.target.checked, { shouldDirty: true })
+            }
+            // disabled={!isExisting}
+            size="sm"
+          />
+          <span
+            className={cn(
+              "rounded-full px-1.75 py-0.5 text-center text-[10px] font-bold uppercase tracking-wider",
+              isActive
+                ? "bg-success/15 text-success"
+                : "bg-neutral-100 text-neutral-500",
+            )}
+          >
+            {isActive ? "Activo" : "Inactivo"}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

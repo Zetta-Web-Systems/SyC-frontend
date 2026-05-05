@@ -25,7 +25,7 @@ export const NON_PAIRED_DEFAULT_SIDE: BodyLaterality = "right";
 
 export const MAX_VISIBLE_ZONES = 3;
 export const TOP_PAIN_ZONES_COUNT = 5;
-export const BODY_PREVIEW_FILL = "#e5e7eb";
+export const BODY_PREVIEW_FILL = "#BABABA";
 
 export const EMPTY_PROFILE_ID_PLACEHOLDER = "";
 
