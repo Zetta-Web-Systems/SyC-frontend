@@ -1,6 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { InstructorsPage } from "@features/instructors";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/instructors")({
-  component: InstructorsPage,
+  component: InstructorsLayout,
 });
+
+function InstructorsLayout() {
+  return <Outlet />;
+}

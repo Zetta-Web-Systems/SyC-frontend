@@ -8,6 +8,8 @@ export const avatarVariants = cva(
         sm: "h-8 w-8 text-xs",
         md: "h-10 w-10 text-sm",
         lg: "h-12 w-12 text-base",
+        xl: "h-14 w-14 text-xl",
+        profile: "h-20 w-20 text-2xl",
       },
       color: {
         primary: "bg-primary-100 text-primary-700",

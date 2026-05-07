@@ -1,7 +1,11 @@
 import type { HTMLAttributes, ReactNode, Ref } from "react";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@shared/lib/cn";
-import { badgeVariants, badgeIconVariants } from "./Badge.variants";
+import {
+  badgeVariants,
+  badgeIconVariants,
+  badgeDotVariants,
+} from "./Badge.variants";
 
 export interface BadgeProps
   extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
@@ -11,6 +15,7 @@ export interface BadgeProps
 
 export function Badge({
   ref,
+  variant,
   intent,
   size,
   icon,
@@ -21,16 +26,23 @@ export function Badge({
   return (
     <span
       ref={ref}
-      className={cn(badgeVariants({ intent, size }), className)}
+      className={cn(badgeVariants({ variant, intent, size }), className)}
       {...props}
     >
-      {icon && (
+      {variant === "dot" ? (
         <span
           aria-hidden="true"
-          className={badgeIconVariants({ intent, size })}
-        >
-          {icon}
-        </span>
+          className={badgeDotVariants({ intent, size })}
+        />
+      ) : (
+        icon && (
+          <span
+            aria-hidden="true"
+            className={badgeIconVariants({ intent, size })}
+          >
+            {icon}
+          </span>
+        )
       )}
       {children}
     </span>

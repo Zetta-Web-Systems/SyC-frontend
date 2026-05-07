@@ -1,2 +1,3 @@
-export { default as AttendancePage } from "./AttendancePage";
-export type { AttendanceResponse, AttendanceStatus } from "./types";
+export { default as AttendanceCheckInPage } from "./pages/AttendanceCheckInPage";
+export { default as AttendanceListPage } from "./pages/AttendanceListPage";
+export * from "./types";

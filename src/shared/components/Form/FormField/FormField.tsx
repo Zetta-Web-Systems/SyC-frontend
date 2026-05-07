@@ -1,15 +1,17 @@
 import type { ReactElement } from "react";
-import type { FieldValues, Path, ChangeHandler } from "react-hook-form";
-import { useFormContext, get } from "react-hook-form";
+import type { FieldValues, Path, RefCallBack } from "react-hook-form";
+import { useFormContext, useController } from "react-hook-form";
 import { Label } from "@shared/ui";
 import { FormMessage } from "@shared/components/Form/FormMessage/FormMessage";
 import { cn } from "@shared/lib/cn";
 
 export interface FieldRenderProps {
-  ref: (instance: HTMLElement | null) => void;
+  ref: RefCallBack;
   name: string;
-  onChange: ChangeHandler;
-  onBlur: ChangeHandler;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- value: any es el valor por defecto que RHF asigna, no hay otra que dejarlo así
+  value: any;
+  onChange: (...event: unknown[]) => void;
+  onBlur: () => void;
   id: string;
   disabled?: boolean;
   error: boolean;
@@ -33,21 +35,17 @@ export function FormField<TFields extends FieldValues>({
   className,
   children,
 }: FormFieldProps<TFields>) {
-  const {
-    register,
-    clearErrors,
-    formState: { errors },
-  } = useFormContext<TFields>();
+  const { control, clearErrors } = useFormContext<TFields>();
+
+  const { field, fieldState } = useController({ name, control, disabled });
 
   const fieldId = `field-${name}`;
   const errorId = `${fieldId}-error`;
-  const hasError = !!get(errors, name);
+  const hasError = !!fieldState.error;
 
-  const registration = register(name, { disabled });
-
-  const handleChange: ChangeHandler = (event) => {
+  const handleChange = (...event: unknown[]) => {
     clearErrors(name);
-    return registration.onChange(event);
+    field.onChange(...event);
   };
 
   return (
@@ -59,12 +57,13 @@ export function FormField<TFields extends FieldValues>({
       )}
 
       {children({
-        ref: registration.ref,
-        name,
+        ref: field.ref,
+        name: field.name,
+        value: field.value ?? "",
         onChange: handleChange,
-        onBlur: registration.onBlur,
+        onBlur: field.onBlur,
         id: fieldId,
-        disabled,
+        disabled: field.disabled,
         error: hasError,
         "aria-describedby": hasError ? errorId : undefined,
       })}

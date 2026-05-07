@@ -10,6 +10,50 @@ import type {
   UpdateInstructorDto,
 } from "../types";
 
+function dtoToFormData(
+  dto: RegisterInstructorDto | UpdateInstructorDto,
+): FormData {
+  const formData = new FormData();
+
+  if (dto.name !== undefined) {
+    formData.append("name", dto.name);
+  }
+
+  if (dto.lastname !== undefined) {
+    formData.append("lastname", dto.lastname);
+  }
+
+  if ("dni" in dto && dto.dni !== undefined) {
+    formData.append("dni", dto.dni);
+  }
+
+  if ("email" in dto && dto.email !== undefined) {
+    formData.append("email", dto.email);
+  }
+
+  if (dto.phone !== undefined) {
+    formData.append("phone", dto.phone);
+  }
+
+  if (dto.emergencyPhone !== undefined) {
+    formData.append("emergencyPhone", dto.emergencyPhone);
+  }
+
+  if (dto.address !== undefined) {
+    formData.append("address", dto.address);
+  }
+
+  if (dto.image instanceof File) {
+    formData.append("image", dto.image);
+  }
+
+  if ("deleteImage" in dto && dto.deleteImage === true) {
+    formData.append("deleteImage", "true");
+  }
+
+  return formData;
+}
+
 export async function getInstructorsPaginated(params: PaginatedParams) {
   const { data } = await api.get<PaginatedResponse<Instructor>>(
     "/instructors/list/paginated",
@@ -19,12 +63,17 @@ export async function getInstructorsPaginated(params: PaginatedParams) {
 }
 
 export async function registerInstructor(dto: RegisterInstructorDto) {
-  const { data } = await api.post<Instructor>("/instructors/register", dto);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.post<Instructor>(
+    "/instructors/register",
+    formData,
+  );
   return data;
 }
 
 export async function updateInstructor(id: string, dto: UpdateInstructorDto) {
-  const { data } = await api.patch<Instructor>(`/instructors/${id}`, dto);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.patch<Instructor>(`/instructors/${id}`, formData);
   return data;
 }
 

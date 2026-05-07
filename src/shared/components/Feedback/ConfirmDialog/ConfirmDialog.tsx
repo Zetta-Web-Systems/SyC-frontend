@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@shared/lib/cn";
 import { Modal } from "@shared/ui";
 import { Button } from "@shared/ui";
-import type { ConfirmIntent } from "@shared/stores/confirm.store";
+import type { ConfirmIntent, ConfirmSize } from "@shared/stores/confirm.store";
 import { INTENT_CONFIG } from "@shared/constants/confirmdialog.constants";
 
 export interface ConfirmDialogProps {
@@ -13,6 +13,8 @@ export interface ConfirmDialogProps {
   icon?: ReactNode;
   title: string;
   description: string;
+  body?: ReactNode;
+  size?: ConfirmSize;
   confirmLabel: string;
   cancelLabel?: string;
   isLoading?: boolean;
@@ -26,6 +28,8 @@ export function ConfirmDialog({
   icon,
   title,
   description,
+  body,
+  size = "sm",
   confirmLabel,
   cancelLabel = "Cancelar",
   isLoading = false,
@@ -34,7 +38,7 @@ export function ConfirmDialog({
   const Icon = config.icon;
 
   return (
-    <Modal open={open} onClose={onClose} size="sm">
+    <Modal open={open} onClose={onClose} size={size}>
       <div className="flex flex-col items-center px-4 pt-6 pb-4 sm:px-6 sm:pt-8 sm:pb-6">
         <div
           className={cn(
@@ -56,6 +60,12 @@ export function ConfirmDialog({
         <p className="text-center mt-4 text-sm text-neutral-600">
           {description}
         </p>
+
+        {body ? (
+          <div className="mt-4 w-full max-h-[60vh] overflow-y-auto text-left">
+            {body}
+          </div>
+        ) : null}
 
         <div className="flex w-full mt-6 gap-3">
           <Button

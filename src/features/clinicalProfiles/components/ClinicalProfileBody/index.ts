@@ -1,0 +1,1 @@
+export { ClinicalProfileBodyPreview } from "./ClinicalProfileBodyPreview";

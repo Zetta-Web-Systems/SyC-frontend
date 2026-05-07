@@ -1,9 +1,6 @@
-export interface ToolbarTab {
-  label: string;
-  value: string;
-}
+import type { FilterOption } from "@shared/types/filters.types";
 
-export interface FilterOption {
+export interface ToolbarTab {
   label: string;
   value: string;
 }
@@ -16,4 +13,11 @@ export interface ToolbarFilterConfig {
   onChange: (selected: string[]) => void;
   multiple?: boolean;
   searchable?: boolean;
+}
+
+export interface ExtraFilterChip {
+  key: string;
+  label: string;
+  value: string;
+  onRemove: () => void;
 }

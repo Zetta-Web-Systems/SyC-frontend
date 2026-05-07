@@ -1,44 +1,51 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
+import type { ReactNode } from "react";
 import { DataTableToolbar } from "@shared/components/DataTable";
 import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
 import { STATUS_FILTER_OPTIONS } from "../../constants/instructors.constants";
 
 interface InstructorsFiltersProps {
   onSearch: (value: string) => void;
-  statusFilter: string[];
-  onStatusChange: (selected: string[]) => void;
+  filters: Record<string, string[]>;
+  onFilterChange: (key: string, values: string[]) => void;
   onClearAllFilters: () => void;
+  actions?: ReactNode;
 }
 
 export function InstructorsFilters({
   onSearch,
-  statusFilter,
-  onStatusChange,
+  filters,
+  onFilterChange,
   onClearAllFilters,
+  actions,
 }: InstructorsFiltersProps) {
-  const filters = useMemo<ToolbarFilterConfig[]>(
+  const handleChange = useCallback(
+    (key: string) => (values: string[]) => onFilterChange(key, values),
+    [onFilterChange],
+  );
+
+  const filterConfigs = useMemo<ToolbarFilterConfig[]>(
     () => [
       {
         key: "status",
         label: "Estado",
         options: STATUS_FILTER_OPTIONS,
-        selected: statusFilter,
-        onChange: onStatusChange,
+        selected: filters.status ?? [],
+        onChange: handleChange("status"),
         multiple: false,
         searchable: false,
       },
     ],
-    [statusFilter, onStatusChange],
+    [filters, handleChange],
   );
 
   return (
     <DataTableToolbar
-      filters={filters}
-      searchPlaceholder="Buscar"
+      filters={filterConfigs}
+      searchPlaceholder="Buscar por nombre"
       onSearch={onSearch}
       onClearAll={onClearAllFilters}
-      onExportExcel={() => {}}
-      onExportPDF={() => {}}
+      actions={actions}
     />
   );
 }

@@ -13,6 +13,7 @@ export interface SearchInputProps {
   disabled?: boolean;
   clearLabel?: string;
   delay?: number;
+  externalValue?: string;
   onSearch: (value: string) => void;
 }
 
@@ -24,11 +25,19 @@ export function SearchInput({
   disabled,
   clearLabel = "Limpiar búsqueda",
   delay = 300,
+  externalValue,
   onSearch,
 }: SearchInputProps) {
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce(value, delay);
   const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (externalValue !== undefined && externalValue !== value) {
+      setValue(externalValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalValue]);
 
   useEffect(() => {
     if (!isMounted.current) {

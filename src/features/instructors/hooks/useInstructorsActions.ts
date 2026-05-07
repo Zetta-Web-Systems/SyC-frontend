@@ -41,21 +41,48 @@ export function useInstructorsActions() {
   }
 
   function handleRegister(data: RegisterInstructorSchema) {
-    registerMutation.mutate(data, {
-      onSuccess: () => handleCloseModal(),
+    confirm({
+      intent: "info",
+      title: "Registrar profesor",
+      description: `¿Estas seguro que deseas registrar el profesor?`,
+      confirmLabel: "Registrar",
+      onConfirm: () => {
+        const normalized = {
+          ...data,
+          image: data.image ?? undefined,
+        };
+        registerMutation.mutate(normalized, {
+          onSuccess: () => handleCloseModal(),
+        });
+      },
     });
   }
 
   function handleUpdate(data: UpdateInstructorSchema) {
     if (!editingInstructor) return;
+    if (Object.keys(data).length === 0) {
+      handleCloseModal();
+      return;
+    }
     confirm({
       intent: "warning",
       title: "Modificar profesor",
-      description: `¿Estas seguro que deseas modificar a ${data.name} ${data.lastname}?`,
+      description: `¿Estas seguro que deseas modificar a ${editingInstructor.name} ${editingInstructor.lastname}?`,
       confirmLabel: "Modificar",
       onConfirm: () => {
+        const { deleteImage, ...rest } = data;
+        const normalized: Record<string, unknown> = {
+          ...rest,
+          image: rest.image ?? undefined,
+        };
+
+        if (deleteImage) {
+          normalized.deleteImage = true;
+          delete normalized.image;
+        }
+
         updateMutation.mutate(
-          { id: editingInstructor.id, dto: data },
+          { id: editingInstructor.id, dto: normalized },
           { onSuccess: () => handleCloseModal() },
         );
       },

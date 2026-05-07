@@ -4,20 +4,52 @@ export const badgeVariants = cva(
   "inline-flex items-center font-medium leading-none whitespace-nowrap",
   {
     variants: {
+      variant: {
+        solid: "",
+        dot: "bg-transparent",
+      },
       intent: {
-        success: "bg-success/15 text-success",
-        warning: "bg-warning/15 text-warning",
-        error: "bg-error/15 text-error",
-        info: "bg-info/15 text-info",
-        neutral: "bg-neutral-100 text-neutral-500",
+        success: "",
+        warning: "",
+        error: "",
+        info: "",
+        neutral: "",
       },
       size: {
-        sm: "px-2 py-0.5 text-[10px] gap-1 rounded-full",
-        md: "px-2.5 py-1 text-xs gap-1.5 rounded-full",
-        lg: "px-4 py-2.5 text-sm gap-2.5 rounded-xl font-bold uppercase tracking-wide",
+        sm: "text-[10px] gap-1 rounded-full",
+        md: "text-xs gap-1.5 rounded-full",
+        lg: "text-sm gap-2.5 rounded-xl font-bold uppercase tracking-wide",
       },
     },
+    compoundVariants: [
+      { variant: "solid", size: "sm", class: "px-2 py-0.5" },
+      { variant: "solid", size: "md", class: "px-2.5 py-1" },
+      { variant: "solid", size: "lg", class: "px-4 py-2.5" },
+      {
+        variant: "solid",
+        intent: "success",
+        class: "bg-success/15 text-success",
+      },
+      {
+        variant: "solid",
+        intent: "warning",
+        class: "bg-warning/15 text-warning",
+      },
+      { variant: "solid", intent: "error", class: "bg-error/15 text-error" },
+      { variant: "solid", intent: "info", class: "bg-info/15 text-info" },
+      {
+        variant: "solid",
+        intent: "neutral",
+        class: "bg-neutral-100 text-neutral-500",
+      },
+      { variant: "dot", intent: "success", class: "text-success" },
+      { variant: "dot", intent: "warning", class: "text-warning" },
+      { variant: "dot", intent: "error", class: "text-error" },
+      { variant: "dot", intent: "info", class: "text-info" },
+      { variant: "dot", intent: "neutral", class: "text-neutral-500" },
+    ],
     defaultVariants: {
+      variant: "solid",
       intent: "neutral",
       size: "md",
     },
@@ -47,3 +79,24 @@ export const badgeIconVariants = cva(
     },
   },
 );
+
+export const badgeDotVariants = cva("inline-block rounded-full shrink-0", {
+  variants: {
+    intent: {
+      success: "bg-success",
+      warning: "bg-warning",
+      error: "bg-error",
+      info: "bg-info",
+      neutral: "bg-neutral-400",
+    },
+    size: {
+      sm: "size-1.5",
+      md: "size-2",
+      lg: "size-2.5",
+    },
+  },
+  defaultVariants: {
+    intent: "neutral",
+    size: "md",
+  },
+});
