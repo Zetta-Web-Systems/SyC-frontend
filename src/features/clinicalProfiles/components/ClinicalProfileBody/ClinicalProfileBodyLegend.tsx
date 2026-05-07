@@ -10,7 +10,7 @@ const LEGEND_ITEMS: LegendItem[] = [
   { label: "Moderado", className: "bg-clinical-mid" },
   { label: "Alto", className: "bg-clinical-high" },
   { label: "Muy alto", className: "bg-clinical-very-high" },
-  { label: "Sin datos", className: "bg-neutral-300" },
+  { label: "Sin datos", className: "bg-neutral-400" },
 ];
 
 export function ClinicalProfileBodyLegend() {

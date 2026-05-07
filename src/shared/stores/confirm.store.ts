@@ -10,11 +10,15 @@ const CONFIRM_INTENT = {
 
 type ConfirmIntent = (typeof CONFIRM_INTENT)[keyof typeof CONFIRM_INTENT];
 
+type ConfirmSize = "sm" | "md" | "lg";
+
 interface ConfirmOptions {
   intent?: ConfirmIntent;
   icon?: ReactNode;
   title: string;
   description: string;
+  body?: ReactNode;
+  size?: ConfirmSize;
   confirmLabel: string;
   cancelLabel?: string;
   onConfirm: () => void | Promise<void>;
@@ -58,4 +62,4 @@ export function confirm(options: ConfirmOptions) {
 }
 
 export { CONFIRM_INTENT };
-export type { ConfirmIntent, ConfirmOptions };
+export type { ConfirmIntent, ConfirmOptions, ConfirmSize };

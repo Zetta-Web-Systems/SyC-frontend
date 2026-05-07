@@ -25,6 +25,8 @@ export const FALLBACK_MESSAGES = {
 export const REQUEST_STATUS = {
   IDLE: "idle",
   LOADING: "loading",
+  MOOD_SELECTION: "mood_selection",
+  MOOD_LOADING: "mood_loading",
   ERROR: "error",
 } as const;
 
@@ -38,6 +40,40 @@ export const ATTENDANCE_ACTION = {
 
 export type AttendanceAction =
   (typeof ATTENDANCE_ACTION)[keyof typeof ATTENDANCE_ACTION];
+
+export const MOOD = {
+  MOTIVATED: "motivated",
+  ENERGETIC: "energetic",
+  TIRED: "tired",
+  SORE: "sore",
+  UNMOTIVATED: "unmotivated",
+} as const;
+
+export type Mood = (typeof MOOD)[keyof typeof MOOD];
+
+export const MOOD_LABELS: Record<Mood, string> = {
+  motivated: "Motivado",
+  energetic: "Enérgico",
+  tired: "Cansado",
+  sore: "Dolorido",
+  unmotivated: "Desganado",
+};
+
+export const MOOD_EMOJIS: Record<Mood, string> = {
+  motivated: "💪",
+  energetic: "⚡",
+  tired: "😴",
+  sore: "🤕",
+  unmotivated: "😔",
+};
+
+export const MOOD_MESSAGES: Record<Mood, string> = {
+  motivated: "¡Hoy es tu día, dale con todo!",
+  energetic: "A romperla en el entrenamiento",
+  tired: "Vamos tranquilo, lo importante es estar acá",
+  sore: "Cuidá la zona, escuchá a tu cuerpo",
+  unmotivated: "Un paso a la vez, ya estás acá",
+};
 
 export const PERSON_TYPE = {
   INSTRUCTOR: "INSTRUCTOR",

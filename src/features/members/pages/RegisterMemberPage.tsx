@@ -32,25 +32,36 @@ export default function RegisterMemberPage() {
     navigate({ to: "/members" });
   }
 
+  function performRegister(data: RegisterMemberSchema) {
+    const normalized = {
+      ...data,
+      image: data.image ?? undefined,
+      currentWeight: data.currentWeight ?? undefined,
+      trainingGoal: data.trainingGoal ?? undefined,
+      clinicalProfile: clinicalProfile
+        ? toClinicalProfileRegisterPayload(clinicalProfile)
+        : {},
+    };
+    mutation.mutate(normalized, {
+      onSuccess: () => goToList(),
+    });
+  }
+
   function handleRegister(data: RegisterMemberSchema) {
+    const missingPhones: string[] = [];
+    if (!data.phone) missingPhones.push("teléfono");
+    if (!data.emergencyPhone) missingPhones.push("teléfono de emergencia");
+    const missingPhonesNotice =
+      missingPhones.length > 0
+        ? ` Estás registrando al alumno sin ${missingPhones.join(" y sin ")}.`
+        : "";
+
     confirm({
-      intent: "info",
+      intent: missingPhones.length > 0 ? "warning" : "info",
       title: "Registrar alumno",
-      description: "¿Estás seguro que deseas registrar el alumno?",
+      description: `¿Estás seguro que deseas registrar el alumno?${missingPhonesNotice}`,
       confirmLabel: "Registrar",
-      onConfirm: () => {
-        const normalized = {
-          ...data,
-          image: data.image ?? undefined,
-          currentWeight: data.currentWeight ?? undefined,
-          clinicalProfile: clinicalProfile
-            ? toClinicalProfileRegisterPayload(clinicalProfile)
-            : {},
-        };
-        mutation.mutate(normalized, {
-          onSuccess: () => goToList(),
-        });
-      },
+      onConfirm: () => performRegister(data),
     });
   }
 

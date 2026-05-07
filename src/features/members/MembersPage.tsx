@@ -1,4 +1,4 @@
-import { ViewToggle } from "@shared/ui";
+// import { ViewToggle } from "@shared/ui";
 import { MembersHeader } from "./components/MembersList/MembersHeader/MembersHeader";
 import { MembersTable } from "./components/MembersList/MembersTable";
 import { MembersFilters } from "./components/MembersList/MembersFilters/MembersFilters";
@@ -12,7 +12,7 @@ export default function MembersPage() {
     pagination,
     filters,
     viewMode,
-    setViewMode,
+    // setViewMode,
     setPagination,
     handleSearch,
     handleFilterChange,
@@ -21,8 +21,13 @@ export default function MembersPage() {
 
   const { data, isLoading, isPlaceholderData } = useMembersQuery(params);
 
-  const { handleOpenRegister, handleOpenEdit, handleDelete, handleRestore } =
-    useMembersActions();
+  const {
+    handleOpenRegister,
+    handleOpenEdit,
+    handleOpenProfile,
+    handleDelete,
+    handleRestore,
+  } = useMembersActions();
 
   const members = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
@@ -36,9 +41,9 @@ export default function MembersPage() {
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
-        actions={
-          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        }
+        // actions={
+        //   <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        // }
       />
 
       <MembersTable
@@ -48,6 +53,7 @@ export default function MembersPage() {
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
         viewMode={viewMode}
+        onProfile={handleOpenProfile}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onRestore={handleRestore}

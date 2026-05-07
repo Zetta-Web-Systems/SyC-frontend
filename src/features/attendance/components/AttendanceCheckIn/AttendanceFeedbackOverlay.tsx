@@ -13,6 +13,8 @@ import { RESET_TIMINGS } from "../../constants";
 interface AttendanceFeedbackOverlayProps {
   status: AttendanceAction | RequestStatus;
   response: AttendanceCheckIn | null;
+  moodMessage?: string | null;
+  profileImageUrl?: string | null;
 }
 
 const BACKGROUND_MAP: Partial<
@@ -25,6 +27,8 @@ const BACKGROUND_MAP: Partial<
 export function AttendanceFeedbackOverlay({
   status,
   response,
+  moodMessage,
+  profileImageUrl,
 }: AttendanceFeedbackOverlayProps) {
   const bg = BACKGROUND_MAP[status] ?? "bg-primary-900";
   const duration =
@@ -40,7 +44,11 @@ export function AttendanceFeedbackOverlay({
       )}
     >
       {status === ATTENDANCE_ACTION.ENTRY && response && (
-        <AttendanceEntryFeedback response={response} />
+        <AttendanceEntryFeedback
+          response={response}
+          subtitle={moodMessage ?? undefined}
+          profileImageUrl={profileImageUrl}
+        />
       )}
 
       {status === ATTENDANCE_ACTION.EXIT && response && (

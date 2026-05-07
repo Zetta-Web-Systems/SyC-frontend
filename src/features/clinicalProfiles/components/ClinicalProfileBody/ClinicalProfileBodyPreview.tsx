@@ -5,7 +5,7 @@ import { useBodyPartsFiltered } from "../../hooks/useBodyPartsFiltered";
 import { ClinicalProfileBodyModal } from "./ClinicalProfileBodyModal";
 
 export function ClinicalProfileBodyPreview() {
-  const { bodyParts, withIntensity, withoutIntensity } = useBodyPartsFiltered();
+  const { bodyParts } = useBodyPartsFiltered();
   const [open, setOpen] = useState(false);
 
   const zoneCount = bodyParts.length;
@@ -50,17 +50,6 @@ export function ClinicalProfileBodyPreview() {
             defaultFill={BODY_PREVIEW_FILL}
           />
         </div>
-
-        {zoneCount > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2 text-xs text-neutral-500">
-            <span>{withIntensity.length} con datos</span>
-            {withoutIntensity.length > 0 && (
-              <span className="text-neutral-400">
-                {withoutIntensity.length} sin datos
-              </span>
-            )}
-          </div>
-        )}
       </button>
 
       <ClinicalProfileBodyModal open={open} onClose={() => setOpen(false)} />

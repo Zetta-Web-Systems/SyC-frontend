@@ -18,6 +18,8 @@ export function ConfirmDialogContainer() {
       icon={options.icon}
       title={options.title}
       description={options.description}
+      body={options.body}
+      size={options.size}
       confirmLabel={options.confirmLabel}
       cancelLabel={options.cancelLabel}
       isLoading={isLoading}

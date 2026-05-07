@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { DefaultValues } from "react-hook-form";
-import { Button } from "@shared/ui";
 import {
   Form,
   FormError,
@@ -9,6 +8,7 @@ import {
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
+import { buildMemberUpdateDefaults } from "../../../lib/memberFormTransformers";
 import {
   registerMemberSchema,
   updateMemberSchema,
@@ -16,6 +16,7 @@ import {
   type UpdateMemberSchema,
 } from "../../../schemas/member.schema";
 import type { Member } from "../../../types";
+import { MemberFormActions } from "./MemberFormActions";
 import { MemberFormFields } from "./MemberFormFields";
 
 interface MemberFormCreateProps {
@@ -57,6 +58,38 @@ export function MemberForm({
   const createDefaults = !member
     ? (rest as MemberFormCreateProps).defaultValues
     : undefined;
+
+  const submitLabel = member ? "Guardar cambios" : "Registrar alumno";
+
+  const body = (
+    <>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+        <MemberFormFields
+          mode={member ? "edit" : "create"}
+          dni={member?.dni}
+          initialImagePreview={member?.image ?? null}
+        />
+
+        {clinicalProfileSlot && (
+          <aside className="lg:sticky lg:top-4">{clinicalProfileSlot}</aside>
+        )}
+      </div>
+
+      <FormUnsavedChangesGuard
+        active={guardUnsavedChanges}
+        allowNavigationTo={guardAllowNavigationTo}
+      />
+
+      <FormError mutation={mutation} />
+
+      <MemberFormActions
+        onCancel={onCancel}
+        isPending={isPending}
+        submitLabel={submitLabel}
+      />
+    </>
+  );
+
   if (member) {
     return (
       <Form<UpdateMemberSchema>
@@ -69,38 +102,10 @@ export function MemberForm({
             ) as UpdateMemberSchema,
           )
         }
-        defaultValues={{
-          name: member.name,
-          lastname: member.lastname,
-          email: member.email ?? "",
-          phone: member.phone ?? "",
-          emergencyPhone: member.emergencyPhone ?? "",
-          address: member.address ?? "",
-          bornDate: member.bornDate ?? "",
-          currentWeight: member.currentWeight ?? null,
-          trainingGoal: member.trainingGoal ?? null,
-        }}
+        defaultValues={buildMemberUpdateDefaults(member)}
         className="flex flex-col gap-5"
       >
-        <MemberFormFields mode="edit" dni={member.dni} />
-
-        {clinicalProfileSlot}
-
-        <FormUnsavedChangesGuard
-          active={guardUnsavedChanges}
-          allowNavigationTo={guardAllowNavigationTo}
-        />
-
-        <FormError mutation={mutation} />
-
-        <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button intent="neutral" variant="outline" onClick={onCancel}>
-            Volver
-          </Button>
-          <Button type="submit" intent="primary" isLoading={isPending}>
-            Guardar cambios
-          </Button>
-        </div>
+        {body}
       </Form>
     );
   }
@@ -114,25 +119,7 @@ export function MemberForm({
       defaultValues={createDefaults}
       className="flex flex-col gap-5"
     >
-      <MemberFormFields mode="create" />
-
-      {clinicalProfileSlot}
-
-      <FormUnsavedChangesGuard
-        active={guardUnsavedChanges}
-        allowNavigationTo={guardAllowNavigationTo}
-      />
-
-      <FormError mutation={mutation} />
-
-      <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Button intent="neutral" variant="outline" onClick={onCancel}>
-          Volver
-        </Button>
-        <Button type="submit" intent="primary" isLoading={isPending}>
-          Registrar alumno
-        </Button>
-      </div>
+      {body}
     </Form>
   );
 }

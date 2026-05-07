@@ -1,3 +1,4 @@
+import { NON_PAIRED_DEFAULT_SIDE } from "../constants";
 import type { ClinicalProfileFormSchema } from "../schemas/clinicalProfile.schema";
 import type { ClinicalProfile } from "../types";
 
@@ -29,7 +30,7 @@ export function buildDefaults(
           painLevel: cs.painLevel,
           bodyZone: cs.bodyZone,
           movementPhase: cs.movementPhase ?? undefined,
-          side: cs.side ?? undefined,
+          side: cs.side ?? NON_PAIRED_DEFAULT_SIDE,
         })),
       })),
     };

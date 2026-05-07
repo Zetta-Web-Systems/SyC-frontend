@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { CalendarDays, Pencil, UserCheck, UserX } from "lucide-react";
+import { CalendarDays, FileUser, Pencil, UserCheck, UserX } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@shared/ui";
 import type { ViewMode } from "@shared/ui";
@@ -27,6 +27,7 @@ interface MembersTableProps {
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
   viewMode: ViewMode;
+  onProfile: (member: Member) => void;
   onEdit: (member: Member) => void;
   onDelete: (member: Member) => void;
   onRestore: (member: Member) => void;
@@ -39,6 +40,7 @@ export function MembersTable({
   onPaginationChange,
   isLoading,
   viewMode,
+  onProfile,
   onEdit,
   onDelete,
   onRestore,
@@ -62,12 +64,12 @@ export function MembersTable({
                 <>
                   <Button
                     variant="ghost"
-                    intent="secondary"
+                    intent="primary"
                     size="icon"
-                    aria-label={`Editar alumno ${member.name} ${member.lastname}`}
-                    onClick={() => onEdit(member)}
+                    aria-label={`Ver perfil de alumno ${member.name} ${member.lastname}`}
+                    onClick={() => onProfile(member)}
                   >
-                    <Pencil size={16} aria-hidden="true" color="green" />
+                    <FileUser size={16} aria-hidden="true" />
                   </Button>
                   <Link
                     to="/attendances"
@@ -86,6 +88,15 @@ export function MembersTable({
                       <CalendarDays size={16} aria-hidden="true" />
                     </Button>
                   </Link>
+                  <Button
+                    variant="ghost"
+                    intent="success"
+                    size="icon"
+                    aria-label={`Editar alumno ${member.name} ${member.lastname}`}
+                    onClick={() => onEdit(member)}
+                  >
+                    <Pencil size={16} aria-hidden="true" color="green" />
+                  </Button>
                   <Button
                     variant="ghost"
                     intent="danger"
@@ -112,7 +123,7 @@ export function MembersTable({
         },
       },
     ],
-    [onEdit, onDelete, onRestore],
+    [onProfile, onEdit, onDelete, onRestore],
   );
 
   const handlePageIndexChange = useCallback(
@@ -140,6 +151,7 @@ export function MembersTable({
           <div key={member.id} className="w-full sm:w-80">
             <MemberCard
               member={member}
+              onProfile={onProfile}
               onEdit={onEdit}
               onDelete={onDelete}
               onRestore={onRestore}

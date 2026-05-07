@@ -20,9 +20,12 @@ export const SIDE_LABELS: Record<BodyLaterality, string> = {
   right: "Derecha",
 };
 
+// Curita del Side (mando right como default)
+export const NON_PAIRED_DEFAULT_SIDE: BodyLaterality = "right";
+
 export const MAX_VISIBLE_ZONES = 3;
 export const TOP_PAIN_ZONES_COUNT = 5;
-export const BODY_PREVIEW_FILL = "#e5e7eb";
+export const BODY_PREVIEW_FILL = "#BABABA";
 
 export const EMPTY_PROFILE_ID_PLACEHOLDER = "";
 
@@ -63,6 +66,15 @@ export const PAIN_TEXT_CLASS: Record<PainPhase, string> = {
   mid: "text-clinical-mid",
   high: "text-clinical-high",
   veryHigh: "text-clinical-very-high",
+};
+
+export const PAIN_BG_CLASS: Record<PainPhase, string> = {
+  none: "bg-clinical-none",
+  veryLow: "bg-clinical-very-low",
+  low: "bg-clinical-low",
+  mid: "bg-clinical-mid",
+  high: "bg-clinical-high",
+  veryHigh: "bg-clinical-very-high",
 };
 
 export const WIZARD_STEP = {

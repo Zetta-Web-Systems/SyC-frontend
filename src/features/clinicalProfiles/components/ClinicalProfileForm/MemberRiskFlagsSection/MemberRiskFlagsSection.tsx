@@ -57,7 +57,7 @@ export function MemberRiskFlagsSection({
                 Banderas de riesgo del alumno
               </h3>
               <p className="text-xs text-neutral-500">
-                Buscá y asociá bandera de riesgos al perfil clínico del alumno.
+                Buscá y asociá bandera de riesgos al perfil clínico del alumno
               </p>
             </div>
 

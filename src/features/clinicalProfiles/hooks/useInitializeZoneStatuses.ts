@@ -24,7 +24,7 @@ export function useInitializeZoneStatuses({
     const current = getCurrent() ?? [];
     for (const zone of zones) {
       if (PAIRED_BODY_ZONES.has(zone)) continue;
-      const already = current.some((s) => s.bodyZone === zone && !s.side);
+      const already = current.some((s) => s.bodyZone === zone);
       if (!already) append(buildStatus(zone));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

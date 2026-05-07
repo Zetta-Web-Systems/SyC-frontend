@@ -80,17 +80,33 @@ export function useClinicalProfileOpExecutor({
           return;
         }
         case "addCurrentStatus": {
-          const created = await addCurrentStatus.mutateAsync({
+          const updatedFlag = await addCurrentStatus.mutateAsync({
             memberRiskFlagId: op.memberRiskFlagId,
             memberId,
-            dto: op.dto,
+            dtos: op.dtos,
           });
-          form.setValue(
-            `memberRiskFlags.${op.flagIndex}.currentStatus.${op.statusIndex}.id`,
-            created.id,
-            { shouldDirty: false },
+          const flagInSnapshot = snapshot.memberRiskFlags.find(
+            (f) => f.id === op.memberRiskFlagId,
           );
-          applyOpToSnapshot(op, snapshot, { status: created });
+          const existingIds = new Set(
+            flagInSnapshot?.currentStatus.map((cs) => cs.id) ?? [],
+          );
+          const newStatuses = updatedFlag.currentStatus.filter(
+            (cs) => !existingIds.has(cs.id),
+          );
+          op.dtos.forEach((dto, i) => {
+            const formIndex = op.statusIndexes[i];
+            const match = newStatuses.find(
+              (cs) => cs.bodyZone === dto.bodyZone && cs.side === dto.side,
+            );
+            if (formIndex === undefined || !match) return;
+            form.setValue(
+              `memberRiskFlags.${op.flagIndex}.currentStatus.${formIndex}.id`,
+              match.id,
+              { shouldDirty: false },
+            );
+          });
+          applyOpToSnapshot(op, snapshot, { statuses: newStatuses });
           return;
         }
         case "addMemberRiskFlag": {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ALL_BODY_ZONES, PAIRED_BODY_ZONES } from "@shared/constants/bodyZones";
+import { ALL_BODY_ZONES } from "@shared/constants/bodyZones";
 import type { BodyZone } from "@shared/types/bodyZone.types";
 import {
   GENERAL_OBSERVATIONS_MAX_LENGTH,
@@ -12,31 +12,16 @@ import {
 const bodyZoneEnum = z.enum(ALL_BODY_ZONES as [BodyZone, ...BodyZone[]]);
 const sideEnum = z.enum(["left", "right"]);
 
-const pairedZoneSideRefinement = (
-  val: { bodyZone: BodyZone; side?: "left" | "right" },
-  ctx: z.RefinementCtx,
-) => {
-  if (val.side && !PAIRED_BODY_ZONES.has(val.bodyZone)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Esta zona no tiene lateralidad",
-      path: ["side"],
-    });
-  }
-};
-
-export const currentStatusCreateSchema = z
-  .object({
-    painLevel: z
-      .number({ error: "El nivel de dolor es requerido" })
-      .int()
-      .min(PAIN_LEVEL_UPDATE_MIN, `Mínimo ${PAIN_LEVEL_UPDATE_MIN}`)
-      .max(PAIN_LEVEL_MAX, `Máximo ${PAIN_LEVEL_MAX}`),
-    movementPhase: z.string().max(MOVEMENT_PHASE_MAX_LENGTH).optional(),
-    bodyZone: bodyZoneEnum,
-    side: sideEnum.optional(),
-  })
-  .superRefine(pairedZoneSideRefinement);
+export const currentStatusCreateSchema = z.object({
+  painLevel: z
+    .number({ error: "El nivel de dolor es requerido" })
+    .int()
+    .min(PAIN_LEVEL_UPDATE_MIN, `Mínimo ${PAIN_LEVEL_UPDATE_MIN}`)
+    .max(PAIN_LEVEL_MAX, `Máximo ${PAIN_LEVEL_MAX}`),
+  movementPhase: z.string().max(MOVEMENT_PHASE_MAX_LENGTH).optional(),
+  bodyZone: bodyZoneEnum,
+  side: sideEnum,
+});
 
 export const currentStatusUpdateSchema = z.object({
   painLevel: z
@@ -75,19 +60,17 @@ export const clinicalProfileUpdateSchema = z.object({
     .nullish(),
 });
 
-const currentStatusFormSchema = z
-  .object({
-    id: z.string().optional(),
-    painLevel: z
-      .number({ error: "El nivel de dolor es requerido" })
-      .int()
-      .min(PAIN_LEVEL_UPDATE_MIN, `Mínimo ${PAIN_LEVEL_UPDATE_MIN}`)
-      .max(PAIN_LEVEL_MAX, `Máximo ${PAIN_LEVEL_MAX}`),
-    movementPhase: z.string().max(MOVEMENT_PHASE_MAX_LENGTH).optional(),
-    bodyZone: bodyZoneEnum,
-    side: sideEnum.optional(),
-  })
-  .superRefine(pairedZoneSideRefinement);
+const currentStatusFormSchema = z.object({
+  id: z.string().optional(),
+  painLevel: z
+    .number({ error: "El nivel de dolor es requerido" })
+    .int()
+    .min(PAIN_LEVEL_UPDATE_MIN, `Mínimo ${PAIN_LEVEL_UPDATE_MIN}`)
+    .max(PAIN_LEVEL_MAX, `Máximo ${PAIN_LEVEL_MAX}`),
+  movementPhase: z.string().max(MOVEMENT_PHASE_MAX_LENGTH).optional(),
+  bodyZone: bodyZoneEnum,
+  side: sideEnum,
+});
 
 const memberRiskFlagFormSchema = z.object({
   id: z.string().optional(),

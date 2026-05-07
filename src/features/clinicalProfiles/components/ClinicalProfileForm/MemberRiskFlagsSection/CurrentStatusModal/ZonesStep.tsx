@@ -39,6 +39,11 @@ export function ZonesStep({ riskFlagIndex, affectedZones }: ZonesStepProps) {
   const statuses = fields as unknown as CurrentStatusFormSchema[];
   const views = buildZoneStatusViews(affectedZones, statuses);
 
+  const rawStatuses =
+    (getValues(arrayName) as CurrentStatusFormSchema[] | undefined) ?? [];
+  const isStatusPersisted = (statusIndex: number): boolean =>
+    Boolean(rawStatuses[statusIndex]?.id);
+
   return (
     <div className="flex flex-col gap-4">
       {views.length === 0 ? (
@@ -53,24 +58,12 @@ export function ZonesStep({ riskFlagIndex, affectedZones }: ZonesStepProps) {
               key={`${view.bodyZone}-${view.isLegacy ? "legacy" : "active"}`}
               riskFlagIndex={riskFlagIndex}
               view={view}
+              isStatusPersisted={isStatusPersisted}
               onAddSide={(side) => {
                 append(buildStatus(view.bodyZone, side));
-                if (view.isPaired && view.singleStatusIndex !== undefined) {
-                  remove(view.singleStatusIndex);
-                }
               }}
               onRemoveStatus={(index) => {
                 remove(index);
-                if (view.isPaired) {
-                  const otherSideActive =
-                    (view.leftStatusIndex !== undefined &&
-                      view.leftStatusIndex !== index) ||
-                    (view.rightStatusIndex !== undefined &&
-                      view.rightStatusIndex !== index);
-                  if (!otherSideActive) {
-                    append(buildStatus(view.bodyZone));
-                  }
-                }
               }}
             />
           ))}

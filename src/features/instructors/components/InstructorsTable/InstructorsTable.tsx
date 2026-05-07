@@ -62,7 +62,7 @@ export function InstructorsTable({
                 <>
                   <Button
                     variant="ghost"
-                    intent="secondary"
+                    intent="success"
                     size="icon"
                     aria-label={`Editar profesor ${instructor.name} ${instructor.lastname}`}
                     onClick={() => onEdit(instructor)}

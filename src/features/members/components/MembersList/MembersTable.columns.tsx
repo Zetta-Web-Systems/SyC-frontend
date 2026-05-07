@@ -1,7 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Phone } from "lucide-react";
 import { Avatar, Badge } from "@shared/ui";
-import { formatDate } from "@shared/utils/date.utils";
 import type { Member } from "../../types";
 import { TRAINING_GOAL_LABELS } from "../../constants";
 
@@ -98,12 +97,12 @@ export const membersColumns: ColumnDef<Member, unknown>[] = [
     },
   },
   {
-    id: "bornDate",
-    header: "Fecha de nac.",
+    id: "age",
+    header: "Edad",
     cell: ({ row }) => {
-      const bornDate = row.original.bornDate;
-      return bornDate ? (
-        <span>{formatDate(bornDate)}</span>
+      const age = row.original.age;
+      return age ? (
+        <span>{age}</span>
       ) : (
         <span className="italic text-neutral-400">Sin registro</span>
       );

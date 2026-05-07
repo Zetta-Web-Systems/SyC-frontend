@@ -50,11 +50,14 @@ function dtoToFormData(dto: RegisterMember | UpdateMember): FormData {
   }
 
   if ("currentWeight" in dto && dto.currentWeight !== undefined) {
-    formData.append("currentWeight", String(dto.currentWeight));
+    formData.append(
+      "currentWeight",
+      dto.currentWeight !== null ? String(dto.currentWeight) : "",
+    );
   }
 
   if ("trainingGoal" in dto && dto.trainingGoal !== undefined) {
-    formData.append("trainingGoal", dto.trainingGoal);
+    formData.append("trainingGoal", dto.trainingGoal ?? "");
   }
 
   if ("clinicalProfile" in dto && dto.clinicalProfile) {
