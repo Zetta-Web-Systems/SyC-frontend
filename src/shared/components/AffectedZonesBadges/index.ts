@@ -1,0 +1,1 @@
+export { AffectedZonesBadges } from "./AffectedZonesBadges";
