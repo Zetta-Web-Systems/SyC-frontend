@@ -27,4 +27,15 @@ export interface RegisterExerciseGroup {
 
 export type UpdateExerciseGroup = Partial<RegisterExerciseGroup>;
 
+export interface RegisterExercise {
+  name: string;
+  exerciseLevel: ExerciseLevel;
+  affectedZones?: BodyZone[];
+  technicalDescription?: string;
+  links?: string[];
+  notes?: string;
+}
+
+export type UpdateExercise = Partial<RegisterExercise>;
+
 export type { AffectedGroup } from "@shared/types/bodyZone.types";

@@ -1,3 +1,4 @@
+import { ViewToggle } from "@shared/ui";
 import { GroupExercisesHeader } from "./components/GroupExercisesList/GroupExercisesHeader/GroupExercisesHeader";
 import { GroupExercisesTable } from "./components/GroupExercisesList/GroupExercisesTable";
 import { GroupExercisesFilters } from "./components/GroupExercisesList/GroupExercisesFilters/GroupExercisesFilters";
@@ -6,8 +7,14 @@ import { useGroupExercisesFilters } from "./hooks/useGroupExercisesFilters";
 import { useGroupExercisesActions } from "./hooks/useGroupExercisesActions";
 
 export default function GroupExercisesPage() {
-  const { params, pagination, setPagination, handleSearch } =
-    useGroupExercisesFilters();
+  const {
+    params,
+    pagination,
+    setPagination,
+    viewMode,
+    setViewMode,
+    handleSearch,
+  } = useGroupExercisesFilters();
 
   const { data, isLoading, isPlaceholderData } = useGroupExercisesQuery(params);
 
@@ -21,7 +28,12 @@ export default function GroupExercisesPage() {
     <div className="flex flex-col gap-4">
       <GroupExercisesHeader onCreate={handleOpenRegister} />
 
-      <GroupExercisesFilters onSearch={handleSearch} />
+      <GroupExercisesFilters
+        onSearch={handleSearch}
+        actions={
+          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        }
+      />
 
       <GroupExercisesTable
         data={groups}
@@ -31,6 +43,7 @@ export default function GroupExercisesPage() {
         isLoading={isLoading && !isPlaceholderData}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
+        viewMode={viewMode}
       />
     </div>
   );

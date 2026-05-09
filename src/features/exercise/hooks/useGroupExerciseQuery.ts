@@ -4,7 +4,7 @@ import { getGroupExerciseById } from "../services/groupExercises.api";
 import { GROUP_EXERCISES_KEYS } from "../constants";
 import type { ExerciseGroup } from "../types";
 
-// NOTA: el endpoint GET /exercises/group/:id todavía no existe en el backend.
+// TODO: el endpoint GET /exercises/group/:id todavía no existe en el backend.
 export function useGroupExerciseQuery(id: string | undefined) {
   const queryClient = useQueryClient();
   return useQuery({
