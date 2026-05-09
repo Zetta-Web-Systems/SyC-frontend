@@ -81,6 +81,27 @@ export const RISK_FLAG_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
 };
 
+export const GROUP_EXERCISE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
+  sm: {
+    name: true,
+    affectedZones: false,
+    exercisesCount: true,
+    actions: true,
+  },
+  md: {
+    name: true,
+    affectedZones: true,
+    exercisesCount: true,
+    actions: true,
+  },
+  lg: {
+    name: true,
+    affectedZones: true,
+    exercisesCount: true,
+    actions: true,
+  },
+};
+
 export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
