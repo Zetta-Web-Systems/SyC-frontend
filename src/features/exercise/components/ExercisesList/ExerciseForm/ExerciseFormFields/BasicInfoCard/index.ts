@@ -1,0 +1,1 @@
+export { BasicInfoCard } from "./BasicInfoCard";
