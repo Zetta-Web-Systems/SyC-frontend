@@ -18,21 +18,19 @@ export const exercisesColumns: ColumnDef<Exercise, unknown>[] = [
     id: "name",
     header: "Nombre",
     meta: { className: "w-[1%] whitespace-nowrap" },
-    cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-3">
-        <span className="font-medium">{row.original.name}</span>
-      </div>
-    ),
-  },
-  {
-    id: "exerciseLevel",
-    header: "Nivel",
     cell: ({ row }) => {
-      const level = row.original.exerciseLevel;
+      const { name, exerciseLevel } = row.original;
+
       return (
-        <Badge intent={LEVEL_INTENT[level]} size="md">
-          {EXERCISE_LEVEL_LABELS[level]}
-        </Badge>
+        <div className="flex flex-col items-start gap-1">
+          <span className="font-medium">{name}</span>
+          <span className="flex items-center gap-1 text-xs">
+            Nivel:{" "}
+            <Badge intent={LEVEL_INTENT[exerciseLevel]} size="sm">
+              {EXERCISE_LEVEL_LABELS[exerciseLevel]}
+            </Badge>
+          </span>
+        </div>
       );
     },
   },

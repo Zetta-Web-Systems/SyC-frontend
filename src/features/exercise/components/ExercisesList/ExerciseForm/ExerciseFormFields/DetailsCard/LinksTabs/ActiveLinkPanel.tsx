@@ -15,7 +15,11 @@ interface ActiveLinkPanelProps {
 
 // TODO: Permitir reproducir el video con modal o iframe embebido sin abandonar el form (pucha)
 // TODO: Obtener título / canal del video vía oEmbed para mostrar mejor info del source.
-export function ActiveLinkPanel({ url, onChange, onRemove }: ActiveLinkPanelProps) {
+export function ActiveLinkPanel({
+  url,
+  onChange,
+  onRemove,
+}: ActiveLinkPanelProps) {
   const trimmed = url.trim();
   const ytId = extractYouTubeId(trimmed);
   const domain = trimmed && !ytId ? getDomainFromUrl(trimmed) : null;
@@ -32,7 +36,7 @@ export function ActiveLinkPanel({ url, onChange, onRemove }: ActiveLinkPanelProp
             type="url"
             value={url}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="https://youtube.com/watch?v=..."
+            placeholder="Enlace al video o recurso"
             leftElement={<LinkIcon size={16} aria-hidden="true" />}
           />
 

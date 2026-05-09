@@ -105,21 +105,18 @@ export const GROUP_EXERCISE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
 export const EXERCISE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
-    exerciseLevel: true,
     affectedZones: false,
     estado: false,
     actions: true,
   },
   md: {
     name: true,
-    exerciseLevel: true,
     affectedZones: true,
     estado: true,
     actions: true,
   },
   lg: {
     name: true,
-    exerciseLevel: true,
     affectedZones: true,
     estado: true,
     actions: true,

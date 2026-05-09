@@ -24,7 +24,7 @@ export default function ExercisesPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Ejercicios"
-        description="Elegí un grupo para ver y gestionar sus ejercicios."
+        description="Elegí un grupo para ver y gestionar sus ejercicios"
       />
 
       <div className="max-w-md">

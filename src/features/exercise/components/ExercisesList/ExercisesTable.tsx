@@ -6,6 +6,7 @@ import type {
 } from "@tanstack/react-table";
 import { Pencil, RotateCcw, Trash2, X } from "lucide-react";
 import { Button } from "@shared/ui";
+import type { ViewMode } from "@shared/ui";
 import {
   DataTable,
   DataCardList,
@@ -28,6 +29,7 @@ interface ExercisesTableProps {
   onSoftDelete: (exercise: Exercise) => void;
   onPhysicalDelete: (exercise: Exercise) => void;
   onRestore: (exercise: Exercise) => void;
+  viewMode?: ViewMode;
 }
 
 export function ExercisesTable({
@@ -40,6 +42,7 @@ export function ExercisesTable({
   onSoftDelete,
   onPhysicalDelete,
   onRestore,
+  viewMode = "table",
 }: ExercisesTableProps) {
   const { columnVisibility, setColumnVisibility } = useColumnVisibility({
     config: EXERCISE_TABLE_VISIBILITY,
@@ -152,25 +155,29 @@ export function ExercisesTable({
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Desktop */}
       <div className="hidden md:block">
-        <DataTable
-          columns={columns}
-          data={data}
-          rowCount={rowCount}
-          pagination={pagination}
-          onPaginationChange={onPaginationChange}
-          columnVisibility={columnVisibility}
-          onColumnVisibilityChange={setColumnVisibility}
-          isLoading={isLoading}
-          noResultsMessage="No se encontraron ejercicios."
-          showPagination={true}
-          renderPagination={(table) => <DataTablePagination table={table} />}
-        />
+        {viewMode === "table" ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            rowCount={rowCount}
+            pagination={pagination}
+            onPaginationChange={onPaginationChange}
+            columnVisibility={columnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
+            isLoading={isLoading}
+            noResultsMessage="No se encontraron ejercicios."
+            showPagination={true}
+            renderPagination={(table) => <DataTablePagination table={table} />}
+          />
+        ) : (
+          cardList
+        )}
       </div>
 
+      {/* Mobile */}
       <div className="md:hidden">{cardList}</div>
     </div>
   );
 }
-
-ExercisesTable.displayName = "ExercisesTable";
