@@ -59,7 +59,7 @@ export default function UpdateGroupExercisePage({
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Editar grupo de ejercicios"
-        description="Modifica la información del grupo de ejercicios."
+        description="Modifica la información del grupo de ejercicios"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

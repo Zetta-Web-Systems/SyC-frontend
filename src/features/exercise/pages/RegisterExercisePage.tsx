@@ -75,7 +75,7 @@ export default function RegisterExercisePage({
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Registrar ejercicio"
-        description="Completá la información para registrar un nuevo ejercicio."
+        description="Completá la información para registrar un nuevo ejercicio"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

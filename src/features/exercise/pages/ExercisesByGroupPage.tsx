@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { ViewToggle } from "@shared/ui";
 import type { ExerciseGroup } from "../types";
 import { useExercisesQuery } from "../hooks/useExercisesQuery";
 import { useExercisesFilters } from "../hooks/useExercisesFilters";
@@ -22,6 +23,8 @@ export default function ExercisesByGroupPage({
     pagination,
     setPagination,
     filters,
+    viewMode,
+    setViewMode,
     handleSearch,
     handleFilterChange,
     handleClearAllFilters,
@@ -73,6 +76,9 @@ export default function ExercisesByGroupPage({
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
+        actions={
+          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        }
       />
 
       <ExercisesTable
@@ -85,6 +91,7 @@ export default function ExercisesByGroupPage({
         onSoftDelete={handleSoftDelete}
         onPhysicalDelete={handlePhysicalDelete}
         onRestore={handleRestore}
+        viewMode={viewMode}
       />
     </div>
   );

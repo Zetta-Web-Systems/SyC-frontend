@@ -71,7 +71,7 @@ export default function UpdateExercisePage({
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Editar ejercicio"
-        description="Modificá la información del ejercicio."
+        description="Modificá la información del ejercicio"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

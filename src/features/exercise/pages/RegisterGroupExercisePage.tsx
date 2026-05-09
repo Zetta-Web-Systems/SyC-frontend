@@ -41,7 +41,7 @@ export default function RegisterGroupExercisePage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Registrar grupo de ejercicios"
-        description="Completa la información para registrar un nuevo grupo de ejercicios."
+        description="Completa la información para registrar un nuevo grupo de ejercicios"
         actions={
           <Button variant="outline" intent="neutral" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
