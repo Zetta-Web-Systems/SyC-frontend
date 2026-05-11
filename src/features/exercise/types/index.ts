@@ -17,7 +17,6 @@ export interface ExerciseGroup {
   id: string;
   name: string;
   affectedZones?: BodyZone[];
-  exercises?: Exercise[];
 }
 
 export interface RegisterExerciseGroup {

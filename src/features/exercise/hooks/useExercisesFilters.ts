@@ -25,7 +25,6 @@ export function useExercisesFilters(groupId: string) {
     handleClearAllFilters: baseClearAll,
   } = useFilters(EXERCISES_FILTER_SCHEMA);
 
-  // exerciseGroupId es implícito por la URL: lo forzamos en los entries.
   const filterEntriesWithGroup = useMemo<FilterEntry[]>(() => {
     const apiKey = EXERCISES_FILTER_SCHEMA.exerciseGroup.apiKey;
     const withoutGroup = filterEntries.filter((e) => e.key !== apiKey);
@@ -36,6 +35,8 @@ export function useExercisesFilters(groupId: string) {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,
     search: search || undefined,
+    orderBy: "exerciseLevel",
+    orderType: "ASC",
     ...splitFilterEntries(filterEntriesWithGroup),
   };
 

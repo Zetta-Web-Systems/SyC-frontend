@@ -53,23 +53,4 @@ export const groupExercisesColumns: ColumnDef<ExerciseGroup, unknown>[] = [
       );
     },
   },
-  {
-    id: "exercisesCount",
-    header: "Ejercicios",
-    cell: ({ row }) => {
-      const count = row.original.exercises?.length ?? 0;
-      if (count === 0) {
-        return (
-          <span className="text-sm italic text-neutral-400">
-            Sin ejercicios
-          </span>
-        );
-      }
-      return (
-        <span className="text-sm text-neutral-700">
-          {count} {count === 1 ? "ejercicio" : "ejercicios"}
-        </span>
-      );
-    },
-  },
 ];

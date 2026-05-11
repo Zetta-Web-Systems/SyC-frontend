@@ -39,8 +39,3 @@ export function getBodyData(zones: BodyZone[] | undefined): ExtendedBodyPart[] {
 export function getIntentForBlock(label: string): BodyZoneIntent {
   return BODY_ZONE_GROUP_INTENT[label] ?? "info";
 }
-
-export function getExercisesCountLabel(count: number): string {
-  if (count === 0) return "Sin ejercicios";
-  return `${count} ${count === 1 ? "ejercicio" : "ejercicios"}`;
-}

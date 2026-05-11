@@ -20,7 +20,6 @@ export function GroupExerciseCard({
   onSelect,
 }: GroupExerciseCardProps) {
   const hasZones = (group.affectedZones?.length ?? 0) > 0;
-  const exercisesCount = group.exercises?.length ?? 0;
   const { blocks, sides, bodyData } = useGroupExerciseCardZones(
     group.affectedZones,
   );
@@ -38,10 +37,7 @@ export function GroupExerciseCard({
 
       <div className="flex flex-1 flex-col gap-2 p-3 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <GroupExerciseHeader
-            name={group.name}
-            exercisesCount={exercisesCount}
-          />
+          <GroupExerciseHeader name={group.name} />
           {showActions && (
             <GroupExerciseActionsMenu
               groupName={group.name}

@@ -18,7 +18,6 @@ export async function getGroupExercisesPaginated(params: PaginatedParams) {
   return data;
 }
 
-// TODO: el endpoint GET /exercises/group/:id todavía no existe en el backend.
 export async function getGroupExerciseById(id: string) {
   const { data } = await api.get<ExerciseGroup>(`/exercises/group/${id}`);
   return data;

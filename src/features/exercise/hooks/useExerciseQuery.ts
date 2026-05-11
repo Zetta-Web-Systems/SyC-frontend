@@ -4,7 +4,6 @@ import { getExerciseById } from "../services/exercises.api";
 import { EXERCISES_KEYS } from "../constants";
 import type { Exercise } from "../types";
 
-// TODO: el endpoint GET /exercises/:id todavía no existe en el backend.
 export function useExerciseQuery(id: string | undefined) {
   const queryClient = useQueryClient();
   return useQuery({
