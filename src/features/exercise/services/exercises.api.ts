@@ -6,6 +6,48 @@ import type {
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type { Exercise, RegisterExercise, UpdateExercise } from "../types";
 
+function dtoToFormData(dto: RegisterExercise | UpdateExercise): FormData {
+  const formData = new FormData();
+
+  if (dto.name !== undefined) {
+    formData.append("name", dto.name);
+  }
+
+  if (dto.exerciseLevel !== undefined) {
+    formData.append("exerciseLevel", dto.exerciseLevel);
+  }
+
+  if (dto.affectedZones !== undefined) {
+    for (const zone of dto.affectedZones) {
+      formData.append("affectedZones", zone);
+    }
+  }
+
+  if (dto.technicalDescription !== undefined) {
+    formData.append("technicalDescription", dto.technicalDescription);
+  }
+
+  if (dto.links !== undefined) {
+    for (const link of dto.links) {
+      formData.append("links", link);
+    }
+  }
+
+  if (dto.notes !== undefined) {
+    formData.append("notes", dto.notes);
+  }
+
+  if (dto.image instanceof File) {
+    formData.append("image", dto.image);
+  }
+
+  if ("deleteImage" in dto && dto.deleteImage === true) {
+    formData.append("deleteImage", "true");
+  }
+
+  return formData;
+}
+
 export async function getExercisesPaginated(params: PaginatedParams) {
   const { data } = await api.get<PaginatedResponse<Exercise>>(
     "/exercises/list/paginated",
@@ -20,9 +62,10 @@ export async function getExerciseById(id: string) {
 }
 
 export async function registerExercise(groupId: string, dto: RegisterExercise) {
+  const formData = dtoToFormData(dto);
   const { data } = await api.post<Exercise>(
     `/exercises/register/${groupId}`,
-    dto,
+    formData,
   );
   return data;
 }
@@ -39,7 +82,8 @@ export async function registerExercisesBulk(
 }
 
 export async function updateExercise(id: string, dto: UpdateExercise) {
-  const { data } = await api.patch<Exercise>(`/exercises/${id}`, dto);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.patch<Exercise>(`/exercises/${id}`, formData);
   return data;
 }
 

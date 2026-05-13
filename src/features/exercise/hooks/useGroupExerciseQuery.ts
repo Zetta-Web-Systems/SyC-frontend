@@ -15,7 +15,7 @@ export function useGroupExerciseQuery(id: string | undefined) {
       const lists = queryClient.getQueriesData<
         PaginatedResponse<ExerciseGroup>
       >({
-        queryKey: GROUP_EXERCISES_KEYS.all,
+        queryKey: [...GROUP_EXERCISES_KEYS.all, "list"],
       });
       for (const [, page] of lists) {
         const cached = page?.data.find((g) => g.id === id);

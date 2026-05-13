@@ -26,6 +26,10 @@ const exerciseGroupIdField = z
   .string({ error: "El grupo de ejercicios es requerido" })
   .min(1, "El grupo de ejercicios es requerido");
 
+const imageField = z.instanceof(File).optional().nullable();
+
+const deleteImageField = z.boolean().optional();
+
 export const registerExerciseSchema = z.object({
   exerciseGroupId: exerciseGroupIdField,
   name: nameField,
@@ -34,10 +38,13 @@ export const registerExerciseSchema = z.object({
   technicalDescription: technicalDescriptionField,
   links: linksField,
   notes: notesField,
+  image: imageField,
 });
 
 export type RegisterExerciseSchema = z.infer<typeof registerExerciseSchema>;
 
-export const updateExerciseSchema = registerExerciseSchema.partial();
+export const updateExerciseSchema = registerExerciseSchema.partial().extend({
+  deleteImage: deleteImageField,
+});
 
 export type UpdateExerciseSchema = z.infer<typeof updateExerciseSchema>;

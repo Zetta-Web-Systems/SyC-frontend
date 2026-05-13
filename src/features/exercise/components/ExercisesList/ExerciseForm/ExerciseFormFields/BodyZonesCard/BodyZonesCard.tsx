@@ -9,16 +9,17 @@ import type {
   RegisterExerciseSchema,
   UpdateExerciseSchema,
 } from "../../../../../schemas/exercise.schema";
-import type { ExerciseGroup } from "../../../../../types";
+import type { Exercise, ExerciseGroup } from "../../../../../types";
 import { InheritanceCaption } from "./InheritanceCaption";
 
 type ExerciseFormValues = RegisterExerciseSchema | UpdateExerciseSchema;
 
 interface BodyZonesCardProps {
   groups: ExerciseGroup[];
+  exercise?: Exercise;
 }
 
-export function BodyZonesCard({ groups }: BodyZonesCardProps) {
+export function BodyZonesCard({ groups, exercise }: BodyZonesCardProps) {
   const form = useFormContext<ExerciseFormValues>();
   const watchedGroupId = form.watch("exerciseGroupId" as never) as unknown as
     | string
@@ -26,17 +27,19 @@ export function BodyZonesCard({ groups }: BodyZonesCardProps) {
 
   const selectedGroup = groups.find((g) => g.id === watchedGroupId);
   const groupZones = selectedGroup?.affectedZones ?? [];
+  const isEditing = !!exercise;
 
   useEffect(() => {
     if (!selectedGroup) return;
     const dirty = form.formState.dirtyFields as Record<string, unknown>;
+    if (isEditing && !dirty.exerciseGroupId) return;
     if (dirty.affectedZones) return;
     form.setValue(
       "affectedZones" as never,
       (selectedGroup.affectedZones ?? []) as never,
       { shouldDirty: false },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- queremos reaccionar solo al cambio de grupo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGroup?.id]);
 
   const currentZones =
@@ -90,7 +93,7 @@ export function BodyZonesCard({ groups }: BodyZonesCardProps) {
                     onClick={handleRestoreFromGroup}
                   >
                     <RotateCcw size={14} aria-hidden="true" />
-                    Restaurar del grupo
+                    Restaurar
                   </Button>
                 ) : null
               }

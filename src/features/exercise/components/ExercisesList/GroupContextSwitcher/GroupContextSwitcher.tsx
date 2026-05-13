@@ -20,7 +20,7 @@ export function GroupContextSwitcher({
   groups,
   isLoading,
   onSearch,
-  placeholder = "Elegir grupo",
+  placeholder = "...",
 }: GroupContextSwitcherProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingName, setPendingName] = useState("");

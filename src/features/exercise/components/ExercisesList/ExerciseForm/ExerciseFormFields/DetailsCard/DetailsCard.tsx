@@ -1,5 +1,6 @@
 import { Card, Label, Textarea } from "@shared/ui";
 import { FormField } from "@shared/components/Form";
+import { MarkdownEditor } from "@shared/components/MarkdownEditor";
 import type {
   RegisterExerciseSchema,
   UpdateExerciseSchema,
@@ -21,10 +22,14 @@ export function DetailsCard() {
           label="Descripción técnica"
         >
           {(field) => (
-            <Textarea
-              {...field}
-              rows={4}
-              placeholder="Descripción de cómo se realiza el ejercicio"
+            <MarkdownEditor
+              id={field.id}
+              value={(field.value as string | undefined) ?? ""}
+              onChange={field.onChange}
+              error={field.error}
+              aria-describedby={field["aria-describedby"]}
+              disabled={field.disabled}
+              placeholder="Descripción de cómo se realiza el ejercicio…"
             />
           )}
         </FormField>

@@ -10,6 +10,7 @@ export interface Exercise {
   technicalDescription?: string | null;
   links?: string[] | null;
   notes?: string | null;
+  image?: string;
   isActive: boolean;
 }
 
@@ -33,8 +34,11 @@ export interface RegisterExercise {
   technicalDescription?: string;
   links?: string[];
   notes?: string;
+  image?: File;
 }
 
-export type UpdateExercise = Partial<RegisterExercise>;
+export type UpdateExercise = Partial<RegisterExercise> & {
+  deleteImage?: boolean;
+};
 
 export type { AffectedGroup } from "@shared/types/bodyZone.types";

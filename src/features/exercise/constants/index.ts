@@ -18,6 +18,15 @@ export const EXERCISE_LEVEL_LABELS: Record<ExerciseLevel, string> = {
   [ExerciseLevel.THREE]: "3",
 };
 
+export const EXERCISE_LEVEL_INTENT: Record<
+  ExerciseLevel,
+  "success" | "warning" | "error"
+> = {
+  [ExerciseLevel.ONE]: "success",
+  [ExerciseLevel.TWO]: "warning",
+  [ExerciseLevel.THREE]: "error",
+};
+
 export const EXERCISE_LEVEL_OPTIONS: FilterOption[] = [
   { value: ExerciseLevel.ONE, label: EXERCISE_LEVEL_LABELS[ExerciseLevel.ONE] },
   { value: ExerciseLevel.TWO, label: EXERCISE_LEVEL_LABELS[ExerciseLevel.TWO] },

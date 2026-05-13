@@ -13,7 +13,7 @@ export function useExerciseQuery(id: string | undefined) {
     initialData: () => {
       if (!id) return undefined;
       const lists = queryClient.getQueriesData<PaginatedResponse<Exercise>>({
-        queryKey: EXERCISES_KEYS.all,
+        queryKey: [...EXERCISES_KEYS.all, "list"],
       });
       for (const [, page] of lists) {
         const cached = page?.data.find((e) => e.id === id);

@@ -171,6 +171,7 @@ function EditExerciseForm({
     >
       <ExerciseFormFields
         groups={groups}
+        exercise={exercise}
         isLoadingGroups={isLoadingGroups}
         onGroupSearch={onGroupSearch}
         onGroupCreated={onGroupCreated}
