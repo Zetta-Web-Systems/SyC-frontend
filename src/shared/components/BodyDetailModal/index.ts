@@ -1,0 +1,1 @@
+export { BodyDetailModal } from "./BodyDetailModal";

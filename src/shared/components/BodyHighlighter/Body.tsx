@@ -25,6 +25,7 @@ export interface BodyProps {
   defaultStroke?: string;
   defaultStrokeWidth?: number;
   hoverFill?: string;
+  getPathLabel?: (slug: Slug) => string | undefined;
 }
 
 function resolveFill(
@@ -54,6 +55,7 @@ function BodyComponent({
   defaultStroke = BODY_HIGHLIGHTER_DEFAULTS.STROKE,
   defaultStrokeWidth = 0,
   hoverFill = BODY_HIGHLIGHTER_DEFAULTS.HOVER,
+  getPathLabel,
 }: BodyProps) {
   const parts = side === "front" ? bodyFront : bodyBack;
   const [hoveredSlug, setHoveredSlug] = useState<Slug | null>(null);
@@ -122,6 +124,8 @@ function BodyComponent({
             ? () => setHoveredSlug((prev) => (prev === part.slug ? null : prev))
             : undefined;
 
+          const pathLabel = getPathLabel?.(part.slug);
+
           return (
             <g key={`${part.slug}-${pathSide}`}>
               {paths.map((d) => (
@@ -135,8 +139,10 @@ function BodyComponent({
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   style={{ cursor: isInteractive ? "pointer" : "default" }}
-                  aria-label={part.slug}
-                />
+                  aria-label={pathLabel ?? part.slug}
+                >
+                  {pathLabel && <title>{pathLabel}</title>}
+                </path>
               ))}
             </g>
           );
