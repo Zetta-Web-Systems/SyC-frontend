@@ -1,5 +1,6 @@
 export { default as GroupExercisesPage } from "./GroupExercisesPage";
 export { default as ExercisesPage } from "./ExercisesPage";
+export { default as ProfileExercisePage } from "./pages/ProfileExercisePage";
 export * from "./types";
 export { useGroupExercisesQuery } from "./hooks/useGroupExercisesQuery";
 export { useExercisesQuery } from "./hooks/useExercisesQuery";

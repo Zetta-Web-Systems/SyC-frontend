@@ -38,6 +38,7 @@ export default function ExercisesByGroupPage({
   const {
     handleOpenRegister,
     handleOpenEdit,
+    handleOpenProfile,
     handleSoftDelete,
     handlePhysicalDelete,
     handleRestore,
@@ -87,6 +88,7 @@ export default function ExercisesByGroupPage({
         pagination={pagination}
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
+        onProfile={handleOpenProfile}
         onEdit={handleOpenEdit}
         onSoftDelete={handleSoftDelete}
         onPhysicalDelete={handlePhysicalDelete}

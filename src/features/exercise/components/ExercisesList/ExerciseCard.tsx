@@ -1,20 +1,13 @@
-import { Pencil, RotateCcw, Trash2, X } from "lucide-react";
-import { Badge, Button } from "@shared/ui";
-import { AffectedZonesBadges } from "@shared/components/AffectedZonesBadges/AffectedZonesBadges";
+import { useRef, useState } from "react";
+import { Dumbbell } from "lucide-react";
+import { Badge } from "@shared/ui";
 import type { Exercise } from "../../types";
-import { EXERCISE_LEVEL_LABELS } from "../../constants";
-
-const LEVEL_INTENT: Record<
-  Exercise["exerciseLevel"],
-  "success" | "warning" | "error"
-> = {
-  "1": "success",
-  "2": "warning",
-  "3": "error",
-};
+import { EXERCISE_LEVEL_INTENT, EXERCISE_LEVEL_LABELS } from "../../constants";
+import { ExerciseActionsMenu } from "./ExerciseActionsMenu";
 
 interface ExerciseCardProps {
   exercise: Exercise;
+  onProfile: (exercise: Exercise) => void;
   onEdit: (exercise: Exercise) => void;
   onSoftDelete: (exercise: Exercise) => void;
   onPhysicalDelete: (exercise: Exercise) => void;
@@ -23,81 +16,96 @@ interface ExerciseCardProps {
 
 export function ExerciseCard({
   exercise,
+  onProfile,
   onEdit,
   onSoftDelete,
   onPhysicalDelete,
   onRestore,
 }: ExerciseCardProps) {
   const isActive = exercise.isActive;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuWasOpenRef = useRef(false);
+
+  const handleOpenProfile = () => onProfile(exercise);
+
+  const handleCardClick = () => {
+    if (menuWasOpenRef.current) {
+      menuWasOpenRef.current = false;
+      return;
+    }
+    handleOpenProfile();
+  };
 
   return (
-    <div className="flex w-full flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-col gap-1">
-          <span className="font-medium text-neutral-900">{exercise.name}</span>
-          <div className="flex items-center gap-2">
-            <Badge intent={LEVEL_INTENT[exercise.exerciseLevel]} size="sm">
-              {EXERCISE_LEVEL_LABELS[exercise.exerciseLevel]}
-            </Badge>
-            <Badge
-              variant="dot"
-              intent={isActive ? "success" : "error"}
-              size="sm"
-            >
-              {isActive ? "ACTIVO" : "INACTIVO"}
-            </Badge>
+    <div
+      role="button"
+      tabIndex={0}
+      onMouseDown={() => {
+        menuWasOpenRef.current = menuOpen;
+      }}
+      onClick={handleCardClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleOpenProfile();
+        }
+      }}
+      aria-label={`Ver perfil de ejercicio ${exercise.name}`}
+      className="flex w-full cursor-pointer items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+    >
+      <div className="relative size-18 shrink-0 overflow-hidden rounded-xl bg-neutral-100 ring-1 ring-neutral-200/60">
+        {exercise.image ? (
+          <img
+            src={exercise.image}
+            alt={exercise.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-neutral-400">
+            <Dumbbell size={32} aria-hidden="true" />
           </div>
-        </div>
+        )}
+        {!isActive && (
+          <Badge
+            intent="error"
+            size="sm"
+            className="absolute top-1.5 left-1.5 shadow-sm"
+          >
+            INACTIVO
+          </Badge>
+        )}
+      </div>
 
-        <div className="flex shrink-0 gap-1">
-          {isActive ? (
-            <>
-              <Button
-                variant="ghost"
-                intent="success"
-                size="icon"
-                aria-label={`Editar ejercicio ${exercise.name}`}
-                onClick={() => onEdit(exercise)}
-              >
-                <Pencil size={16} aria-hidden="true" color="green" />
-              </Button>
-              <Button
-                variant="ghost"
-                intent="danger"
-                size="icon"
-                aria-label={`Desactivar ejercicio ${exercise.name}`}
-                onClick={() => onSoftDelete(exercise)}
-              >
-                <Trash2 size={16} aria-hidden="true" />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="ghost"
-                intent="secondary"
-                size="icon"
-                aria-label={`Restaurar ejercicio ${exercise.name}`}
-                onClick={() => onRestore(exercise)}
-              >
-                <RotateCcw size={16} aria-hidden="true" />
-              </Button>
-              <Button
-                variant="ghost"
-                intent="danger"
-                size="icon"
-                aria-label={`Eliminar definitivamente ejercicio ${exercise.name}`}
-                onClick={() => onPhysicalDelete(exercise)}
-              >
-                <X size={16} aria-hidden="true" />
-              </Button>
-            </>
-          )}
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
+        <span className="line-clamp-2 text-base leading-tight font-semibold text-neutral-900">
+          {exercise.name}
+        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-neutral-500">Nivel</span>
+          <Badge
+            intent={EXERCISE_LEVEL_INTENT[exercise.exerciseLevel]}
+            size="sm"
+          >
+            {EXERCISE_LEVEL_LABELS[exercise.exerciseLevel]}
+          </Badge>
         </div>
       </div>
 
-      <div>
-        <AffectedZonesBadges zones={exercise.affectedZones} />
+      <div
+        className="shrink-0"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <ExerciseActionsMenu
+          exercise={exercise}
+          onProfile={onProfile}
+          onEdit={onEdit}
+          onSoftDelete={onSoftDelete}
+          onPhysicalDelete={onPhysicalDelete}
+          onRestore={onRestore}
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+        />
       </div>
     </div>
   );

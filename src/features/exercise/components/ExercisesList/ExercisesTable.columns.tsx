@@ -1,18 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@shared/ui";
+import { Dumbbell } from "lucide-react";
+import { Avatar, Badge } from "@shared/ui";
 import { BODY_ZONE_LABELS, GROUP_DOT_CLASS } from "@shared/constants/bodyZones";
 import { getAffectedGroups } from "@shared/utils/bodyZones.utils";
 import type { Exercise } from "../../types";
-import { EXERCISE_LEVEL_LABELS } from "../../constants";
-
-const LEVEL_INTENT: Record<
-  Exercise["exerciseLevel"],
-  "success" | "warning" | "error"
-> = {
-  "1": "success",
-  "2": "warning",
-  "3": "error",
-};
+import { EXERCISE_LEVEL_INTENT, EXERCISE_LEVEL_LABELS } from "../../constants";
 
 export const exercisesColumns: ColumnDef<Exercise, unknown>[] = [
   {
@@ -20,17 +12,26 @@ export const exercisesColumns: ColumnDef<Exercise, unknown>[] = [
     header: "Nombre",
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
-      const { name, exerciseLevel } = row.original;
+      const { name, image, exerciseLevel } = row.original;
 
       return (
-        <div className="flex flex-col items-start gap-1">
-          <span className="font-medium">{name}</span>
-          <span className="flex items-center gap-1 text-xs">
-            Nivel:{" "}
-            <Badge intent={LEVEL_INTENT[exerciseLevel]} size="sm">
-              {EXERCISE_LEVEL_LABELS[exerciseLevel]}
-            </Badge>
-          </span>
+        <div className="flex items-center justify-start gap-4">
+          <Avatar
+            size="md"
+            color="neutral"
+            src={image ?? null}
+            fallback={<Dumbbell size={18} aria-hidden="true" />}
+            alt={name}
+          />
+          <div className="flex flex-col items-start gap-1">
+            <span className="font-medium">{name}</span>
+            <span className="flex items-center gap-1 text-xs">
+              Nivel:{" "}
+              <Badge intent={EXERCISE_LEVEL_INTENT[exerciseLevel]} size="sm">
+                {EXERCISE_LEVEL_LABELS[exerciseLevel]}
+              </Badge>
+            </span>
+          </div>
         </div>
       );
     },
@@ -73,6 +74,7 @@ export const exercisesColumns: ColumnDef<Exercise, unknown>[] = [
   {
     id: "estado",
     header: "Estado",
+    meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
       const isActive = row.original.isActive;
       return (

@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { Pencil, RotateCcw, Trash2, X } from "lucide-react";
+import { FileUser, Pencil, RotateCcw, Trash2, X } from "lucide-react";
 import { Button } from "@shared/ui";
 import type { ViewMode } from "@shared/ui";
 import {
@@ -25,6 +25,7 @@ interface ExercisesTableProps {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
+  onProfile: (exercise: Exercise) => void;
   onEdit: (exercise: Exercise) => void;
   onSoftDelete: (exercise: Exercise) => void;
   onPhysicalDelete: (exercise: Exercise) => void;
@@ -38,6 +39,7 @@ export function ExercisesTable({
   pagination,
   onPaginationChange,
   isLoading,
+  onProfile,
   onEdit,
   onSoftDelete,
   onPhysicalDelete,
@@ -59,6 +61,15 @@ export function ExercisesTable({
 
           return (
             <div className="flex place-content-center gap-1">
+              <Button
+                variant="ghost"
+                intent="primary"
+                size="icon"
+                aria-label={`Ver perfil de ejercicio ${exercise.name}`}
+                onClick={() => onProfile(exercise)}
+              >
+                <FileUser size={16} aria-hidden="true" />
+              </Button>
               {exercise.isActive ? (
                 <>
                   <Button
@@ -107,7 +118,7 @@ export function ExercisesTable({
         },
       },
     ],
-    [onEdit, onSoftDelete, onPhysicalDelete, onRestore],
+    [onProfile, onEdit, onSoftDelete, onPhysicalDelete, onRestore],
   );
 
   const handlePageIndexChange = useCallback(
@@ -135,6 +146,7 @@ export function ExercisesTable({
           <div key={exercise.id} className="w-full sm:w-80">
             <ExerciseCard
               exercise={exercise}
+              onProfile={onProfile}
               onEdit={onEdit}
               onSoftDelete={onSoftDelete}
               onPhysicalDelete={onPhysicalDelete}

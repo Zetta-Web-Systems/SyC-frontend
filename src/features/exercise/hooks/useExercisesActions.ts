@@ -24,6 +24,12 @@ export function useExercisesActions(groupId: string) {
       params: { groupId, exerciseId: exercise.id },
     });
 
+  const handleOpenProfile = (exercise: Exercise) =>
+    navigate({
+      to: "/exercises/$groupId/profile/$exerciseId",
+      params: { groupId, exerciseId: exercise.id },
+    });
+
   function handleSoftDelete(exercise: Exercise) {
     confirm({
       intent: "warning",
@@ -63,6 +69,7 @@ export function useExercisesActions(groupId: string) {
   return {
     handleOpenRegister,
     handleOpenEdit,
+    handleOpenProfile,
     handleSoftDelete,
     handlePhysicalDelete,
     handleRestore,
