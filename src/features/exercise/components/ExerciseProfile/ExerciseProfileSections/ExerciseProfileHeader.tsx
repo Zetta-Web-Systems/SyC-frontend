@@ -1,11 +1,10 @@
-import { ArrowLeft, Pencil } from "lucide-react";
-import { Link } from "@tanstack/react-router";
-import { Avatar, Badge, Button, Card } from "@shared/ui";
+import { Avatar, Badge, Card } from "@shared/ui";
 import type { Exercise } from "../../../types";
 import {
   EXERCISE_LEVEL_INTENT,
   EXERCISE_LEVEL_LABELS,
 } from "../../../constants";
+import { ExerciseProfileActionsMenu } from "./ExerciseProfileActionsMenu";
 
 interface ExerciseProfileHeaderProps {
   exercise: Exercise;
@@ -23,7 +22,7 @@ export function ExerciseProfileHeader({
   const initials = exercise.name.slice(0, 2).toUpperCase();
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6">
+    <Card className="relative rounded-xl border border-neutral-200 bg-white p-4 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="flex min-w-0 items-center gap-4">
           <Avatar
@@ -65,26 +64,11 @@ export function ExerciseProfileHeader({
           </div>
         </div>
 
-        <div className="flex shrink-0 gap-2">
-          <Link to="/exercises/$groupId" params={{ groupId }}>
-            <Button variant="outline" intent="neutral" size="md">
-              <ArrowLeft size={14} aria-hidden="true" />
-              <span className="hidden xs:inline">Volver al listado</span>
-            </Button>
-          </Link>
-
-          {exercise.isActive && (
-            <Button
-              variant="solid"
-              intent="primary"
-              size="md"
-              onClick={() => onEdit(exercise)}
-            >
-              <Pencil size={14} aria-hidden="true" />
-              <span className="hidden xs:inline">Editar ejercicio</span>
-            </Button>
-          )}
-        </div>
+        <ExerciseProfileActionsMenu
+          exercise={exercise}
+          groupId={groupId}
+          onEdit={onEdit}
+        />
       </div>
     </Card>
   );
