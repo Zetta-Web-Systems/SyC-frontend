@@ -16,6 +16,7 @@ export interface FormImageProps<TFields extends FieldValues> {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  shape?: "round" | "square";
   initialPreview?: string | null;
   deleteFieldName?: FieldPath<TFields>;
   deleteFieldTitle?: string;
@@ -29,6 +30,7 @@ export function FormImage<TFields extends FieldValues>({
   required,
   disabled,
   className,
+  shape = "round",
   initialPreview,
   deleteFieldName,
   deleteFieldTitle = "Eliminar imagen",
@@ -82,7 +84,13 @@ export function FormImage<TFields extends FieldValues>({
         });
       },
     });
-  }, [name, deleteFieldName, deleteFieldTitle, deleteFieldDescription, setValue]);
+  }, [
+    name,
+    deleteFieldName,
+    deleteFieldTitle,
+    deleteFieldDescription,
+    setValue,
+  ]);
 
   const handleRestore = useCallback(() => {
     if (!deleteFieldName) return;
@@ -108,6 +116,7 @@ export function FormImage<TFields extends FieldValues>({
         onRestore={isDeleted && initialPreview ? handleRestore : undefined}
         maxSizeMB={maxSizeMB}
         disabled={disabled}
+        shape={shape}
       />
 
       {hasError && <FormMessage name={name as string} id={`${name}-error`} />}

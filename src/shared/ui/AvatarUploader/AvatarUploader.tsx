@@ -21,6 +21,7 @@ export interface AvatarUploaderProps {
   maxSizeMB?: number;
   className?: string;
   disabled?: boolean;
+  shape?: "round" | "square";
   onChange: (file: File | null) => void;
   onRemove?: () => void;
   onRestore?: () => void;
@@ -33,10 +34,13 @@ export function AvatarUploader({
   maxSizeMB = 5,
   className,
   disabled,
+  shape = "round",
   onChange,
   onRemove,
   onRestore,
 }: AvatarUploaderProps) {
+  const shapeClass = shape === "square" ? "rounded-lg" : "rounded-full";
+  const cropShape = shape === "square" ? "rect" : "round";
   const inputRef = useRef<HTMLInputElement>(null);
   const [state, dispatch] = useReducer(cropReducer, initialCropState);
   const {
@@ -139,7 +143,12 @@ export function AvatarUploader({
 
       {value || initialPreview ? (
         <div className="relative flex flex-col items-center gap-3">
-          <div className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-neutral-200">
+          <div
+            className={cn(
+              "relative h-24 w-24 overflow-hidden border-2 border-neutral-200",
+              shapeClass,
+            )}
+          >
             <img
               src={
                 value
@@ -152,7 +161,6 @@ export function AvatarUploader({
           </div>
           <div className="flex gap-2">
             <Button
-              type="button"
               variant="outline"
               size="sm"
               onClick={openFilePicker}
@@ -161,7 +169,6 @@ export function AvatarUploader({
               Cambiar
             </Button>
             <Button
-              type="button"
               variant="ghost"
               size="sm"
               onClick={handleReset}
@@ -179,7 +186,8 @@ export function AvatarUploader({
             onClick={openFilePicker}
             disabled={disabled}
             className={cn(
-              "flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-dashed border-neutral-300",
+              "flex h-24 w-24 cursor-pointer flex-col items-center justify-center border-2 border-dashed border-neutral-300",
+              shapeClass,
               "transition-colors hover:border-primary-500 hover:bg-primary-50",
               "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
               disabled && "cursor-not-allowed opacity-50",
@@ -222,7 +230,7 @@ export function AvatarUploader({
                 crop={crop}
                 zoom={zoom}
                 aspect={1}
-                cropShape="round"
+                cropShape={cropShape}
                 showGrid={false}
                 onCropChange={(c) => dispatch({ type: "SET_CROP", crop: c })}
                 onZoomChange={(z) => dispatch({ type: "SET_ZOOM", zoom: z })}
