@@ -76,7 +76,7 @@ export function ExerciseProfileActionsMenu({
           {exercise.isActive && (
             <>
               <PopoverSeparator />
-              <PopoverItem icon={<Pencil />} onClick={handleEdit}>
+              <PopoverItem icon={<Pencil color="green" />} onClick={handleEdit}>
                 Editar ejercicio
               </PopoverItem>
             </>
