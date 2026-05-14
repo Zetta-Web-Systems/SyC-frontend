@@ -60,8 +60,8 @@ export function GroupExerciseCard({
         type="button"
         onClick={() => onSelect?.(group)}
         className={cn(
-          "flex w-full cursor-pointer rounded-xl border border-neutral-200 bg-white text-left transition",
-          "hover:border-primary-400 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
+          "flex w-full cursor-pointer rounded-xl border border-neutral-200 bg-white text-left shadow-sm transition-shadow",
+          "hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
         )}
       >
         {content}
@@ -70,7 +70,7 @@ export function GroupExerciseCard({
   }
 
   return (
-    <div className="flex w-full rounded-xl border border-neutral-200 bg-white transition hover:border-neutral-300">
+    <div className="flex w-full rounded-xl border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       {content}
     </div>
   );

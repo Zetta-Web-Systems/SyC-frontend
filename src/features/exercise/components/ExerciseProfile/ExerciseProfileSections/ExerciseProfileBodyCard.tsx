@@ -1,8 +1,14 @@
-import { Card } from "@shared/ui";
+import { useMemo } from "react";
+import { Badge, Card } from "@shared/ui";
 import { Body } from "@shared/components/BodyHighlighter";
 import { BodyDetailModal } from "@shared/components/BodyDetailModal";
 import { BODY_PREVIEW_FILL } from "@features/clinicalProfiles";
-import { BODY_ZONE_LABELS } from "@shared/constants/bodyZones";
+import {
+  ALL_BODY_ZONES,
+  BODY_ZONE_GROUP_INTENT,
+  BODY_ZONE_LABELS,
+  BODY_ZONE_TO_GROUP_LABEL,
+} from "@shared/constants/bodyZones";
 import type { DisclosureState } from "@shared/hooks/useDisclosure";
 import type { Slug } from "@shared/types/bodyHighlighter.types";
 import type { BodyZone } from "@shared/types/bodyZone.types";
@@ -21,6 +27,34 @@ export function ExerciseProfileBodyCard({
   const bodyParts = useExerciseBodyParts(exercise.affectedZones);
   const zoneCount = bodyParts.length;
   const hasZones = zoneCount > 0;
+
+  const uniqueZones = useMemo(() => {
+    const unique = Array.from(new Set(exercise.affectedZones ?? []));
+    return unique.sort(
+      (a, b) => ALL_BODY_ZONES.indexOf(a) - ALL_BODY_ZONES.indexOf(b),
+    );
+  }, [exercise.affectedZones]);
+
+  const legend = hasZones ? (
+    <div className="flex flex-wrap justify-center gap-2 border-t border-neutral-200 pt-5">
+      {uniqueZones.map((zone) => {
+        const groupLabel = BODY_ZONE_TO_GROUP_LABEL[zone];
+        const intent = BODY_ZONE_GROUP_INTENT[groupLabel] ?? "neutral";
+        return (
+          <Badge
+            key={zone}
+            variant="dot"
+            intent={intent}
+            size="md"
+            title={groupLabel}
+            className="text-neutral-800"
+          >
+            {BODY_ZONE_LABELS[zone]}
+          </Badge>
+        );
+      })}
+    </div>
+  ) : undefined;
 
   return (
     <>
@@ -90,6 +124,7 @@ export function ExerciseProfileBodyCard({
             : undefined
         }
         getPathLabel={(slug: Slug) => BODY_ZONE_LABELS[slug as BodyZone]}
+        legend={legend}
       />
     </>
   );
