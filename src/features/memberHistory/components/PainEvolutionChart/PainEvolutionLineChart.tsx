@@ -65,9 +65,7 @@ function CustomTooltip({ active, label, payload }: CustomTooltipProps) {
 
   return (
     <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs shadow-md">
-      <p className="mb-1 font-medium text-neutral-700">
-        {formatDate(new Date(label))}
-      </p>
+      <p className="mb-1 font-medium text-neutral-700">{formatDate(label)}</p>
       <ul className="flex flex-col gap-1">
         {realItems.map((item) => (
           <li key={item.dataKey} className="flex items-center gap-2">
@@ -107,7 +105,7 @@ export function PainEvolutionLineChart({
             type="number"
             scale="time"
             domain={["dataMin", "dataMax"]}
-            tickFormatter={(value: number) => formatDateShort(new Date(value))}
+            tickFormatter={(value: number) => formatDateShort(value)}
             tick={{ fontSize: 11, fill: "var(--color-neutral-500)" }}
             tickMargin={6}
             stroke="var(--color-neutral-300)"

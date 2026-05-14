@@ -33,26 +33,32 @@ export function LinksTabs() {
     value,
   }));
 
-  function setLinks(next: string[]) {
-    form.setValue("links", next, { shouldDirty: true });
+  function setLinks(updater: (prev: string[]) => string[]) {
+    const current =
+      (form.getValues("links") as string[] | undefined) ?? ([] as string[]);
+    form.setValue("links", updater(current), { shouldDirty: true });
     form.clearErrors("links");
   }
 
   function handleAdd() {
     setIds((prev) => [...prev, nextLinkId()]);
-    setLinks([...links, ""]);
-    setActiveIndex(links.length);
+    const current =
+      (form.getValues("links") as string[] | undefined) ?? ([] as string[]);
+    setLinks((prev) => [...prev, ""]);
+    setActiveIndex(current.length);
   }
 
   function handleRemove(index: number) {
     setIds((prev) => prev.filter((_, i) => i !== index));
-    const next = links.filter((_, i) => i !== index);
-    setLinks(next);
-    setActiveIndex((prev) => Math.max(0, Math.min(prev, next.length - 1)));
+    const current =
+      (form.getValues("links") as string[] | undefined) ?? ([] as string[]);
+    setLinks((prev) => prev.filter((_, i) => i !== index));
+    const nextLength = current.length - 1;
+    setActiveIndex((prev) => Math.max(0, Math.min(prev, nextLength - 1)));
   }
 
   function handleChange(index: number, value: string) {
-    setLinks(links.map((l, i) => (i === index ? value : l)));
+    setLinks((prev) => prev.map((l, i) => (i === index ? value : l)));
   }
 
   const errorMessage = form.formState.errors.links?.message as
