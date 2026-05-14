@@ -7,6 +7,10 @@ export function extractYouTubeId(url: string): string | null {
   return match ? match[1] : null;
 }
 
+export function hasYouTubeLink(links: string[] | null | undefined): boolean {
+  return !!links?.some((link) => extractYouTubeId(link) !== null);
+}
+
 export function getYouTubeThumbnailUrl(videoId: string): string {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }

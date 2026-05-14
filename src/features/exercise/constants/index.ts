@@ -27,6 +27,17 @@ export const EXERCISE_LEVEL_INTENT: Record<
   [ExerciseLevel.THREE]: "error",
 };
 
+export const EXERCISE_LEVEL_TEXT_COLOR_CLASS: Record<
+  "success" | "warning" | "error",
+  string
+> = {
+  success: "text-success",
+  warning: "text-warning",
+  error: "text-error",
+};
+
+export const YOUTUBE_FAVICON_URL = "https://www.youtube.com/favicon.ico";
+
 export const EXERCISE_LEVEL_OPTIONS: FilterOption[] = [
   { value: ExerciseLevel.ONE, label: EXERCISE_LEVEL_LABELS[ExerciseLevel.ONE] },
   { value: ExerciseLevel.TWO, label: EXERCISE_LEVEL_LABELS[ExerciseLevel.TWO] },
