@@ -1,10 +1,15 @@
-import { useId } from "react";
+import { lazy, Suspense, useId } from "react";
 import { Weight } from "lucide-react";
 import { Card, Spinner, Switch } from "@shared/ui";
 import { useWeightEvolutionChart } from "../../hooks/useWeightEvolutionChart";
-import { WeightEvolutionLineChart } from "./WeightEvolutionLineChart";
 import { WeightEvolutionPeriodSelector } from "./WeightEvolutionPeriodSelector";
 import { WeightTrendSummary } from "./WeightTrendSummary";
+
+const WeightEvolutionLineChart = lazy(() =>
+  import("./WeightEvolutionLineChart").then((m) => ({
+    default: m.WeightEvolutionLineChart,
+  })),
+);
 
 interface WeightEvolutionChartProps {
   memberId: string;
@@ -81,7 +86,15 @@ export function WeightEvolutionChart({ memberId }: WeightEvolutionChartProps) {
 
         {!isLoading && !isError && hasDataInRange && (
           <>
-            <WeightEvolutionLineChart rows={rows} domain={domain} />
+            <Suspense
+              fallback={
+                <div className="flex h-64 items-center justify-center">
+                  <Spinner />
+                </div>
+              }
+            >
+              <WeightEvolutionLineChart rows={rows} domain={domain} />
+            </Suspense>
             <WeightTrendSummary trend={trend} />
           </>
         )}

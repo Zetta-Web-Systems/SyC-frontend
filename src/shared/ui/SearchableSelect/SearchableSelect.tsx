@@ -1,4 +1,11 @@
-import { useState, useMemo, useEffect, useId, useRef } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+} from "react";
 import type { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
 import { Popover } from "@shared/ui/Popover/Popover";
@@ -83,23 +90,22 @@ export function SearchableSelect<T>({
   const totalOptions = filtered.length + (showCreateOption ? 1 : 0);
 
   useEffect(() => {
-    if (!open) return;
-    setActiveIndex(0);
-  }, [open, search]);
-
-  useEffect(() => {
     if (open) searchInputRef.current?.focus();
   }, [open]);
 
+  const notifyAsyncSearch = useEffectEvent((next: string) => {
+    onSearch?.(next);
+  });
+
   useEffect(() => {
     if (!isAsync) return;
-    onSearch?.(search);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onSearch identity-stable from caller
-  }, [search]);
+    notifyAsyncSearch(search);
+  }, [isAsync, search]);
 
   function handleClose() {
     setOpen(false);
     setSearch("");
+    setActiveIndex(0);
   }
 
   function handleSelect(item: T) {
@@ -128,6 +134,7 @@ export function SearchableSelect<T>({
 
   function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
+    setActiveIndex(0);
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
@@ -153,7 +160,11 @@ export function SearchableSelect<T>({
   const hasValue = !!value;
   const showClearButton = clearable && hasValue && !disabled;
 
-  const toggleOpen = () => !disabled && setOpen((p) => !p);
+  const toggleOpen = () => {
+    if (disabled) return;
+    if (!open) setActiveIndex(0);
+    setOpen((p) => !p);
+  };
 
   const defaultTrigger = (
     <button

@@ -41,7 +41,7 @@ export function ClinicalProfileCard({
     const named = flags.filter(
       (f): f is NamedFlag => typeof f.name === "string" && f.name.length > 0,
     );
-    const sorted = [...named].sort((a, b) => {
+    const sorted = named.toSorted((a, b) => {
       if (a.isActive === b.isActive) return 0;
       return a.isActive ? -1 : 1;
     });

@@ -4,11 +4,34 @@ import { ActiveLinkPanel } from "./ActiveLinkPanel";
 import { EmptyState } from "./EmptyState";
 import { TabStrip } from "./TabStrip";
 
+let linkIdCounter = 0;
+const nextLinkId = () => `link-${++linkIdCounter}`;
+
 export function LinksTabs() {
   const form = useFormContext();
   const links =
     (form.watch("links") as string[] | undefined) ?? ([] as string[]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [ids, setIds] = useState<string[]>(() => links.map(() => nextLinkId()));
+
+  if (ids.length !== links.length) {
+    setIds((current) => {
+      if (current.length === links.length) return current;
+      if (current.length < links.length) {
+        const extra = Array.from(
+          { length: links.length - current.length },
+          () => nextLinkId(),
+        );
+        return [...current, ...extra];
+      }
+      return current.slice(0, links.length);
+    });
+  }
+
+  const tabItems = links.map((value, i) => ({
+    id: ids[i] ?? `pending-${i}`,
+    value,
+  }));
 
   function setLinks(next: string[]) {
     form.setValue("links", next, { shouldDirty: true });
@@ -16,11 +39,13 @@ export function LinksTabs() {
   }
 
   function handleAdd() {
+    setIds((prev) => [...prev, nextLinkId()]);
     setLinks([...links, ""]);
     setActiveIndex(links.length);
   }
 
   function handleRemove(index: number) {
+    setIds((prev) => prev.filter((_, i) => i !== index));
     const next = links.filter((_, i) => i !== index);
     setLinks(next);
     setActiveIndex((prev) => Math.max(0, Math.min(prev, next.length - 1)));
@@ -45,7 +70,7 @@ export function LinksTabs() {
       ) : (
         <>
           <TabStrip
-            links={links}
+            items={tabItems}
             activeIndex={safeIndex}
             onSelect={setActiveIndex}
             onAdd={handleAdd}

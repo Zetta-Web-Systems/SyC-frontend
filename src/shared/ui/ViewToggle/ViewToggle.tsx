@@ -1,5 +1,4 @@
-import { forwardRef } from "react";
-import type { HTMLAttributes } from "react";
+import type { HTMLAttributes, Ref } from "react";
 import { LayoutGrid, Table2 } from "lucide-react";
 import { Button } from "@shared/ui/Button/Button";
 import { cn } from "@shared/lib/cn";
@@ -10,12 +9,19 @@ export interface ViewToggleProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
   "onChange"
 > {
+  ref?: Ref<HTMLDivElement>;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
-  ({ viewMode, onViewModeChange, className, ...props }, ref) => (
+export function ViewToggle({
+  ref,
+  viewMode,
+  onViewModeChange,
+  className,
+  ...props
+}: ViewToggleProps) {
+  return (
     <div
       ref={ref}
       className={cn(
@@ -51,6 +57,7 @@ export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
         <LayoutGrid size={14} aria-hidden="true" />
       </Button>
     </div>
-  ),
-);
+  );
+}
+
 ViewToggle.displayName = "ViewToggle";
