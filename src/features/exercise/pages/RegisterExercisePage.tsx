@@ -53,8 +53,8 @@ export default function RegisterExercisePage({
       description: "¿Estás seguro que deseas registrar el ejercicio?",
       confirmLabel: "Registrar",
       onConfirm: () => {
-        const { exerciseGroupId, ...rest } = data;
-        const dto: RegisterExercise = rest;
+        const { exerciseGroupId, image, ...rest } = data;
+        const dto: RegisterExercise = { ...rest, image: image ?? undefined };
         mutation.mutate(
           { groupId: exerciseGroupId, dto },
           {

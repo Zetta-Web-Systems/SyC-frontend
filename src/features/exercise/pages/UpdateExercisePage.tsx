@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
@@ -22,6 +22,7 @@ export default function UpdateExercisePage({
   exerciseId,
 }: UpdateExercisePageProps) {
   const navigate = useNavigate();
+  const router = useRouter();
   const mutation = useUpdateExerciseMutation();
   const { data: exercise, isLoading, isError } = useExerciseQuery(exerciseId);
   const { data: groupsData, isLoading: isLoadingGroups } =
@@ -39,10 +40,14 @@ export default function UpdateExercisePage({
   }
 
   function handleBack() {
-    navigate({
-      to: "/exercises/$groupId",
-      params: { groupId },
-    });
+    if (window.history.length > 1) {
+      router.history.back();
+    } else {
+      navigate({
+        to: "/exercises/$groupId",
+        params: { groupId },
+      });
+    }
   }
 
   function handleUpdate(data: UpdateExerciseSchema) {
@@ -57,8 +62,8 @@ export default function UpdateExercisePage({
       description: `¿Estás seguro que deseas modificar el ejercicio "${exercise.name}"?`,
       confirmLabel: "Modificar",
       onConfirm: () => {
-        const { exerciseGroupId: _ignored, ...rest } = data;
-        const dto: UpdateExercise = rest;
+        const { exerciseGroupId: _ignored, image, ...rest } = data;
+        const dto: UpdateExercise = { ...rest, image: image ?? undefined };
         mutation.mutate(
           { id: exercise.id, dto },
           { onSuccess: () => goToList() },

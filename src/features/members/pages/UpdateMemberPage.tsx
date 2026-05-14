@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
@@ -18,6 +18,7 @@ interface UpdateMemberPageProps {
 
 export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
   const navigate = useNavigate();
+  const router = useRouter();
   const mutation = useUpdateMemberMutation();
   const { data: member, isLoading, isError } = useMemberQuery(memberId);
   const [navigating, setNavigating] = useState(false);
@@ -33,7 +34,11 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
   }
 
   function handleBack() {
-    navigate({ to: "/members" });
+    if (window.history.length > 1) {
+      router.history.back();
+    } else {
+      navigate({ to: "/members" });
+    }
   }
 
   function handleUpdate(data: UpdateMemberSchema) {
