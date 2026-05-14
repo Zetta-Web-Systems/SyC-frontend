@@ -13,7 +13,7 @@ function SettingsPage() {
       <div>
         <h1 className="text-2xl font-bold text-neutral-900">Configuración</h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Administra los ajustes de la aplicación.
+          Administra los ajustes de la aplicación
         </p>
       </div>
 
@@ -36,7 +36,7 @@ function SettingsPage() {
                 Banderas de riesgo
               </span>
               <span className="text-xs font-normal text-neutral-500">
-                Gestiona las condiciones médicas y zonas afectadas.
+                Gestiona las condiciones médicas y zonas afectadas
               </span>
             </span>
           </span>
@@ -69,7 +69,7 @@ function SettingsPage() {
                 Grupos de ejercicios
               </span>
               <span className="text-xs font-normal text-neutral-500">
-                Administra los grupos de ejercicios y sus zonas afectadas.
+                Administra los grupos de ejercicios y sus zonas afectadas
               </span>
             </span>
           </span>

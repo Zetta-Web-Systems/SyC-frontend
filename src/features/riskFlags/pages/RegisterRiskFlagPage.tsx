@@ -41,7 +41,7 @@ export default function RegisterRiskFlagPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Registrar bandera de riesgo"
-        description="Completa la información para registrar una nueva bandera de riesgo."
+        description="Completa la información para registrar una nueva bandera de riesgo"
         actions={
           <Button variant="outline" intent="neutral" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />
