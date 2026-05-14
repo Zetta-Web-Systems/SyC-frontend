@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { ViewToggle } from "@shared/ui";
 import { GroupExercisesHeader } from "./components/GroupExercisesList/GroupExercisesHeader/GroupExercisesHeader";
 import { GroupExercisesTable } from "./components/GroupExercisesList/GroupExercisesTable";
@@ -7,6 +8,8 @@ import { useGroupExercisesFilters } from "./hooks/useGroupExercisesFilters";
 import { useGroupExercisesActions } from "./hooks/useGroupExercisesActions";
 
 export default function GroupExercisesPage() {
+  const navigate = useNavigate();
+
   const {
     params,
     pagination,
@@ -26,7 +29,11 @@ export default function GroupExercisesPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <GroupExercisesHeader onCreate={handleOpenRegister} />
+      <GroupExercisesHeader
+        onCreate={handleOpenRegister}
+        onBack={() => navigate({ to: "/settings" })}
+        onGoToExercises={() => navigate({ to: "/exercises" })}
+      />
 
       <GroupExercisesFilters
         onSearch={handleSearch}
