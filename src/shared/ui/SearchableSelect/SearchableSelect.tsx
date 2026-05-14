@@ -232,7 +232,7 @@ export function SearchableSelect<T>({
             }
           >
             {isLoading && (
-              <li className="flex items-center justify-center px-3 py-3">
+              <li className="flex items-center justify-center p-3">
                 <Spinner size="sm" />
               </li>
             )}

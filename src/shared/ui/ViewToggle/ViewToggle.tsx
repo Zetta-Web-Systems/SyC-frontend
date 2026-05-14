@@ -34,7 +34,7 @@ export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
         aria-checked={viewMode === "table"}
         aria-label="Vista tabla"
         onClick={() => onViewModeChange("table")}
-        className="h-7 w-7"
+        className="size-7"
       >
         <Table2 size={14} aria-hidden="true" />
       </Button>
@@ -46,7 +46,7 @@ export const ViewToggle = forwardRef<HTMLDivElement, ViewToggleProps>(
         aria-checked={viewMode === "card"}
         aria-label="Vista tarjetas"
         onClick={() => onViewModeChange("card")}
-        className="h-7 w-7"
+        className="size-7"
       >
         <LayoutGrid size={14} aria-hidden="true" />
       </Button>

@@ -285,7 +285,7 @@ export function AvatarUploader({
                     className="animate-spin"
                     aria-hidden="true"
                   />
-                  Procesando...
+                  Procesando…
                 </>
               ) : (
                 "Confirmar"

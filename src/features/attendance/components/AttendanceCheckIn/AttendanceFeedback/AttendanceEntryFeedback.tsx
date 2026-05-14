@@ -39,7 +39,7 @@ export function AttendanceEntryFeedback({
         className="mt-3 animate-[attendance-content-up_400ms_ease-out_both] md:mt-4"
         style={{ animationDelay: "700ms" }}
       >
-        <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+        <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
           {response.message}
         </h2>
       </div>
