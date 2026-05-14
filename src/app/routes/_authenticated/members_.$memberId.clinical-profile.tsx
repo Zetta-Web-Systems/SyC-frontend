@@ -1,13 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { ClinicalProfilePage } from "@features/clinicalProfiles";
+
+const clinicalProfileSearchSchema = z.object({
+  from: z.enum(["profile", "update"]).optional(),
+});
 
 export const Route = createFileRoute(
   "/_authenticated/members_/$memberId/clinical-profile",
 )({
+  validateSearch: clinicalProfileSearchSchema,
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { memberId } = Route.useParams();
-  return <ClinicalProfilePage memberId={memberId} />;
+  const { from } = Route.useSearch();
+  return <ClinicalProfilePage memberId={memberId} from={from} />;
 }

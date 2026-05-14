@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Spinner } from "@shared/ui";
+import { useDisclosure } from "@shared/hooks/useDisclosure";
 import {
   PainEvolutionChart,
   WeightEvolutionChart,
@@ -17,9 +19,12 @@ interface ProfileMemberPageProps {
 export default function ProfileMemberPage({
   memberId,
 }: ProfileMemberPageProps) {
+  const navigate = useNavigate();
   const { data: member, isLoading, isError } = useMemberQuery(memberId);
 
   const { handleOpenEdit } = useMembersActions();
+
+  const bodyDetailModal = useDisclosure();
 
   const memberRiskFlags = useMemo(
     () => mapClinicalProfileToRiskFlagLikes(member?.clinicalProfile),
@@ -50,6 +55,14 @@ export default function ProfileMemberPage({
             <ClinicalProfileCard
               mode="profile"
               memberRiskFlags={memberRiskFlags}
+              bodyDetailModal={bodyDetailModal}
+              onOpen={() =>
+                navigate({
+                  to: "/members/$memberId/clinical-profile",
+                  params: { memberId: member.id },
+                  search: { from: "profile" },
+                })
+              }
             />
           }
           painEvolutionSlot={<PainEvolutionChart memberId={memberId} />}

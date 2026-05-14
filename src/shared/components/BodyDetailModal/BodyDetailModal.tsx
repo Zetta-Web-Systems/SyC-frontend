@@ -13,6 +13,7 @@ interface BodyDetailModalProps {
   title?: string;
   subtitle?: string;
   legend?: ReactNode;
+  details?: ReactNode;
   defaultFill?: string;
   scale?: number;
   getPathLabel?: (slug: Slug) => string | undefined;
@@ -25,6 +26,7 @@ export function BodyDetailModal({
   title = "Zonas afectadas",
   subtitle,
   legend,
+  details,
   defaultFill,
   scale = 1.4,
   getPathLabel,
@@ -55,6 +57,7 @@ export function BodyDetailModal({
         </div>
 
         {legend}
+        {details}
       </div>
     </Modal>
   );

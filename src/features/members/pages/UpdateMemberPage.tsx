@@ -117,6 +117,7 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
                 navigate({
                   to: "/members/$memberId/clinical-profile",
                   params: { memberId: member.id },
+                  search: { from: "update" },
                 })
               }
             />

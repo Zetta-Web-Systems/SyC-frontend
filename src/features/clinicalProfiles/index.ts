@@ -1,6 +1,7 @@
 export { default as ClinicalProfilePage } from "./pages/ClinicalProfilePage";
 export { default as ClinicalProfileDraftPage } from "./pages/ClinicalProfileDraftPage";
 export { ClinicalProfileForm } from "./components/ClinicalProfileForm";
+export { ClinicalProfileBodyLegend } from "./components/ClinicalProfileBody/ClinicalProfileBodyLegend";
 export { NewStatusesPreviewList } from "./components/ClinicalProfileForm/NewStatusesPreviewList";
 export {
   buildNewStatusesPreview,
@@ -17,6 +18,7 @@ export {
   PAIN_PHASES,
   PAIN_BG_CLASS,
   PAIN_TEXT_CLASS,
+  SIDE_LABELS,
 } from "./constants";
 export type { PainPhase } from "./constants";
 export {
