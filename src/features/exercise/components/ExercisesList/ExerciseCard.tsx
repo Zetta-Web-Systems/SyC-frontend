@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
 import { Dumbbell } from "lucide-react";
 import { Badge } from "@shared/ui";
 import type { Exercise } from "../../types";
@@ -33,10 +34,15 @@ export function ExerciseCard({
   const levelIntent = EXERCISE_LEVEL_INTENT[exercise.exerciseLevel];
   const [menuOpen, setMenuOpen] = useState(false);
   const menuWasOpenRef = useRef(false);
+  const menuContainerRef = useRef<HTMLDivElement>(null);
 
   const handleOpenProfile = () => onProfile(exercise);
 
-  const handleCardClick = () => {
+  const isEventFromMenu = (target: EventTarget | null) =>
+    menuContainerRef.current?.contains(target as Node) ?? false;
+
+  const handleCardClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (isEventFromMenu(e.target)) return;
     if (menuWasOpenRef.current) {
       menuWasOpenRef.current = false;
       return;
@@ -44,20 +50,26 @@ export function ExerciseCard({
     handleOpenProfile();
   };
 
+  const handleCardMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (isEventFromMenu(e.target)) return;
+    menuWasOpenRef.current = menuOpen;
+  };
+
+  const handleCardKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (isEventFromMenu(e.target)) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleOpenProfile();
+    }
+  };
+
   return (
     <div
       role="button"
       tabIndex={0}
-      onMouseDown={() => {
-        menuWasOpenRef.current = menuOpen;
-      }}
+      onMouseDown={handleCardMouseDown}
       onClick={handleCardClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          handleOpenProfile();
-        }
-      }}
+      onKeyDown={handleCardKeyDown}
       aria-label={`Ver perfil de ejercicio ${exercise.name}`}
       className="flex w-full cursor-pointer items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
     >
@@ -111,11 +123,7 @@ export function ExerciseCard({
         </Badge>
       </div>
 
-      <div
-        className="shrink-0"
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
+      <div ref={menuContainerRef} className="shrink-0">
         <ExerciseActionsMenu
           exercise={exercise}
           onProfile={onProfile}

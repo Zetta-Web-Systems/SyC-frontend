@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Activity } from "lucide-react";
 import { Card, Spinner, Switch } from "@shared/ui";
 import { usePainEvolutionChart } from "../../hooks/usePainEvolutionChart";
@@ -32,6 +33,7 @@ export function PainEvolutionChart({ memberId }: PainEvolutionChartProps) {
     includeInactive,
     setIncludeInactive,
   } = usePainEvolutionChart(memberId);
+  const devModeId = useId();
 
   return (
     <Card className="rounded-xl border border-neutral-200 bg-white p-5">
@@ -45,9 +47,13 @@ export function PainEvolutionChart({ memberId }: PainEvolutionChartProps) {
             />
             <h6 className="text-neutral-500">Evolución de dolor</h6>
           </div>
-          <label className="flex items-center gap-2 text-xs text-neutral-500">
+          <label
+            htmlFor={devModeId}
+            className="flex items-center gap-2 text-xs text-neutral-500"
+          >
             <span>Datos demo</span>
             <Switch
+              id={devModeId}
               checked={devMode}
               onChange={(event) => setDevMode(event.target.checked)}
               size="sm"

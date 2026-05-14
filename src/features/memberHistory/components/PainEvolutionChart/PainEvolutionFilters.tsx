@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { FilterDropdown, Switch } from "@shared/ui";
 import type { FilterOption } from "@shared/types/filters.types";
 import type { PainEvolutionPeriodValue } from "../../constants/painEvolution";
@@ -26,6 +26,8 @@ export function PainEvolutionFilters({
   includeInactive,
   onIncludeInactiveChange,
 }: PainEvolutionFiltersProps) {
+  const includeInactiveId = useId();
+
   const dropdownOptions = useMemo<FilterOption[]>(
     () =>
       flagOptions.map((flag) => ({
@@ -50,9 +52,13 @@ export function PainEvolutionFilters({
         />
       )}
 
-      <label className="flex items-center gap-2 text-xs text-neutral-600">
+      <label
+        htmlFor={includeInactiveId}
+        className="flex items-center gap-2 text-xs text-neutral-600"
+      >
         <span>Incluir inactivas</span>
         <Switch
+          id={includeInactiveId}
           checked={includeInactive}
           onChange={(event) => onIncludeInactiveChange(event.target.checked)}
           size="sm"

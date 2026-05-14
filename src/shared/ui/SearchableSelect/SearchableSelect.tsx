@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useId } from "react";
+import { useState, useMemo, useEffect, useId, useRef } from "react";
 import type { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
 import { Popover } from "@shared/ui/Popover/Popover";
@@ -66,6 +66,7 @@ export function SearchableSelect<T>({
   const triggerId = id ?? generatedId;
   const listboxId = `${triggerId}-listbox`;
   const isAsync = !!onSearch;
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = useMemo(() => {
     if (isAsync) return items;
@@ -85,6 +86,10 @@ export function SearchableSelect<T>({
     if (!open) return;
     setActiveIndex(0);
   }, [open, search]);
+
+  useEffect(() => {
+    if (open) searchInputRef.current?.focus();
+  }, [open]);
 
   useEffect(() => {
     if (!isAsync) return;
@@ -113,11 +118,19 @@ export function SearchableSelect<T>({
     onChange(null);
   }
 
+  function handleClearKeyDown(e: KeyboardEvent<HTMLSpanElement>) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(null);
+    }
+  }
+
   function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }
 
-  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+  function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
     if (!open) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -172,6 +185,7 @@ export function SearchableSelect<T>({
             tabIndex={-1}
             aria-label="Limpiar selección"
             onClick={handleClear}
+            onKeyDown={handleClearKeyDown}
             className="flex items-center rounded p-0.5 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
           >
             <X size={14} aria-hidden="true" />
@@ -187,7 +201,7 @@ export function SearchableSelect<T>({
   );
 
   return (
-    <div className="relative" onKeyDown={handleKeyDown}>
+    <div className="relative">
       <Popover
         open={open}
         onClose={handleClose}
@@ -209,9 +223,10 @@ export function SearchableSelect<T>({
         <div className="flex w-72 flex-col">
           <div className="border-b border-neutral-100 p-3">
             <Input
-              autoFocus
+              ref={searchInputRef}
               value={search}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
               placeholder={searchPlaceholder}
               size="sm"
               leftElement={<Search size={14} aria-hidden="true" />}
