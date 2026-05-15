@@ -1,16 +1,11 @@
-import { lazy, Suspense, useId } from "react";
+import { useId } from "react";
 import { Activity } from "lucide-react";
 import { Card, Spinner, Switch } from "@shared/ui";
 import { usePainEvolutionChart } from "../../hooks/usePainEvolutionChart";
 import { PainEvolutionFilters } from "./PainEvolutionFilters";
 import { PainEvolutionLegend } from "./PainEvolutionLegend";
+import { PainEvolutionLineChart } from "./PainEvolutionLineChart";
 import { PainEvolutionTrends } from "./PainEvolutionTrends";
-
-const PainEvolutionLineChart = lazy(() =>
-  import("./PainEvolutionLineChart").then((m) => ({
-    default: m.PainEvolutionLineChart,
-  })),
-);
 
 interface PainEvolutionChartProps {
   memberId: string;
@@ -110,15 +105,7 @@ export function PainEvolutionChart({ memberId }: PainEvolutionChartProps) {
               hiddenSeries={hiddenSeries}
               onToggle={toggleSeries}
             />
-            <Suspense
-              fallback={
-                <div className="flex h-64 items-center justify-center">
-                  <Spinner />
-                </div>
-              }
-            >
-              <PainEvolutionLineChart rows={rows} series={visibleSeries} />
-            </Suspense>
+            <PainEvolutionLineChart rows={rows} series={visibleSeries} />
             <PainEvolutionTrends trends={visibleTrends} />
           </>
         )}

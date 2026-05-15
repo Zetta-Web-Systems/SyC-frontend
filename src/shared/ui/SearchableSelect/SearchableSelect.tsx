@@ -1,11 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useEffectEvent,
-  useId,
-  useRef,
-} from "react";
+import { useState, useMemo, useEffect, useEffectEvent, useId } from "react";
 import type { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
 import { Popover } from "@shared/ui/Popover/Popover";
@@ -73,7 +66,6 @@ export function SearchableSelect<T>({
   const triggerId = id ?? generatedId;
   const listboxId = `${triggerId}-listbox`;
   const isAsync = !!onSearch;
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = useMemo(() => {
     if (isAsync) return items;
@@ -88,10 +80,6 @@ export function SearchableSelect<T>({
     !filtered.some((it) => getLabel(it) === search);
 
   const totalOptions = filtered.length + (showCreateOption ? 1 : 0);
-
-  useEffect(() => {
-    if (open) searchInputRef.current?.focus();
-  }, [open]);
 
   const notifyAsyncSearch = useEffectEvent((next: string) => {
     onSearch?.(next);
@@ -234,7 +222,9 @@ export function SearchableSelect<T>({
         <div className="flex w-72 flex-col">
           <div className="border-b border-neutral-100 p-3">
             <Input
-              ref={searchInputRef}
+              ref={(el) => {
+                el?.focus();
+              }}
               value={search}
               onChange={handleSearchChange}
               onKeyDown={handleKeyDown}
