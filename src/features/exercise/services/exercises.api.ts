@@ -6,15 +6,6 @@ import type {
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type { Exercise, RegisterExercise, UpdateExercise } from "../types";
 
-function hasImageUpload(dto: RegisterExercise | UpdateExercise): boolean {
-  return dto.image instanceof File;
-}
-
-function dtoToJson(dto: RegisterExercise | UpdateExercise) {
-  const { image: _image, ...rest } = dto;
-  return rest;
-}
-
 function dtoToFormData(dto: RegisterExercise | UpdateExercise): FormData {
   const formData = new FormData();
 
@@ -27,7 +18,9 @@ function dtoToFormData(dto: RegisterExercise | UpdateExercise): FormData {
   }
 
   if (dto.affectedZones !== undefined) {
-    formData.append("affectedZones", JSON.stringify(dto.affectedZones));
+    for (const zone of dto.affectedZones) {
+      formData.append("affectedZones", zone);
+    }
   }
 
   if (dto.technicalDescription !== undefined) {
@@ -35,7 +28,9 @@ function dtoToFormData(dto: RegisterExercise | UpdateExercise): FormData {
   }
 
   if (dto.links !== undefined) {
-    formData.append("links", JSON.stringify(dto.links));
+    for (const link of dto.links) {
+      formData.append("links", link);
+    }
   }
 
   if (dto.notes !== undefined) {
@@ -67,10 +62,10 @@ export async function getExerciseById(id: string) {
 }
 
 export async function registerExercise(groupId: string, dto: RegisterExercise) {
-  const body = hasImageUpload(dto) ? dtoToFormData(dto) : dtoToJson(dto);
+  const formData = dtoToFormData(dto);
   const { data } = await api.post<Exercise>(
     `/exercises/register/${groupId}`,
-    body,
+    formData,
   );
   return data;
 }
@@ -87,8 +82,8 @@ export async function registerExercisesBulk(
 }
 
 export async function updateExercise(id: string, dto: UpdateExercise) {
-  const body = hasImageUpload(dto) ? dtoToFormData(dto) : dtoToJson(dto);
-  const { data } = await api.patch<Exercise>(`/exercises/${id}`, body);
+  const formData = dtoToFormData(dto);
+  const { data } = await api.patch<Exercise>(`/exercises/${id}`, formData);
   return data;
 }
 
