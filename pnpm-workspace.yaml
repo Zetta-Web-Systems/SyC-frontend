@@ -1,10 +1,4 @@
-# Cuarentena de supply-chain: no se instalan versiones de paquetes
-# publicadas hace menos de 3 dias (4320 min). El malware recien subido
-# a npm suele detectarse y bajarse en horas, asi que esta ventana lo filtra.
 minimumReleaseAge: 4320
 
-# Scripts de build de dependencias permitidos explicitamente.
-# pnpm bloquea por defecto todos los postinstall (vector tipico de malware);
-# solo se ejecutan los listados aca.
 allowBuilds:
   esbuild: true
