@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { RotateCw, X } from "lucide-react";
 import { Body } from "@shared/components/BodyHighlighter";
 import {
@@ -20,6 +21,8 @@ export interface BodyZoneSelectorProps {
   "aria-describedby"?: string;
   disabled?: boolean;
   mode?: BodyZoneSelectorMode;
+  bodyFooter?: ReactNode;
+  footerExtra?: ReactNode;
 }
 
 export function BodyZoneSelector({
@@ -30,6 +33,8 @@ export function BodyZoneSelector({
   "aria-describedby": ariaDescribedBy,
   disabled,
   mode = "multi",
+  bodyFooter,
+  footerExtra,
 }: BodyZoneSelectorProps) {
   const normalizedValue = Array.isArray(value) ? value : [];
   const {
@@ -112,6 +117,8 @@ export function BodyZoneSelector({
               />
             </div>
           </div>
+
+          {bodyFooter}
         </div>
 
         <Accordion>
@@ -165,41 +172,47 @@ export function BodyZoneSelector({
         </Accordion>
       </div>
 
-      {normalizedValue.length > 0 && (
+      {(normalizedValue.length > 0 || footerExtra) && (
         <div className="flex flex-wrap items-center gap-2 border-t border-neutral-200 pt-3">
-          <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            {isSingle
-              ? "Zona seleccionada"
-              : `${normalizedValue.length} seleccionada${normalizedValue.length === 1 ? "" : "s"}`}
-          </span>
+          {normalizedValue.length > 0 && (
+            <>
+              <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                {isSingle
+                  ? "Zona seleccionada"
+                  : `${normalizedValue.length} seleccionada${normalizedValue.length === 1 ? "" : "s"}`}
+              </span>
 
-          <div className="flex flex-wrap gap-1.5">
-            {normalizedValue.map((zone) => (
-              <button
-                key={zone}
-                type="button"
-                onClick={() => toggleZone(zone)}
-                disabled={disabled}
-                className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 hover:bg-primary-100 disabled:opacity-60"
-              >
-                {BODY_ZONE_LABELS[zone]}
-                <X size={12} aria-hidden="true" />
-              </button>
-            ))}
-          </div>
-
-          {!isSingle && (
-            <Button
-              variant="ghost"
-              intent="neutral"
-              size="sm"
-              onClick={clearAll}
-              disabled={disabled}
-              className="ml-auto"
-            >
-              Limpiar
-            </Button>
+              <div className="flex flex-wrap gap-1.5">
+                {normalizedValue.map((zone) => (
+                  <button
+                    key={zone}
+                    type="button"
+                    onClick={() => toggleZone(zone)}
+                    disabled={disabled}
+                    className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 hover:bg-primary-100 disabled:opacity-60"
+                  >
+                    {BODY_ZONE_LABELS[zone]}
+                    <X size={12} aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+            </>
           )}
+
+          <div className="ml-auto flex items-center gap-2">
+            {footerExtra}
+            {!isSingle && normalizedValue.length > 0 && (
+              <Button
+                variant="ghost"
+                intent="neutral"
+                size="sm"
+                onClick={clearAll}
+                disabled={disabled}
+              >
+                Limpiar
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </div>

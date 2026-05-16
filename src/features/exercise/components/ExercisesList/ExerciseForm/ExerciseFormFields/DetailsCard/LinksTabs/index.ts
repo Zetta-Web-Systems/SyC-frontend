@@ -1,0 +1,1 @@
+export { LinksTabs } from "./LinksTabs";

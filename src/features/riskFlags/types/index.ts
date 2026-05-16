@@ -15,7 +15,4 @@ export type RegisterRiskFlag = BaseRiskFlag;
 
 export type UpdateRiskFlag = Partial<BaseRiskFlag>;
 
-export interface AffectedGroup {
-  label: string;
-  zones: BodyZone[];
-}
+export type { AffectedGroup } from "@shared/types/bodyZone.types";

@@ -1,22 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  BODY_ZONE_GROUPS,
-  BODY_ZONE_LABELS,
-  BODY_ZONE_TO_GROUP_LABEL,
-  GROUP_DOT_CLASS,
-} from "@shared/constants/bodyZones";
-import type { BodyZone } from "@shared/types/bodyZone.types";
+import { BODY_ZONE_LABELS, GROUP_DOT_CLASS } from "@shared/constants/bodyZones";
+import { getAffectedGroups } from "@shared/utils/bodyZones.utils";
 import { Badge } from "@shared/ui";
-import type { RiskFlag, AffectedGroup } from "../../types";
-
-function getAffectedGroups(zones: BodyZone[] | undefined): AffectedGroup[] {
-  return BODY_ZONE_GROUPS.map((group) => ({
-    label: group.label,
-    zones: (zones ?? []).filter(
-      (zone) => BODY_ZONE_TO_GROUP_LABEL[zone] === group.label,
-    ),
-  }));
-}
+import type { RiskFlag } from "../../types";
 
 export const riskFlagsColumns: ColumnDef<RiskFlag, unknown>[] = [
   {

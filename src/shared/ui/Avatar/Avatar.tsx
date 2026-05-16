@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ImgHTMLAttributes, Ref } from "react";
+import type { ImgHTMLAttributes, ReactNode, Ref } from "react";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "@shared/lib/cn";
 import { avatarVariants } from "./Avatar.variants";
@@ -10,7 +10,7 @@ export interface AvatarProps
     VariantProps<typeof avatarVariants> {
   ref?: Ref<HTMLSpanElement>;
   src?: string | null;
-  fallback: string;
+  fallback: ReactNode;
 }
 
 export function Avatar({
@@ -26,24 +26,32 @@ export function Avatar({
   const [imgError, setImgError] = useState(false);
 
   const showImage = src && !imgError;
+  const ariaLabel =
+    alt ?? (typeof fallback === "string" ? fallback : undefined);
+  const imgAlt = alt ?? (typeof fallback === "string" ? fallback : "");
 
   return (
     <span
       ref={ref}
       className={cn(avatarVariants({ size, color }), className)}
       role="img"
-      aria-label={alt ?? fallback}
+      aria-label={ariaLabel}
     >
       {showImage ? (
         <img
           src={src}
-          alt={alt ?? fallback}
+          alt={imgAlt}
           onError={() => setImgError(true)}
           className="h-full w-full object-cover"
           {...props}
         />
       ) : (
-        <span aria-hidden="true">{fallback}</span>
+        <span
+          aria-hidden="true"
+          className="inline-flex items-center justify-center"
+        >
+          {fallback}
+        </span>
       )}
     </span>
   );

@@ -69,10 +69,9 @@ export const ALL_BODY_ZONES: BodyZone[] = BODY_ZONE_GROUPS.flatMap(
   (g) => g.zones,
 );
 
-export const BODY_ZONE_GROUP_INTENT: Record<
-  string,
-  "info" | "warning" | "error"
-> = {
+export type BodyZoneIntent = "info" | "warning" | "error";
+
+export const BODY_ZONE_GROUP_INTENT: Record<string, BodyZoneIntent> = {
   "Tren superior": "info",
   Core: "warning",
   "Tren inferior": "error",
