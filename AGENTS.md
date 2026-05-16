@@ -8,15 +8,18 @@ feature-based architecture.
 ## Commands
 
 ```bash
-npm run dev        # Start Vite dev server
-npm run build      # Production build (ONLY when explicitly requested)
-npm run lint       # Run ESLint on all .ts / .tsx files
+pnpm dev        # Start Vite dev server
+pnpm build      # Production build (ONLY when explicitly requested)
+pnpm lint       # Run ESLint on all .ts / .tsx files
 ```
 
-*npm run build* must be executed only if the user explicitly requests a build.
+The project uses **pnpm** as package manager — never use `npm` or `yarn`
+(a `preinstall` hook blocks them).
+
+*pnpm build* must be executed only if the user explicitly requests a build.
 Validation for code changes consists only of:
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ---
