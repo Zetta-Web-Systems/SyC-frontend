@@ -29,6 +29,7 @@ dist-ssr
 # Carpeta de documentación
 .opencode
 .docs
+.claude
 
 # TanStack Router — auto-generated route tree
 src/app/routeTree.gen.ts
