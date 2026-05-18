@@ -1,0 +1,1 @@
+export { BodyZonesCard } from "./BodyZonesCard";

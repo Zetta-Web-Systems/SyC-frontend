@@ -69,7 +69,7 @@ export default function RegisterMemberPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Registrar alumno"
-        description="Completa la información para registrar un nuevo alumno."
+        description="Completa la información para registrar un nuevo alumno"
         actions={
           <Button variant="outline" intent="neutral" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

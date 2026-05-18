@@ -20,7 +20,7 @@ export function AttendanceInlineError({
           )}
           role="alert"
         >
-          <AlertCircle className="h-5 w-5 shrink-0 text-error" />
+          <AlertCircle className="size-5 shrink-0 text-error" />
           <p className="text-sm font-medium text-error md:text-base">{error}</p>
         </div>
       )}

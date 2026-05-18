@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { RiskFlagsHeader } from "./components/RiskFlagsList/RiskFlagsHeader/RiskFlagsHeader";
 import { RiskFlagsTable } from "./components/RiskFlagsList/RiskFlagsTable";
 import { RiskFlagsFilters } from "./components/RiskFlagsList/RiskFlagsFilters/RiskFlagsFilters";
@@ -6,6 +7,8 @@ import { useRiskFlagsFilters } from "./hooks/useRiskFlagsFilters";
 import { useRiskFlagsActions } from "./hooks/useRiskFlagsActions";
 
 export default function RiskFlagsPage() {
+  const navigate = useNavigate();
+
   const {
     params,
     pagination,
@@ -26,7 +29,11 @@ export default function RiskFlagsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <RiskFlagsHeader onCreate={handleOpenRegister} />
+      <RiskFlagsHeader
+        onCreate={handleOpenRegister}
+        onBack={() => navigate({ to: "/settings" })}
+        onGoToMembers={() => navigate({ to: "/members" })}
+      />
 
       <RiskFlagsFilters
         onSearch={handleSearch}

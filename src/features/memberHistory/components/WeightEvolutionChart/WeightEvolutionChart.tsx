@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Weight } from "lucide-react";
 import { Card, Spinner, Switch } from "@shared/ui";
 import { useWeightEvolutionChart } from "../../hooks/useWeightEvolutionChart";
@@ -23,6 +24,7 @@ export function WeightEvolutionChart({ memberId }: WeightEvolutionChartProps) {
     devMode,
     setDevMode,
   } = useWeightEvolutionChart(memberId);
+  const devModeId = useId();
 
   return (
     <Card className="rounded-xl border border-neutral-200 bg-white p-5">
@@ -32,9 +34,13 @@ export function WeightEvolutionChart({ memberId }: WeightEvolutionChartProps) {
             <Weight size={16} aria-hidden="true" className="text-primary-500" />
             <h6 className="text-neutral-500">Evolución de peso</h6>
           </div>
-          <label className="flex items-center gap-2 text-xs text-neutral-500">
+          <label
+            htmlFor={devModeId}
+            className="flex items-center gap-2 text-xs text-neutral-500"
+          >
             <span>Datos demo</span>
             <Switch
+              id={devModeId}
               checked={devMode}
               onChange={(event) => setDevMode(event.target.checked)}
               size="sm"

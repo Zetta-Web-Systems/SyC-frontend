@@ -25,6 +25,7 @@ export interface BodyProps {
   defaultStroke?: string;
   defaultStrokeWidth?: number;
   hoverFill?: string;
+  getPathLabel?: (slug: Slug) => string | undefined;
 }
 
 function resolveFill(
@@ -54,6 +55,7 @@ function BodyComponent({
   defaultStroke = BODY_HIGHLIGHTER_DEFAULTS.STROKE,
   defaultStrokeWidth = 0,
   hoverFill = BODY_HIGHLIGHTER_DEFAULTS.HOVER,
+  getPathLabel,
 }: BodyProps) {
   const parts = side === "front" ? bodyFront : bodyBack;
   const [hoveredSlug, setHoveredSlug] = useState<Slug | null>(null);
@@ -108,19 +110,21 @@ function BodyComponent({
           const stroke = ext?.styles?.stroke ?? defaultStroke;
           const strokeWidth = ext?.styles?.strokeWidth ?? defaultStrokeWidth;
 
-          const handleClick = isInteractive
+          const selectBodyPart = isInteractive
             ? () =>
                 onBodyPartPress?.(
                   ext ?? { slug: part.slug },
                   anatomicalPathSide,
                 )
             : undefined;
-          const handleMouseEnter = isInteractive
+          const highlightBodyPart = isInteractive
             ? () => setHoveredSlug(part.slug)
             : undefined;
-          const handleMouseLeave = isInteractive
+          const unhighlightBodyPart = isInteractive
             ? () => setHoveredSlug((prev) => (prev === part.slug ? null : prev))
             : undefined;
+
+          const pathLabel = getPathLabel?.(part.slug);
 
           return (
             <g key={`${part.slug}-${pathSide}`}>
@@ -131,12 +135,14 @@ function BodyComponent({
                   fill={fill}
                   stroke={stroke}
                   strokeWidth={strokeWidth}
-                  onClick={handleClick}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+                  onClick={selectBodyPart}
+                  onMouseEnter={highlightBodyPart}
+                  onMouseLeave={unhighlightBodyPart}
                   style={{ cursor: isInteractive ? "pointer" : "default" }}
-                  aria-label={part.slug}
-                />
+                  aria-label={pathLabel ?? part.slug}
+                >
+                  {pathLabel && <title>{pathLabel}</title>}
+                </path>
               ))}
             </g>
           );

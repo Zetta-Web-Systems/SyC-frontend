@@ -28,7 +28,7 @@ function PageButtons({ pages, currentPage, onPageChange }: PageButtonsProps) {
     page < 0 ? (
       <span
         key={page}
-        className="flex h-8 w-8 items-center justify-center text-sm text-neutral-400"
+        className="flex size-8 items-center justify-center text-sm text-neutral-400"
       >
         ...
       </span>

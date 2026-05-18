@@ -33,14 +33,8 @@ export const ME_POPOVER = {
   VP_MARGIN: 8,
 };
 
-export const ME_CONTENT_CLASSNAME = [
+const ME_CONTENT_BASE_CLASSNAME = [
   "[&_.ProseMirror]:outline-none",
-  "[&_.ProseMirror_h1]:text-2xl [&_.ProseMirror_h1]:font-semibold [&_.ProseMirror_h1]:mt-4 [&_.ProseMirror_h1]:mb-2",
-  "[&_.ProseMirror_h2]:text-xl [&_.ProseMirror_h2]:font-semibold [&_.ProseMirror_h2]:mt-3 [&_.ProseMirror_h2]:mb-1",
-  "[&_.ProseMirror_h3]:text-lg [&_.ProseMirror_h3]:font-semibold [&_.ProseMirror_h3]:mt-2 [&_.ProseMirror_h3]:mb-1",
-  "[&_.ProseMirror_h4]:text-base [&_.ProseMirror_h4]:font-semibold",
-  "[&_.ProseMirror_h5]:text-sm [&_.ProseMirror_h5]:font-semibold",
-  "[&_.ProseMirror_h6]:text-xs [&_.ProseMirror_h6]:font-semibold [&_.ProseMirror_h6]:uppercase",
   "[&_.ProseMirror_p]:my-1",
   "[&_.ProseMirror_ul]:list-disc [&_.ProseMirror_ul]:pl-5",
   "[&_.ProseMirror_ol]:list-decimal [&_.ProseMirror_ol]:pl-5",
@@ -55,3 +49,25 @@ export const ME_CONTENT_CLASSNAME = [
   "[&_.ProseMirror_a]:text-primary-600 [&_.ProseMirror_a]:underline",
   "[&_.ProseMirror_img]:max-w-full [&_.ProseMirror_img]:h-auto [&_.ProseMirror_img]:rounded-md [&_.ProseMirror_img]:my-2",
 ].join(" ");
+
+const ME_CONTENT_HEADINGS_DEFAULT = [
+  "[&_.ProseMirror_h1]:text-2xl [&_.ProseMirror_h1]:font-semibold [&_.ProseMirror_h1]:mt-4 [&_.ProseMirror_h1]:mb-2",
+  "[&_.ProseMirror_h2]:text-xl [&_.ProseMirror_h2]:font-semibold [&_.ProseMirror_h2]:mt-3 [&_.ProseMirror_h2]:mb-1",
+  "[&_.ProseMirror_h3]:text-lg [&_.ProseMirror_h3]:font-semibold [&_.ProseMirror_h3]:mt-2 [&_.ProseMirror_h3]:mb-1",
+  "[&_.ProseMirror_h4]:text-base [&_.ProseMirror_h4]:font-semibold",
+  "[&_.ProseMirror_h5]:text-sm [&_.ProseMirror_h5]:font-semibold",
+  "[&_.ProseMirror_h6]:text-xs [&_.ProseMirror_h6]:font-semibold [&_.ProseMirror_h6]:uppercase",
+].join(" ");
+
+const ME_CONTENT_HEADINGS_COMPACT = [
+  "[&_.ProseMirror_h1]:text-base [&_.ProseMirror_h1]:font-semibold [&_.ProseMirror_h1]:mt-2 [&_.ProseMirror_h1]:mb-1",
+  "[&_.ProseMirror_h2]:text-sm [&_.ProseMirror_h2]:font-semibold [&_.ProseMirror_h2]:mt-2 [&_.ProseMirror_h2]:mb-1",
+  "[&_.ProseMirror_h3]:text-sm [&_.ProseMirror_h3]:font-semibold [&_.ProseMirror_h3]:mt-1 [&_.ProseMirror_h3]:mb-0.5",
+  "[&_.ProseMirror_h4]:text-xs [&_.ProseMirror_h4]:font-semibold",
+  "[&_.ProseMirror_h5]:text-xs [&_.ProseMirror_h5]:font-medium",
+  "[&_.ProseMirror_h6]:text-[10px] [&_.ProseMirror_h6]:font-semibold [&_.ProseMirror_h6]:uppercase",
+].join(" ");
+
+export const ME_CONTENT_CLASSNAME = `${ME_CONTENT_BASE_CLASSNAME} ${ME_CONTENT_HEADINGS_DEFAULT}`;
+
+export const ME_CONTENT_CLASSNAME_COMPACT = `${ME_CONTENT_BASE_CLASSNAME} ${ME_CONTENT_HEADINGS_COMPACT}`;

@@ -78,14 +78,14 @@ export function PhoneInput({
   "aria-describedby": ariaDescribedBy,
   className,
 }: PhoneInputProps) {
-  const handleChange = useCallback(
+  const sanitizePhoneInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value.replace(/[^\d+\- ]/g, ""));
     },
     [onChange],
   );
 
-  const handleBlur = useCallback(() => {
+  const formatPhoneOnBlur = useCallback(() => {
     if (value) {
       const formatted = format(value);
       if (formatted !== null && formatted !== value) onChange(formatted);
@@ -103,8 +103,8 @@ export function PhoneInput({
       autoComplete="tel"
       maxLength={20}
       value={value}
-      onChange={handleChange}
-      onBlur={handleBlur}
+      onChange={sanitizePhoneInput}
+      onBlur={formatPhoneOnBlur}
       disabled={disabled}
       error={error}
       placeholder={placeholder}

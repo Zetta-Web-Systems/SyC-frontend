@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useEffectEvent, useId, useRef } from "react";
 import type { ReactNode, Ref } from "react";
 import type { VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
@@ -47,18 +47,22 @@ export function Modal({
     }
   }, [open, dialogRef]);
 
+  const requestClose = useEffectEvent(() => {
+    onClose();
+  });
+
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
     function handleCancel(e: Event) {
       e.preventDefault();
-      onClose();
+      requestClose();
     }
 
     dialog.addEventListener("cancel", handleCancel);
     return () => dialog.removeEventListener("cancel", handleCancel);
-  }, [onClose, dialogRef]);
+  }, [dialogRef]);
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (closeOnBackdropClick && e.target === dialogRef.current) {

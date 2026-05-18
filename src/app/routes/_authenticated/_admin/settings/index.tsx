@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flag, ChevronRight } from "lucide-react";
+import { Flag, ChevronRight, Dumbbell } from "lucide-react";
 import { buttonVariants } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 
@@ -11,9 +11,9 @@ function SettingsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Configuración</h1>
+        <h1 className="text-neutral-900 text-xl md:text-3xl">Configuración</h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Administra los ajustes de la aplicación.
+          Administra los ajustes de la aplicación
         </p>
       </div>
 
@@ -36,7 +36,40 @@ function SettingsPage() {
                 Banderas de riesgo
               </span>
               <span className="text-xs font-normal text-neutral-500">
-                Gestiona las condiciones médicas y zonas afectadas.
+                Gestiona las condiciones médicas y zonas afectadas
+              </span>
+            </span>
+          </span>
+          <ChevronRight
+            size={18}
+            className="text-neutral-400"
+            aria-hidden="true"
+          />
+        </Link>
+
+        <Link
+          to="/settings/group-exercises"
+          className={cn(
+            buttonVariants({
+              variant: "outline",
+              intent: "neutral",
+              size: "lg",
+            }),
+            "h-auto justify-between gap-3 rounded-xl px-4 py-4 text-left",
+          )}
+        >
+          <span className="flex items-center gap-3">
+            <Dumbbell
+              size={20}
+              className="text-primary-500"
+              aria-hidden="true"
+            />
+            <span className="flex flex-col">
+              <span className="text-sm font-semibold text-neutral-900">
+                Grupos de ejercicios
+              </span>
+              <span className="text-xs font-normal text-neutral-500">
+                Administra los grupos de ejercicios y sus zonas afectadas
               </span>
             </span>
           </span>

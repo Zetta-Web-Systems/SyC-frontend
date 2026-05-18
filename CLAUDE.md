@@ -6,15 +6,18 @@ feature-based architecture.
 ## Commands
 
 ```bash
-npm run dev        # Start Vite dev server
-npm run build      # Production build (ONLY when explicitly requested)
-npm run lint       # Run ESLint on all .ts / .tsx files
+pnpm dev        # Start Vite dev server
+pnpm build      # Production build (ONLY when explicitly requested)
+pnpm lint       # Run ESLint on all .ts / .tsx files
 ```
 
-*npm run build* must be executed only if the user explicitly requests a build.
+The project uses **pnpm** as package manager — never use `npm` or `yarn`
+(a `preinstall` hook blocks them).
+
+*pnpm build* must be executed only if the user explicitly requests a build.
 Validation for code changes consists only of:
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ---
@@ -260,6 +263,23 @@ Always use `import type` for type-only imports.
 
 ---
 
+## Key Patterns
+Components - **Purpose**: Pure presentation - **Rules**: - Receive typed props only - NO API calls - NO business logic - Minimal UI logic (local toggles, hovers) - Should be reusable - One component = one responsibility (SRP)
+
+Custom Hooks - **Purpose**: Encapsulate stateful logic - **When to create**: - Uses React hooks (useState, useEffect, useCallback, etc.) - Manages state or side effects - API calls with state management - Complex logic that needs memoization - Reusable stateful behavior - **When NOT to create**: - Pure functions (use utils instead) - Static transformations - Simple formatters
+
+Utils/Helpers - **Purpose**: Pure, reusable functions - **Examples**: - Date formatting: `formatLongDate(date: Date): string` - String transformations: `capitalize(str: string): string` - Data mapping: `mapStatusToLabel(status: string): string` - Calculations: `calculatePercentage(value: number, total: number): number` - **Rules**: - Always pure (same input = same output) - NO side effects - NO React hooks - Fully testable
+
+Constants - **Purpose**: Static, immutable values - **Examples**: - Animation variants (Framer Motion) - Configuration objects - Enums/mappings - Color schemes - **Rules**: - NEVER inside components - Export as `const` with type annotations - Group by domain (animations, colors, routes, etc.)
+
+## Key Principles
+1. **Separation of Concerns**: Logic ≠ Presentation
+2. **Single Responsibility**: One thing well 
+3. **DRY**: Extract reusable code 
+4. **Pure Functions**: Utils should be predictable
+5. **Composition**: Build complex UIs from simple pieces
+6. **Testability**: Pure functions + isolated components
+
 ## Tech Stack
 
 - **React 19**
@@ -271,10 +291,3 @@ Always use `import type` for type-only imports.
 - **Zustand** — state management
 - **Axios** — API client
 - **React Hook Form** + **Zod** — forms
-
-## Planned (not yet installed)
-
-The following tools are in the architecture plan but have **not** been added yet:
-- **Playwright** — E2E testing
-
-Do not install these unless explicitly instructed.

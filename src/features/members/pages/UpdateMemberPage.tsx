@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { User, Users } from "lucide-react";
 import { Button, Spinner } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
@@ -32,8 +32,15 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
     navigate({ to: "/members" });
   }
 
-  function handleBack() {
+  function handleGoToList() {
     navigate({ to: "/members" });
+  }
+
+  function handleGoToProfile() {
+    navigate({
+      to: "/members/profile/$memberId",
+      params: { memberId },
+    });
   }
 
   function handleUpdate(data: UpdateMemberSchema) {
@@ -73,10 +80,20 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
         title="Editar alumno"
         description="Modifica la información del alumno"
         actions={
-          <Button intent="neutral" variant="outline" onClick={handleBack}>
-            <ArrowLeft size={16} aria-hidden="true" />
-            <span className="hidden xs:inline">Volver</span>
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              intent="neutral"
+              variant="outline"
+              onClick={handleGoToProfile}
+            >
+              <User size={16} aria-hidden="true" />
+              <span className="hidden xs:inline">Ficha de alumno</span>
+            </Button>
+            <Button intent="neutral" variant="outline" onClick={handleGoToList}>
+              <Users size={16} aria-hidden="true" />
+              <span className="hidden xs:inline">Listado de alumnos</span>
+            </Button>
+          </div>
         }
       />
 
@@ -99,7 +116,7 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
         <MemberForm
           member={member}
           onSubmit={handleUpdate}
-          onCancel={handleBack}
+          onCancel={handleGoToList}
           isPending={mutation.isPending}
           mutation={mutation}
           guardUnsavedChanges={!navigating}
@@ -112,6 +129,7 @@ export default function UpdateMemberPage({ memberId }: UpdateMemberPageProps) {
                 navigate({
                   to: "/members/$memberId/clinical-profile",
                   params: { memberId: member.id },
+                  search: { from: "update" },
                 })
               }
             />

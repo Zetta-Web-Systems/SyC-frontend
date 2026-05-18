@@ -86,7 +86,7 @@ export function AttendanceCard({ attendance }: AttendanceCardProps) {
           </span>
           <div className="flex flex-col items-center">
             <div className="h-2 w-px bg-primary-300" />
-            <div className="h-2 w-2 rounded-full border-2 border-primary-500 bg-white" />
+            <div className="size-2 rounded-full border-2 border-primary-500 bg-white" />
             <div className="h-2 w-px bg-neutral-300" />
           </div>
           {attendance.departureTime ? (

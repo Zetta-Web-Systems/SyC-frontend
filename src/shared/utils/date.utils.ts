@@ -26,12 +26,18 @@ const dateShortFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
 });
 
 // Helper centralizado
-function parseDate(input: string | Date): Date {
+function parseDate(input: string | number | Date): Date {
   if (typeof input === "string") {
     const normalized = /^\d{4}-\d{2}-\d{2}$/.test(input)
       ? `${input}T00:00:00`
       : input;
     const parsed = new Date(normalized);
+    if (isNaN(parsed.getTime())) throw new Error(`Invalid date: ${input}`);
+    return parsed;
+  }
+
+  if (typeof input === "number") {
+    const parsed = new Date(input);
     if (isNaN(parsed.getTime())) throw new Error(`Invalid date: ${input}`);
     return parsed;
   }
@@ -46,7 +52,7 @@ function parseDate(input: string | Date): Date {
  * @example
  * formatDate("2026-03-23") => "23/03/2026"
  */
-export function formatDate(date: string | Date): string {
+export function formatDate(date: string | number | Date): string {
   return dateFormatter.format(parseDate(date));
 }
 
@@ -56,7 +62,7 @@ export function formatDate(date: string | Date): string {
  * @example
  * formatDateTime("2026-03-23T14:30:00") => "23/03/2026, 14:30"
  */
-export function formatDateTime(date: string | Date): string {
+export function formatDateTime(date: string | number | Date): string {
   return dateTimeFormatter.format(parseDate(date));
 }
 
@@ -66,7 +72,7 @@ export function formatDateTime(date: string | Date): string {
  * @example
  * formatDateShort("2026-03-23") => "23 mar"
  */
-export function formatDateShort(date: string | Date): string {
+export function formatDateShort(date: string | number | Date): string {
   return dateShortFormatter.format(parseDate(date));
 }
 

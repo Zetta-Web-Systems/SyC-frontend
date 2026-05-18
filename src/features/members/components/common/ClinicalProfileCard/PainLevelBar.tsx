@@ -24,7 +24,7 @@ export function PainLevelBar({
       <div className="flex items-center justify-between text-[10px] font-semibold tracking-wider uppercase">
         <span className="text-neutral-500">Nivel de dolor</span>
         <span className={getPainTextClass(level)}>
-          {level}/{max} — {getPainLabel(level)}
+          {level}/{max} ({getPainLabel(level)})
         </span>
       </div>
       <div

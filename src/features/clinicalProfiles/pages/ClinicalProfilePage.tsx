@@ -16,10 +16,12 @@ import { useClinicalProfilePageData } from "./useClinicalProfilePageData";
 
 interface ClinicalProfilePageProps {
   memberId: string;
+  from?: "profile" | "update";
 }
 
 export default function ClinicalProfilePage({
   memberId,
+  from = "update",
 }: ClinicalProfilePageProps) {
   const navigate = useNavigate();
   const [navigating, setNavigating] = useState(false);
@@ -37,8 +39,12 @@ export default function ClinicalProfilePage({
 
   const goBack = useCallback(() => {
     flushSync(() => setNavigating(true));
+    if (from === "profile") {
+      navigate({ to: "/members/profile/$memberId", params: { memberId } });
+      return;
+    }
     navigate({ to: "/members/update/$memberId", params: { memberId } });
-  }, [memberId, navigate]);
+  }, [from, memberId, navigate]);
 
   const { save, isSaving, mutation } = useSaveClinicalProfile({
     memberId,

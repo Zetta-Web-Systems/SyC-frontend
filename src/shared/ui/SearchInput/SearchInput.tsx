@@ -1,6 +1,6 @@
 import type { Ref } from "react";
 import type { ChangeEvent } from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useEffectEvent } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@shared/ui";
 import { useDebounce } from "@shared/hooks/useDebounce";
@@ -39,19 +39,23 @@ export function SearchInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalValue]);
 
+  const notifySearch = useEffectEvent((next: string) => {
+    onSearch(next);
+  });
+
   useEffect(() => {
     if (!isMounted.current) {
       isMounted.current = true;
       return;
     }
-    onSearch(debouncedValue);
-  }, [debouncedValue, onSearch]);
+    notifySearch(debouncedValue);
+  }, [debouncedValue]);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  function updateSearchValue(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
   }
 
-  function handleClear() {
+  function clearSearchValue() {
     setValue("");
   }
 
@@ -59,7 +63,7 @@ export function SearchInput({
     <button
       type="button"
       aria-label={clearLabel}
-      onClick={handleClear}
+      onClick={clearSearchValue}
       className="flex items-center text-neutral-400 transition-colors hover:text-neutral-600"
     >
       <X size={14} aria-hidden="true" />
@@ -71,7 +75,7 @@ export function SearchInput({
       ref={ref}
       id={id}
       value={value}
-      onChange={handleChange}
+      onChange={updateSearchValue}
       placeholder={placeholder}
       disabled={disabled}
       className={className}
