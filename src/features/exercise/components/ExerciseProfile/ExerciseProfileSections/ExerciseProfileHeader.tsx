@@ -35,7 +35,7 @@ export function ExerciseProfileHeader({
           />
 
           <div className="flex min-w-0 flex-col gap-2">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-neutral-900 wrap-break-word">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight leading-tight text-neutral-900 wrap-break-word">
               {exercise.name}
             </h2>
 

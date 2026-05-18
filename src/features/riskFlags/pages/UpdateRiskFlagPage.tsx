@@ -55,7 +55,7 @@ export default function UpdateRiskFlagPage({
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Editar bandera de riesgo"
-        description="Modifica la información de la bandera de riesgo."
+        description="Modifica la información de la bandera de riesgo"
         actions={
           <Button intent="neutral" variant="outline" onClick={handleBack}>
             <ArrowLeft size={16} aria-hidden="true" />

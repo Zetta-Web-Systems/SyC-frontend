@@ -73,7 +73,7 @@ export function MemberProfileHeader({
         <div className="flex-1 min-w-0 w-full">
           <div className="flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-4">
             <div className="min-w-0 text-center sm:text-left">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-neutral-900 wrap-break-word">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight leading-tight text-neutral-900 wrap-break-word">
                 {fullName}
               </h2>
 

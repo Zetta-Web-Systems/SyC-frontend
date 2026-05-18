@@ -33,7 +33,7 @@ export function SourcePreview({ url, ytId, domain }: SourcePreviewProps) {
           aria-hidden="true"
           className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/50"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-error/90 text-white shadow-md">
+          <span className="flex size-9 items-center justify-center rounded-full bg-error/90 text-white shadow-md">
             <Play size={16} fill="currentColor" />
           </span>
         </span>
@@ -53,7 +53,7 @@ export function SourcePreview({ url, ytId, domain }: SourcePreviewProps) {
         <img
           src={getFaviconUrl(domain)}
           alt=""
-          className="h-8 w-8"
+          className="size-8"
           onError={() => setErrored(true)}
         />
         <span className="truncate text-xs text-neutral-500">{domain}</span>

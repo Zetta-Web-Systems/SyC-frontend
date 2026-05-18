@@ -110,17 +110,17 @@ function BodyComponent({
           const stroke = ext?.styles?.stroke ?? defaultStroke;
           const strokeWidth = ext?.styles?.strokeWidth ?? defaultStrokeWidth;
 
-          const handleClick = isInteractive
+          const selectBodyPart = isInteractive
             ? () =>
                 onBodyPartPress?.(
                   ext ?? { slug: part.slug },
                   anatomicalPathSide,
                 )
             : undefined;
-          const handleMouseEnter = isInteractive
+          const highlightBodyPart = isInteractive
             ? () => setHoveredSlug(part.slug)
             : undefined;
-          const handleMouseLeave = isInteractive
+          const unhighlightBodyPart = isInteractive
             ? () => setHoveredSlug((prev) => (prev === part.slug ? null : prev))
             : undefined;
 
@@ -135,9 +135,9 @@ function BodyComponent({
                   fill={fill}
                   stroke={stroke}
                   strokeWidth={strokeWidth}
-                  onClick={handleClick}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+                  onClick={selectBodyPart}
+                  onMouseEnter={highlightBodyPart}
+                  onMouseLeave={unhighlightBodyPart}
                   style={{ cursor: isInteractive ? "pointer" : "default" }}
                   aria-label={pathLabel ?? part.slug}
                 >

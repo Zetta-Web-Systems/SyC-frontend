@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useId } from "react";
+import { useState, useMemo, useEffect, useEffectEvent, useId } from "react";
 import type { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
 import { Popover } from "@shared/ui/Popover/Popover";
@@ -81,20 +81,19 @@ export function SearchableSelect<T>({
 
   const totalOptions = filtered.length + (showCreateOption ? 1 : 0);
 
-  useEffect(() => {
-    if (!open) return;
-    setActiveIndex(0);
-  }, [open, search]);
+  const notifyAsyncSearch = useEffectEvent((next: string) => {
+    onSearch?.(next);
+  });
 
   useEffect(() => {
     if (!isAsync) return;
-    onSearch?.(search);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onSearch identity-stable from caller
-  }, [search]);
+    notifyAsyncSearch(search);
+  }, [isAsync, search]);
 
   function handleClose() {
     setOpen(false);
     setSearch("");
+    setActiveIndex(0);
   }
 
   function handleSelect(item: T) {
@@ -113,11 +112,20 @@ export function SearchableSelect<T>({
     onChange(null);
   }
 
-  function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
-    setSearch(e.target.value);
+  function handleClearKeyDown(e: KeyboardEvent<HTMLSpanElement>) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(null);
+    }
   }
 
-  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+  function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+    setActiveIndex(0);
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
     if (!open) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -140,7 +148,11 @@ export function SearchableSelect<T>({
   const hasValue = !!value;
   const showClearButton = clearable && hasValue && !disabled;
 
-  const toggleOpen = () => !disabled && setOpen((p) => !p);
+  const toggleOpen = () => {
+    if (disabled) return;
+    if (!open) setActiveIndex(0);
+    setOpen((p) => !p);
+  };
 
   const defaultTrigger = (
     <button
@@ -172,6 +184,7 @@ export function SearchableSelect<T>({
             tabIndex={-1}
             aria-label="Limpiar selección"
             onClick={handleClear}
+            onKeyDown={handleClearKeyDown}
             className="flex items-center rounded p-0.5 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
           >
             <X size={14} aria-hidden="true" />
@@ -187,7 +200,7 @@ export function SearchableSelect<T>({
   );
 
   return (
-    <div className="relative" onKeyDown={handleKeyDown}>
+    <div className="relative">
       <Popover
         open={open}
         onClose={handleClose}
@@ -209,9 +222,12 @@ export function SearchableSelect<T>({
         <div className="flex w-72 flex-col">
           <div className="border-b border-neutral-100 p-3">
             <Input
-              autoFocus
+              ref={(el) => {
+                el?.focus();
+              }}
               value={search}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
               placeholder={searchPlaceholder}
               size="sm"
               leftElement={<Search size={14} aria-hidden="true" />}
@@ -232,7 +248,7 @@ export function SearchableSelect<T>({
             }
           >
             {isLoading && (
-              <li className="flex items-center justify-center px-3 py-3">
+              <li className="flex items-center justify-center p-3">
                 <Spinner size="sm" />
               </li>
             )}

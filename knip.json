@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/app/routes/**/*.{ts,tsx}"
+  ],
+  "ignoreBinaries": [
+    "only-allow"
+  ],
+  "ignoreDependencies": [
+    "@tiptap/extension-link",
+    "@tiptap/extension-underline",
+    "@tiptap/extensions",
+    "react-error-boundary"
+  ]
+}

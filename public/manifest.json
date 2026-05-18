@@ -2,7 +2,7 @@
   "name": "Sano & Controlado",
   "short_name": "SyC",
   "description": "Sistema de gestion para gimnasios",
-  "start_url": "/login",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#ffffff",
@@ -21,6 +21,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -22,12 +22,13 @@ export default function AttendanceCheckInPage() {
     <div className="relative h-screen w-screen overflow-hidden bg-white select-none">
       <AttendanceIdleScreen
         dni={flow.dni}
-        isValid={flow.isValid}
-        canAddDigit={flow.canAddDigit}
-        isEmpty={flow.isEmpty}
-        disabled={!isIdle && !isError}
-        error={flow.error}
-        isError={isError}
+        keypad={{
+          isValid: flow.isValid,
+          canAddDigit: flow.canAddDigit,
+          isEmpty: flow.isEmpty,
+          disabled: !isIdle && !isError,
+        }}
+        error={{ message: flow.error, visible: isError }}
         onAddDigit={flow.addDigit}
         onRemoveDigit={flow.removeDigit}
         onSubmit={flow.submit}

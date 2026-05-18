@@ -53,12 +53,12 @@ function ResourceCard({ url }: ResourceCardProps) {
       className="group flex h-full flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-sm"
     >
       <div className="flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-neutral-200 bg-neutral-50">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-md border border-neutral-200 bg-neutral-50">
           {domain ? (
             <img
               src={getFaviconUrl(domain)}
               alt=""
-              className="h-5 w-5"
+              className="size-5"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).style.display = "none";
               }}

@@ -33,7 +33,7 @@ export function TabButton({ index, link, active, onClick }: TabButtonProps) {
     <img
       src={getFaviconUrl(domain)}
       alt=""
-      className="h-3.5 w-3.5"
+      className="size-3.5"
       onError={() => setIconErrored(true)}
     />
   ) : (

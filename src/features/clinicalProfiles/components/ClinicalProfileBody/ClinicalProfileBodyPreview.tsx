@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { Body } from "@shared/components/BodyHighlighter";
+import { BodyDetailModal } from "@shared/components/BodyDetailModal";
+import { useDisclosure } from "@shared/hooks/useDisclosure";
 import { BODY_PREVIEW_FILL } from "../../constants";
 import { useBodyPartsFiltered } from "../../hooks/useBodyPartsFiltered";
-import { ClinicalProfileBodyModal } from "./ClinicalProfileBodyModal";
+import { ClinicalProfileBodyLegend } from "./ClinicalProfileBodyLegend";
 
 export function ClinicalProfileBodyPreview() {
   const { bodyParts } = useBodyPartsFiltered();
-  const [open, setOpen] = useState(false);
+  const detailModal = useDisclosure();
 
   const zoneCount = bodyParts.length;
 
@@ -14,7 +15,7 @@ export function ClinicalProfileBodyPreview() {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={detailModal.open}
         className="group w-full cursor-default rounded-xl border border-neutral-200 bg-white p-4 text-left max-md:pointer-events-none md:cursor-pointer md:transition md:hover:shadow-sm"
       >
         <div className="flex items-center justify-between">
@@ -52,7 +53,14 @@ export function ClinicalProfileBodyPreview() {
         </div>
       </button>
 
-      <ClinicalProfileBodyModal open={open} onClose={() => setOpen(false)} />
+      <BodyDetailModal
+        open={detailModal.isOpen}
+        onClose={detailModal.close}
+        bodyParts={bodyParts}
+        defaultFill={BODY_PREVIEW_FILL}
+        subtitle="Visualización detallada del perfil clínico"
+        legend={<ClinicalProfileBodyLegend />}
+      />
     </>
   );
 }

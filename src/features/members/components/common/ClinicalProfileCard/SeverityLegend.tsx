@@ -38,7 +38,7 @@ export function SeverityLegend({ bodyParts }: SeverityLegendProps) {
 
   if (phasesPresent.size === 0) return null;
 
-  const phases = [...phasesPresent].sort(
+  const phases = Array.from(phasesPresent).toSorted(
     (a, b) => PHASE_ORDER[a] - PHASE_ORDER[b],
   );
 

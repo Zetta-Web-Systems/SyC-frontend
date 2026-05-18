@@ -26,7 +26,7 @@ export function AttendanceMoodSelector({
         className="animate-[attendance-content-up_400ms_ease-out_both]"
         style={{ animationDelay: "150ms" }}
       >
-        <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-5xl">
+        <h2 className="text-center text-3xl font-semibold tracking-tight text-white md:text-5xl">
           ¿Cómo te sentís hoy, {personName}?
         </h2>
       </div>

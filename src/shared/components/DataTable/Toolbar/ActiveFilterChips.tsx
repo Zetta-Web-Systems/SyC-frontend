@@ -31,8 +31,9 @@ export function ActiveFilterChips({
   const activeChips = useMemo<ActiveChip[]>(() => {
     const chips: ActiveChip[] = [];
     for (const filter of filters) {
+      const optionsByValue = new Map(filter.options.map((o) => [o.value, o]));
       for (const selectedValue of filter.selected) {
-        const option = filter.options.find((o) => o.value === selectedValue);
+        const option = optionsByValue.get(selectedValue);
         if (option) {
           chips.push({
             filterKey: filter.key,

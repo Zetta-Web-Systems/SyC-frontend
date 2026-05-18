@@ -35,12 +35,12 @@ export function AttendanceAdminAccess({ visible }: AttendanceAdminAccessProps) {
     >
       <div
         {...longPress.handlers}
-        className="fixed bottom-0 left-0 z-40 flex h-16 w-16 items-center justify-center"
+        className="fixed bottom-0 left-0 z-40 flex size-16 items-center justify-center"
         aria-label="Mantener presionado para opciones de administración"
       >
         {longPress.isPressed && (
           <svg
-            className="absolute h-12 w-12"
+            className="absolute size-12"
             viewBox="0 0 36 36"
             aria-hidden="true"
           >

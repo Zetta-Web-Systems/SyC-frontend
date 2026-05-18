@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@shared/lib/cn";
 import {
   ME_SHORTCUTS,
@@ -51,15 +57,19 @@ export function MarkdownToolbarPopover({
     };
   }, [anchorRef]);
 
+  const requestClose = useEffectEvent(() => {
+    onClose();
+  });
+
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const target = event.target as Node;
       if (ref.current?.contains(target)) return;
       if (anchorRef.current?.contains(target)) return;
-      onClose();
+      requestClose();
     };
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") requestClose();
     };
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKey);
@@ -67,7 +77,7 @@ export function MarkdownToolbarPopover({
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKey);
     };
-  }, [anchorRef, onClose]);
+  }, [anchorRef]);
 
   return (
     <Portal>

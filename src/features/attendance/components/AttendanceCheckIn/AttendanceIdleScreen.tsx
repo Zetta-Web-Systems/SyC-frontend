@@ -2,14 +2,22 @@ import { AttendanceDniDisplay } from "./AttendanceDisplay/AttendanceDniDisplay";
 import { AttendanceNumericKeypad } from "./AttendanceDisplay/AttendanceNumericKeypad";
 import { AttendanceInlineError } from "./AttendanceFeedback/AttendanceInlineError";
 
-interface AttendanceIdleScreenProps {
-  dni: string;
+export interface AttendanceKeypadState {
   isValid: boolean;
   canAddDigit: boolean;
   isEmpty: boolean;
   disabled: boolean;
-  error: string | null;
-  isError: boolean;
+}
+
+export interface AttendanceErrorState {
+  message: string | null;
+  visible: boolean;
+}
+
+interface AttendanceIdleScreenProps {
+  dni: string;
+  keypad: AttendanceKeypadState;
+  error: AttendanceErrorState;
   onAddDigit: (digit: string) => void;
   onRemoveDigit: () => void;
   onSubmit: () => void;
@@ -17,12 +25,8 @@ interface AttendanceIdleScreenProps {
 
 export function AttendanceIdleScreen({
   dni,
-  isValid,
-  canAddDigit,
-  isEmpty,
-  disabled,
+  keypad,
   error,
-  isError,
   onAddDigit,
   onRemoveDigit,
   onSubmit,
@@ -35,19 +39,23 @@ export function AttendanceIdleScreen({
         className="h-20 w-auto object-contain md:h-30 lg:h-24"
       />
 
-      <AttendanceDniDisplay dni={dni} isValid={isValid} isError={isError} />
+      <AttendanceDniDisplay
+        dni={dni}
+        isValid={keypad.isValid}
+        isError={error.visible}
+      />
 
       <AttendanceNumericKeypad
         onDigit={onAddDigit}
         onBackspace={onRemoveDigit}
         onSubmit={onSubmit}
-        isValid={isValid}
-        canAddDigit={canAddDigit}
-        isEmpty={isEmpty}
-        disabled={disabled}
+        isValid={keypad.isValid}
+        canAddDigit={keypad.canAddDigit}
+        isEmpty={keypad.isEmpty}
+        disabled={keypad.disabled}
       />
 
-      <AttendanceInlineError error={error} visible={isError} />
+      <AttendanceInlineError error={error.message} visible={error.visible} />
     </div>
   );
 }

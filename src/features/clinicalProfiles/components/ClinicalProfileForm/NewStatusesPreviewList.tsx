@@ -25,9 +25,9 @@ export function NewStatusesPreviewList({
             {group.riskFlagName}
           </h4>
           <ul className="mt-2 flex flex-col gap-1.5 text-sm text-neutral-700">
-            {group.items.map((item, idx) => (
+            {group.items.map((item) => (
               <li
-                key={`${item.bodyZone}-${item.side}-${idx}`}
+                key={`${item.bodyZone}-${item.side}-${item.painLevel}`}
                 className="flex flex-wrap items-center gap-x-3 gap-y-1"
               >
                 <span className="font-medium">

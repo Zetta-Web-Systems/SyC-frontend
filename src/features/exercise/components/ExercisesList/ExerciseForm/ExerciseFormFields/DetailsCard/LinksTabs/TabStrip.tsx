@@ -1,21 +1,31 @@
 import { Plus } from "lucide-react";
 import { TabButton } from "./TabButton";
 
+interface TabItem {
+  id: string;
+  value: string;
+}
+
 interface TabStripProps {
-  links: string[];
+  items: TabItem[];
   activeIndex: number;
   onSelect: (index: number) => void;
   onAdd: () => void;
 }
 
-export function TabStrip({ links, activeIndex, onSelect, onAdd }: TabStripProps) {
+export function TabStrip({
+  items,
+  activeIndex,
+  onSelect,
+  onAdd,
+}: TabStripProps) {
   return (
     <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
-      {links.map((link, i) => (
+      {items.map((item, i) => (
         <TabButton
-          key={i}
+          key={item.id}
           index={i}
-          link={link}
+          link={item.value}
           active={activeIndex === i}
           onClick={() => onSelect(i)}
         />
