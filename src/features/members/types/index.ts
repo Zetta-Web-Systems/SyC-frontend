@@ -41,6 +41,13 @@ export interface Member extends BaseMember {
   clinicalProfile?: ClinicalProfile;
 }
 
+export interface MemberSimple {
+  id: string;
+  name: string;
+  lastname: string;
+  image?: string | null;
+}
+
 export interface RegisterMember extends BaseMember {
   dni: string;
   email?: string;
