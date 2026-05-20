@@ -15,6 +15,13 @@ export interface ToolbarFilterConfig {
   searchable?: boolean;
 }
 
+export interface ToolbarToggleFilter {
+  key: string;
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}
+
 export interface ExtraFilterChip {
   key: string;
   label: string;
