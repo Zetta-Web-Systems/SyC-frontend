@@ -8,11 +8,13 @@ import {
   Popover,
   FilterDropdown,
   DateFilterDropdown,
+  Switch,
 } from "@shared/ui";
 import type { DateFilterDropdownProps } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import type {
   ToolbarFilterConfig,
+  ToolbarToggleFilter,
   ExtraFilterChip,
 } from "@shared/types/datatable.types";
 import { ActiveFilterChips } from "./Toolbar/ActiveFilterChips";
@@ -20,6 +22,7 @@ import { ExportMenu } from "./Toolbar/ExportMenu";
 
 export interface DataTableToolbarProps {
   filters: ToolbarFilterConfig[];
+  toggleFilters?: ToolbarToggleFilter[];
   dateFilter?: Omit<DateFilterDropdownProps, "className">;
   searchPlaceholder?: string;
   searchValue?: string;
@@ -34,8 +37,11 @@ export interface DataTableToolbarProps {
   className?: string;
 }
 
+const EMPTY_TOGGLE_FILTERS: ToolbarToggleFilter[] = [];
+
 export function DataTableToolbar({
   filters,
+  toggleFilters = EMPTY_TOGGLE_FILTERS,
   dateFilter,
   searchPlaceholder = "Buscar...",
   searchValue,
@@ -82,6 +88,7 @@ export function DataTableToolbar({
 
   const activeFilterCount =
     filters.reduce((sum, f) => sum + f.selected.length, 0) +
+    toggleFilters.filter((t) => t.checked).length +
     builtExtraChips.length;
 
   return (
@@ -107,6 +114,25 @@ export function DataTableToolbar({
               multiple={filter.multiple}
               searchable={filter.searchable}
             />
+          ))}
+
+          {toggleFilters.map((toggle) => (
+            <label
+              key={toggle.key}
+              className={cn(
+                "inline-flex h-10 cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border px-4 text-sm font-medium transition-colors",
+                toggle.checked
+                  ? "border-primary-500 bg-primary-50 text-primary-700"
+                  : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50",
+              )}
+            >
+              {toggle.label}
+              <Switch
+                size="sm"
+                checked={toggle.checked}
+                onChange={(e) => toggle.onChange(e.target.checked)}
+              />
+            </label>
           ))}
 
           {moreFiltersContent != null && (
@@ -177,6 +203,25 @@ export function DataTableToolbar({
                   multiple={filter.multiple}
                   searchable={filter.searchable}
                 />
+              ))}
+
+              {toggleFilters.map((toggle) => (
+                <label
+                  key={toggle.key}
+                  className={cn(
+                    "inline-flex h-10 cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border px-4 text-sm font-medium transition-colors",
+                    toggle.checked
+                      ? "border-primary-500 bg-primary-50 text-primary-700"
+                      : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50",
+                  )}
+                >
+                  {toggle.label}
+                  <Switch
+                    size="sm"
+                    checked={toggle.checked}
+                    onChange={(e) => toggle.onChange(e.target.checked)}
+                  />
+                </label>
               ))}
 
               {onClearAll && activeFilterCount > 0 && (
