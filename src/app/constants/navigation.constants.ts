@@ -63,7 +63,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         label: "Planificaciones",
-        to: "/plans",
+        to: "/training-plans",
         icon: ClipboardList,
         color: "text-emerald-400",
         roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
