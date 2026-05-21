@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { Pencil, UserX } from "lucide-react";
+import { CalendarPlus, Pencil, UserX } from "lucide-react";
 import { Button } from "@shared/ui";
 import { DataTable, DataTablePagination } from "@shared/components/DataTable";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
@@ -20,6 +20,7 @@ interface TrainingPlansTableProps {
   isLoading: boolean;
   onEdit: (trainingPlan: TrainingPlanSimple) => void;
   onDelete: (trainingPlan: TrainingPlanSimple) => void;
+  onExtend: (trainingPlan: TrainingPlanSimple) => void;
 }
 
 export function TrainingPlansTable({
@@ -30,6 +31,7 @@ export function TrainingPlansTable({
   isLoading,
   onEdit,
   onDelete,
+  onExtend,
 }: TrainingPlansTableProps) {
   const { columnVisibility, setColumnVisibility } = useColumnVisibility({
     config: TRAINING_PLAN_TABLE_VISIBILITY,
@@ -48,6 +50,17 @@ export function TrainingPlansTable({
           return (
             <div className="flex place-content-center gap-1">
               <>
+                {trainingPlan.isActive && (
+                  <Button
+                    variant="ghost"
+                    intent="primary"
+                    size="icon"
+                    aria-label={`Extender planificación de ${name} ${lastname}`}
+                    onClick={() => onExtend(trainingPlan)}
+                  >
+                    <CalendarPlus size={16} aria-hidden="true" />
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   intent="success"
@@ -61,7 +74,7 @@ export function TrainingPlansTable({
                   variant="ghost"
                   intent="danger"
                   size="icon"
-                  aria-label={`Eliminar planificación de ${name} ${lastname}`}
+                  aria-label={`Desactivar planificación de ${name} ${lastname}`}
                   onClick={() => onDelete(trainingPlan)}
                 >
                   <UserX size={16} aria-hidden="true" />
@@ -72,7 +85,7 @@ export function TrainingPlansTable({
         },
       },
     ],
-    [onEdit, onDelete],
+    [onEdit, onDelete, onExtend],
   );
 
   return (

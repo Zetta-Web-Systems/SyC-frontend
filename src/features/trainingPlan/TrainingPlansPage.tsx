@@ -20,7 +20,7 @@ export default function TrainingPlansPage() {
 
   const { data, isLoading, isPlaceholderData } = useTrainingPlansQuery(params);
 
-  const { handleOpenRegister, handleOpenEdit, handleDelete } =
+  const { handleOpenRegister, handleOpenEdit, handleDelete, handleExtend } =
     useTrainingPlansActions();
 
   const trainingPlans = data?.data ?? [];
@@ -47,6 +47,7 @@ export default function TrainingPlansPage() {
         isLoading={isLoading && !isPlaceholderData}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
+        onExtend={handleExtend}
       />
     </div>
   );

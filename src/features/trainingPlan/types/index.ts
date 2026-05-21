@@ -92,6 +92,10 @@ export interface RegisterTrainingPlan extends BaseTrainingPlan {
 
 export type UpdateTrainingPlan = Partial<BaseTrainingPlan>;
 
+export interface ExtendTrainingPlan {
+  weeksToExtend: number;
+}
+
 export type UpdateExerciseExecution = Partial<
   Pick<RegisterExerciseExecution, "sets" | "reps" | "rir">
 >;

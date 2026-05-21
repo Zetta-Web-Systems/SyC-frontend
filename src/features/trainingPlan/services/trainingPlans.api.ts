@@ -7,6 +7,7 @@ import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type {
   AddPlannedExercise,
   AddTrainingDay,
+  ExtendTrainingPlan,
   RegisterTrainingPlan,
   ReorderPlannedExercises,
   ReorderTrainingDays,
@@ -47,6 +48,17 @@ export async function updateTrainingPlan(id: string, dto: UpdateTrainingPlan) {
 
 export async function deleteTrainingPlan(id: string) {
   await api.delete(`/training-plans/${id}`);
+}
+
+export async function extendTrainingPlan(
+  id: string,
+  dto: ExtendTrainingPlan,
+) {
+  const { data } = await api.patch<TrainingPlan>(
+    `/training-plans/extend/${id}`,
+    dto,
+  );
+  return data;
 }
 
 export async function addTrainingDay(
