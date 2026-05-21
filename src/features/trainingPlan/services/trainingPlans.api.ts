@@ -45,6 +45,10 @@ export async function updateTrainingPlan(id: string, dto: UpdateTrainingPlan) {
   return data;
 }
 
+export async function deleteTrainingPlan(id: string) {
+  await api.delete(`/training-plans/${id}`);
+}
+
 export async function addTrainingDay(
   trainingPlanId: string,
   dto: AddTrainingDay,

@@ -20,7 +20,8 @@ export default function TrainingPlansPage() {
 
   const { data, isLoading, isPlaceholderData } = useTrainingPlansQuery(params);
 
-  const { handleOpenRegister, handleOpenEdit } = useTrainingPlansActions();
+  const { handleOpenRegister, handleOpenEdit, handleDelete } =
+    useTrainingPlansActions();
 
   const trainingPlans = data?.data ?? [];
   const rowCount = data?.pagination.total ?? 0;
@@ -45,6 +46,7 @@ export default function TrainingPlansPage() {
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
         onEdit={handleOpenEdit}
+        onDelete={handleDelete}
       />
     </div>
   );
