@@ -44,6 +44,7 @@ export interface TrainingPlan {
 
 export interface TrainingPlanSimple {
   id: string;
+  planNumber: number;
   startDate: string;
   endDate: string;
   durationInWeeks: number;
@@ -74,6 +75,7 @@ export interface RegisterTrainingDay {
 }
 
 interface BaseTrainingPlan {
+  planNumber: number;
   startDate: string;
   mobilityBlock: string;
   preparatoryBlock: string;

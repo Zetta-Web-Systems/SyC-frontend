@@ -9,7 +9,7 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     header: "Alumno",
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
-      const { member } = row.original;
+      const { member, planNumber } = row.original;
       const initials = (
         member.name.charAt(0) + member.lastname.charAt(0)
       ).toUpperCase();
@@ -24,7 +24,10 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
             fallback={initials}
             alt={fullName}
           />
-          <span className="font-medium">{fullName}</span>
+          <div className="flex flex-col items-start gap-1">
+            <span className="font-medium">{fullName}</span>
+            <span className="text-xs text-neutral-500">Plan #{planNumber}</span>
+          </div>
         </div>
       );
     },
