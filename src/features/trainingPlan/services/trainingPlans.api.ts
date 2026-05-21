@@ -1,0 +1,118 @@
+import { api } from "@shared/api/api";
+import type {
+  PaginatedParams,
+  PaginatedResponse,
+} from "@shared/types/pagination.types";
+import { buildPaginatedParams } from "@shared/utils/pagination.utils";
+import type {
+  AddPlannedExercise,
+  AddTrainingDay,
+  RegisterTrainingPlan,
+  ReorderPlannedExercises,
+  ReorderTrainingDays,
+  TrainingPlan,
+  TrainingPlanSimple,
+  UpdateExerciseExecution,
+  UpdateTrainingPlan,
+} from "../types";
+
+export async function getTrainingPlansPaginated(params: PaginatedParams) {
+  const { data } = await api.get<PaginatedResponse<TrainingPlanSimple>>(
+    "/training-plans/list/paginated",
+    { params: buildPaginatedParams(params) },
+  );
+  return data;
+}
+
+export async function getTrainingPlanById(id: string) {
+  const { data } = await api.get<TrainingPlan>(`/training-plans/${id}`);
+  return data;
+}
+
+export async function registerTrainingPlan(
+  memberId: string,
+  dto: RegisterTrainingPlan,
+) {
+  const { data } = await api.post<TrainingPlan>(
+    `/training-plans/register/${memberId}`,
+    dto,
+  );
+  return data;
+}
+
+export async function updateTrainingPlan(id: string, dto: UpdateTrainingPlan) {
+  const { data } = await api.patch<TrainingPlan>(`/training-plans/${id}`, dto);
+  return data;
+}
+
+export async function addTrainingDay(
+  trainingPlanId: string,
+  dto: AddTrainingDay,
+) {
+  const { data } = await api.post<TrainingPlan>(
+    `/training-plans/${trainingPlanId}/training-days/add`,
+    dto,
+  );
+  return data;
+}
+
+export async function updateTrainingDay(
+  trainingDayId: string,
+  dto: AddTrainingDay,
+) {
+  const { data } = await api.patch<TrainingPlan>(
+    `/training-plans/training-days/${trainingDayId}`,
+    dto,
+  );
+  return data;
+}
+
+export async function deleteTrainingDay(trainingDayId: string) {
+  await api.delete(`/training-plans/training-days/${trainingDayId}`);
+}
+
+export async function reorderTrainingDays(
+  trainingPlanId: string,
+  dto: ReorderTrainingDays,
+) {
+  await api.patch(
+    `/training-plans/${trainingPlanId}/training-days/reorder`,
+    dto,
+  );
+}
+
+export async function addPlannedExercise(
+  trainingDayId: string,
+  dto: AddPlannedExercise,
+) {
+  await api.post(
+    `/training-plans/training-days/${trainingDayId}/planned-exercises/add`,
+    dto,
+  );
+}
+
+export async function reorderPlannedExercises(
+  trainingDayId: string,
+  dto: ReorderPlannedExercises,
+) {
+  await api.patch(
+    `/training-plans/training-days/${trainingDayId}/planned-exercises/reorder`,
+    dto,
+  );
+}
+
+export async function deletePlannedExercise(plannedExerciseId: string) {
+  await api.delete(
+    `/training-plans/training-days/planned-exercises/${plannedExerciseId}`,
+  );
+}
+
+export async function updateExerciseExecution(
+  exerciseExecutionId: string,
+  dto: UpdateExerciseExecution,
+) {
+  await api.patch(
+    `/training-plans/training-days/planned-exercises/exercise-executions/${exerciseExecutionId}`,
+    dto,
+  );
+}
