@@ -9,11 +9,13 @@ import type {
   AddTrainingDay,
   ExtendTrainingPlan,
   RegisterTrainingPlan,
+  RegisterTrainingPlanTemplate,
   ReorderPlannedExercises,
   ReorderTrainingDays,
   TrainingPlan,
   TrainingPlanSimple,
   UpdateExerciseExecution,
+  UpdateTrainingDay,
   UpdateTrainingPlan,
 } from "../types";
 
@@ -41,6 +43,16 @@ export async function registerTrainingPlan(
   return data;
 }
 
+export async function registerTrainingPlanTemplate(
+  dto: RegisterTrainingPlanTemplate,
+) {
+  const { data } = await api.post<TrainingPlan>(
+    `/training-plans/template/register`,
+    dto,
+  );
+  return data;
+}
+
 export async function updateTrainingPlan(id: string, dto: UpdateTrainingPlan) {
   const { data } = await api.patch<TrainingPlan>(`/training-plans/${id}`, dto);
   return data;
@@ -50,10 +62,7 @@ export async function deleteTrainingPlan(id: string) {
   await api.delete(`/training-plans/${id}`);
 }
 
-export async function extendTrainingPlan(
-  id: string,
-  dto: ExtendTrainingPlan,
-) {
+export async function extendTrainingPlan(id: string, dto: ExtendTrainingPlan) {
   const { data } = await api.patch<TrainingPlan>(
     `/training-plans/extend/${id}`,
     dto,
@@ -74,7 +83,7 @@ export async function addTrainingDay(
 
 export async function updateTrainingDay(
   trainingDayId: string,
-  dto: AddTrainingDay,
+  dto: UpdateTrainingDay,
 ) {
   const { data } = await api.patch<TrainingPlan>(
     `/training-plans/training-days/${trainingDayId}`,
