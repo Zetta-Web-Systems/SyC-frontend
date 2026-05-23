@@ -10,6 +10,11 @@ import { DataTable, DataTablePagination } from "@shared/components/DataTable";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
 import { TRAINING_PLAN_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
 import type { TrainingPlanSimple } from "../../types";
+import {
+  getTrainingPlanDescription,
+  getTrainingPlanKind,
+  TRAINING_PLAN_KIND,
+} from "../../utils/trainingPlanKind";
 import { trainingPlansColumns } from "./TrainingPlansTable.columns";
 
 interface TrainingPlansTableProps {
@@ -45,17 +50,20 @@ export function TrainingPlansTable({
         header: "Acciones",
         cell: ({ row }) => {
           const trainingPlan = row.original;
-          const { name, lastname } = trainingPlan.member;
+          const kind = getTrainingPlanKind(trainingPlan);
+          const description = getTrainingPlanDescription(trainingPlan);
+          const canExtend =
+            kind === TRAINING_PLAN_KIND.REGULAR && trainingPlan.isActive;
 
           return (
             <div className="flex place-content-center gap-1">
               <>
-                {trainingPlan.isActive && (
+                {canExtend && (
                   <Button
                     variant="ghost"
                     intent="primary"
                     size="icon"
-                    aria-label={`Extender planificación de ${name} ${lastname}`}
+                    aria-label={`Extender ${description}`}
                     onClick={() => onExtend(trainingPlan)}
                   >
                     <CalendarPlus size={16} aria-hidden="true" />
@@ -65,7 +73,7 @@ export function TrainingPlansTable({
                   variant="ghost"
                   intent="success"
                   size="icon"
-                  aria-label={`Editar planificación de ${name} ${lastname}`}
+                  aria-label={`Editar ${description}`}
                   onClick={() => onEdit(trainingPlan)}
                 >
                   <Pencil size={16} aria-hidden="true" color="green" />
@@ -74,7 +82,7 @@ export function TrainingPlansTable({
                   variant="ghost"
                   intent="danger"
                   size="icon"
-                  aria-label={`Desactivar planificación de ${name} ${lastname}`}
+                  aria-label={`Eliminar ${description}`}
                   onClick={() => onDelete(trainingPlan)}
                 >
                   <UserX size={16} aria-hidden="true" />

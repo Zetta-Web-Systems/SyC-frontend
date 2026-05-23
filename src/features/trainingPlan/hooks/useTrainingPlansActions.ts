@@ -4,6 +4,11 @@ import { confirm } from "@shared/stores/confirm.store";
 import { ExtendPlanWeeksField } from "../components/TrainingPlansList/ExtendPlanWeeksField";
 import { useDeleteTrainingPlanMutation } from "./mutations/useDeleteTrainingPlanMutation";
 import { useExtendTrainingPlanMutation } from "./mutations/useExtendTrainingPlanMutation";
+import {
+  getTrainingPlanDescription,
+  getTrainingPlanKind,
+  TRAINING_PLAN_KIND,
+} from "../utils/trainingPlanKind";
 import type { TrainingPlanSimple } from "../types";
 
 const DEFAULT_WEEKS_TO_EXTEND = 1;
@@ -23,11 +28,17 @@ export function useTrainingPlansActions() {
     });
 
   function handleDelete(trainingPlan: TrainingPlanSimple) {
-    const { name, lastname } = trainingPlan.member;
+    const kind = getTrainingPlanKind(trainingPlan);
+    const description = getTrainingPlanDescription(trainingPlan);
+    const title =
+      kind === TRAINING_PLAN_KIND.REGULAR
+        ? "Eliminar planificación"
+        : "Eliminar plantilla";
+
     confirm({
       intent: "danger",
-      title: "Eliminar planificación",
-      description: `¿Estas seguro que deseas eliminar la planificación de ${name} ${lastname}?`,
+      title,
+      description: `¿Estás seguro que deseas eliminar la ${description}?`,
       confirmLabel: "Eliminar",
       onConfirm: () => {
         deleteMutation.mutate({ trainingPlanId: trainingPlan.id });
@@ -36,12 +47,15 @@ export function useTrainingPlansActions() {
   }
 
   function handleExtend(trainingPlan: TrainingPlanSimple) {
-    const { name, lastname } = trainingPlan.member;
+    if (getTrainingPlanKind(trainingPlan) !== TRAINING_PLAN_KIND.REGULAR) {
+      return;
+    }
+    const description = getTrainingPlanDescription(trainingPlan);
     const selectedWeeks = { current: DEFAULT_WEEKS_TO_EXTEND };
     confirm({
       intent: "info",
       title: "Extender planificación",
-      description: `¿Cuántas semanas deseas extender la planificación de ${name} ${lastname}?`,
+      description: `¿Cuántas semanas deseas extender la ${description}?`,
       body: createElement(ExtendPlanWeeksField, {
         defaultValue: DEFAULT_WEEKS_TO_EXTEND,
         onChange: (weeks) => {

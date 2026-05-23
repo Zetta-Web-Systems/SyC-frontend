@@ -24,34 +24,40 @@ export interface TrainingDay {
   id: string;
   order: number;
   dayName?: DayName | null;
+  trainingDayLabel?: string | null;
   plannedExercises: PlannedExercise[];
 }
 
-export interface TrainingPlan {
-  id: string;
-  startDate: string;
-  durationInWeeks: number;
-  daysPerWeek: number;
+interface BaseTrainingPlan {
   mobilityBlock: string;
   preparatoryBlock: string;
   aerobicBlock: string;
-  member: Member;
+  isTemplate?: boolean;
+  templateName?: string;
+}
+
+export interface TrainingPlan extends BaseTrainingPlan {
+  id: string;
+  planNumber?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  durationInWeeks: number;
+  daysPerWeek: number;
+  member?: Member;
   isActive: boolean;
   trainingDays: TrainingDay[];
-  isTemplate: boolean;
-  templateName?: string | null;
 }
 
 export interface TrainingPlanSimple {
   id: string;
-  planNumber: number;
-  startDate: string;
-  endDate: string;
+  planNumber?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
   durationInWeeks: number;
   daysPerWeek: number;
-  member: MemberSimple;
+  member?: MemberSimple;
   isActive: boolean;
-  isTemplate: boolean;
+  isTemplate?: boolean;
   templateName?: string | null;
 }
 
@@ -71,26 +77,30 @@ export interface RegisterPlannedExercise {
 export interface RegisterTrainingDay {
   order: number;
   dayName?: DayName;
+  trainingDayLabel?: string;
   plannedExercises: RegisterPlannedExercise[];
 }
 
-interface BaseTrainingPlan {
-  planNumber: number;
-  startDate: string;
-  mobilityBlock: string;
-  preparatoryBlock: string;
-  aerobicBlock: string;
-  isTemplate?: boolean;
-  templateName?: string;
-}
-
 export interface RegisterTrainingPlan extends BaseTrainingPlan {
+  startDate: string;
   durationInWeeks: number;
   daysPerWeek: number;
   trainingDays: RegisterTrainingDay[];
 }
 
-export type UpdateTrainingPlan = Partial<BaseTrainingPlan>;
+export interface RegisterTrainingPlanTemplate extends Omit<
+  BaseTrainingPlan,
+  "templateName" | "isTemplate"
+> {
+  templateName: string;
+  durationInWeeks: number;
+  daysPerWeek: number;
+  trainingDays: RegisterTrainingDay[];
+}
+
+export interface UpdateTrainingPlan extends Partial<BaseTrainingPlan> {
+  startDate?: string;
+}
 
 export interface ExtendTrainingPlan {
   weeksToExtend: number;
@@ -103,7 +113,10 @@ export type UpdateExerciseExecution = Partial<
 export interface AddTrainingDay {
   order?: number;
   dayName?: DayName;
+  trainingDayLabel?: string;
 }
+
+export type UpdateTrainingDay = Omit<AddTrainingDay, "order">;
 
 export interface ReorderTrainingDays {
   dayIds: string[];

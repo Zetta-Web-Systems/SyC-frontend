@@ -1,7 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { LayoutTemplate } from "lucide-react";
 import { Avatar, Badge } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
 import type { TrainingPlanSimple } from "../../types";
+import {
+  getTrainingPlanKind,
+  TRAINING_PLAN_KIND,
+} from "../../utils/trainingPlanKind";
 
 export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
   {
@@ -9,24 +14,64 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     header: "Alumno",
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
-      const { member, planNumber } = row.original;
-      const initials = (
-        member.name.charAt(0) + member.lastname.charAt(0)
-      ).toUpperCase();
-      const fullName = `${member.name} ${member.lastname}`;
+      const plan = row.original;
+      const kind = getTrainingPlanKind(plan);
+      const isTemplate = kind !== TRAINING_PLAN_KIND.REGULAR;
+
+      const fullName = plan.member
+        ? `${plan.member.name} ${plan.member.lastname}`
+        : null;
+      const title = fullName ?? plan.templateName ?? "Plantilla";
+      const subtitle =
+        kind === TRAINING_PLAN_KIND.REGULAR
+          ? plan.planNumber != null
+            ? `Plan #${plan.planNumber}`
+            : null
+          : kind === TRAINING_PLAN_KIND.MEMBER_TEMPLATE
+            ? (plan.templateName ?? "Plantilla")
+            : null;
 
       return (
         <div className="flex items-center justify-start gap-4">
-          <Avatar
-            size="md"
-            color="primary"
-            src={member.image ?? null}
-            fallback={initials}
-            alt={fullName}
-          />
+          <div className="relative shrink-0">
+            {plan.member ? (
+              <Avatar
+                size="md"
+                color="primary"
+                src={plan.member.image ?? null}
+                fallback={(
+                  plan.member.name.charAt(0) + plan.member.lastname.charAt(0)
+                ).toUpperCase()}
+                alt={fullName ?? ""}
+              />
+            ) : (
+              <Avatar
+                size="md"
+                color="neutral"
+                src={null}
+                fallback={<LayoutTemplate size={18} aria-hidden="true" />}
+                alt={title}
+              />
+            )}
+            {isTemplate && plan.member && (
+              <span
+                title="Plantilla"
+                aria-label="Plantilla"
+                className="pointer-events-none absolute -top-1 -left-1 z-10 flex size-4 items-center justify-center rounded-full bg-white drop-shadow-sm"
+              >
+                <LayoutTemplate
+                  size={10}
+                  aria-hidden="true"
+                  className="text-primary-600"
+                />
+              </span>
+            )}
+          </div>
           <div className="flex flex-col items-start gap-1">
-            <span className="font-medium">{fullName}</span>
-            <span className="text-xs text-neutral-500">Plan #{planNumber}</span>
+            <span className="font-medium">{title}</span>
+            {subtitle && (
+              <span className="text-xs text-neutral-500">{subtitle}</span>
+            )}
           </div>
         </div>
       );
@@ -35,7 +80,11 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
   {
     id: "startDate",
     header: "Fecha de inicio",
-    cell: ({ row }) => <span>{formatDate(row.original.startDate)}</span>,
+    cell: ({ row }) => (
+      <span>
+        {row.original.startDate ? formatDate(row.original.startDate) : "—"}
+      </span>
+    ),
   },
   {
     id: "durationInWeeks",
@@ -59,17 +108,6 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
           {days} {days === 1 ? "día" : "días"}
         </span>
       );
-    },
-  },
-  {
-    id: "template",
-    header: "Plantilla",
-    cell: ({ row }) => {
-      const { isTemplate, templateName } = row.original;
-      if (!isTemplate) {
-        return <span className="italic text-neutral-400">No</span>;
-      }
-      return <span>{templateName ?? "Sí"}</span>;
     },
   },
   {
