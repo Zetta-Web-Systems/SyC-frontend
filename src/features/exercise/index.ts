@@ -4,6 +4,7 @@ export { default as ProfileExercisePage } from "./pages/ProfileExercisePage";
 export * from "./types";
 export { useGroupExercisesQuery } from "./hooks/useGroupExercisesQuery";
 export { useExercisesQuery } from "./hooks/useExercisesQuery";
+export { useExerciseQuery } from "./hooks/useExerciseQuery";
 export { GroupExerciseForm } from "./components/GroupExercisesList/GroupExerciseForm/GroupExerciseForm";
 export { GroupExerciseModal } from "./components/GroupExerciseModal/GroupExerciseModal";
 export { ExerciseForm } from "./components/ExercisesList/ExerciseForm/ExerciseForm";
