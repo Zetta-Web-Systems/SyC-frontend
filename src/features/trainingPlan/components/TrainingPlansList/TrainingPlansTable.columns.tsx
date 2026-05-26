@@ -6,7 +6,7 @@ import type { TrainingPlanSimple } from "../../types";
 import {
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
-} from "../../utils/trainingPlanKind";
+} from "../../lib/trainingPlanKind";
 
 export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
   {

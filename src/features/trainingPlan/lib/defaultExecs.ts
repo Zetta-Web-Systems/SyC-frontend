@@ -1,4 +1,5 @@
 import type { RegisterExerciseExecution } from "../types";
+import type { RegisterTrainingDayFormSchema } from "../schemas/registerTrainingPlan.schema";
 
 export const DEFAULT_EXEC: Omit<RegisterExerciseExecution, "weekNumber"> = {
   sets: 3,
@@ -34,4 +35,20 @@ export function syncExecsToDuration(
     next.push(defaultExec(i + 1));
   }
   return next;
+}
+
+export function syncAllDaysToDuration(
+  days: RegisterTrainingDayFormSchema[],
+  durationInWeeks: number,
+): RegisterTrainingDayFormSchema[] {
+  return days.map((day) => ({
+    ...day,
+    plannedExercises: day.plannedExercises.map((pe) => ({
+      ...pe,
+      exerciseExecutions: syncExecsToDuration(
+        pe.exerciseExecutions,
+        durationInWeeks,
+      ),
+    })),
+  }));
 }

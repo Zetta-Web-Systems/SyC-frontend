@@ -14,7 +14,7 @@ import {
   getTrainingPlanDescription,
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
-} from "../../utils/trainingPlanKind";
+} from "../../lib/trainingPlanKind";
 import { trainingPlansColumns } from "./TrainingPlansTable.columns";
 
 interface TrainingPlansTableProps {
