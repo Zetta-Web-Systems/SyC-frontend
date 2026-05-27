@@ -16,7 +16,7 @@ export interface ListStateProps {
 }
 
 const DEFAULT_MESSAGE: Record<ListStateKind, string> = {
-  loading: "Cargando…",
+  loading: "Cargando",
   empty: "Sin resultados",
   error: "Ocurrió un error.",
 };

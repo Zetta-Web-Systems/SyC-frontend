@@ -35,6 +35,7 @@ export { Checkbox } from "./Checkbox/Checkbox";
 export { DateFilterDropdown } from "./DateFilterDropdown/DateFilterDropdown";
 export { FilterDropdown } from "./FilterDropdown/FilterDropdown";
 export { IconBox } from "./IconBox/IconBox";
+export { iconBoxVariants } from "./IconBox/IconBox.variants";
 export { InlineEditField } from "./InlineEditField/InlineEditField";
 export { Input } from "./Input/Input";
 export { Label } from "./Label/Label";

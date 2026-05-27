@@ -29,7 +29,7 @@ export function DetailsCard() {
               error={field.error}
               aria-describedby={field["aria-describedby"]}
               disabled={field.disabled}
-              placeholder="Descripción de cómo se realiza el ejercicio…"
+              placeholder="Descripción de cómo se realiza el ejercicio"
             />
           )}
         </FormField>

@@ -100,7 +100,7 @@ export function SelectMenu<T extends string | number>({
   options,
   variant = "input",
   size = "md",
-  placeholder = "Seleccionar…",
+  placeholder = "Seleccionar",
   renderTrigger,
   hideChevron = false,
   id,
