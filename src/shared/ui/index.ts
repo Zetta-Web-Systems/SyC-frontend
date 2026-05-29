@@ -3,8 +3,11 @@ export type { AccordionItemProps } from "./Accordion/AccordionItem";
 export type { AvatarUploaderProps } from "./AvatarUploader/AvatarUploader";
 export type { ButtonProps } from "./Button/Button";
 export type { DateFilterDropdownProps } from "./DateFilterDropdown/DateFilterDropdown";
+export type { DrawerProps } from "./Drawer/Drawer";
+export type { FabProps, FabSpeedDialItem } from "./Fab/Fab";
 export type { FilterDropdownProps } from "./FilterDropdown/FilterDropdown";
 export type { IconBoxProps } from "./IconBox/IconBox";
+export type { IconButtonProps } from "./IconButton/IconButton";
 export type {
   InlineEditFieldProps,
   InlineEditTextProps,
@@ -33,9 +36,14 @@ export { buttonVariants } from "./Button/Button.variants";
 export { Card } from "./Card/Card";
 export { Checkbox } from "./Checkbox/Checkbox";
 export { DateFilterDropdown } from "./DateFilterDropdown/DateFilterDropdown";
+export { Drawer } from "./Drawer/Drawer";
+export { Fab, FabSpeedDial } from "./Fab/Fab";
+export { fabVariants } from "./Fab/Fab.variants";
 export { FilterDropdown } from "./FilterDropdown/FilterDropdown";
 export { IconBox } from "./IconBox/IconBox";
 export { iconBoxVariants } from "./IconBox/IconBox.variants";
+export { IconButton } from "./IconButton/IconButton";
+export { iconButtonVariants } from "./IconButton/IconButton.variants";
 export { InlineEditField } from "./InlineEditField/InlineEditField";
 export { Input } from "./Input/Input";
 export { Label } from "./Label/Label";
