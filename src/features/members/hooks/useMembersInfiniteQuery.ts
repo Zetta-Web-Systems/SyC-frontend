@@ -3,7 +3,8 @@ import type { PaginatedParams } from "@shared/types/pagination.types";
 import { getMembersPaginated } from "../services/members.api";
 import { MEMBERS_KEYS } from "../constants";
 
-interface UseMembersInfiniteQueryParams extends Omit<PaginatedParams, "page"> {
+interface UseMembersInfiniteQueryParams
+  extends Omit<PaginatedParams, "page" | "size"> {
   pageSize?: number;
 }
 

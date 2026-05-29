@@ -3,10 +3,8 @@ import type { PaginatedParams } from "@shared/types/pagination.types";
 import { getExercisesPaginated } from "../services/exercises.api";
 import { EXERCISES_KEYS } from "../constants";
 
-interface UseExercisesInfiniteQueryParams extends Omit<
-  PaginatedParams,
-  "page"
-> {
+interface UseExercisesInfiniteQueryParams
+  extends Omit<PaginatedParams, "page" | "size"> {
   pageSize?: number;
 }
 
