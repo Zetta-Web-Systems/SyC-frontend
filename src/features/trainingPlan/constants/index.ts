@@ -30,3 +30,6 @@ export const DayName = {
 } as const;
 
 export type DayName = (typeof DayName)[keyof typeof DayName];
+
+export { TRAINING_PLAN_OB, OB_BLOCK_TONE } from "./trainingPlanOB";
+export type { TrainingPlanOBEntry, OBBlockTone } from "./trainingPlanOB";

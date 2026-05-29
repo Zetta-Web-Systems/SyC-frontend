@@ -8,7 +8,7 @@ import {
   getTrainingPlanDescription,
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
-} from "../utils/trainingPlanKind";
+} from "../lib/trainingPlanKind";
 import type { TrainingPlanSimple } from "../types";
 
 const DEFAULT_WEEKS_TO_EXTEND = 1;

@@ -14,6 +14,7 @@ export interface FormProps<TFields extends FieldValues> {
   id?: string;
   onSubmit: (data: TFields, form: UseFormReturn<TFields>) => void;
   defaultValues?: DefaultValues<TFields>;
+  reValidateMode?: "onSubmit" | "onChange" | "onBlur";
   children: ReactNode | ((form: UseFormReturn<TFields>) => ReactNode);
 }
 
@@ -23,12 +24,13 @@ export function Form<TFields extends FieldValues>({
   id,
   onSubmit,
   defaultValues,
+  reValidateMode = "onSubmit",
   children,
 }: FormProps<TFields>) {
   const form = useForm<TFields>({
     resolver: zodResolver(schema),
     mode: "onSubmit",
-    reValidateMode: "onSubmit",
+    reValidateMode,
     defaultValues,
     shouldFocusError: true,
   });

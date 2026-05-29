@@ -96,10 +96,8 @@ export function FabSpeedDial({
       ref={containerRef}
       className={cn(
         positionClassName,
-        "z-60 flex flex-col items-end gap-3 transition-all duration-300",
-        visible
-          ? "translate-y-0 opacity-100"
-          : "pointer-events-none translate-y-4 opacity-0",
+        "pointer-events-none z-60 flex flex-col items-end gap-3 transition-all duration-300",
+        visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
       )}
     >
       <div
@@ -150,7 +148,7 @@ export function FabSpeedDial({
         onClick={toggle}
         aria-expanded={isOpen}
         aria-label={ariaLabel}
-        className={fabToggleVariants({ intent: toggleIntent })}
+        className={cn("pointer-events-auto", fabToggleVariants({ intent: toggleIntent }))}
       >
         <ChevronUp
           size={18}

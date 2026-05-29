@@ -8,6 +8,7 @@ interface InlineEditCommonProps {
   label?: ReactNode;
   error?: string | boolean;
   shape?: "rounded" | "pill";
+  appearance?: "chip" | "seamless";
   className?: string;
   inputClassName?: string;
   ariaLabel?: string;
@@ -52,6 +53,8 @@ function clamp(n: number, min: number | undefined, max: number | undefined) {
 }
 
 export function InlineEditField(props: InlineEditFieldProps) {
+  const appearance = props.appearance ?? "chip";
+  const isSeamless = appearance === "seamless";
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const errorId = useId();
@@ -64,11 +67,12 @@ export function InlineEditField(props: InlineEditFieldProps) {
 
   useEffect(() => {
     if (!editing) return;
+    if (isSeamless) return;
     inputRef.current?.focus();
     if (props.type === "number" || props.type === "text") {
       inputRef.current?.select();
     }
-  }, [editing, props.type]);
+  }, [editing, isSeamless, props.type]);
 
   function startEdit() {
     if (!editing) setEditing(true);
@@ -78,24 +82,32 @@ export function InlineEditField(props: InlineEditFieldProps) {
     setEditing(false);
   }
 
+  const showAsInput = isSeamless || editing;
+
   return (
-    <span className="inline-flex flex-col">
+    <span
+      className={cn(
+        "flex-col",
+        isSeamless ? "flex w-full min-w-0" : "inline-flex",
+      )}
+    >
       <span
-        role={editing ? undefined : "button"}
-        tabIndex={editing ? undefined : 0}
-        onClick={startEdit}
+        role={!isSeamless && !editing ? "button" : undefined}
+        tabIndex={!isSeamless && !editing ? 0 : undefined}
+        onClick={isSeamless ? undefined : startEdit}
         onKeyDown={(e) => {
-          if (!editing && (e.key === "Enter" || e.key === " ")) {
+          if (!isSeamless && !editing && (e.key === "Enter" || e.key === " ")) {
             e.preventDefault();
             startEdit();
           }
         }}
-        aria-label={props.ariaLabel}
+        aria-label={!isSeamless ? props.ariaLabel : undefined}
         aria-invalid={hasError || undefined}
         aria-describedby={errorString ? errorId : undefined}
         data-invalid={hasError ? "true" : undefined}
         className={cn(
           inlineEditShellVariants({
+            appearance,
             shape: props.shape,
             editing,
             error: hasError,
@@ -113,13 +125,15 @@ export function InlineEditField(props: InlineEditFieldProps) {
         )}
         <InlineEditEditor
           {...props}
-          editing={editing}
+          editing={showAsInput}
           inputRef={inputRef}
+          onStartEdit={startEdit}
           onStopEdit={stopEdit}
+          seamless={isSeamless}
         />
       </span>
       {errorString && !editing && (
-        <span id={errorId} role="alert" className="mt-1 text-[11px] text-error">
+        <span id={errorId} role="alert" className="mt-1 text-xs text-error">
           {errorString}
         </span>
       )}
@@ -132,7 +146,9 @@ InlineEditField.displayName = "InlineEditField";
 interface InlineEditEditorExtra {
   editing: boolean;
   inputRef: React.RefObject<HTMLInputElement | null>;
+  onStartEdit: () => void;
   onStopEdit: () => void;
+  seamless: boolean;
 }
 
 function InlineEditEditor(props: InlineEditFieldProps & InlineEditEditorExtra) {
@@ -172,7 +188,7 @@ function DateEditor({
           if (e.key === "Enter" || e.key === "Escape") onStopEdit();
         }}
         className={cn(
-          "border-none bg-transparent p-0 text-[12.5px] font-semibold text-neutral-900 outline-none",
+          "border-none bg-transparent p-0 text-sm font-semibold text-neutral-900 outline-none",
           inputClassName,
         )}
       />
@@ -186,13 +202,16 @@ function DateEditor({
 function TextEditor({
   editing,
   inputRef,
+  onStartEdit,
   onStopEdit,
+  seamless,
   value,
   onChange,
   format,
   placeholder,
   maxLength,
   inputClassName,
+  ariaLabel,
 }: InlineEditTextProps & InlineEditEditorExtra) {
   const [draft, setDraft] = useState(value);
 
@@ -218,6 +237,8 @@ function TextEditor({
         value={draft}
         placeholder={placeholder}
         maxLength={maxLength}
+        aria-label={seamless ? ariaLabel : undefined}
+        onFocus={seamless ? onStartEdit : undefined}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
@@ -230,7 +251,10 @@ function TextEditor({
           }
         }}
         className={cn(
-          "border-none bg-transparent p-0 text-[12.5px] font-semibold text-neutral-900 outline-none placeholder:text-neutral-400",
+          "border-none bg-transparent p-0 outline-none placeholder:text-neutral-400",
+          seamless
+            ? "w-full text-inherit"
+            : "text-sm font-semibold text-neutral-900",
           inputClassName,
         )}
       />
@@ -295,7 +319,7 @@ function NumberEditor({
             }
           }}
           className={cn(
-            "w-10 border-none bg-transparent p-0 text-[12.5px] font-semibold text-neutral-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+            "w-10 border-none bg-transparent p-0 text-sm font-semibold text-neutral-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
             inputClassName,
           )}
         />

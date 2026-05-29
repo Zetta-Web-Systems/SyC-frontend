@@ -127,6 +127,30 @@ export function removeExerciseFromDay(
   });
 }
 
+export function reorderExercisesInDay(
+  days: RegisterTrainingDayFormSchema[],
+  dayName: DayName,
+  fromOrder: number,
+  toOrder: number,
+): RegisterTrainingDayFormSchema[] {
+  if (fromOrder === toOrder) return days;
+  return days.map((d) => {
+    if (d.dayName !== dayName) return d;
+    const fromIdx = d.plannedExercises.findIndex(
+      (pe) => pe.order === fromOrder,
+    );
+    const toIdx = d.plannedExercises.findIndex((pe) => pe.order === toOrder);
+    if (fromIdx < 0 || toIdx < 0) return d;
+    const next = [...d.plannedExercises];
+    const [moved] = next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, moved);
+    return {
+      ...d,
+      plannedExercises: next.map((pe, i) => ({ ...pe, order: i })),
+    };
+  });
+}
+
 export function duplicateExerciseInDay(
   days: RegisterTrainingDayFormSchema[],
   dayName: DayName,

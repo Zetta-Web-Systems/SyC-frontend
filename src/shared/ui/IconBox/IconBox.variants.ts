@@ -29,6 +29,9 @@ export const iconBoxVariants = cva(
         success: "",
         warning: "",
         danger: "",
+        mobility: "",
+        preparatory: "",
+        aerobic: "",
       },
     },
     compoundVariants: [
@@ -121,6 +124,51 @@ export const iconBoxVariants = cva(
         tone: "solid",
         intent: "danger",
         className: "bg-error text-white",
+      },
+      {
+        tone: "subtle",
+        intent: "mobility",
+        className: "bg-block-mobility/15 text-block-mobility",
+      },
+      {
+        tone: "subtle",
+        intent: "preparatory",
+        className: "bg-block-preparatory/15 text-block-preparatory",
+      },
+      {
+        tone: "subtle",
+        intent: "aerobic",
+        className: "bg-block-aerobic/15 text-block-aerobic",
+      },
+      {
+        tone: "soft",
+        intent: "mobility",
+        className: "bg-block-mobility/25 text-block-mobility",
+      },
+      {
+        tone: "soft",
+        intent: "preparatory",
+        className: "bg-block-preparatory/25 text-block-preparatory",
+      },
+      {
+        tone: "soft",
+        intent: "aerobic",
+        className: "bg-block-aerobic/25 text-block-aerobic",
+      },
+      {
+        tone: "solid",
+        intent: "mobility",
+        className: "bg-block-mobility text-white",
+      },
+      {
+        tone: "solid",
+        intent: "preparatory",
+        className: "bg-block-preparatory text-white",
+      },
+      {
+        tone: "solid",
+        intent: "aerobic",
+        className: "bg-block-aerobic text-white",
       },
     ],
     defaultVariants: {

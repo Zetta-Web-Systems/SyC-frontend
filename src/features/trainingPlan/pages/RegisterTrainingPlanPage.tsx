@@ -1,28 +1,28 @@
-// import { useState } from "react";
-// import { flushSync } from "react-dom";
+import { useState } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, FileText } from "lucide-react";
 import { Button } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
-// import { RegisterTrainingPlanForm } from "../components/RegisterTrainingPlanForm/RegisterTrainingPlanForm";
-// import { useRegisterTrainingPlanSubmit } from "../hooks/useRegisterTrainingPlanSubmit";
+import { TrainingPlanForm } from "../components/TrainingPlanForm/TrainingPlanForm";
+import { useRegisterTrainingPlanSubmit } from "../hooks/useRegisterTrainingPlanSubmit";
 
 export default function RegisterTrainingPlanPage() {
   const navigate = useNavigate();
-  // const [navigating, setNavigating] = useState(false);
+  const [navigating, setNavigating] = useState(false);
 
-  // function goToList() {
-  //   flushSync(() => setNavigating(true));
-  //   void navigate({ to: "/training-plans" });
-  // }
+  function goToList() {
+    flushSync(() => setNavigating(true));
+    void navigate({ to: "/training-plans" });
+  }
 
   function handleBack() {
     void navigate({ to: "/training-plans" });
   }
 
-  // const { isPending, mutation, handleSubmit } = useRegisterTrainingPlanSubmit({
-  //   onSuccess: goToList,
-  // });
+  const { isPending, mutation, handleSubmit } = useRegisterTrainingPlanSubmit({
+    onSuccess: goToList,
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,13 +43,13 @@ export default function RegisterTrainingPlanPage() {
         }
       />
 
-      {/* <RegisterTrainingPlanForm
+      <TrainingPlanForm
         onSubmit={handleSubmit}
         onCancel={handleBack}
         isPending={isPending}
         mutation={mutation}
         guardUnsavedChanges={!navigating}
-      /> */}
+      />
     </div>
   );
 }

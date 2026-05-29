@@ -8,6 +8,7 @@ type ListStateKind = "loading" | "empty" | "error";
 export interface ListStateProps {
   kind: ListStateKind;
   icon?: ReactNode;
+  hideIcon?: boolean;
   message?: ReactNode;
   description?: ReactNode;
   size?: "sm" | "md" | "lg";
@@ -18,7 +19,7 @@ export interface ListStateProps {
 const DEFAULT_MESSAGE: Record<ListStateKind, string> = {
   loading: "Cargando",
   empty: "Sin resultados",
-  error: "Ocurrió un error.",
+  error: "Ocurrió un error",
 };
 
 function DefaultIcon({ kind, size }: { kind: ListStateKind; size: number }) {
@@ -30,6 +31,7 @@ function DefaultIcon({ kind, size }: { kind: ListStateKind; size: number }) {
 export function ListState({
   kind,
   icon,
+  hideIcon = false,
   message,
   description,
   size = "md",
@@ -39,7 +41,9 @@ export function ListState({
   const resolvedVariant = variant ?? (kind === "empty" ? "block" : "inline");
 
   const iconSize = size === "sm" ? 14 : size === "lg" ? 22 : 18;
-  const resolvedIcon = icon ?? <DefaultIcon kind={kind} size={iconSize} />;
+  const resolvedIcon = hideIcon
+    ? null
+    : (icon ?? <DefaultIcon kind={kind} size={iconSize} />);
   const resolvedMessage = message ?? DEFAULT_MESSAGE[kind];
 
   if (resolvedVariant === "inline") {
@@ -53,7 +57,9 @@ export function ListState({
           className,
         )}
       >
-        <span className="inline-flex shrink-0">{resolvedIcon}</span>
+        {resolvedIcon && (
+          <span className="inline-flex shrink-0">{resolvedIcon}</span>
+        )}
         <span>{resolvedMessage}</span>
       </div>
     );
@@ -79,14 +85,16 @@ export function ListState({
         className,
       )}
     >
-      <span
-        className={cn(
-          "inline-flex shrink-0",
-          kind === "error" ? "text-error" : "text-neutral-400",
-        )}
-      >
-        {resolvedIcon}
-      </span>
+      {resolvedIcon && (
+        <span
+          className={cn(
+            "inline-flex shrink-0",
+            kind === "error" ? "text-error" : "text-neutral-400",
+          )}
+        >
+          {resolvedIcon}
+        </span>
+      )}
       <div className="flex flex-col gap-0.5">
         <span className="font-medium">{resolvedMessage}</span>
         {description && (
