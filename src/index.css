@@ -43,6 +43,11 @@
   --color-clinical-high: #dc2626;
   --color-clinical-very-high: #991b1b;
 
+  /* Colores (bloques OB)*/
+  --color-block-mobility: #8b5cf6;
+  --color-block-preparatory: #38bdf8;
+  --color-block-aerobic: #2563eb;
+
   /* Breakpoints */
   --breakpoint-xs: 488px;
   --breakpoint-sm: 640px;
