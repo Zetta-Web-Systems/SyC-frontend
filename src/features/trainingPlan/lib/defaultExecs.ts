@@ -4,7 +4,7 @@ import type { RegisterTrainingDayFormSchema } from "../schemas/registerTrainingP
 export const DEFAULT_EXEC: Omit<RegisterExerciseExecution, "weekNumber"> = {
   sets: 3,
   reps: "10",
-  rir: "3",
+  rir: "",
 };
 
 export function defaultExec(weekNumber: number): RegisterExerciseExecution {
