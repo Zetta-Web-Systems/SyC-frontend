@@ -156,7 +156,6 @@ export function TrainingDaysEditor({
               Todavía no agregaste ningún día de entrenamiento
             </p>
             <Button
-              type="button"
               intent="primary"
               size="md"
               onClick={handleAddDay}

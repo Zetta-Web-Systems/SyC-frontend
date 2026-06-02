@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dumbbell, Trash2 } from "lucide-react";
 import { Button, IconBox, Input, Modal } from "@shared/ui";
-import { useExerciseQuery } from "@features/exercise";
+import { getExerciseGroupLabel, useExerciseQuery } from "@features/exercise";
 import { useTrainingPlanFormHelpers } from "../../../hooks/form/useTrainingPlanFormHelpers";
 import { useTrainingPlanFormErrors } from "../../../hooks/form/useTrainingPlanFormErrors";
 import type { DayName } from "../../../constants";
@@ -66,6 +66,7 @@ export function ExerciseEditModal({
   }
 
   const title = exercise?.name ?? "Ejercicio";
+  const groupLabel = getExerciseGroupLabel(exercise);
 
   return (
     <Modal
@@ -76,7 +77,6 @@ export function ExerciseEditModal({
       footer={
         <>
           <Button
-            type="button"
             variant="ghost"
             intent="danger"
             size="md"
@@ -90,7 +90,6 @@ export function ExerciseEditModal({
               Cancelar
             </Button>
             <Button
-              type="button"
               variant="solid"
               intent="primary"
               size="md"
@@ -109,10 +108,8 @@ export function ExerciseEditModal({
           </IconBox>
           <div className="min-w-0 flex-1">
             <h3 className="m-0 text-lg font-bold text-neutral-900">{title}</h3>
-            {exercise?.exerciseGroup && (
-              <p className="mt-0.5 text-xs text-neutral-500">
-                {exercise.exerciseGroup}
-              </p>
+            {groupLabel && (
+              <p className="mt-0.5 text-xs text-neutral-500">{groupLabel}</p>
             )}
           </div>
         </div>
@@ -181,11 +178,6 @@ export function ExerciseEditModal({
             </tbody>
           </table>
         </div>
-
-        <p className="mt-3 text-xs text-neutral-500">
-          La cantidad de semanas se ajusta automáticamente con la duración del
-          plan.
-        </p>
       </div>
     </Modal>
   );

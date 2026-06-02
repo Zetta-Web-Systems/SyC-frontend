@@ -71,7 +71,6 @@ export function DayHeader({ activeDayName, onActiveChange }: DayHeaderProps) {
         </div>
         <div className="flex gap-1">
           <Button
-            type="button"
             variant="ghost"
             intent="neutral"
             size="sm"
@@ -83,7 +82,6 @@ export function DayHeader({ activeDayName, onActiveChange }: DayHeaderProps) {
             <span className="hidden xs:inline">Duplicar día</span>
           </Button>
           <Button
-            type="button"
             variant="ghost"
             intent="danger"
             size="sm"

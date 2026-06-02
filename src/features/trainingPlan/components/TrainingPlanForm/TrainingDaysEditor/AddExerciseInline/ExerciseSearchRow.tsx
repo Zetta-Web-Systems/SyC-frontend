@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { getExerciseGroupLabel } from "@features/exercise";
 import type { Exercise } from "@features/exercise";
 
 interface ExerciseSearchRowProps {
@@ -21,7 +22,7 @@ export function ExerciseSearchRow({
           {exercise.name}
         </div>
         <div className="truncate text-xs text-neutral-500">
-          {exercise.exerciseGroup}
+          {getExerciseGroupLabel(exercise)}
         </div>
       </div>
       <Plus

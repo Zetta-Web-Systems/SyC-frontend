@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Plus, X } from "lucide-react";
-import { IconButton, SearchInput } from "@shared/ui";
-import { cn } from "@shared/lib/cn";
+import { Button, IconButton, SearchInput } from "@shared/ui";
 import { useDropdown } from "@shared/hooks/useDropdown";
 import type { Exercise } from "@features/exercise";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
@@ -42,17 +41,15 @@ export function AddExerciseInline({
 
   if (!isOpen) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="dashed"
+        intent="primary"
         onClick={open}
-        className={cn(
-          "flex w-full items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-primary-300 bg-white px-3 py-3 text-sm font-semibold text-primary-600 transition-colors",
-          "hover:border-primary-500 hover:bg-primary-50",
-        )}
+        className="w-full rounded-xl"
       >
         <Plus size={14} aria-hidden="true" />
         Agregar ejercicio
-      </button>
+      </Button>
     );
   }
 

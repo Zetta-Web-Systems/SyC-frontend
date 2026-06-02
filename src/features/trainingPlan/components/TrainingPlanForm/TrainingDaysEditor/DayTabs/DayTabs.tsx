@@ -53,7 +53,6 @@ export function DayTabs({
       ))}
 
       <Button
-        type="button"
         variant="ghost"
         intent="primary"
         size="sm"
