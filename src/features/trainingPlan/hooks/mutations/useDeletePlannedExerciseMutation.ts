@@ -12,7 +12,8 @@ export function useDeletePlannedExerciseMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TRAINING_PLANS_KEYS.all });
       toast.success("Ejercicio eliminado", {
-        description: "El ejercicio fue eliminado del plan correctamente.",
+        description:
+          "El ejercicio fue eliminado de la planificación correctamente.",
       });
     },
   });

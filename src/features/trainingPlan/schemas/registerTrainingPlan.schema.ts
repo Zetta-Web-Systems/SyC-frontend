@@ -130,7 +130,7 @@ function attachCrossFieldIssues(
       if (execs.length !== data.durationInWeeks) {
         ctx.addIssue({
           code: "custom",
-          message: `Las semanas deben coincidir con la duración del plan (${data.durationInWeeks})`,
+          message: `Las semanas deben coincidir con la duración de la planificación (${data.durationInWeeks})`,
           path: [
             "trainingDays",
             dayIndex,

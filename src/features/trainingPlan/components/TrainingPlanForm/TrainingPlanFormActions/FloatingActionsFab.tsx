@@ -53,7 +53,7 @@ export function FloatingActionsFab({
     <FabSpeedDial
       items={items}
       visible={visible}
-      ariaLabel="Acciones del plan"
+      ariaLabel="Acciones de la planificación"
     />
   );
 }

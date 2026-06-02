@@ -16,7 +16,7 @@ export function DateBadge({ value, onChange, error }: DateBadgeProps) {
       icon={<Calendar size={14} className="text-neutral-400" />}
       label="Inicio"
       error={error}
-      ariaLabel="Fecha de inicio del plan"
+      ariaLabel="Fecha de inicio de la planificación"
     />
   );
 }

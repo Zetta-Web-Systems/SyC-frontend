@@ -28,7 +28,7 @@ export default function RegisterTrainingPlanPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Registrar planificación"
-        description="Diseñá los bloques, días y ejercicios del plan"
+        description="Diseñá los bloques, días y ejercicios de la planificación"
         actions={
           <div className="flex gap-2">
             <Button intent="neutral" variant="outline" disabled>
