@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { Pencil, UserCheck, UserX } from "lucide-react";
+import { Pencil, UserCheck, Trash2 } from "lucide-react";
 import { Button } from "@shared/ui";
 import {
   DataTable,
@@ -77,7 +77,7 @@ export function RiskFlagsTable({
                     aria-label={`Eliminar bandera de riesgo ${riskFlag.name}`}
                     onClick={() => onDelete(riskFlag)}
                   >
-                    <UserX size={16} aria-hidden="true" />
+                    <Trash2 size={16} aria-hidden="true" />
                   </Button>
                 </>
               ) : (
