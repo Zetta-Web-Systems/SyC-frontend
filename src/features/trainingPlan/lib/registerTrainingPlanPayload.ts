@@ -12,13 +12,13 @@ export function toRegisterTrainingDays(
 ): RegisterTrainingDay[] {
   const sorted = sortDays(values.trainingDays);
   return sorted.map((d, i) => ({
-    order: i,
+    order: i + 1,
     dayName: d.dayName,
     trainingDayLabel: d.trainingDayLabel || undefined,
     plannedExercises: d.plannedExercises.map<RegisterPlannedExercise>(
       (pe, j) => ({
         exerciseId: pe.exerciseId,
-        order: j,
+        order: j + 1,
         exerciseExecutions: pe.exerciseExecutions.map((e, k) => ({
           weekNumber: k + 1,
           sets: e.sets,
@@ -39,7 +39,6 @@ export function buildRegisterTrainingPlanPayload(
 ): BuildRegisterTrainingPlanResult {
   const trainingDays = toRegisterTrainingDays(values);
   const baseDto = {
-    startDate: values.startDate,
     durationInWeeks: values.durationInWeeks,
     daysPerWeek: values.daysPerWeek,
     mobilityBlock: values.mobilityBlock,
@@ -49,7 +48,11 @@ export function buildRegisterTrainingPlanPayload(
   };
 
   if (values.mode === "plan") {
-    return { kind: "plan", memberId: values.memberId, dto: baseDto };
+    return {
+      kind: "plan",
+      memberId: values.memberId,
+      dto: { ...baseDto, startDate: values.startDate },
+    };
   }
 
   return {
