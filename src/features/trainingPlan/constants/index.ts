@@ -17,6 +17,7 @@ export const STATUS_FILTER_OPTIONS: FilterOption[] = [
 
 export const TRAINING_PLANS_FILTER_SCHEMA = {
   status: { apiKey: "isActive", initial: ["1"] },
+  isTemplate: { apiKey: "isTemplate", initial: [] },
 } as const satisfies FilterSchema;
 
 export const DayName = {

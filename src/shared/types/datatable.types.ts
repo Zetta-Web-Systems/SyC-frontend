@@ -13,6 +13,7 @@ export interface ToolbarFilterConfig {
   onChange: (selected: string[]) => void;
   multiple?: boolean;
   searchable?: boolean;
+  disabled?: boolean;
 }
 
 export interface ToolbarToggleFilter {

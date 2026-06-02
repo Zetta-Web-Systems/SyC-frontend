@@ -11,7 +11,7 @@ import {
 export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
   {
     id: "member",
-    header: "Alumno",
+    header: "Alumno/Plantilla",
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
       const plan = row.original;
@@ -78,13 +78,33 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     },
   },
   {
-    id: "startDate",
-    header: "Fecha de inicio",
-    cell: ({ row }) => (
-      <span>
-        {row.original.startDate ? formatDate(row.original.startDate) : "—"}
-      </span>
-    ),
+    id: "dates",
+    header: "Fechas",
+    cell: ({ row }) => {
+      const { startDate, endDate } = row.original;
+
+      if (!startDate && !endDate) {
+        return <span className="italic text-neutral-400">Sin fechas</span>;
+      }
+
+      return (
+        <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+          {startDate ? (
+            <span>{formatDate(startDate)}</span>
+          ) : (
+            <span className="italic text-neutral-400">Sin inicio</span>
+          )}
+          <span className="text-primary-600" aria-hidden="true">
+            -
+          </span>
+          {endDate ? (
+            <span>{formatDate(endDate)}</span>
+          ) : (
+            <span className="italic text-neutral-400">Sin fin</span>
+          )}
+        </div>
+      );
+    },
   },
   {
     id: "durationInWeeks",
@@ -100,7 +120,7 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
   },
   {
     id: "daysPerWeek",
-    header: "Días por semana",
+    header: "Frecuencia",
     cell: ({ row }) => {
       const days = row.original.daysPerWeek;
       return (
@@ -114,11 +134,25 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     id: "estado",
     header: "Estado",
     cell: ({ row }) => {
-      const isActive = row.original.isActive;
+      const plan = row.original;
+      const isTemplate =
+        getTrainingPlanKind(plan) !== TRAINING_PLAN_KIND.REGULAR;
+
+      if (isTemplate) {
+        return (
+          <Badge variant="dot" intent="info" size="md">
+            PLANTILLA
+          </Badge>
+        );
+      }
 
       return (
-        <Badge variant="dot" intent={isActive ? "success" : "error"} size="md">
-          {isActive ? "ACTIVO" : "INACTIVO"}
+        <Badge
+          variant="dot"
+          intent={plan.isActive ? "success" : "error"}
+          size="md"
+        >
+          {plan.isActive ? "ACTIVO" : "INACTIVO"}
         </Badge>
       );
     },

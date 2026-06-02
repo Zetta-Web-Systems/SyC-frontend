@@ -34,13 +34,14 @@ export function TrainingPlansFilters({
         key: "status",
         label: "Estado",
         options: STATUS_FILTER_OPTIONS,
-        selected: filters.status ?? [],
+        selected: showTemplates ? [] : (filters.status ?? []),
         onChange: handleChange("status"),
         multiple: false,
         searchable: false,
+        disabled: showTemplates,
       },
     ],
-    [filters, handleChange],
+    [filters, handleChange, showTemplates],
   );
 
   const toggleFilters = useMemo<ToolbarToggleFilter[]>(

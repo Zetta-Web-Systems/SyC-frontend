@@ -15,6 +15,7 @@ export interface FilterDropdownProps {
   onChange: (selected: string[]) => void;
   multiple?: boolean;
   searchable?: boolean;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export function FilterDropdown({
   onChange,
   multiple = true,
   searchable = true,
+  disabled = false,
   className,
 }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -77,6 +79,7 @@ export function FilterDropdown({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
+          disabled={disabled}
           className={filterDropdownTriggerVariants({
             isActive: hasSelection,
           })}

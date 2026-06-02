@@ -4,7 +4,7 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { CalendarPlus, Pencil, UserX } from "lucide-react";
+import { CalendarPlus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@shared/ui";
 import { DataTable, DataTablePagination } from "@shared/components/DataTable";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
@@ -85,7 +85,7 @@ export function TrainingPlansTable({
                   aria-label={`Eliminar ${description}`}
                   onClick={() => onDelete(trainingPlan)}
                 >
-                  <UserX size={16} aria-hidden="true" />
+                  <Trash2 size={16} aria-hidden="true" />
                 </Button>
               </>
             </div>

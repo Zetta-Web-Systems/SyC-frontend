@@ -1,10 +1,7 @@
 import { useState, useCallback } from "react";
 import type { PaginationState } from "@tanstack/react-table";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
-import type {
-  FilterEntry,
-  PaginatedParams,
-} from "@shared/types/pagination.types";
+import type { PaginatedParams } from "@shared/types/pagination.types";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 import { useFilters } from "@shared/hooks/useFilters";
 import {
@@ -18,7 +15,6 @@ export function useTrainingPlansFilters() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [search, setSearch] = useState("");
-  const [showTemplates, setShowTemplates] = useState(false);
 
   const {
     filters,
@@ -27,17 +23,20 @@ export function useTrainingPlansFilters() {
     handleClearAllFilters: baseClearAll,
   } = useFilters(TRAINING_PLANS_FILTER_SCHEMA);
 
-  const entries: FilterEntry[] = [...filterEntries];
-  if (showTemplates) {
-    entries.push({ key: "isTemplate", value: "1" });
-  }
+  const showTemplates = (filters.isTemplate?.length ?? 0) > 0;
+
+  const apiEntries = showTemplates
+    ? filterEntries.filter(
+        (e) => e.key !== TRAINING_PLANS_FILTER_SCHEMA.status.apiKey,
+      )
+    : filterEntries;
 
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,
     orderBy: TRAINING_PLANS_ORDER_BY,
     search: search || undefined,
-    ...splitFilterEntries(entries),
+    ...splitFilterEntries(apiEntries),
   };
 
   const resetPage = useCallback(() => {
@@ -65,16 +64,15 @@ export function useTrainingPlansFilters() {
 
   const handleClearAllFilters = useCallback(() => {
     baseClearAll();
-    setShowTemplates(false);
     resetPage();
   }, [baseClearAll, resetPage]);
 
   const handleToggleTemplates = useCallback(
     (checked: boolean) => {
-      setShowTemplates(checked);
+      baseFilterChange("isTemplate", checked ? ["1"] : []);
       resetPage();
     },
-    [resetPage],
+    [baseFilterChange, resetPage],
   );
 
   return {

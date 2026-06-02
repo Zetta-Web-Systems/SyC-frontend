@@ -113,6 +113,7 @@ export function DataTableToolbar({
               onChange={filter.onChange}
               multiple={filter.multiple}
               searchable={filter.searchable}
+              disabled={filter.disabled}
             />
           ))}
 
@@ -202,6 +203,7 @@ export function DataTableToolbar({
                   onChange={filter.onChange}
                   multiple={filter.multiple}
                   searchable={filter.searchable}
+                  disabled={filter.disabled}
                 />
               ))}
 

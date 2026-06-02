@@ -126,7 +126,7 @@ export const EXERCISE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
 export const TRAINING_PLAN_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     member: true,
-    startDate: true,
+    dates: true,
     durationInWeeks: false,
     daysPerWeek: false,
     estado: false,
@@ -134,7 +134,7 @@ export const TRAINING_PLAN_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
   md: {
     member: true,
-    startDate: true,
+    dates: true,
     durationInWeeks: true,
     daysPerWeek: true,
     estado: true,
@@ -142,7 +142,7 @@ export const TRAINING_PLAN_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
   lg: {
     member: true,
-    startDate: true,
+    dates: true,
     durationInWeeks: true,
     daysPerWeek: true,
     estado: true,
