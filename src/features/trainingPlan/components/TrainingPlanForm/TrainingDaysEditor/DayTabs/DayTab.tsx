@@ -106,11 +106,22 @@ export function DayTab({
       <button
         type="button"
         onClick={onActivate}
-        className="text-xs text-neutral-400 transition-colors hover:text-neutral-600"
+        className="cursor-pointer text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-700"
       >
-        <span className="xs:hidden">· {exerciseCount}</span>
+        <span aria-hidden="true" className="mr-1 text-neutral-300">
+          ·
+        </span>
+        <span
+          className={cn(
+            "font-bold tabular-nums",
+            isActive ? "text-primary-600" : "text-neutral-800",
+          )}
+        >
+          {exerciseCount}
+        </span>
         <span className="hidden xs:inline">
-          · {exerciseCount} {exerciseCount === 1 ? "ejercicio" : "ejercicios"}
+          {" "}
+          {exerciseCount === 1 ? "ejercicio" : "ejercicios"}
         </span>
       </button>
     </div>

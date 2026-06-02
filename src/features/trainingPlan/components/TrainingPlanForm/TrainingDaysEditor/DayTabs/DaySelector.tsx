@@ -21,10 +21,16 @@ export function DaySelector({
         const isUsed = dn !== value && usedDayNames.has(dn);
         return {
           value: dn,
-          label: dn,
+          label: isUsed ? (
+            <span className="font-medium text-neutral-500 line-through decoration-neutral-300">
+              {dn}
+            </span>
+          ) : (
+            dn
+          ),
           disabled: isUsed,
           endAdornment: isUsed ? (
-            <Pill size="xs" intent="neutral" tone="soft" uppercase>
+            <Pill size="xs" intent="warning" tone="soft" uppercase>
               En uso
             </Pill>
           ) : undefined,
