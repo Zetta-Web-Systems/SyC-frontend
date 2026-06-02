@@ -47,7 +47,7 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
             ) : (
               <Avatar
                 size="md"
-                color="neutral"
+                color="primary"
                 src={null}
                 fallback={<LayoutTemplate size={18} aria-hidden="true" />}
                 alt={title}
@@ -57,13 +57,9 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
               <span
                 title="Plantilla"
                 aria-label="Plantilla"
-                className="pointer-events-none absolute -top-1 -left-1 z-10 flex size-4 items-center justify-center rounded-full bg-white drop-shadow-sm"
+                className="pointer-events-none absolute -top-1.5 -left-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-primary-600 text-white ring-2 ring-white drop-shadow-sm"
               >
-                <LayoutTemplate
-                  size={10}
-                  aria-hidden="true"
-                  className="text-primary-600"
-                />
+                <LayoutTemplate size={11} aria-hidden="true" />
               </span>
             )}
           </div>
@@ -125,7 +121,7 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
       const days = row.original.daysPerWeek;
       return (
         <span>
-          {days} {days === 1 ? "día" : "días"}
+          {days} {days === 1 ? "día" : "días"} por semana
         </span>
       );
     },

@@ -23,6 +23,7 @@ interface TrainingPlansTableProps {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
+  showTemplates: boolean;
   onEdit: (trainingPlan: TrainingPlanSimple) => void;
   onDelete: (trainingPlan: TrainingPlanSimple) => void;
   onExtend: (trainingPlan: TrainingPlanSimple) => void;
@@ -34,6 +35,7 @@ export function TrainingPlansTable({
   pagination,
   onPaginationChange,
   isLoading,
+  showTemplates,
   onEdit,
   onDelete,
   onExtend,
@@ -41,6 +43,12 @@ export function TrainingPlansTable({
   const { columnVisibility, setColumnVisibility } = useColumnVisibility({
     config: TRAINING_PLAN_TABLE_VISIBILITY,
   });
+
+  const effectiveColumnVisibility = useMemo(
+    () =>
+      showTemplates ? { ...columnVisibility, dates: false } : columnVisibility,
+    [columnVisibility, showTemplates],
+  );
 
   const columns = useMemo<ColumnDef<TrainingPlanSimple, unknown>[]>(
     () => [
@@ -103,7 +111,7 @@ export function TrainingPlansTable({
       rowCount={rowCount}
       pagination={pagination}
       onPaginationChange={onPaginationChange}
-      columnVisibility={columnVisibility}
+      columnVisibility={effectiveColumnVisibility}
       onColumnVisibilityChange={setColumnVisibility}
       isLoading={isLoading}
       noResultsMessage="No se encontraron planificaciones."

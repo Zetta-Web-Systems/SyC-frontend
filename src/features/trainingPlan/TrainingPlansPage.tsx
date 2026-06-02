@@ -45,6 +45,7 @@ export default function TrainingPlansPage() {
         pagination={pagination}
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
+        showTemplates={showTemplates}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onExtend={handleExtend}
