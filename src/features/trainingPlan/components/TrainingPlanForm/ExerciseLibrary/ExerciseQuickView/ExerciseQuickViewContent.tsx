@@ -1,15 +1,11 @@
-import { Accordion, AccordionItem, Badge } from "@shared/ui";
+import { Accordion, AccordionItem } from "@shared/ui";
 import { MarkdownViewer } from "@shared/components/MarkdownViewer";
 import type { DisclosureState } from "@shared/hooks/useDisclosure";
 import {
-  EXERCISE_LEVEL_INTENT,
-  EXERCISE_LEVEL_LABELS,
-  EXERCISE_LEVEL_TEXT_COLOR_CLASS,
   ExerciseProfileBodyCard,
   VideoThumbnailStrip,
   YouTubeEmbed,
   extractYouTubeId,
-  getExerciseGroupLabel,
 } from "@features/exercise";
 import type { ActiveVideoState, Exercise } from "@features/exercise";
 import { ExerciseQuickViewResourceCard } from "./ExerciseQuickViewResourceCard";
@@ -26,7 +22,6 @@ export function ExerciseQuickViewContent({
   bodyDetailModal,
 }: ExerciseQuickViewContentProps) {
   const { videos, activeIndex, setActiveIndex, activeVideo } = videoSelection;
-  const levelIntent = EXERCISE_LEVEL_INTENT[exercise.exerciseLevel];
 
   const hasDescription = Boolean(exercise.technicalDescription?.trim());
   const hasNotes = Boolean(exercise.notes?.trim());
@@ -38,23 +33,6 @@ export function ExerciseQuickViewContent({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-neutral-500">
-          {getExerciseGroupLabel(exercise)}
-        </span>
-        <Badge
-          variant="dot"
-          intent={levelIntent}
-          size="md"
-          className="text-neutral-800"
-        >
-          Nivel{" "}
-          <span className={EXERCISE_LEVEL_TEXT_COLOR_CLASS[levelIntent]}>
-            {EXERCISE_LEVEL_LABELS[exercise.exerciseLevel]}
-          </span>
-        </Badge>
-      </div>
-
       {activeVideo && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
           <div className="w-full max-w-md overflow-hidden rounded-lg shadow-sm">
