@@ -5,7 +5,10 @@ import { getExerciseGroupLabel, useExerciseQuery } from "@features/exercise";
 import { IconBox, IconButton } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
+import { getAffectedStatuses } from "../../../../lib/trafficLight";
+import type { AffectedCurrentStatus } from "../../../../lib/trafficLight";
 import { summarizeExecs } from "../../../../lib/summarizeExecs";
+import { TrainingPlanRiskIndicator } from "../../../TrainingPlanRiskIndicator/TrainingPlanRiskIndicator";
 import type { DayName } from "../../../../constants";
 import type { RegisterExerciseExecutionFormSchema } from "../../../../schemas/registerTrainingPlan.schema";
 import {
@@ -22,6 +25,7 @@ interface ExerciseRowProps {
   exerciseOrder: number;
   rowNumber: number;
   exerciseExecutions: RegisterExerciseExecutionFormSchema[];
+  riskStatuses: AffectedCurrentStatus[];
   error?: string;
   onEdit: () => void;
 }
@@ -32,6 +36,7 @@ export function ExerciseRow({
   exerciseOrder,
   rowNumber,
   exerciseExecutions,
+  riskStatuses,
   error,
   onEdit,
 }: ExerciseRowProps) {
@@ -40,6 +45,9 @@ export function ExerciseRow({
   const exerciseQuery = useExerciseQuery(exerciseId);
   const exercise = exerciseQuery.data;
   const summary = summarizeExecs(exerciseExecutions);
+
+  const affected = exercise ? getAffectedStatuses(exercise, riskStatuses) : [];
+  const isYellow = affected.length > 0;
 
   const dragData: RowDragData = {
     type: DRAG_TYPE.ROW,
@@ -88,6 +96,7 @@ export function ExerciseRow({
         "grid cursor-grab items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-2.5 py-2 transition-colors hover:border-primary-200 hover:bg-primary-50/30 active:cursor-grabbing sm:gap-2 sm:px-3 sm:py-2.5",
         "grid-cols-[auto_auto_minmax(0,1fr)_minmax(0,auto)_auto_auto]",
         isDragging && "opacity-40",
+        isYellow && "border-warning/40 bg-warning/5",
         error && "border-error bg-error/5 hover:border-error hover:bg-error/10",
       )}
     >
@@ -112,6 +121,7 @@ export function ExerciseRow({
             {exercise?.name ??
               (exerciseQuery.isLoading ? "Cargando..." : "Ejercicio")}
           </span>
+          {isYellow && <TrainingPlanRiskIndicator affected={affected} />}
         </div>
         <div
           className={cn(

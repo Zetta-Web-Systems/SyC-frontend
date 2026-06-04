@@ -31,7 +31,7 @@ export function TrainingPlanFormActions({
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => setAtBottom(entry.isIntersecting),
-      { threshold: 0.1 },
+      { rootMargin: "0px 0px -64px 0px", threshold: 0 },
     );
     observer.observe(el);
     return () => observer.disconnect();

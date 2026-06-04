@@ -8,6 +8,7 @@ import { Button, IconBox } from "@shared/ui";
 import { ListState } from "@shared/components/ListState";
 import { useTrainingPlanFormHelpers } from "../../../hooks/form/useTrainingPlanFormHelpers";
 import { useTrainingPlanFormErrors } from "../../../hooks/form/useTrainingPlanFormErrors";
+import { useTrainingPlanRiskStatuses } from "../../../hooks/ui/useTrainingPlanRiskStatuses";
 import type { DayName } from "../../../constants";
 import { rowId } from "../../../lib/trainingPlanDnd";
 import { DayTabs } from "./DayTabs/DayTabs";
@@ -32,6 +33,7 @@ export function TrainingDaysEditor({
 }: TrainingDaysEditorProps) {
   const { sortedDays, addDay, canAddDay } = useTrainingPlanFormHelpers();
   const { byDay, trainingDaysRoot } = useTrainingPlanFormErrors();
+  const riskStatuses = useTrainingPlanRiskStatuses();
 
   const [editing, setEditing] = useState<{
     dayName: DayName;
@@ -129,6 +131,7 @@ export function TrainingDaysEditor({
                         exerciseId={pe.exerciseId}
                         rowNumber={i + 1}
                         exerciseExecutions={pe.exerciseExecutions}
+                        riskStatuses={riskStatuses}
                         error={exErr?.exerciseId ?? exErr?.executions}
                         onEdit={() =>
                           setEditing({
