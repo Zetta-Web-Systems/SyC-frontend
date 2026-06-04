@@ -4,11 +4,12 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { CalendarPlus, Pencil, Trash2 } from "lucide-react";
+import { Ban, CalendarPlus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@shared/ui";
 import { DataTable, DataTablePagination } from "@shared/components/DataTable";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
 import { TRAINING_PLAN_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
+import { PlanState } from "../../constants";
 import type { TrainingPlanSimple } from "../../types";
 import {
   getTrainingPlanDescription,
@@ -60,8 +61,8 @@ export function TrainingPlansTable({
           const trainingPlan = row.original;
           const kind = getTrainingPlanKind(trainingPlan);
           const description = getTrainingPlanDescription(trainingPlan);
-          const canExtend =
-            kind === TRAINING_PLAN_KIND.REGULAR && trainingPlan.isActive;
+          const isCancelled = trainingPlan.state === PlanState.CANCELLED;
+          const canExtend = kind === TRAINING_PLAN_KIND.REGULAR && !isCancelled;
 
           return (
             <div className="flex place-content-center gap-1">
@@ -90,10 +91,14 @@ export function TrainingPlansTable({
                   variant="ghost"
                   intent="danger"
                   size="icon"
-                  aria-label={`Eliminar ${description}`}
+                  aria-label={`${isCancelled ? "Eliminar" : "Cancelar"} ${description}`}
                   onClick={() => onDelete(trainingPlan)}
                 >
-                  <Trash2 size={16} aria-hidden="true" />
+                  {isCancelled ? (
+                    <Trash2 size={16} aria-hidden="true" />
+                  ) : (
+                    <Ban size={16} aria-hidden="true" />
+                  )}
                 </Button>
               </>
             </div>

@@ -31,11 +31,11 @@ export function TrainingPlansFilters({
   const filterConfigs = useMemo<ToolbarFilterConfig[]>(
     () => [
       {
-        key: "status",
+        key: "state",
         label: "Estado",
         options: STATUS_FILTER_OPTIONS,
-        selected: showTemplates ? [] : (filters.status ?? []),
-        onChange: handleChange("status"),
+        selected: showTemplates ? [] : (filters.state ?? []),
+        onChange: handleChange("state"),
         multiple: false,
         searchable: false,
         disabled: showTemplates,
@@ -47,7 +47,7 @@ export function TrainingPlansFilters({
   const toggleFilters = useMemo<ToolbarToggleFilter[]>(
     () => [
       {
-        key: "isTemplate",
+        key: "templates",
         label: "Solo plantillas",
         checked: showTemplates,
         onChange: onToggleTemplates,

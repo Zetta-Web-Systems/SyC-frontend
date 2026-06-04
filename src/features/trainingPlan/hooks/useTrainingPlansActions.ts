@@ -9,6 +9,7 @@ import {
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
 } from "../lib/trainingPlanKind";
+import { PlanState } from "../constants";
 import type { TrainingPlanSimple } from "../types";
 
 const DEFAULT_WEEKS_TO_EXTEND = 1;
@@ -30,16 +31,19 @@ export function useTrainingPlansActions() {
   function handleDelete(trainingPlan: TrainingPlanSimple) {
     const kind = getTrainingPlanKind(trainingPlan);
     const description = getTrainingPlanDescription(trainingPlan);
-    const title =
-      kind === TRAINING_PLAN_KIND.REGULAR
-        ? "Eliminar planificación"
-        : "Eliminar plantilla";
+    const isTemplate = kind === TRAINING_PLAN_KIND.TEMPLATE;
+    const isCancelled = trainingPlan.state === PlanState.CANCELLED;
+
+    const entity = isTemplate ? "plantilla" : "planificación";
+    const verb = isCancelled ? "Eliminar" : "Cancelar";
+    const action = `${verb} ${entity}`;
 
     confirm({
       intent: "danger",
-      title,
-      description: `¿Estás seguro que deseas eliminar la ${description}?`,
-      confirmLabel: "Eliminar",
+      title: action,
+      description: `¿Estás seguro que deseas ${verb.toLowerCase()} la ${description}?`,
+      confirmLabel: action,
+      cancelLabel: "Volver",
       onConfirm: () => {
         deleteMutation.mutate({ trainingPlanId: trainingPlan.id });
       },
@@ -47,7 +51,10 @@ export function useTrainingPlansActions() {
   }
 
   function handleExtend(trainingPlan: TrainingPlanSimple) {
-    if (getTrainingPlanKind(trainingPlan) !== TRAINING_PLAN_KIND.REGULAR) {
+    const isRegular =
+      getTrainingPlanKind(trainingPlan) === TRAINING_PLAN_KIND.REGULAR;
+    const isCancelled = trainingPlan.state === PlanState.CANCELLED;
+    if (!isRegular || isCancelled) {
       return;
     }
     const description = getTrainingPlanDescription(trainingPlan);

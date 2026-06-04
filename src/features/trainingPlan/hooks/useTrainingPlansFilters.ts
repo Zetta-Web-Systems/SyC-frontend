@@ -5,6 +5,7 @@ import type { PaginatedParams } from "@shared/types/pagination.types";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 import { useFilters } from "@shared/hooks/useFilters";
 import {
+  PlanState,
   TRAINING_PLANS_FILTER_SCHEMA,
   TRAINING_PLANS_ORDER_BY,
 } from "../constants";
@@ -23,20 +24,14 @@ export function useTrainingPlansFilters() {
     handleClearAllFilters: baseClearAll,
   } = useFilters(TRAINING_PLANS_FILTER_SCHEMA);
 
-  const showTemplates = (filters.isTemplate?.length ?? 0) > 0;
-
-  const apiEntries = showTemplates
-    ? filterEntries.filter(
-        (e) => e.key !== TRAINING_PLANS_FILTER_SCHEMA.status.apiKey,
-      )
-    : filterEntries;
+  const showTemplates = filters.state?.includes(PlanState.TEMPLATE) ?? false;
 
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,
     orderBy: TRAINING_PLANS_ORDER_BY,
     search: search || undefined,
-    ...splitFilterEntries(apiEntries),
+    ...splitFilterEntries(filterEntries),
   };
 
   const resetPage = useCallback(() => {
@@ -69,7 +64,7 @@ export function useTrainingPlansFilters() {
 
   const handleToggleTemplates = useCallback(
     (checked: boolean) => {
-      baseFilterChange("isTemplate", checked ? ["1"] : []);
+      baseFilterChange("state", checked ? [PlanState.TEMPLATE] : []);
       resetPage();
     },
     [baseFilterChange, resetPage],

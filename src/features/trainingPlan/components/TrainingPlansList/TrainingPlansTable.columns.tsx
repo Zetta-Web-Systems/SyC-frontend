@@ -3,6 +3,7 @@ import { LayoutTemplate } from "lucide-react";
 import { Avatar, Badge } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
 import type { TrainingPlanSimple } from "../../types";
+import { PLAN_STATE_BADGE } from "../../constants";
 import {
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
@@ -15,21 +16,17 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
       const plan = row.original;
-      const kind = getTrainingPlanKind(plan);
-      const isTemplate = kind !== TRAINING_PLAN_KIND.REGULAR;
+      const isTemplate =
+        getTrainingPlanKind(plan) === TRAINING_PLAN_KIND.TEMPLATE;
 
       const fullName = plan.member
         ? `${plan.member.name} ${plan.member.lastname}`
         : null;
       const title = fullName ?? plan.templateName ?? "Plantilla";
       const subtitle =
-        kind === TRAINING_PLAN_KIND.REGULAR
-          ? plan.planNumber != null
-            ? `Plan #${plan.planNumber}`
-            : null
-          : kind === TRAINING_PLAN_KIND.MEMBER_TEMPLATE
-            ? (plan.templateName ?? "Plantilla")
-            : null;
+        !isTemplate && plan.planNumber != null
+          ? `Plan #${plan.planNumber}`
+          : null;
 
       return (
         <div className="flex items-center justify-start gap-4">
@@ -52,15 +49,6 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
                 fallback={<LayoutTemplate size={18} aria-hidden="true" />}
                 alt={title}
               />
-            )}
-            {isTemplate && plan.member && (
-              <span
-                title="Plantilla"
-                aria-label="Plantilla"
-                className="pointer-events-none absolute -top-1.5 -left-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-primary-600 text-white ring-2 ring-white drop-shadow-sm"
-              >
-                <LayoutTemplate size={11} aria-hidden="true" />
-              </span>
             )}
           </div>
           <div className="flex flex-col items-start gap-1">
@@ -130,25 +118,11 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     id: "estado",
     header: "Estado",
     cell: ({ row }) => {
-      const plan = row.original;
-      const isTemplate =
-        getTrainingPlanKind(plan) !== TRAINING_PLAN_KIND.REGULAR;
-
-      if (isTemplate) {
-        return (
-          <Badge variant="dot" intent="info" size="md">
-            PLANTILLA
-          </Badge>
-        );
-      }
+      const badge = PLAN_STATE_BADGE[row.original.state];
 
       return (
-        <Badge
-          variant="dot"
-          intent={plan.isActive ? "success" : "error"}
-          size="md"
-        >
-          {plan.isActive ? "ACTIVO" : "INACTIVO"}
+        <Badge variant="dot" intent={badge.intent} size="md">
+          {badge.label.toUpperCase()}
         </Badge>
       );
     },

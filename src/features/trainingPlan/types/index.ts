@@ -1,7 +1,7 @@
 import type { Member, MemberSimple } from "@features/members";
 import type { Exercise } from "@features/exercise";
 import type { CurrentStatus } from "@features/clinicalProfiles";
-import type { DayName } from "../constants";
+import type { DayName, PlanState } from "../constants";
 
 export interface ExerciseExecution {
   id: string;
@@ -32,7 +32,6 @@ interface BaseTrainingPlan {
   mobilityBlock: string;
   preparatoryBlock: string;
   aerobicBlock: string;
-  isTemplate?: boolean;
   templateName?: string;
 }
 
@@ -44,7 +43,7 @@ export interface TrainingPlan extends BaseTrainingPlan {
   durationInWeeks: number;
   daysPerWeek: number;
   member?: Member;
-  isActive: boolean;
+  state: PlanState;
   trainingDays: TrainingDay[];
 }
 
@@ -56,8 +55,7 @@ export interface TrainingPlanSimple {
   durationInWeeks: number;
   daysPerWeek: number;
   member?: MemberSimple;
-  isActive: boolean;
-  isTemplate?: boolean;
+  state: PlanState;
   templateName?: string | null;
 }
 
@@ -90,7 +88,7 @@ export interface RegisterTrainingPlan extends BaseTrainingPlan {
 
 export interface RegisterTrainingPlanTemplate extends Omit<
   BaseTrainingPlan,
-  "templateName" | "isTemplate"
+  "templateName"
 > {
   templateName: string;
   durationInWeeks: number;
