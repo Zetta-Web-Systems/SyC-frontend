@@ -8,6 +8,13 @@ import type {
   MemberRiskFlagUpdateSchema,
 } from "../schemas/clinicalProfile.schema";
 
+export async function getClinicalProfileByMemberId(memberId: string) {
+  const { data } = await api.get<ClinicalProfile>(
+    `/clinical-profile/${memberId}`,
+  );
+  return data;
+}
+
 export async function updateClinicalProfile(
   id: string,
   dto: ClinicalProfileUpdateSchema,

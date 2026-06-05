@@ -30,6 +30,7 @@ export {
   getPainTextClassByPhase,
 } from "./lib/painLevelStyles";
 export { toClinicalProfileRegisterPayload } from "./lib/clinicalProfileDiff";
+export { useClinicalProfileQuery } from "./hooks/useClinicalProfileQuery";
 export { useUpdateClinicalProfileMutation } from "./hooks/mutations/useUpdateClinicalProfileMutation";
 export { useAddMemberRiskFlagMutation } from "./hooks/mutations/useAddMemberRiskFlagMutation";
 export { useUpdateMemberRiskFlagMutation } from "./hooks/mutations/useUpdateMemberRiskFlagMutation";
