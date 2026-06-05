@@ -46,8 +46,7 @@ export function useRegisterTrainingPlanSubmit({
       confirm({
         intent: "info",
         title: "Registrar plantilla",
-        description:
-          "¿Estás seguro que deseas registrar la plantilla? El nombre es opcional, podés dejarlo vacío.",
+        description: "¿Estás seguro que deseas registrar la plantilla?",
         body: (
           <RegisterTemplateNameField
             defaultValue={data.templateName ?? ""}
