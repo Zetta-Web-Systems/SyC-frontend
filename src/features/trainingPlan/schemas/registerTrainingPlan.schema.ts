@@ -70,10 +70,7 @@ const planBranch = z.object({
 
 const templateBranch = z.object({
   mode: z.literal("template"),
-  templateName: z
-    .string()
-    .min(1, "El nombre de la plantilla es requerido")
-    .max(80, "Máximo 80 caracteres"),
+  templateName: z.string().max(80, "Máximo 80 caracteres").optional(),
   ...baseShape,
 });
 

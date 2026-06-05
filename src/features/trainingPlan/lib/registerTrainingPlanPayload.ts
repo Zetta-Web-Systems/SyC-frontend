@@ -57,6 +57,6 @@ export function buildRegisterTrainingPlanPayload(
 
   return {
     kind: "template",
-    dto: { ...baseDto, templateName: values.templateName },
+    dto: { ...baseDto, templateName: values.templateName?.trim() || undefined },
   };
 }

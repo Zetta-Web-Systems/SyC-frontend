@@ -3,6 +3,7 @@ import type { MutationLike } from "@shared/types/mutations.types";
 import { useRegisterTrainingPlanMutation } from "./mutations/useRegisterTrainingPlanMutation";
 import { useRegisterTrainingPlanTemplateMutation } from "./mutations/useRegisterTrainingPlanTemplateMutation";
 import { buildRegisterTrainingPlanPayload } from "../lib/registerTrainingPlanPayload";
+import { RegisterTemplateNameField } from "../components/TrainingPlanForm/RegisterTemplateNameField/RegisterTemplateNameField";
 import type { RegisterTrainingPlanFormSchema } from "../schemas/registerTrainingPlan.schema";
 
 interface UseRegisterTrainingPlanSubmitOptions {
@@ -40,13 +41,33 @@ export function useRegisterTrainingPlanSubmit({
   }
 
   function handleSubmit(data: RegisterTrainingPlanFormSchema) {
-    const isTemplate = data.mode === "template";
+    if (data.mode === "template") {
+      const nameRef = { current: data.templateName ?? "" };
+      confirm({
+        intent: "info",
+        title: "Registrar plantilla",
+        description:
+          "¿Estás seguro que deseas registrar la plantilla? El nombre es opcional, podés dejarlo vacío.",
+        body: (
+          <RegisterTemplateNameField
+            defaultValue={data.templateName ?? ""}
+            onValueChange={(value) => {
+              nameRef.current = value;
+            }}
+          />
+        ),
+        confirmLabel: "Registrar",
+        onConfirm: () => {
+          performRegister({ ...data, templateName: nameRef.current.trim() });
+        },
+      });
+      return;
+    }
+
     confirm({
       intent: "info",
-      title: isTemplate ? "Registrar plantilla" : "Registrar planificación",
-      description: isTemplate
-        ? "¿Estás seguro que deseas registrar la plantilla?"
-        : "¿Estás seguro que deseas registrar la planificación?",
+      title: "Registrar planificación",
+      description: "¿Estás seguro que deseas registrar la planificación?",
       confirmLabel: "Registrar",
       onConfirm: () => performRegister(data),
     });

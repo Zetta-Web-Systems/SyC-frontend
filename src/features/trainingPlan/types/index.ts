@@ -86,11 +86,7 @@ export interface RegisterTrainingPlan extends BaseTrainingPlan {
   trainingDays: RegisterTrainingDay[];
 }
 
-export interface RegisterTrainingPlanTemplate extends Omit<
-  BaseTrainingPlan,
-  "templateName"
-> {
-  templateName: string;
+export interface RegisterTrainingPlanTemplate extends BaseTrainingPlan {
   durationInWeeks: number;
   daysPerWeek: number;
   trainingDays: RegisterTrainingDay[];
