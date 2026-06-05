@@ -67,13 +67,16 @@ export function TemplateToggleSection({
             htmlFor={inputId}
             className="mb-1 block text-xs font-semibold tracking-wider text-neutral-500 uppercase"
           >
-            Nombre de la plantilla
+            Nombre de la plantilla{" "}
+            <span className="font-normal normal-case text-neutral-400">
+              (opcional)
+            </span>
           </label>
           <Input
             id={inputId}
             value={templateName}
             onChange={(e) => onTemplateNameChange(e.target.value)}
-            placeholder="Ingresa el nombre de la plantilla"
+            placeholder="Opcional"
             size="sm"
             error={showError}
             errorMessage={showError ? templateNameError : undefined}

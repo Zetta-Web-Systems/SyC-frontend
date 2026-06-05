@@ -7,6 +7,7 @@ import { DateBadge } from "./Badges/DateBadge";
 import { DurationBadge } from "./Badges/DurationBadge";
 import { FrequencyBadge } from "./Badges/FrequencyBadge";
 import { MemberSelectorPill } from "./MemberSelector/MemberSelectorPill";
+import { ClinicalProfileButton } from "./ClinicalProfileButton/ClinicalProfileButton";
 
 interface TrainingPlanMetaBarProps {
   selectedMember: Member | null;
@@ -108,6 +109,10 @@ export function TrainingPlanMetaBar({
       </div>
 
       <span className="hidden sm:block sm:flex-1" />
+
+      <ClinicalProfileButton
+        member={mode === "template" ? null : selectedMember}
+      />
     </div>
   );
 }
