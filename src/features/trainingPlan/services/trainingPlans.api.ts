@@ -8,10 +8,12 @@ import type {
   AddPlannedExercise,
   AddTrainingDay,
   ExtendTrainingPlan,
+  PlannedExerciseTrafficLight,
   RegisterTrainingPlan,
   RegisterTrainingPlanTemplate,
   ReorderPlannedExercises,
   ReorderTrainingDays,
+  TrafficLightRequest,
   TrainingPlan,
   TrainingPlanSimple,
   UpdateExerciseExecution,
@@ -130,6 +132,14 @@ export async function deletePlannedExercise(plannedExerciseId: string) {
   await api.delete(
     `/training-plans/training-days/planned-exercises/${plannedExerciseId}`,
   );
+}
+
+export async function getPlannedExerciseTrafficLight(dto: TrafficLightRequest) {
+  const { data } = await api.get<PlannedExerciseTrafficLight>(
+    "/training-plans/training-days/planned-exercises/traffic-light",
+    { params: dto },
+  );
+  return data;
 }
 
 export async function updateExerciseExecution(

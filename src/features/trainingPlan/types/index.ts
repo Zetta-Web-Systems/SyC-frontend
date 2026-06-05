@@ -124,3 +124,13 @@ export interface AddPlannedExercise {
 export interface ReorderPlannedExercises {
   exerciseIds: string[];
 }
+
+export interface TrafficLightRequest {
+  memberId: string;
+  exerciseId: string;
+}
+
+export interface PlannedExerciseTrafficLight {
+  isYellow: boolean;
+  currentStatusAffected: CurrentStatus[];
+}

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { TriangleAlert } from "lucide-react";
 import { Badge, Popover } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
+import type { CurrentStatus } from "@features/clinicalProfiles";
 import { TRAFFIC_LIGHT_TEXT } from "../../constants/trafficLight";
-import type { AffectedCurrentStatus } from "../../lib/trafficLight";
 import { AffectedZonesDetail } from "./AffectedZonesDetail";
 
 interface TrainingPlanRiskIndicatorProps {
-  affected: AffectedCurrentStatus[];
+  affected: CurrentStatus[];
   className?: string;
 }
 

@@ -5,10 +5,9 @@ import { getExerciseGroupLabel, useExerciseQuery } from "@features/exercise";
 import { IconBox, IconButton } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
-import { getAffectedStatuses } from "../../../../lib/trafficLight";
-import type { AffectedCurrentStatus } from "../../../../lib/trafficLight";
+import { useTrafficLightQuery } from "../../../../hooks/useTrafficLightQuery";
 import { summarizeExecs } from "../../../../lib/summarizeExecs";
-import { TrainingPlanRiskIndicator } from "../../../TrainingPlanRiskIndicator/TrainingPlanRiskIndicator";
+import { ExerciseRowTrafficLight } from "./ExerciseRowTrafficLight";
 import type { DayName } from "../../../../constants";
 import type { RegisterExerciseExecutionFormSchema } from "../../../../schemas/registerTrainingPlan.schema";
 import {
@@ -25,7 +24,7 @@ interface ExerciseRowProps {
   exerciseOrder: number;
   rowNumber: number;
   exerciseExecutions: RegisterExerciseExecutionFormSchema[];
-  riskStatuses: AffectedCurrentStatus[];
+  memberId?: string;
   error?: string;
   onEdit: () => void;
 }
@@ -36,7 +35,7 @@ export function ExerciseRow({
   exerciseOrder,
   rowNumber,
   exerciseExecutions,
-  riskStatuses,
+  memberId,
   error,
   onEdit,
 }: ExerciseRowProps) {
@@ -46,8 +45,8 @@ export function ExerciseRow({
   const exercise = exerciseQuery.data;
   const summary = summarizeExecs(exerciseExecutions);
 
-  const affected = exercise ? getAffectedStatuses(exercise, riskStatuses) : [];
-  const isYellow = affected.length > 0;
+  const trafficLight = useTrafficLightQuery(memberId, exerciseId);
+  const isYellow = trafficLight.data?.isYellow ?? false;
 
   const dragData: RowDragData = {
     type: DRAG_TYPE.ROW,
@@ -121,7 +120,13 @@ export function ExerciseRow({
             {exercise?.name ??
               (exerciseQuery.isLoading ? "Cargando..." : "Ejercicio")}
           </span>
-          {isYellow && <TrainingPlanRiskIndicator affected={affected} />}
+          {memberId && (
+            <ExerciseRowTrafficLight
+              isLoading={trafficLight.isLoading}
+              isYellow={isYellow}
+              affected={trafficLight.data?.currentStatusAffected ?? []}
+            />
+          )}
         </div>
         <div
           className={cn(

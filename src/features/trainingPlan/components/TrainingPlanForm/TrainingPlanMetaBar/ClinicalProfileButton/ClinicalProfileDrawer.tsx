@@ -5,8 +5,8 @@ import { useDisclosure } from "@shared/hooks/useDisclosure";
 import {
   ClinicalProfileCard,
   mapClinicalProfileToRiskFlagLikes,
-  useMemberQuery,
 } from "@features/members";
+import { useClinicalProfileQuery } from "@features/clinicalProfiles";
 
 interface ClinicalProfileDrawerProps {
   memberId: string;
@@ -22,16 +22,16 @@ export function ClinicalProfileDrawer({
   onClose,
 }: ClinicalProfileDrawerProps) {
   const {
-    data: member,
+    data: clinicalProfile,
     isLoading,
     isError,
-  } = useMemberQuery(open ? memberId : undefined);
+  } = useClinicalProfileQuery(open ? memberId : undefined);
 
   const bodyDetailModal = useDisclosure();
 
   const memberRiskFlags = useMemo(
-    () => mapClinicalProfileToRiskFlagLikes(member?.clinicalProfile),
-    [member?.clinicalProfile],
+    () => mapClinicalProfileToRiskFlagLikes(clinicalProfile),
+    [clinicalProfile],
   );
 
   return (
@@ -69,7 +69,7 @@ export function ClinicalProfileDrawer({
           </p>
         )}
 
-        {!isLoading && !isError && member && (
+        {!isLoading && !isError && clinicalProfile && (
           <ClinicalProfileCard
             mode="profile"
             memberRiskFlags={memberRiskFlags}

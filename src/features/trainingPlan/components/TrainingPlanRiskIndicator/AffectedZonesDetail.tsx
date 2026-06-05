@@ -5,10 +5,10 @@ import {
 } from "@features/clinicalProfiles";
 import { BODY_ZONE_LABELS } from "@shared/constants/bodyZones";
 import { cn } from "@shared/lib/cn";
-import type { AffectedCurrentStatus } from "../../lib/trafficLight";
+import type { CurrentStatus } from "@features/clinicalProfiles";
 
 interface AffectedZonesDetailProps {
-  affected: AffectedCurrentStatus[];
+  affected: CurrentStatus[];
 }
 
 export function AffectedZonesDetail({ affected }: AffectedZonesDetailProps) {
@@ -27,9 +27,6 @@ export function AffectedZonesDetail({ affected }: AffectedZonesDetailProps) {
                 {SIDE_LABELS[s.side]}
               </span>
             </p>
-            {s.riskFlagName && (
-              <p className="truncate text-neutral-500">{s.riskFlagName}</p>
-            )}
           </div>
           <span
             className={cn(

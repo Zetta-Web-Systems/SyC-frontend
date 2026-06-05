@@ -14,6 +14,13 @@ export const TRAINING_PLANS_KEYS = {
   list: (params: PaginatedParams) =>
     [...TRAINING_PLANS_KEYS.all, "list", params] as const,
   detail: (id: string) => [...TRAINING_PLANS_KEYS.all, "detail", id] as const,
+  trafficLight: (memberId: string, exerciseId: string) =>
+    [
+      ...TRAINING_PLANS_KEYS.all,
+      "traffic-light",
+      memberId,
+      exerciseId,
+    ] as const,
 } as const;
 
 export const TRAINING_PLANS_ORDER_BY = "startDate";
