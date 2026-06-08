@@ -10,7 +10,7 @@ import type {
 
 export async function getClinicalProfileByMemberId(memberId: string) {
   const { data } = await api.get<ClinicalProfile>(
-    `/clinical-profile/${memberId}`,
+    `/clinical-profile/member/${memberId}`,
   );
   return data;
 }
