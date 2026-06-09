@@ -1,12 +1,14 @@
 import { useMemo } from "react";
-import { X } from "lucide-react";
-import { Drawer, IconButton, Spinner } from "@shared/ui";
+import { useNavigate } from "@tanstack/react-router";
+import { Pencil, X } from "lucide-react";
+import { Button, Drawer, IconButton, Spinner } from "@shared/ui";
 import { useDisclosure } from "@shared/hooks/useDisclosure";
 import {
   ClinicalProfileCard,
   mapClinicalProfileToRiskFlagLikes,
 } from "@features/members";
 import { useClinicalProfileQuery } from "@features/clinicalProfiles";
+import { useSaveTrainingPlanDraft } from "../../../../hooks/form/useSaveTrainingPlanDraft";
 
 interface ClinicalProfileDrawerProps {
   memberId: string;
@@ -21,6 +23,9 @@ export function ClinicalProfileDrawer({
   open,
   onClose,
 }: ClinicalProfileDrawerProps) {
+  const navigate = useNavigate();
+  const { stashDraft } = useSaveTrainingPlanDraft();
+
   const {
     data: clinicalProfile,
     isLoading,
@@ -33,6 +38,17 @@ export function ClinicalProfileDrawer({
     () => mapClinicalProfileToRiskFlagLikes(clinicalProfile),
     [clinicalProfile],
   );
+
+  const hasProfile = !!clinicalProfile;
+
+  function openClinicalProfile() {
+    stashDraft(null);
+    void navigate({
+      to: "/members/$memberId/clinical-profile",
+      params: { memberId },
+      search: { from: "training-plan" },
+    });
+  }
 
   return (
     <Drawer
@@ -48,9 +64,22 @@ export function ClinicalProfileDrawer({
           </h5>
           <p className="truncate text-xs text-neutral-500">{memberName}</p>
         </div>
-        <IconButton aria-label="Cerrar" onClick={onClose}>
-          <X size={16} aria-hidden="true" />
-        </IconButton>
+        <div className="flex items-center gap-1.5">
+          {hasProfile && (
+            <Button
+              intent="primary"
+              variant="outline"
+              size="sm"
+              onClick={openClinicalProfile}
+            >
+              <Pencil size={14} aria-hidden="true" />
+              <span className="hidden xs:inline">Editar</span>
+            </Button>
+          )}
+          <IconButton aria-label="Cerrar" onClick={onClose}>
+            <X size={16} aria-hidden="true" />
+          </IconButton>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -69,9 +98,10 @@ export function ClinicalProfileDrawer({
           </p>
         )}
 
-        {!isLoading && !isError && clinicalProfile && (
+        {!isLoading && !isError && (
           <ClinicalProfileCard
             mode="profile"
+            onOpen={openClinicalProfile}
             memberRiskFlags={memberRiskFlags}
             bodyDetailModal={bodyDetailModal}
           />

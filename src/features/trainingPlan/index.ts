@@ -3,4 +3,4 @@ export { default as RegisterTrainingPlanPage } from "./pages/RegisterTrainingPla
 export { default as ProfileTrainingPlanPage } from "./pages/ProfileTrainingPlanPage";
 export * from "./types";
 export { TRAINING_PLANS_KEYS } from "./constants";
-export { useTrainingPlanQuery } from "./hooks/useTrainingPlanQuery";
+export { useTrainingPlanQuery } from "./hooks/queries/useTrainingPlanQuery";

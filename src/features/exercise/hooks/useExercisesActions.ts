@@ -14,8 +14,8 @@ export function useExercisesActions(groupId: string) {
 
   const handleOpenRegister = () =>
     navigate({
-      to: "/exercises/$groupId/register",
-      params: { groupId },
+      to: "/exercises/register",
+      search: { groupId },
     });
 
   const handleOpenEdit = (exercise: Exercise) =>

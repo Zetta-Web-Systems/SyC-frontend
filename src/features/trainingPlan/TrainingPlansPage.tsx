@@ -1,7 +1,7 @@
 import { TrainingPlansHeader } from "./components/TrainingPlansList/TrainingPlansHeader/TrainingPlansHeader";
 import { TrainingPlansFilters } from "./components/TrainingPlansList/TrainingPlansFilters/TrainingPlansFilters";
 import { TrainingPlansTable } from "./components/TrainingPlansList/TrainingPlansTable";
-import { useTrainingPlansQuery } from "./hooks/useTrainingPlansQuery";
+import { useTrainingPlansQuery } from "./hooks/queries/useTrainingPlansQuery";
 import { useTrainingPlansFilters } from "./hooks/useTrainingPlansFilters";
 import { useTrainingPlansActions } from "./hooks/useTrainingPlansActions";
 

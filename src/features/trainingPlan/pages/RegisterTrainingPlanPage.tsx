@@ -1,23 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, FileText } from "lucide-react";
-import { Button } from "@shared/ui";
+import { ArrowLeft, FileText, RotateCcw, X } from "lucide-react";
+import { Button, IconButton } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
+import { confirm } from "@shared/stores/confirm.store";
 import { TrainingPlanForm } from "../components/TrainingPlanForm/TrainingPlanForm";
 import { useRegisterTrainingPlanSubmit } from "../hooks/useRegisterTrainingPlanSubmit";
+import { useTrainingPlanDraft } from "../stores/trainingPlanDraft.store";
 
-export default function RegisterTrainingPlanPage() {
+const GUARD_ALLOW_NAVIGATION_TO = [
+  "/exercises/register",
+  "/members/$memberId/clinical-profile",
+];
+
+interface RegisterTrainingPlanPageProps {
+  createdExerciseId?: string;
+  resume?: boolean;
+}
+
+export default function RegisterTrainingPlanPage({
+  createdExerciseId,
+  resume,
+}: RegisterTrainingPlanPageProps) {
   const navigate = useNavigate();
   const [navigating, setNavigating] = useState(false);
+  const [remountKey, setRemountKey] = useState(0);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  const draft = useTrainingPlanDraft((s) => s.draft);
+  const savedAt = useTrainingPlanDraft((s) => s.savedAt);
+  const clearDraft = useTrainingPlanDraft((s) => s.clear);
+
+  const isTransientReturn = Boolean(createdExerciseId) || resume === true;
+  const hasSavedDraft = draft !== null && savedAt !== null;
+  const shouldResume = isTransientReturn || hasSavedDraft;
+  const showResumeBanner =
+    hasSavedDraft && !isTransientReturn && !bannerDismissed;
+
+  useEffect(() => {
+    if (!shouldResume) clearDraft();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function goToList() {
+    clearDraft();
     flushSync(() => setNavigating(true));
     void navigate({ to: "/training-plans" });
   }
 
-  function handleBack() {
+  function handleLeave() {
     void navigate({ to: "/training-plans" });
+  }
+
+  function handleCancel() {
+    clearDraft();
+    void navigate({ to: "/training-plans" });
+  }
+
+  function handleSaveAndExit() {
+    flushSync(() => setNavigating(true));
+    void navigate({ to: "/training-plans" });
+  }
+
+  function handleDiscardDraft() {
+    confirm({
+      intent: "warning",
+      title: "Descartar borrador",
+      description:
+        "Vas a empezar la planificación de cero y se perderá el borrador guardado. ¿Seguro?",
+      confirmLabel: "Descartar",
+      onConfirm: () => {
+        clearDraft();
+        setRemountKey((k) => k + 1);
+      },
+    });
   }
 
   const { isPending, mutation, handleSubmit } = useRegisterTrainingPlanSubmit({
@@ -35,7 +92,7 @@ export default function RegisterTrainingPlanPage() {
               <FileText size={16} aria-hidden="true" />
               <span className="hidden xs:inline">Cargar plantilla</span>
             </Button>
-            <Button intent="neutral" variant="outline" onClick={handleBack}>
+            <Button intent="neutral" variant="outline" onClick={handleLeave}>
               <ArrowLeft size={16} aria-hidden="true" />
               <span className="hidden xs:inline">Volver</span>
             </Button>
@@ -43,12 +100,44 @@ export default function RegisterTrainingPlanPage() {
         }
       />
 
+      {showResumeBanner && (
+        <div className="flex flex-col gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <p className="font-medium text-primary-800">
+            Estás retomando un borrador guardado.
+          </p>
+          <div className="flex items-center gap-1.5 sm:shrink-0">
+            <Button
+              intent="neutral"
+              variant="outline"
+              size="sm"
+              onClick={handleDiscardDraft}
+            >
+              <RotateCcw size={14} aria-hidden="true" />
+              Descartar y empezar de cero
+            </Button>
+            <IconButton
+              size="sm"
+              aria-label="Ocultar aviso"
+              onClick={() => setBannerDismissed(true)}
+            >
+              <X size={16} aria-hidden="true" />
+            </IconButton>
+          </div>
+        </div>
+      )}
+
       <TrainingPlanForm
+        key={remountKey}
         onSubmit={handleSubmit}
-        onCancel={handleBack}
+        onCancel={handleCancel}
         isPending={isPending}
         mutation={mutation}
         guardUnsavedChanges={!navigating}
+        guardAllowNavigationTo={GUARD_ALLOW_NAVIGATION_TO}
+        defaultValues={shouldResume ? (draft ?? undefined) : undefined}
+        restore={shouldResume}
+        autoAddExerciseId={createdExerciseId}
+        onSaveAndExit={handleSaveAndExit}
       />
     </div>
   );
