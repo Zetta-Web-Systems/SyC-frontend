@@ -21,8 +21,10 @@ interface ConfirmOptions {
   size?: ConfirmSize;
   confirmLabel: string;
   cancelLabel?: string;
+  tertiaryLabel?: string;
   onConfirm: () => void | Promise<void>;
   onCancel?: () => void;
+  onTertiary?: () => void;
 }
 
 interface ConfirmState {
@@ -30,6 +32,7 @@ interface ConfirmState {
   isLoading: boolean;
   open: (options: ConfirmOptions) => void;
   handleConfirm: () => Promise<void>;
+  handleTertiary: () => void;
   close: () => void;
 }
 
@@ -48,6 +51,11 @@ export const useConfirmStore = createStore<ConfirmState>(
       } finally {
         set({ options: null, isLoading: false });
       }
+    },
+    handleTertiary: () => {
+      const { options } = get();
+      options?.onTertiary?.();
+      set({ options: null, isLoading: false });
     },
     close: () => {
       const { options } = get();

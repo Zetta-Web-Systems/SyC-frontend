@@ -9,22 +9,24 @@ interface UseUnsavedChangesPromptOptions {
   description?: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  onSaveAndLeave?: () => void;
+  saveAndLeaveLabel?: string;
 }
 
 export function useUnsavedChangesPrompt({
   when,
   allowNavigationTo,
-  title = "Cambios sin guardar",
-  description = "Hay cambios sin guardar. Si sales ahora los perderás.",
-  confirmLabel = "Salir sin guardar",
+  title,
+  description,
+  confirmLabel,
   cancelLabel = "Seguir editando",
+  onSaveAndLeave,
+  saveAndLeaveLabel = "Guardar y salir",
 }: UseUnsavedChangesPromptOptions) {
   const resolver = useBlocker({
     shouldBlockFn: ({ next }) => {
       if (!when) return false;
-      if (
-        allowNavigationTo?.some((path) => next.fullPath.startsWith(path))
-      ) {
+      if (allowNavigationTo?.some((path) => next.fullPath.startsWith(path))) {
         return false;
       }
       return true;
@@ -43,11 +45,32 @@ export function useUnsavedChangesPrompt({
     if (promptedRef.current) return;
     promptedRef.current = true;
 
+    if (onSaveAndLeave) {
+      confirm({
+        intent: "info",
+        title: title ?? "¿Guardar antes de salir?",
+        description:
+          description ??
+          "Podés guardar el borrador y retomar la planificación cuando quieras.",
+        confirmLabel: saveAndLeaveLabel,
+        onConfirm: () => {
+          onSaveAndLeave();
+          resolver.proceed?.();
+        },
+        tertiaryLabel: confirmLabel ?? "Salir sin guardar",
+        onTertiary: () => resolver.proceed?.(),
+        cancelLabel,
+        onCancel: () => resolver.reset?.(),
+      });
+      return;
+    }
+
     confirm({
       intent: "warning",
-      title,
-      description,
-      confirmLabel,
+      title: title ?? "Cambios sin guardar",
+      description:
+        description ?? "Hay cambios sin guardar. Si sales ahora los perderás.",
+      confirmLabel: confirmLabel ?? "Salir sin guardar",
       cancelLabel,
       onConfirm: () => resolver.proceed?.(),
       onCancel: () => resolver.reset?.(),
@@ -59,5 +82,7 @@ export function useUnsavedChangesPrompt({
     description,
     confirmLabel,
     cancelLabel,
+    onSaveAndLeave,
+    saveAndLeaveLabel,
   ]);
 }
