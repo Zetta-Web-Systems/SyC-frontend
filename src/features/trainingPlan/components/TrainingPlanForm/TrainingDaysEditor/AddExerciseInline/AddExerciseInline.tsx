@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { LibraryBig, Plus, X } from "lucide-react";
 import { Button, IconButton, SearchInput } from "@shared/ui";
+import { cn } from "@shared/lib/cn";
 import { useDropdown } from "@shared/hooks/useDropdown";
 import type { Exercise } from "@features/exercise";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
@@ -78,6 +79,10 @@ export function AddExerciseInline({
     (e) => e.name.trim().toLowerCase() === trimmedSearch.toLowerCase(),
   );
   const showCreate = trimmedSearch.length > 0 && !hasExactMatch;
+  const noResults =
+    !exerciseSearch.isLoading &&
+    !exerciseSearch.isError &&
+    exerciseSearch.items.length === 0;
 
   return (
     <div
@@ -98,20 +103,37 @@ export function AddExerciseInline({
         </IconButton>
       </div>
 
-      <ExerciseSearchList
-        items={exerciseSearch.items}
-        search={exerciseSearch.search}
-        total={exerciseSearch.total}
-        isLoading={exerciseSearch.isLoading}
-        isFetchingNextPage={exerciseSearch.isFetchingNextPage}
-        hasNextPage={exerciseSearch.hasNextPage}
-        isError={exerciseSearch.isError}
-        scrollRef={exerciseSearch.scrollRef}
-        sentinelRef={exerciseSearch.sentinelRef}
-        onSelect={handleSelect}
-      />
+      {!noResults && (
+        <ExerciseSearchList
+          items={exerciseSearch.items}
+          search={exerciseSearch.search}
+          total={exerciseSearch.total}
+          isLoading={exerciseSearch.isLoading}
+          isFetchingNextPage={exerciseSearch.isFetchingNextPage}
+          hasNextPage={exerciseSearch.hasNextPage}
+          isError={exerciseSearch.isError}
+          scrollRef={exerciseSearch.scrollRef}
+          sentinelRef={exerciseSearch.sentinelRef}
+          onSelect={handleSelect}
+        />
+      )}
 
-      <div className="flex flex-col gap-0.5 border-t border-neutral-100 p-1.5">
+      <div
+        className={cn(
+          "flex flex-col gap-0.5 p-1.5",
+          !noResults && "border-t border-neutral-100",
+        )}
+      >
+        {showCreate && (
+          <button
+            type="button"
+            onClick={handleCreate}
+            className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-primary-700 hover:bg-primary-50"
+          >
+            <Plus size={14} aria-hidden="true" />
+            <span>Crear &ldquo;{trimmedSearch}&rdquo;</span>
+          </button>
+        )}
         <button
           type="button"
           onClick={handleOpenLibrary}
@@ -124,16 +146,6 @@ export function AddExerciseInline({
           />
           Abrir biblioteca
         </button>
-        {showCreate && (
-          <button
-            type="button"
-            onClick={handleCreate}
-            className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-primary-700 hover:bg-primary-50"
-          >
-            <Plus size={14} aria-hidden="true" />
-            <span>Crear &ldquo;{trimmedSearch}&rdquo;</span>
-          </button>
-        )}
       </div>
     </div>
   );
