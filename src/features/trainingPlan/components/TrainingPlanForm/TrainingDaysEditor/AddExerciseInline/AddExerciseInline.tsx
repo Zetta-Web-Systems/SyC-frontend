@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
-import { Plus, X } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { LibraryBig, Plus, X } from "lucide-react";
 import { Button, IconButton, SearchInput } from "@shared/ui";
 import { useDropdown } from "@shared/hooks/useDropdown";
 import type { Exercise } from "@features/exercise";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
+import { useSaveTrainingPlanDraft } from "../../../../hooks/form/useSaveTrainingPlanDraft";
 import { useExerciseSearchInfinite } from "../../../../hooks/ui/useExerciseSearchInfinite";
 import type { DayName } from "../../../../constants";
 import { ExerciseSearchList } from "./ExerciseSearchList";
@@ -11,19 +13,23 @@ import { ExerciseSearchList } from "./ExerciseSearchList";
 interface AddExerciseInlineProps {
   dayName: DayName;
   onOpenChange?: (isOpen: boolean) => void;
+  onOpenLibrary?: () => void;
 }
 
 export function AddExerciseInline({
   dayName,
   onOpenChange,
+  onOpenLibrary,
 }: AddExerciseInlineProps) {
   const { addExercise } = useTrainingPlanFormHelpers();
+  const { stashDraft } = useSaveTrainingPlanDraft();
+  const navigate = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { isOpen, open, close, containerRef } = useDropdown<HTMLDivElement>({});
 
   const exerciseSearch = useExerciseSearchInfinite({ enabled: isOpen });
-  const { setSearch } = exerciseSearch;
+  const { setSearch, search } = exerciseSearch;
 
   useEffect(() => {
     onOpenChange?.(isOpen);
@@ -39,6 +45,20 @@ export function AddExerciseInline({
     close();
   }
 
+  function handleOpenLibrary() {
+    close();
+    onOpenLibrary?.();
+  }
+
+  function handleCreate() {
+    const name = search.trim();
+    stashDraft(dayName);
+    void navigate({
+      to: "/exercises/register",
+      search: { from: "training-plan", ...(name ? { name } : {}) },
+    });
+  }
+
   if (!isOpen) {
     return (
       <Button
@@ -52,6 +72,12 @@ export function AddExerciseInline({
       </Button>
     );
   }
+
+  const trimmedSearch = search.trim();
+  const hasExactMatch = exerciseSearch.items.some(
+    (e) => e.name.trim().toLowerCase() === trimmedSearch.toLowerCase(),
+  );
+  const showCreate = trimmedSearch.length > 0 && !hasExactMatch;
 
   return (
     <div
@@ -84,6 +110,31 @@ export function AddExerciseInline({
         sentinelRef={exerciseSearch.sentinelRef}
         onSelect={handleSelect}
       />
+
+      <div className="flex flex-col gap-0.5 border-t border-neutral-100 p-1.5">
+        <button
+          type="button"
+          onClick={handleOpenLibrary}
+          className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+        >
+          <LibraryBig
+            size={14}
+            aria-hidden="true"
+            className="text-neutral-500"
+          />
+          Abrir biblioteca
+        </button>
+        {showCreate && (
+          <button
+            type="button"
+            onClick={handleCreate}
+            className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-primary-700 hover:bg-primary-50"
+          >
+            <Plus size={14} aria-hidden="true" />
+            <span>Crear &ldquo;{trimmedSearch}&rdquo;</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

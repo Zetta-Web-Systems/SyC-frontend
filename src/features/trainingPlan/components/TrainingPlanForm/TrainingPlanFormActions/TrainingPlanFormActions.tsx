@@ -10,6 +10,7 @@ interface TrainingPlanFormActionsProps {
   onCancel: () => void;
   isPending: boolean;
   onOpenLibrary?: () => void;
+  onSaveAndExit?: () => void;
 }
 
 export function TrainingPlanFormActions({
@@ -17,6 +18,7 @@ export function TrainingPlanFormActions({
   onCancel,
   isPending,
   onOpenLibrary,
+  onSaveAndExit,
 }: TrainingPlanFormActionsProps) {
   const mode = useWatch<RegisterTrainingPlanFormSchema>({ name: "mode" });
   const submitLabel =
@@ -74,6 +76,11 @@ export function TrainingPlanFormActions({
         <Button intent="danger" variant="solid" onClick={onCancel}>
           Cancelar
         </Button>
+        {onSaveAndExit && (
+          <Button intent="secondary" variant="solid" onClick={onSaveAndExit}>
+            Guardar y salir
+          </Button>
+        )}
         <Button
           type="submit"
           form={formId}
@@ -91,6 +98,7 @@ export function TrainingPlanFormActions({
           onCancel={onCancel}
           isPending={isPending}
           onOpenLibrary={onOpenLibrary}
+          onSaveAndExit={onSaveAndExit}
           visible={fabVisible}
         />
       </Portal>

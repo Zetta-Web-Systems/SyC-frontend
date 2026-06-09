@@ -43,13 +43,12 @@ export function ExerciseSearchList({
       renderItem={(ex) => (
         <ExerciseSearchRow exercise={ex} onSelect={onSelect} />
       )}
-      sectionTitle="Elegir ejercicio"
       countLabel={({ total, hasSearch }) =>
         hasSearch ? `${total} resultados` : `${total} ejercicios`
       }
       emptyMessage="Sin ejercicios disponibles"
       errorMessage="Error al cargar ejercicios."
-      listClassName="h-55 flex-none px-1 pt-0.5 pb-1.5"
+      listClassName="max-h-55 flex-none px-1 pt-0.5 pb-1.5"
     />
   );
 }

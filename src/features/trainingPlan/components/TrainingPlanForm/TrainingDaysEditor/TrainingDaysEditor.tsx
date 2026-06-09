@@ -24,6 +24,7 @@ interface TrainingDaysEditorProps {
   onActiveDayChange: (dayName: DayName | null) => void;
   isDragging: boolean;
   activeDragType: "library-exercise" | "day-row" | null;
+  onOpenLibrary: () => void;
 }
 
 export function TrainingDaysEditor({
@@ -31,6 +32,7 @@ export function TrainingDaysEditor({
   onActiveDayChange,
   isDragging,
   activeDragType,
+  onOpenLibrary,
 }: TrainingDaysEditorProps) {
   const { sortedDays, addDay, canAddDay } = useTrainingPlanFormHelpers();
   const { byDay, trainingDaysRoot } = useTrainingPlanFormErrors();
@@ -150,6 +152,7 @@ export function TrainingDaysEditor({
                     onOpenChange={(open) =>
                       setAddingForDay(open ? activeDay.dayName : null)
                     }
+                    onOpenLibrary={onOpenLibrary}
                   />
                 </div>
               </SortableContext>

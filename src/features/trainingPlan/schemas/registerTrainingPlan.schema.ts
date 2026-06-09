@@ -1,7 +1,6 @@
 import { z } from "zod";
+import { formatDateToISO } from "@shared/utils/date.utils";
 import { DayName } from "../constants";
-
-const todayIsoDate = (): string => new Date().toISOString().slice(0, 10);
 
 const executionSchema = z.object({
   weekNumber: z.number().int().min(1),
@@ -85,7 +84,7 @@ function attachCrossFieldIssues(
   if (
     data.mode === "plan" &&
     data.startDate &&
-    data.startDate < todayIsoDate()
+    data.startDate < formatDateToISO(new Date())
   ) {
     ctx.addIssue({
       code: "custom",

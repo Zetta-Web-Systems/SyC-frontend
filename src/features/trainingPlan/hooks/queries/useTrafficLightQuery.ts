@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPlannedExerciseTrafficLight } from "../services/trainingPlans.api";
-import { TRAINING_PLANS_KEYS } from "../constants";
+import { getPlannedExerciseTrafficLight } from "../../services/trainingPlans.api";
+import { TRAINING_PLANS_KEYS } from "../../constants";
 
 const TRAFFIC_LIGHT_DEBOUNCE_MS = 200;
 

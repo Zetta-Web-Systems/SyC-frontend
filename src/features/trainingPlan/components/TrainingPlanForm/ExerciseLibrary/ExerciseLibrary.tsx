@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Drawer } from "@shared/ui";
 import { SearchableInfiniteList } from "@shared/components/SearchableInfiniteList";
 import type { Exercise } from "@features/exercise";
 import { useTrainingPlanFormHelpers } from "../../../hooks/form/useTrainingPlanFormHelpers";
+import { useSaveTrainingPlanDraft } from "../../../hooks/form/useSaveTrainingPlanDraft";
 import { useExerciseLibrary } from "../../../hooks/ui/useExerciseLibrary";
 import type { DayName } from "../../../constants";
 import { ExerciseGroupSelect } from "./ExerciseGroupSelect";
@@ -22,12 +24,22 @@ export function ExerciseLibrary({
   activeDayName,
 }: ExerciseLibraryProps) {
   const { addExercise } = useTrainingPlanFormHelpers();
+  const { stashDraft } = useSaveTrainingPlanDraft();
+  const navigate = useNavigate();
   const library = useExerciseLibrary({ enabled: open });
   const [previewExercise, setPreviewExercise] = useState<Exercise | null>(null);
 
   function handleAdd(exercise: Exercise) {
     if (!activeDayName) return;
     addExercise(activeDayName, { exercise });
+  }
+
+  function handleCreate() {
+    stashDraft(activeDayName);
+    void navigate({
+      to: "/exercises/register",
+      search: { from: "training-plan" },
+    });
   }
 
   return (
@@ -39,7 +51,7 @@ export function ExerciseLibrary({
         ariaLabel="Biblioteca de ejercicios"
         onAfterClose={library.reset}
       >
-        <ExerciseLibraryHeader onClose={onClose} />
+        <ExerciseLibraryHeader onClose={onClose} onCreate={handleCreate} />
 
         <SearchableInfiniteList<Exercise>
           search={library.search}

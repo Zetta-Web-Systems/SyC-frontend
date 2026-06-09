@@ -5,7 +5,7 @@ import { getExerciseGroupLabel, useExerciseQuery } from "@features/exercise";
 import { IconBox, IconButton } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { useTrainingPlanFormHelpers } from "../../../../hooks/form/useTrainingPlanFormHelpers";
-import { useTrafficLightQuery } from "../../../../hooks/useTrafficLightQuery";
+import { useTrafficLightQuery } from "../../../../hooks/queries/useTrafficLightQuery";
 import { summarizeExecs } from "../../../../lib/summarizeExecs";
 import { ExerciseRowTrafficLight } from "./ExerciseRowTrafficLight";
 import type { DayName } from "../../../../constants";
@@ -61,6 +61,7 @@ export function ExerciseRow({
   };
   const {
     setNodeRef,
+    setActivatorNodeRef,
     attributes,
     listeners,
     transform,
@@ -80,31 +81,28 @@ export function ExerciseRow({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       onClick={onEdit}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          onEdit();
-        }
-      }}
       aria-invalid={error ? true : undefined}
       data-invalid={error ? "true" : undefined}
       className={cn(
-        "grid cursor-grab items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-2.5 py-2 transition-colors hover:border-primary-200 hover:bg-primary-50/30 active:cursor-grabbing sm:gap-2 sm:px-3 sm:py-2.5",
+        "grid cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-2.5 py-2 transition-colors hover:border-primary-200 hover:bg-primary-50/30 sm:gap-2 sm:px-3 sm:py-2.5",
         "grid-cols-[auto_auto_minmax(0,1fr)_minmax(0,auto)_auto_auto]",
         isDragging && "opacity-40",
         isYellow && "border-warning/40 bg-warning/5",
         error && "border-error bg-error/5 hover:border-error hover:bg-error/10",
       )}
     >
-      <span
-        aria-hidden="true"
-        className="text-neutral-300 group-hover:text-primary-500"
+      <IconButton
+        ref={setActivatorNodeRef}
+        aria-label="Reordenar ejercicio"
+        intent="primary"
+        className="cursor-grab touch-none active:cursor-grabbing"
+        onClick={(e) => e.stopPropagation()}
+        {...attributes}
+        {...listeners}
       >
-        <GripVertical size={14} />
-      </span>
+        <GripVertical size={14} aria-hidden="true" />
+      </IconButton>
       <IconBox
         size="xs"
         shape="sm"
@@ -140,10 +138,18 @@ export function ExerciseRow({
       <div className="hidden truncate font-mono text-xs text-neutral-600 md:block">
         {summary}
       </div>
-      <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary-600">
+      <button
+        type="button"
+        aria-label="Editar ejercicio"
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
+        className="inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-xs font-semibold text-primary-600 transition-colors hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
+      >
         <span className="hidden xs:inline">Editar</span>
         <ChevronRight size={14} aria-hidden="true" />
-      </span>
+      </button>
       <div
         className="flex items-center gap-0.5"
         onClick={(e) => e.stopPropagation()}

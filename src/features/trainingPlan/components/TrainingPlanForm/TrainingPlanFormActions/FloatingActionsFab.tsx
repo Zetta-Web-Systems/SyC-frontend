@@ -1,4 +1,4 @@
-import { BookMarked, X } from "lucide-react";
+import { BookMarked, Save, X } from "lucide-react";
 import { FabSpeedDial } from "@shared/ui";
 import type { FabSpeedDialItem } from "@shared/ui";
 
@@ -8,6 +8,7 @@ interface FloatingActionsFabProps {
   onCancel: () => void;
   isPending: boolean;
   onOpenLibrary?: () => void;
+  onSaveAndExit?: () => void;
   visible: boolean;
 }
 
@@ -17,6 +18,7 @@ export function FloatingActionsFab({
   onCancel,
   isPending,
   onOpenLibrary,
+  onSaveAndExit,
   visible,
 }: FloatingActionsFabProps) {
   const items: FabSpeedDialItem[] = [];
@@ -38,6 +40,16 @@ export function FloatingActionsFab({
     variant: "solid",
     onClick: onCancel,
   });
+  if (onSaveAndExit) {
+    items.push({
+      key: "save-exit",
+      label: "Guardar y salir",
+      icon: <Save size={16} aria-hidden="true" />,
+      intent: "secondary",
+      variant: "solid",
+      onClick: onSaveAndExit,
+    });
+  }
   items.push({
     key: "submit",
     label: submitLabel,
