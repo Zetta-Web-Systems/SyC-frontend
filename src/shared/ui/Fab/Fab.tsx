@@ -62,7 +62,7 @@ export interface FabSpeedDialItem {
   key: string;
   label: string;
   icon?: ReactNode;
-  intent: "neutral" | "primary" | "danger";
+  intent: "neutral" | "primary" | "danger" | "secondary";
   variant: "outline" | "solid";
   type?: "button" | "submit";
   form?: string;
@@ -148,7 +148,10 @@ export function FabSpeedDial({
         onClick={toggle}
         aria-expanded={isOpen}
         aria-label={ariaLabel}
-        className={cn("pointer-events-auto", fabToggleVariants({ intent: toggleIntent }))}
+        className={cn(
+          "pointer-events-auto",
+          fabToggleVariants({ intent: toggleIntent }),
+        )}
       >
         <ChevronUp
           size={18}
