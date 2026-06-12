@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { toast } from "@shared/stores/toast.store";
@@ -11,7 +11,7 @@ import { useClinicalProfileOpExecutor } from "./useClinicalProfileOpExecutor";
 
 interface UseSaveClinicalProfileParams {
   memberId: string;
-  snapshotRef: MutableRefObject<ClinicalProfile | null>;
+  snapshotRef: RefObject<ClinicalProfile | null>;
   onSuccess: () => void;
 }
 
