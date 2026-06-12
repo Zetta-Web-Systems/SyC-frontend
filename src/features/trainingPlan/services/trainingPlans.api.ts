@@ -112,10 +112,11 @@ export async function addPlannedExercise(
   trainingDayId: string,
   dto: AddPlannedExercise,
 ) {
-  await api.post(
+  const { data } = await api.post<TrainingPlan>(
     `/training-plans/training-days/${trainingDayId}/planned-exercises/add`,
     dto,
   );
+  return data;
 }
 
 export async function reorderPlannedExercises(

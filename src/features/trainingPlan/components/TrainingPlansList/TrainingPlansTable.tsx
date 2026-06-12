@@ -62,6 +62,7 @@ export function TrainingPlansTable({
           const kind = getTrainingPlanKind(trainingPlan);
           const description = getTrainingPlanDescription(trainingPlan);
           const isCancelled = trainingPlan.state === PlanState.CANCELLED;
+          const isCompleted = trainingPlan.state === PlanState.COMPLETED;
           const canExtend = kind === TRAINING_PLAN_KIND.REGULAR && !isCancelled;
 
           return (
@@ -70,7 +71,7 @@ export function TrainingPlansTable({
                 {canExtend && (
                   <Button
                     variant="ghost"
-                    intent="primary"
+                    intent="secondary"
                     size="icon"
                     aria-label={`Extender ${description}`}
                     onClick={() => onExtend(trainingPlan)}
@@ -78,15 +79,17 @@ export function TrainingPlansTable({
                     <CalendarPlus size={16} aria-hidden="true" />
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  intent="success"
-                  size="icon"
-                  aria-label={`Editar ${description}`}
-                  onClick={() => onEdit(trainingPlan)}
-                >
-                  <Pencil size={16} aria-hidden="true" color="green" />
-                </Button>
+                {!isCompleted && (
+                  <Button
+                    variant="ghost"
+                    intent="success"
+                    size="icon"
+                    aria-label={`Editar ${description}`}
+                    onClick={() => onEdit(trainingPlan)}
+                  >
+                    <Pencil size={16} aria-hidden="true" color="green" />
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   intent="danger"

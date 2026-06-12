@@ -11,6 +11,7 @@ interface TrainingPlanFormActionsProps {
   isPending: boolean;
   onOpenLibrary?: () => void;
   onSaveAndExit?: () => void;
+  submitLabel?: string;
 }
 
 export function TrainingPlanFormActions({
@@ -19,10 +20,12 @@ export function TrainingPlanFormActions({
   isPending,
   onOpenLibrary,
   onSaveAndExit,
+  submitLabel: submitLabelOverride,
 }: TrainingPlanFormActionsProps) {
   const mode = useWatch<RegisterTrainingPlanFormSchema>({ name: "mode" });
   const submitLabel =
-    mode === "template" ? "Guardar plantilla" : "Guardar plan";
+    submitLabelOverride ??
+    (mode === "template" ? "Guardar plantilla" : "Guardar plan");
 
   const inlineRef = useRef<HTMLDivElement>(null);
   const [atBottom, setAtBottom] = useState(false);

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import type { UseFormReturn } from "react-hook-form";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import type { DayName } from "../../constants";
 import {
@@ -13,6 +14,7 @@ import { confirm } from "@shared/stores/confirm.store";
 import { formatDateToISO } from "@shared/utils/date.utils";
 import { useMemberQuery, type Member } from "@features/members";
 import {
+  editTrainingPlanFormSchema,
   registerTrainingPlanFormSchema,
   type RegisterTrainingPlanFormSchema,
 } from "../../schemas/registerTrainingPlan.schema";
@@ -25,6 +27,7 @@ import { useNavigateToFirstError } from "../../hooks/form/useNavigateToFirstErro
 import { useTrainingPlanDnd } from "../../hooks/form/useTrainingPlanDnd";
 import { DRAG_TYPE } from "../../lib/trainingPlanDnd";
 import { TrainingPlanMetaBar } from "./TrainingPlanMetaBar/TrainingPlanMetaBar";
+import { EditTrainingPlanMetaBar } from "./TrainingPlanMetaBar/EditTrainingPlanMetaBar";
 import { TrainingPlanOB } from "./TrainingPlanOB/TrainingPlanOB";
 import { TrainingDaysEditor } from "./TrainingDaysEditor/TrainingDaysEditor";
 import { ExerciseLibrary } from "./ExerciseLibrary/ExerciseLibrary";
@@ -48,7 +51,10 @@ const DEFAULT_FORM_ID = "training-plan-form";
 
 interface TrainingPlanFormProps {
   id?: string;
-  onSubmit: (data: RegisterTrainingPlanFormSchema) => void;
+  onSubmit: (
+    data: RegisterTrainingPlanFormSchema,
+    form: UseFormReturn<RegisterTrainingPlanFormSchema>,
+  ) => void;
   onCancel: () => void;
   isPending: boolean;
   mutation: MutationLike;
@@ -58,6 +64,9 @@ interface TrainingPlanFormProps {
   restore?: boolean;
   autoAddExerciseId?: string;
   onSaveAndExit?: () => void;
+  editMode?: boolean;
+  initialMember?: Member | null;
+  submitLabel?: string;
 }
 
 export function TrainingPlanForm({
@@ -72,13 +81,18 @@ export function TrainingPlanForm({
   restore = false,
   autoAddExerciseId,
   onSaveAndExit,
+  editMode = false,
+  initialMember = null,
+  submitLabel,
 }: TrainingPlanFormProps) {
   return (
     <Form<RegisterTrainingPlanFormSchema>
       id={id}
-      schema={registerTrainingPlanFormSchema}
+      schema={
+        editMode ? editTrainingPlanFormSchema : registerTrainingPlanFormSchema
+      }
       defaultValues={defaultValues ?? DEFAULT_VALUES}
-      onSubmit={(data) => onSubmit(data)}
+      onSubmit={(data, form) => onSubmit(data, form)}
       reValidateMode="onChange"
       className="flex flex-col gap-4"
     >
@@ -92,6 +106,9 @@ export function TrainingPlanForm({
         restore={restore}
         autoAddExerciseId={autoAddExerciseId}
         onSaveAndExit={onSaveAndExit}
+        editMode={editMode}
+        initialMember={initialMember}
+        submitLabel={submitLabel}
       />
     </Form>
   );
@@ -109,6 +126,9 @@ interface TrainingPlanFormBodyProps {
   restore: boolean;
   autoAddExerciseId?: string;
   onSaveAndExit?: () => void;
+  editMode: boolean;
+  initialMember: Member | null;
+  submitLabel?: string;
 }
 
 function TrainingPlanFormBody({
@@ -121,6 +141,9 @@ function TrainingPlanFormBody({
   restore,
   autoAddExerciseId,
   onSaveAndExit,
+  editMode,
+  initialMember,
+  submitLabel,
 }: TrainingPlanFormBodyProps) {
   useDurationExecsSync();
   useAutoGenerateInitialDays();
@@ -135,7 +158,9 @@ function TrainingPlanFormBody({
     restoredMemberId ?? undefined,
   );
 
-  const [pickedMember, setPickedMember] = useState<Member | null>(null);
+  const [pickedMember, setPickedMember] = useState<Member | null>(
+    initialMember,
+  );
   const selectedMember = pickedMember ?? restoredMember ?? null;
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [activeDayName, setActiveDayName] = useState<DayName | null>(
@@ -193,10 +218,14 @@ function TrainingPlanFormBody({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <TrainingPlanMetaBar
-        selectedMember={selectedMember}
-        onSelectMember={setPickedMember}
-      />
+      {editMode ? (
+        <EditTrainingPlanMetaBar member={selectedMember} />
+      ) : (
+        <TrainingPlanMetaBar
+          selectedMember={selectedMember}
+          onSelectMember={setPickedMember}
+        />
+      )}
 
       <TrainingPlanOB />
       <TrainingDaysEditor
@@ -220,6 +249,7 @@ function TrainingPlanFormBody({
         isPending={isPending}
         onOpenLibrary={() => setLibraryOpen(true)}
         onSaveAndExit={requestSaveAndExit}
+        submitLabel={submitLabel}
       />
 
       <ExerciseLibrary

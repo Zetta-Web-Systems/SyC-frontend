@@ -3,6 +3,7 @@ import { formatDateToISO } from "@shared/utils/date.utils";
 import { DayName } from "../constants";
 
 const executionSchema = z.object({
+  id: z.string().optional(),
   weekNumber: z.number().int().min(1),
   sets: z.number().int().min(1, "Mín. 1 serie"),
   reps: z.string().min(1, "Reps requeridas"),
@@ -10,6 +11,7 @@ const executionSchema = z.object({
 });
 
 const plannedExerciseSchema = z.object({
+  id: z.string().optional(),
   exerciseId: z.string().min(1),
   order: z.number().int().min(0),
   exerciseExecutions: z.array(executionSchema).min(1),
@@ -29,6 +31,7 @@ const dayNameField = z.enum(
 );
 
 const trainingDaySchema = z.object({
+  id: z.string().optional(),
   order: z.number().int().min(0),
   dayName: dayNameField,
   trainingDayLabel: z.string().max(120).optional(),
@@ -80,8 +83,10 @@ type RawTrainingPlanFormValues =
 function attachCrossFieldIssues(
   data: RawTrainingPlanFormValues,
   ctx: z.RefinementCtx,
+  allowPastStartDate: boolean,
 ) {
   if (
+    !allowPastStartDate &&
     data.mode === "plan" &&
     data.startDate &&
     data.startDate < formatDateToISO(new Date())
@@ -176,9 +181,18 @@ function attachCrossFieldIssues(
   });
 }
 
-export const registerTrainingPlanFormSchema = z
-  .discriminatedUnion("mode", [planBranch, templateBranch])
-  .superRefine(attachCrossFieldIssues);
+export function createTrainingPlanFormSchema(allowPastStartDate = false) {
+  return z
+    .discriminatedUnion("mode", [planBranch, templateBranch])
+    .superRefine((data, ctx) =>
+      attachCrossFieldIssues(data, ctx, allowPastStartDate),
+    );
+}
+
+export const registerTrainingPlanFormSchema =
+  createTrainingPlanFormSchema(false);
+
+export const editTrainingPlanFormSchema = createTrainingPlanFormSchema(true);
 
 export type RegisterTrainingPlanFormSchema = z.infer<
   typeof registerTrainingPlanFormSchema

@@ -70,8 +70,9 @@ export function duplicateDayInto(
     trainingDayLabel: source.trainingDayLabel ?? "",
     plannedExercises: source.plannedExercises.map((pe) => ({
       ...pe,
+      id: undefined,
       exerciseExecutions: syncExecsToDuration(
-        pe.exerciseExecutions.map((e) => ({ ...e })),
+        pe.exerciseExecutions.map((e) => ({ ...e, id: undefined })),
         durationInWeeks,
       ),
     })),
@@ -165,7 +166,11 @@ export function duplicateExerciseInDay(
     const source = d.plannedExercises[idx];
     const copy: RegisterPlannedExerciseFormSchema = {
       ...source,
-      exerciseExecutions: source.exerciseExecutions.map((e) => ({ ...e })),
+      id: undefined,
+      exerciseExecutions: source.exerciseExecutions.map((e) => ({
+        ...e,
+        id: undefined,
+      })),
     };
     const next = [...d.plannedExercises];
     next.splice(idx + 1, 0, copy);

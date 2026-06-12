@@ -24,7 +24,7 @@ export function useTrainingPlansActions() {
 
   const handleOpenEdit = (trainingPlan: TrainingPlanSimple) =>
     navigate({
-      to: "/training-plans/profile/$trainingPlanId",
+      to: "/training-plans/edit/$trainingPlanId",
       params: { trainingPlanId: trainingPlan.id },
     });
 
