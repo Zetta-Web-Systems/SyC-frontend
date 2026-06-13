@@ -5,9 +5,15 @@ interface DateBadgeProps {
   value: string;
   onChange: (value: string) => void;
   error?: string;
+  className?: string;
 }
 
-export function DateBadge({ value, onChange, error }: DateBadgeProps) {
+export function DateBadge({
+  value,
+  onChange,
+  error,
+  className,
+}: DateBadgeProps) {
   return (
     <InlineEditField
       type="date"
@@ -16,6 +22,7 @@ export function DateBadge({ value, onChange, error }: DateBadgeProps) {
       icon={<Calendar size={14} className="text-neutral-400" />}
       label="Inicio"
       error={error}
+      className={className}
       ariaLabel="Fecha de inicio de la planificación"
     />
   );

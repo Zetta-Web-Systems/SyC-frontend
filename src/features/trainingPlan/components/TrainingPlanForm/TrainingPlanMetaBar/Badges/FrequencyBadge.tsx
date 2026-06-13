@@ -7,6 +7,7 @@ interface FrequencyBadgeProps {
   value: number;
   onChange: (value: number) => void;
   error?: string;
+  className?: string;
 }
 
 const OPTIONS = [2, 3, 4, 5, 6, 7] as const;
@@ -15,6 +16,7 @@ export function FrequencyBadge({
   value,
   onChange,
   error,
+  className,
 }: FrequencyBadgeProps) {
   const options = useMemo<SelectMenuOption<number>[]>(
     () =>
@@ -48,6 +50,7 @@ export function FrequencyBadge({
         "border-neutral-200 hover:border-neutral-300",
         "data-[state=open]:border-primary-500 data-[state=open]:shadow-[0_0_0_3px_rgba(75,93,180,0.10)]",
         "data-[state=closed]:data-[error=true]:border-error",
+        className,
       )}
     />
   );

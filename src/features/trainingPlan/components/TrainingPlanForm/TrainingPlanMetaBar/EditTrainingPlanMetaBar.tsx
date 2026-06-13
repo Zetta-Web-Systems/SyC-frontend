@@ -63,10 +63,16 @@ export function EditTrainingPlanMetaBar({
           />
         )}
         <div className="min-w-0">
-          <div className="truncate font-semibold text-neutral-900">
-            {isTemplate || !member
-              ? templateName || "Plantilla"
-              : memberFullName(member)}
+          <div className="flex items-center gap-1.5">
+            <span className="truncate font-semibold text-neutral-900">
+              {isTemplate || !member
+                ? templateName || "Plantilla"
+                : memberFullName(member)}
+            </span>
+            <ClinicalProfileButton
+              member={isTemplate ? null : member}
+              compact
+            />
           </div>
           <div className="truncate text-xs text-neutral-500">
             {isTemplate || !member ? "Plantilla" : formatMemberMeta(member)}
@@ -87,9 +93,10 @@ export function EditTrainingPlanMetaBar({
             revalidateIfSubmitted();
           }}
           error={meta.startDate}
+          className="shadow-sm"
         />
 
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5">
+        <span className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 shadow-sm">
           <Timer size={14} className="text-neutral-400" aria-hidden="true" />
           <span className="font-medium text-neutral-500">Duración</span>
           <span className="font-semibold text-neutral-900">
@@ -104,12 +111,9 @@ export function EditTrainingPlanMetaBar({
             revalidateIfSubmitted();
           }}
           error={meta.daysPerWeek}
+          className="shadow-sm"
         />
       </div>
-
-      <span className="hidden sm:block sm:flex-1" />
-
-      <ClinicalProfileButton member={isTemplate ? null : member} />
     </div>
   );
 }

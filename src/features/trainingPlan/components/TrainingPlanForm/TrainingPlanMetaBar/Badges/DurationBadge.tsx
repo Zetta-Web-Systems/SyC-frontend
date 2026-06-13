@@ -6,6 +6,7 @@ interface DurationBadgeProps {
   min?: number;
   max?: number;
   error?: string;
+  className?: string;
 }
 
 export function DurationBadge({
@@ -14,6 +15,7 @@ export function DurationBadge({
   min = 1,
   max = 52,
   error,
+  className,
 }: DurationBadgeProps) {
   return (
     <InlineEditField
@@ -26,6 +28,7 @@ export function DurationBadge({
       suffix="semanas"
       format={(n) => `${n} ${n === 1 ? "semana" : "semanas"}`}
       error={error}
+      className={className}
       ariaLabel="Duración en semanas"
     />
   );

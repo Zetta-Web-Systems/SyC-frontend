@@ -65,16 +65,22 @@ export function TrainingPlanMetaBar({
 
   return (
     <div className="flex flex-col items-stretch gap-2.5 rounded-2xl border border-neutral-200 bg-neutral-50 p-2.5 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2.5 sm:gap-y-2 sm:p-3">
-      <MemberSelectorPill
-        selectedMember={mode === "template" ? null : selectedMember}
-        isTemplate={mode === "template"}
-        templateName={templateName}
-        memberError={meta.memberId}
-        templateNameError={meta.templateName}
-        onSelectMember={handleSelectMember}
-        onToggleTemplate={handleToggleTemplate}
-        onTemplateNameChange={handleTemplateNameChange}
-      />
+      <div className="flex items-center gap-2">
+        <MemberSelectorPill
+          selectedMember={mode === "template" ? null : selectedMember}
+          isTemplate={mode === "template"}
+          templateName={templateName}
+          memberError={meta.memberId}
+          templateNameError={meta.templateName}
+          onSelectMember={handleSelectMember}
+          onToggleTemplate={handleToggleTemplate}
+          onTemplateNameChange={handleTemplateNameChange}
+        />
+        <ClinicalProfileButton
+          member={mode === "template" ? null : selectedMember}
+          compact
+        />
+      </div>
 
       <span
         className="hidden h-6 w-px bg-neutral-200 sm:block"
@@ -89,6 +95,7 @@ export function TrainingPlanMetaBar({
             revalidateIfSubmitted();
           }}
           error={meta.startDate}
+          className="shadow-sm"
         />
         <DurationBadge
           value={durationInWeeks}
@@ -97,6 +104,7 @@ export function TrainingPlanMetaBar({
             revalidateIfSubmitted();
           }}
           error={meta.durationInWeeks}
+          className="shadow-sm"
         />
         <FrequencyBadge
           value={daysPerWeek}
@@ -105,14 +113,9 @@ export function TrainingPlanMetaBar({
             revalidateIfSubmitted();
           }}
           error={meta.daysPerWeek}
+          className="shadow-sm"
         />
       </div>
-
-      <span className="hidden sm:block sm:flex-1" />
-
-      <ClinicalProfileButton
-        member={mode === "template" ? null : selectedMember}
-      />
     </div>
   );
 }
