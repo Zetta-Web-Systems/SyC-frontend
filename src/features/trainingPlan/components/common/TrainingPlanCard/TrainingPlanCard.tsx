@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { CalendarDays, Clock, LayoutTemplate, Repeat } from "lucide-react";
+import { CalendarDays, ClipboardList, Clock, Repeat } from "lucide-react";
 import { Avatar, Badge, Card, Spinner } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { formatDayMonth } from "@shared/utils/date.utils";
@@ -81,9 +81,9 @@ export function TrainingPlanCard({
             ) : (
               <Avatar
                 size="md"
-                color="primary"
+                color="violet"
                 src={null}
-                fallback={<LayoutTemplate size={18} aria-hidden="true" />}
+                fallback={<ClipboardList size={18} aria-hidden="true" />}
                 alt={title}
               />
             )}
@@ -97,24 +97,22 @@ export function TrainingPlanCard({
             )}
           </div>
 
-          <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <span className="truncate font-semibold text-neutral-900">
               {title}
             </span>
-            {isTemplate && (
-              <span className="text-xs text-neutral-500">
-                Plantilla reutilizable
-              </span>
-            )}
+            <Badge
+              variant="dot"
+              intent={badge.intent}
+              size="sm"
+              className="self-start"
+            >
+              {badge.label.toUpperCase()}
+            </Badge>
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
-          <Badge variant="dot" intent={badge.intent} size="sm">
-            {badge.label.toUpperCase()}
-          </Badge>
-          {actions}
-        </div>
+        {actions && <div className="shrink-0">{actions}</div>}
       </div>
 
       <div className="flex items-center justify-center gap-2.5 border-t border-neutral-100 pt-3 text-xs text-neutral-500">

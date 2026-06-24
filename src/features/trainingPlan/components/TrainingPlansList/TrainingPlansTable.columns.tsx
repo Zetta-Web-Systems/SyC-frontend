@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { LayoutTemplate } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { Avatar, Badge } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
 import type { TrainingPlanSimple } from "../../types";
@@ -44,9 +44,9 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
             ) : (
               <Avatar
                 size="md"
-                color="primary"
+                color="violet"
                 src={null}
-                fallback={<LayoutTemplate size={18} aria-hidden="true" />}
+                fallback={<ClipboardList size={18} aria-hidden="true" />}
                 alt={title}
               />
             )}
