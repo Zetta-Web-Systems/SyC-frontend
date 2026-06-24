@@ -55,3 +55,41 @@ export function trainingPlanToFormValues(
     ...base,
   };
 }
+
+export function templateToFormValues(
+  plan: TrainingPlan,
+): RegisterTrainingPlanFormSchema {
+  const trainingDays = [...plan.trainingDays]
+    .sort((a, b) => a.order - b.order)
+    .map((day, dayIndex) => ({
+      order: dayIndex,
+      dayName: (day.dayName ?? DayName.MONDAY) as DayName,
+      trainingDayLabel: day.trainingDayLabel ?? "",
+      plannedExercises: [...day.plannedExercises]
+        .sort((a, b) => a.order - b.order)
+        .map((pe, peIndex) => ({
+          exerciseId: pe.exercise.id,
+          order: peIndex,
+          exerciseExecutions: [...pe.exerciseExecutions]
+            .sort((a, b) => a.weekNumber - b.weekNumber)
+            .map((exec) => ({
+              weekNumber: exec.weekNumber,
+              sets: exec.sets,
+              reps: exec.reps,
+              rir: exec.rir ?? "",
+            })),
+        })),
+    }));
+
+  return {
+    mode: "plan",
+    memberId: "",
+    startDate: formatDateToISO(new Date()),
+    durationInWeeks: plan.durationInWeeks,
+    daysPerWeek: plan.daysPerWeek,
+    mobilityBlock: plan.mobilityBlock,
+    preparatoryBlock: plan.preparatoryBlock,
+    aerobicBlock: plan.aerobicBlock,
+    trainingDays,
+  };
+}

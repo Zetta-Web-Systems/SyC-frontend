@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, FileText, RotateCcw, X } from "lucide-react";
 import { Button, IconButton } from "@shared/ui";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { confirm } from "@shared/stores/confirm.store";
+import { toast } from "@shared/stores/toast.store";
 import { TrainingPlanForm } from "../components/TrainingPlanForm/TrainingPlanForm";
+import { LoadTemplateModal } from "../components/TrainingPlanForm/LoadTemplateModal/LoadTemplateModal";
 import { useRegisterTrainingPlanSubmit } from "../hooks/useRegisterTrainingPlanSubmit";
 import { useTrainingPlanDraft } from "../stores/trainingPlanDraft.store";
+import type { RegisterTrainingPlanFormSchema } from "../schemas/registerTrainingPlan.schema";
 
 const GUARD_ALLOW_NAVIGATION_TO = [
   "/exercises/register",
@@ -27,6 +30,9 @@ export default function RegisterTrainingPlanPage({
   const [navigating, setNavigating] = useState(false);
   const [remountKey, setRemountKey] = useState(0);
   const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [loadTemplateOpen, setLoadTemplateOpen] = useState(false);
+  const [templateValues, setTemplateValues] =
+    useState<RegisterTrainingPlanFormSchema | null>(null);
 
   const draft = useTrainingPlanDraft((s) => s.draft);
   const savedAt = useTrainingPlanDraft((s) => s.savedAt);
@@ -72,10 +78,34 @@ export default function RegisterTrainingPlanPage({
       confirmLabel: "Descartar",
       onConfirm: () => {
         clearDraft();
+        setTemplateValues(null);
         setRemountKey((k) => k + 1);
       },
     });
   }
+
+  const handleApplyTemplate = useCallback(
+    (values: RegisterTrainingPlanFormSchema) => {
+      confirm({
+        intent: "warning",
+        title: "Cargar plantilla",
+        description:
+          "Se reemplazará el contenido actual del formulario con el de la plantilla seleccionada. ¿Querés continuar?",
+        confirmLabel: "Cargar plantilla",
+        onConfirm: () => {
+          clearDraft();
+          setTemplateValues(values);
+          setBannerDismissed(true);
+          setRemountKey((k) => k + 1);
+          setLoadTemplateOpen(false);
+          toast.success("Plantilla cargada", {
+            description: "Revisá los bloques y días, y asigná un alumno.",
+          });
+        },
+      });
+    },
+    [clearDraft],
+  );
 
   const { isPending, mutation, handleSubmit } = useRegisterTrainingPlanSubmit({
     onSuccess: goToList,
@@ -88,7 +118,11 @@ export default function RegisterTrainingPlanPage({
         description="Diseñá los bloques, días y ejercicios de la planificación"
         actions={
           <div className="flex gap-2">
-            <Button intent="neutral" variant="outline" disabled>
+            <Button
+              intent="neutral"
+              variant="outline"
+              onClick={() => setLoadTemplateOpen(true)}
+            >
               <FileText size={16} aria-hidden="true" />
               <span className="hidden xs:inline">Cargar plantilla</span>
             </Button>
@@ -134,10 +168,18 @@ export default function RegisterTrainingPlanPage({
         mutation={mutation}
         guardUnsavedChanges={!navigating}
         guardAllowNavigationTo={GUARD_ALLOW_NAVIGATION_TO}
-        defaultValues={shouldResume ? (draft ?? undefined) : undefined}
-        restore={shouldResume}
+        defaultValues={
+          templateValues ?? (shouldResume ? (draft ?? undefined) : undefined)
+        }
+        restore={templateValues ? false : shouldResume}
         autoAddExerciseId={createdExerciseId}
         onSaveAndExit={handleSaveAndExit}
+      />
+
+      <LoadTemplateModal
+        open={loadTemplateOpen}
+        onClose={() => setLoadTemplateOpen(false)}
+        onApply={handleApplyTemplate}
       />
     </div>
   );
