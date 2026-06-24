@@ -12,6 +12,7 @@ export default function TrainingPlansPage() {
     setPagination,
     filters,
     showTemplates,
+    viewMode,
     handleSearch,
     handleFilterChange,
     handleClearAllFilters,
@@ -46,6 +47,7 @@ export default function TrainingPlansPage() {
         onPaginationChange={setPagination}
         isLoading={isLoading && !isPlaceholderData}
         showTemplates={showTemplates}
+        viewMode={viewMode}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onExtend={handleExtend}

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import type {
   ColumnDef,
   OnChangeFn,
@@ -6,7 +6,13 @@ import type {
 } from "@tanstack/react-table";
 import { Ban, CalendarPlus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@shared/ui";
-import { DataTable, DataTablePagination } from "@shared/components/DataTable";
+import type { ViewMode } from "@shared/ui";
+import {
+  DataTable,
+  DataCardList,
+  DataTablePagination,
+  StandalonePagination,
+} from "@shared/components/DataTable";
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
 import { TRAINING_PLAN_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
 import { PlanState } from "../../constants";
@@ -16,7 +22,9 @@ import {
   getTrainingPlanKind,
   TRAINING_PLAN_KIND,
 } from "../../lib/trainingPlanKind";
+import { TrainingPlanCard } from "../common";
 import { trainingPlansColumns } from "./TrainingPlansTable.columns";
+import { TrainingPlanCardMenu } from "./TrainingPlanCardMenu";
 
 interface TrainingPlansTableProps {
   data: TrainingPlanSimple[];
@@ -25,6 +33,7 @@ interface TrainingPlansTableProps {
   onPaginationChange: OnChangeFn<PaginationState>;
   isLoading: boolean;
   showTemplates: boolean;
+  viewMode: ViewMode;
   onEdit: (trainingPlan: TrainingPlanSimple) => void;
   onDelete: (trainingPlan: TrainingPlanSimple) => void;
   onExtend: (trainingPlan: TrainingPlanSimple) => void;
@@ -37,6 +46,7 @@ export function TrainingPlansTable({
   onPaginationChange,
   isLoading,
   showTemplates,
+  viewMode,
   onEdit,
   onDelete,
   onExtend,
@@ -112,20 +122,79 @@ export function TrainingPlansTable({
     [onEdit, onDelete, onExtend],
   );
 
+  const handlePageIndexChange = useCallback(
+    (pageIndex: number) => {
+      onPaginationChange((prev) => ({ ...prev, pageIndex }));
+    },
+    [onPaginationChange],
+  );
+
+  const handlePageSizeChange = useCallback(
+    (pageSize: number) => {
+      onPaginationChange({ pageIndex: 0, pageSize });
+    },
+    [onPaginationChange],
+  );
+
+  const cardList = (
+    <>
+      <DataCardList
+        data={data}
+        isLoading={isLoading}
+        noResultsMessage="No se encontraron planificaciones."
+        className="flex-row flex-wrap justify-center"
+        renderCard={(trainingPlan) => (
+          <div key={trainingPlan.id} className="w-full sm:w-90">
+            <TrainingPlanCard
+              plan={trainingPlan}
+              actions={
+                <TrainingPlanCardMenu
+                  trainingPlan={trainingPlan}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onExtend={onExtend}
+                />
+              }
+            />
+          </div>
+        )}
+      />
+      <StandalonePagination
+        pageIndex={pagination.pageIndex}
+        pageSize={pagination.pageSize}
+        rowCount={rowCount}
+        onPageIndexChange={handlePageIndexChange}
+        onPageSizeChange={handlePageSizeChange}
+      />
+    </>
+  );
+
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      rowCount={rowCount}
-      pagination={pagination}
-      onPaginationChange={onPaginationChange}
-      columnVisibility={effectiveColumnVisibility}
-      onColumnVisibilityChange={setColumnVisibility}
-      isLoading={isLoading}
-      noResultsMessage="No se encontraron planificaciones."
-      showPagination={true}
-      renderPagination={(table) => <DataTablePagination table={table} />}
-    />
+    <div className="flex flex-col gap-3">
+      {/* Desktop */}
+      <div className="hidden md:block">
+        {viewMode === "table" ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            rowCount={rowCount}
+            pagination={pagination}
+            onPaginationChange={onPaginationChange}
+            columnVisibility={effectiveColumnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
+            isLoading={isLoading}
+            noResultsMessage="No se encontraron planificaciones."
+            showPagination={true}
+            renderPagination={(table) => <DataTablePagination table={table} />}
+          />
+        ) : (
+          cardList
+        )}
+      </div>
+
+      {/* Mobile */}
+      <div className="md:hidden">{cardList}</div>
+    </div>
   );
 }
 

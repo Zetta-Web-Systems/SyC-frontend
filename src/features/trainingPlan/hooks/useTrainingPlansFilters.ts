@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import type { PaginationState } from "@tanstack/react-table";
+import type { ViewMode } from "@shared/ui";
 import { DEFAULT_PAGE_SIZE } from "@shared/constants/pagination.constants";
 import type { PaginatedParams } from "@shared/types/pagination.types";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
@@ -16,6 +17,7 @@ export function useTrainingPlansFilters() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
 
   const {
     filters,
@@ -77,6 +79,8 @@ export function useTrainingPlansFilters() {
     search,
     filters,
     showTemplates,
+    viewMode,
+    setViewMode,
     handleSearch,
     handleFilterChange,
     handleClearAllFilters,
