@@ -22,7 +22,7 @@ export function ExerciseProfileHeader({
   const initials = exercise.name.slice(0, 2).toUpperCase();
 
   return (
-    <Card className="relative rounded-xl border border-neutral-200 bg-white p-4 sm:p-6">
+    <Card surface="panel" className="relative p-4 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="flex min-w-0 items-center gap-4">
           <Avatar

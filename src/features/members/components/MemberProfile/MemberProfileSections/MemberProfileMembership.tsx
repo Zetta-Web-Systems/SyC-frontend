@@ -42,7 +42,7 @@ export function MemberProfileMembership({
   const progress = ((totalDays - membership.remainingDays) / totalDays) * 100;
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-4">
+    <Card surface="panel" padding="md">
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold uppercase tracking-wide text-neutral-500">

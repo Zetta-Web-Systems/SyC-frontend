@@ -86,7 +86,7 @@ export function ClinicalProfileCard({
 
   return (
     <>
-      <Card className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
+      <Card surface="panel" padding="lg" className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <h6 className="flex items-center gap-1.5 text-neutral-500">
             Perfil clínico

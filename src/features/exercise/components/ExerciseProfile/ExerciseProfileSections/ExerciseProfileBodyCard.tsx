@@ -58,7 +58,7 @@ export function ExerciseProfileBodyCard({
 
   return (
     <>
-      <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+      <Card surface="panel" padding="lg">
         <button
           type="button"
           onClick={bodyDetailModal.open}

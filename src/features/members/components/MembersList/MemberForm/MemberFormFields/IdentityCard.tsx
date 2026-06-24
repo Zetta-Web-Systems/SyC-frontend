@@ -19,7 +19,7 @@ export function IdentityCard({
   const isEditing = mode === "edit";
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-6 md:flex-row md:items-start">
         <div className="flex flex-col items-center gap-2">
           {isEditing ? (

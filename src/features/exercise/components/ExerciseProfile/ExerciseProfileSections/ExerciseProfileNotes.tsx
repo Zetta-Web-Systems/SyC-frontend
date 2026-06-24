@@ -11,7 +11,7 @@ export function ExerciseProfileNotes({ exercise }: ExerciseProfileNotesProps) {
   if (!hasNotes) return null;
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-2">
         <h6 className="text-neutral-500">Notas</h6>
         <p className="whitespace-pre-line text-sm text-neutral-900">
