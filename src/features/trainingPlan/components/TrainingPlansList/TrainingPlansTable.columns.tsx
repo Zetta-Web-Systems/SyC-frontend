@@ -115,6 +115,19 @@ export const trainingPlansColumns: ColumnDef<TrainingPlanSimple, unknown>[] = [
     },
   },
   {
+    id: "createdBy",
+    header: "Profesor",
+    cell: ({ row }) => {
+      const createdBy = row.original.createdBy?.trim();
+
+      if (!createdBy) {
+        return <span className="italic text-neutral-400">Sin asignar</span>;
+      }
+
+      return <span>{createdBy}</span>;
+    },
+  },
+  {
     id: "estado",
     header: "Estado",
     cell: ({ row }) => {

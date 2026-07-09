@@ -43,6 +43,7 @@ export interface TrainingPlan extends BaseTrainingPlan {
   durationInWeeks: number;
   daysPerWeek: number;
   member?: Member;
+  createdBy?: string;
   state: PlanState;
   trainingDays: TrainingDay[];
 }
@@ -55,6 +56,7 @@ export interface TrainingPlanSimple {
   durationInWeeks: number;
   daysPerWeek: number;
   member?: MemberSimple;
+  createdBy?: string | null;
   state: PlanState;
   templateName?: string | null;
 }
