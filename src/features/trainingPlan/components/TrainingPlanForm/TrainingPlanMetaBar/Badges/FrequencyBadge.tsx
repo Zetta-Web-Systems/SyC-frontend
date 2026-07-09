@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Repeat } from "lucide-react";
 import { SelectMenu } from "@shared/ui";
 import type { SelectMenuOption } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
@@ -39,6 +40,7 @@ export function FrequencyBadge({
       panelWidth="170px"
       renderTrigger={(selected) => (
         <>
+          <Repeat size={14} className="text-neutral-400" aria-hidden="true" />
           <span className="font-medium text-neutral-500">Frecuencia</span>
           <span className="font-semibold text-neutral-900">
             {selected?.triggerLabel ?? selected?.label ?? "—"}

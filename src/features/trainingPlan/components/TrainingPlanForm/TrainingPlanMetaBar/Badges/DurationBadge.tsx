@@ -1,3 +1,4 @@
+import { Timer } from "lucide-react";
 import { InlineEditField } from "@shared/ui";
 
 interface DurationBadgeProps {
@@ -24,6 +25,7 @@ export function DurationBadge({
       onChange={onChange}
       min={min}
       max={max}
+      icon={<Timer size={14} className="text-neutral-400" />}
       label="Duración"
       suffix="semanas"
       format={(n) => `${n} ${n === 1 ? "semana" : "semanas"}`}

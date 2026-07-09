@@ -43,6 +43,7 @@ export function TrainingPlanEditor({ plan, onDone }: TrainingPlanEditorProps) {
     <TrainingPlanForm
       editMode
       initialMember={plan.member ?? null}
+      createdBy={plan.createdBy}
       defaultValues={formValues}
       onSubmit={handleSubmit}
       onCancel={onDone}

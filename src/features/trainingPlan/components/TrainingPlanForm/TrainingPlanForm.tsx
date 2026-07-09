@@ -67,6 +67,7 @@ interface TrainingPlanFormProps {
   editMode?: boolean;
   initialMember?: Member | null;
   submitLabel?: string;
+  createdBy?: string | null;
 }
 
 export function TrainingPlanForm({
@@ -84,6 +85,7 @@ export function TrainingPlanForm({
   editMode = false,
   initialMember = null,
   submitLabel,
+  createdBy,
 }: TrainingPlanFormProps) {
   return (
     <Form<RegisterTrainingPlanFormSchema>
@@ -109,6 +111,7 @@ export function TrainingPlanForm({
         editMode={editMode}
         initialMember={initialMember}
         submitLabel={submitLabel}
+        createdBy={createdBy}
       />
     </Form>
   );
@@ -129,6 +132,7 @@ interface TrainingPlanFormBodyProps {
   editMode: boolean;
   initialMember: Member | null;
   submitLabel?: string;
+  createdBy?: string | null;
 }
 
 function TrainingPlanFormBody({
@@ -144,6 +148,7 @@ function TrainingPlanFormBody({
   editMode,
   initialMember,
   submitLabel,
+  createdBy,
 }: TrainingPlanFormBodyProps) {
   useDurationExecsSync();
   useAutoGenerateInitialDays();
@@ -219,7 +224,10 @@ function TrainingPlanFormBody({
       onDragCancel={handleDragCancel}
     >
       {editMode ? (
-        <EditTrainingPlanMetaBar member={selectedMember} />
+        <EditTrainingPlanMetaBar
+          member={selectedMember}
+          createdBy={createdBy}
+        />
       ) : (
         <TrainingPlanMetaBar
           selectedMember={selectedMember}
