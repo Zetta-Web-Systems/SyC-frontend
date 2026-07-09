@@ -3,7 +3,7 @@ import {
   CalendarDays,
   Play,
   Users,
-  GraduationCap,
+  UserRoundCheck,
   ClipboardList,
   Dumbbell,
   Receipt,
@@ -52,7 +52,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         label: "Profesores",
         to: "/instructors",
-        icon: GraduationCap,
+        icon: UserRoundCheck,
         color: "text-amber-400",
         roles: [USER_ROLE.ADMIN],
       },
