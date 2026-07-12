@@ -11,17 +11,17 @@ import {
 } from "../../../lib/memberDisplay";
 import { DateBadge } from "./Badges/DateBadge";
 import { FrequencyBadge } from "./Badges/FrequencyBadge";
-import { CreatedByBadge } from "./Badges/CreatedByBadge";
+import { InstructorSelector } from "./InstructorSelector/InstructorSelector";
 import { ClinicalProfileButton } from "./ClinicalProfileButton/ClinicalProfileButton";
 
 interface EditTrainingPlanMetaBarProps {
   member: Member | null;
-  createdBy?: string | null;
+  instructorName?: string | null;
 }
 
 export function EditTrainingPlanMetaBar({
   member,
-  createdBy,
+  instructorName,
 }: EditTrainingPlanMetaBarProps) {
   const form = useFormContext<RegisterTrainingPlanFormSchema>();
   const { meta } = useTrainingPlanFormErrors();
@@ -89,7 +89,10 @@ export function EditTrainingPlanMetaBar({
       />
 
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2 sm:contents">
-        <CreatedByBadge value={createdBy} />
+        <InstructorSelector
+          currentInstructorName={instructorName}
+          className="shadow-sm"
+        />
         <DateBadge
           value={startDate}
           onChange={(v) => {

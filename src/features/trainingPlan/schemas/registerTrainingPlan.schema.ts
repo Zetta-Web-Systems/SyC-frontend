@@ -41,6 +41,7 @@ const trainingDaySchema = z.object({
 });
 
 const baseShape = {
+  instructorId: z.string().optional(),
   startDate: z.string().min(1, "La fecha de inicio es requerida"),
   durationInWeeks: z
     .number({ error: "Duración requerida" })

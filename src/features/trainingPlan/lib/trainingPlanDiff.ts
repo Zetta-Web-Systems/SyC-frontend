@@ -41,6 +41,9 @@ function buildMetaDto(
 ): UpdateTrainingPlan | null {
   const dto: UpdateTrainingPlan = {};
 
+  if (snapshot.instructorId !== next.instructorId && next.instructorId) {
+    dto.instructorId = next.instructorId;
+  }
   if (snapshot.startDate !== next.startDate) dto.startDate = next.startDate;
   if (snapshot.mobilityBlock !== next.mobilityBlock)
     dto.mobilityBlock = next.mobilityBlock;
