@@ -51,6 +51,10 @@ function dtoToFormData(
     formData.append("deleteImage", "true");
   }
 
+  if (dto.isAdmin !== undefined) {
+    formData.append("isAdmin", String(dto.isAdmin));
+  }
+
   return formData;
 }
 

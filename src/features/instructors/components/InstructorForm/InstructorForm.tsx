@@ -5,6 +5,7 @@ import { PhoneInput } from "@shared/components/VariousInputs/PhoneInput";
 import type { MutationLike } from "@shared/types/mutations.types";
 import { normalizeEmptyStrings } from "@shared/utils/normalizeFormData.utils";
 import { pickDirtyFields } from "@shared/utils/pickDirtyFields.utils";
+import { USER_ROLE } from "@features/auth";
 import {
   registerInstructorSchema,
   updateInstructorSchema,
@@ -12,6 +13,7 @@ import {
   type UpdateInstructorSchema,
 } from "../../schemas/instructor.schema";
 import type { Instructor } from "../../types";
+import { InstructorAdminSwitch } from "./InstructorAdminSwitch";
 
 interface InstructorFormCreateProps {
   instructor?: undefined;
@@ -55,6 +57,7 @@ export function InstructorForm({
           phone: instructor.phone ?? "",
           emergencyPhone: instructor.emergencyPhone ?? "",
           address: instructor.address ?? "",
+          isAdmin: instructor.role === USER_ROLE.ADMIN,
         }}
         className="flex flex-col gap-5"
       >
@@ -155,6 +158,8 @@ export function InstructorForm({
             deleteFieldTitle="Eliminar foto de perfil"
             deleteFieldDescription="¿Estás seguro que deseas eliminar la foto de perfil?"
           />
+
+          <InstructorAdminSwitch />
         </div>
 
         <FormError mutation={mutation} />
@@ -268,6 +273,8 @@ export function InstructorForm({
           name="image"
           label="Foto de perfil"
         />
+
+        <InstructorAdminSwitch />
       </div>
 
       <FormError mutation={mutation} />

@@ -20,9 +20,11 @@ export interface RegisterInstructorDto extends BaseInstructor {
   dni: string;
   email: string;
   image?: File;
+  isAdmin?: boolean;
 }
 
 export interface UpdateInstructorDto extends Partial<BaseInstructor> {
   image?: File;
   deleteImage?: boolean;
+  isAdmin?: boolean;
 }
