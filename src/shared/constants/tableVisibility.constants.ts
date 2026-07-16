@@ -60,6 +60,33 @@ export const MEMBER_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
 };
 
+export const BILLING_TABLE_VISIBILITY: ColumnVisibilityConfig = {
+  sm: {
+    member: true,
+    period: false,
+    dueStatus: true,
+    total: false,
+    paid: true,
+    actions: true,
+  },
+  md: {
+    member: true,
+    period: true,
+    dueStatus: true,
+    total: true,
+    paid: true,
+    actions: true,
+  },
+  lg: {
+    member: true,
+    period: true,
+    dueStatus: true,
+    total: true,
+    paid: true,
+    actions: true,
+  },
+};
+
 export const RISK_FLAG_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
