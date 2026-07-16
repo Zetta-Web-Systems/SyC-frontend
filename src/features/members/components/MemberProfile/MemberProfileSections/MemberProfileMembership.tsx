@@ -1,92 +1,79 @@
-import { Card, Badge } from "@shared/ui";
-import { cn } from "@shared/lib/cn";
-import { formatDate } from "@shared/utils/date.utils";
-
-interface Membership {
-  planName: string;
-  status: "active" | "expired" | "pending";
-  startDate: string;
-  endDate: string;
-  remainingDays: number;
-}
+import { History, RefreshCw, CreditCard } from "lucide-react";
+import { Card, Badge, Button } from "@shared/ui";
+import {
+  MEMBER_PLAN_TYPE_LABELS,
+  type MemberPlanType,
+} from "@features/memberPlans";
 
 interface MemberProfileMembershipProps {
-  membership: Membership;
-}
-
-function getStatus(status: Membership["status"]) {
-  switch (status) {
-    case "active":
-      return { label: "Vigente", intent: "success" as const };
-    case "expired":
-      return { label: "Vencida", intent: "error" as const };
-    case "pending":
-      return { label: "Pendiente", intent: "warning" as const };
-  }
-}
-
-function getDaysBetween(start: string, end: string) {
-  const s = new Date(start);
-  const e = new Date(end);
-
-  const diff = e.getTime() - s.getTime();
-  return Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  planType?: MemberPlanType | null;
+  onAssign?: () => void;
+  onViewHistory?: () => void;
 }
 
 export function MemberProfileMembership({
-  membership,
+  planType,
+  onAssign,
+  onViewHistory,
 }: MemberProfileMembershipProps) {
-  const status = getStatus(membership.status);
-  const totalDays = getDaysBetween(membership.startDate, membership.endDate);
-
-  const progress = ((totalDays - membership.remainingDays) / totalDays) * 100;
+  const hasPlan = Boolean(planType);
 
   return (
     <Card surface="panel" padding="md">
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold uppercase tracking-wide text-neutral-500">
-            Plan
+            Membresía
           </span>
 
-          <Badge size="sm" intent={status.intent}>
-            {status.label}
+          <Badge size="sm" intent={hasPlan ? "success" : "neutral"}>
+            {hasPlan ? "Con plan" : "Sin plan"}
           </Badge>
         </div>
-        <div className="text-sm text-neutral-800">
-          <span className="text-neutral-500">Plan · </span>
-          <span className="font-medium">{membership.planName}</span>
+
+        <div className="flex items-center gap-2 text-sm text-neutral-800">
+          <CreditCard
+            size={16}
+            className="text-primary-500"
+            aria-hidden="true"
+          />
+          {hasPlan && planType ? (
+            <span className="font-medium">
+              {MEMBER_PLAN_TYPE_LABELS[planType]}
+            </span>
+          ) : (
+            <span className="italic text-neutral-400">
+              Sin membresía asignada
+            </span>
+          )}
         </div>
 
-        <div className="flex items-center justify-between text-xs text-neutral-500">
-          <span>
-            {formatDate(membership.startDate)} –{" "}
-            {formatDate(membership.endDate)}
-          </span>
+        <div className="mt-1 flex flex-col gap-2">
+          {onViewHistory && (
+            <Button
+              variant="ghost"
+              intent="neutral"
+              size="sm"
+              className="w-full"
+              onClick={onViewHistory}
+            >
+              <History size={14} aria-hidden="true" />
+              Ver historial
+            </Button>
+          )}
 
-          <span
-            className={cn(
-              "font-medium",
-              membership.remainingDays <= 5 ? "text-error" : "text-neutral-700",
-            )}
-          >
-            {membership.remainingDays} días restantes
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <div className="h-1.5 w-full rounded-full bg-neutral-200 overflow-hidden">
-            <div
-              className={cn(
-                "h-full rounded-full transition-all",
-                membership.remainingDays <= 5 ? "bg-error" : "bg-success",
-              )}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="flex justify-between text-[10px] text-neutral-400">
-            <span>{formatDate(membership.startDate)}</span>
-            <span>{formatDate(membership.endDate)}</span>
-          </div>
+          {onAssign && (
+            <Button
+              variant="outline"
+              intent="neutral"
+              size="sm"
+              className="w-full"
+              onClick={onAssign}
+            >
+              <RefreshCw size={14} aria-hidden="true" />
+              Asignar / cambiar membresía
+            </Button>
+          )}
         </div>
       </div>
     </Card>

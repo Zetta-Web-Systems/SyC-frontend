@@ -1,11 +1,8 @@
 import { Calendar, Pencil } from "lucide-react";
 import { Avatar, Badge, Card, Button } from "@shared/ui";
+import { MEMBER_PLAN_TYPE_LABELS } from "@features/memberPlans";
 import type { Member } from "../../../types";
 import { Link } from "@tanstack/react-router";
-
-interface Membership {
-  status?: "active" | "expired" | "pending";
-}
 
 interface TrainingPlan {
   name: string;
@@ -20,20 +17,8 @@ interface TrainingPlans {
 
 interface MemberProfileHeaderProps {
   member: Member;
-  membership?: Membership;
   plans?: TrainingPlans;
   onEdit: (member: Member) => void;
-}
-
-function getMembershipBadge(status?: Membership["status"]) {
-  switch (status) {
-    case "active":
-      return { label: "VIGENTE", intent: "success" as const };
-    case "expired":
-      return { label: "VENCIDO", intent: "error" as const };
-    default:
-      return null;
-  }
 }
 
 function getPlanBadge(plan?: TrainingPlan) {
@@ -45,7 +30,6 @@ function getPlanBadge(plan?: TrainingPlan) {
 
 export function MemberProfileHeader({
   member,
-  membership,
   plans,
   onEdit,
 }: MemberProfileHeaderProps) {
@@ -55,7 +39,9 @@ export function MemberProfileHeader({
 
   const fullName = `${member.name} ${member.lastname}`;
 
-  const membershipBadge = getMembershipBadge(membership?.status);
+  const membershipBadge = member.memberPlanType
+    ? { label: MEMBER_PLAN_TYPE_LABELS[member.memberPlanType], intent: "success" as const }
+    : { label: "SIN MEMBRESÍA", intent: "warning" as const };
   const planBadge = getPlanBadge(plans?.current);
 
   return (

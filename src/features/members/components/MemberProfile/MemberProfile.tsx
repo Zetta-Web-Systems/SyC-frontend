@@ -1,13 +1,15 @@
+import { useState } from "react";
 import type { ReactNode } from "react";
+import {
+  AssignMembershipModal,
+  MembershipHistoryModal,
+} from "@features/memberPlans";
 import type { Member } from "../../types";
 import { MemberProfileHeader } from "./MemberProfileSections/MemberProfileHeader";
 import { MemberProfileContact } from "./MemberProfileSections/MemberProfileContact";
 import { MemberProfileMembership } from "./MemberProfileSections/MemberProfileMembership";
 import { MemberProfilePlan } from "./MemberProfileSections/MemberProfilePlan";
-import {
-  mockMembership,
-  mockTrainingPlans,
-} from "../../data/memberProfile.mock";
+import { mockTrainingPlans } from "../../data/memberProfile.mock";
 
 interface MemberProfileProps {
   member: Member;
@@ -24,12 +26,16 @@ export function MemberProfile({
   weightEvolutionSlot,
   onEdit,
 }: MemberProfileProps) {
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const memberName = `${member.name} ${member.lastname}`;
+
   return (
     <div className="flex flex-col gap-6">
       <MemberProfileHeader
         member={member}
         onEdit={onEdit}
-        membership={mockMembership}
         plans={mockTrainingPlans}
       />
 
@@ -38,7 +44,11 @@ export function MemberProfile({
           <MemberProfileContact member={member} />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <MemberProfileMembership membership={mockMembership} />
+            <MemberProfileMembership
+              planType={member.memberPlanType}
+              onAssign={() => setAssignOpen(true)}
+              onViewHistory={() => setHistoryOpen(true)}
+            />
             <MemberProfilePlan plans={mockTrainingPlans} />
           </div>
 
@@ -52,6 +62,20 @@ export function MemberProfile({
           </aside>
         )}
       </div>
+
+      <AssignMembershipModal
+        memberId={member.id}
+        memberName={memberName}
+        open={assignOpen}
+        onClose={() => setAssignOpen(false)}
+      />
+
+      <MembershipHistoryModal
+        memberId={member.id}
+        memberName={memberName}
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+      />
     </div>
   );
 }
