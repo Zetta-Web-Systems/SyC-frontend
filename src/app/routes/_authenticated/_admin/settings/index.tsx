@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flag, ChevronRight, Dumbbell } from "lucide-react";
+import { Flag, ChevronRight, Dumbbell, SlidersHorizontal } from "lucide-react";
 import { buttonVariants } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 
@@ -70,6 +70,39 @@ function SettingsPage() {
               </span>
               <span className="text-xs font-normal text-neutral-500">
                 Administra los grupos de ejercicios y sus zonas afectadas
+              </span>
+            </span>
+          </span>
+          <ChevronRight
+            size={18}
+            className="text-neutral-400"
+            aria-hidden="true"
+          />
+        </Link>
+
+        <Link
+          to="/settings/parameters"
+          className={cn(
+            buttonVariants({
+              variant: "outline",
+              intent: "neutral",
+              size: "lg",
+            }),
+            "h-auto justify-between gap-3 rounded-xl px-4 py-4 text-left",
+          )}
+        >
+          <span className="flex items-center gap-3">
+            <SlidersHorizontal
+              size={20}
+              className="text-primary-500"
+              aria-hidden="true"
+            />
+            <span className="flex flex-col">
+              <span className="text-sm font-semibold text-neutral-900">
+                Parámetros del sistema
+              </span>
+              <span className="text-xs font-normal text-neutral-500">
+                Umbrales del semáforo y precios de las membresías
               </span>
             </span>
           </span>
