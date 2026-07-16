@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   CalendarDays,
+  DollarSign,
   EllipsisVertical,
   IdCard,
   MapPin,
@@ -108,6 +109,20 @@ export function MemberCard({
                 </PopoverItem>
                 <PopoverSeparator />
                 <PopoverItem
+                  icon={<DollarSign color="green" />}
+                  onClick={() => {
+                    void navigate({
+                      to: "/billing",
+                      search: {
+                        search: `${member.name} ${member.lastname}`,
+                      },
+                    });
+                    setMenuOpen(false);
+                  }}
+                >
+                  Ver cuotas
+                </PopoverItem>
+                <PopoverItem
                   icon={<CalendarDays color="#4ea49c" />}
                   onClick={() => {
                     void navigate({
@@ -132,7 +147,6 @@ export function MemberCard({
                 >
                   Editar
                 </PopoverItem>
-                <PopoverSeparator />
                 <PopoverSeparator />
                 <PopoverItem
                   icon={<UserX />}

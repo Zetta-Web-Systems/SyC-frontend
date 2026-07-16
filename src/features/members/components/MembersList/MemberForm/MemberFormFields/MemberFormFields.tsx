@@ -1,6 +1,7 @@
 import { ContactCard } from "./ContactCard";
 import { IdentityCard } from "./IdentityCard";
 import { PhysicalCard } from "./PhysicalCard";
+import { MembershipCard } from "./MembershipCard";
 
 interface MemberFormFieldsProps {
   mode: "create" | "edit";
@@ -23,6 +24,7 @@ export function MemberFormFields({
       />
       <ContactCard />
       <PhysicalCard />
+      {mode === "create" && <MembershipCard />}
     </div>
   );
 }

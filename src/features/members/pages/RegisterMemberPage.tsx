@@ -38,6 +38,7 @@ export default function RegisterMemberPage() {
       image: data.image ?? undefined,
       currentWeight: data.currentWeight ?? undefined,
       trainingGoal: data.trainingGoal ?? undefined,
+      memberPlanType: data.memberPlanType ?? undefined,
       clinicalProfile: clinicalProfile
         ? toClinicalProfileRegisterPayload(clinicalProfile)
         : {},

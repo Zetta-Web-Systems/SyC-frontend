@@ -4,7 +4,14 @@ import type {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { CalendarDays, FileUser, Pencil, UserCheck, UserX } from "lucide-react";
+import {
+  CalendarDays,
+  DollarSign,
+  FileUser,
+  Pencil,
+  UserCheck,
+  UserX,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@shared/ui";
 import type { ViewMode } from "@shared/ui";
@@ -71,6 +78,19 @@ export function MembersTable({
                   >
                     <FileUser size={16} aria-hidden="true" />
                   </Button>
+                  <Link
+                    to="/billing"
+                    search={{ search: `${member.name} ${member.lastname}` }}
+                  >
+                    <Button
+                      variant="ghost"
+                      intent="success"
+                      size="icon"
+                      aria-label={`Ver cuotas de ${member.name} ${member.lastname}`}
+                    >
+                      <DollarSign size={16} aria-hidden="true" />
+                    </Button>
+                  </Link>
                   <Link
                     to="/attendances"
                     search={{
