@@ -6,6 +6,7 @@ import type {
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type {
   Instructor,
+  InstructorName,
   RegisterInstructorDto,
   UpdateInstructorDto,
 } from "../types";
@@ -51,6 +52,10 @@ function dtoToFormData(
     formData.append("deleteImage", "true");
   }
 
+  if (dto.isAdmin !== undefined) {
+    formData.append("isAdmin", String(dto.isAdmin));
+  }
+
   return formData;
 }
 
@@ -59,6 +64,11 @@ export async function getInstructorsPaginated(params: PaginatedParams) {
     "/instructors/list/paginated",
     { params: buildPaginatedParams(params) },
   );
+  return data;
+}
+
+export async function getInstructorNames() {
+  const { data } = await api.get<InstructorName[]>("/instructors/list/names");
   return data;
 }
 

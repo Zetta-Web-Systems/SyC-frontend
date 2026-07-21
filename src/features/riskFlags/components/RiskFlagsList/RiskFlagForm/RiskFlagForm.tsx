@@ -111,7 +111,7 @@ export function RiskFlagForm({
               error={field.error}
               aria-describedby={field["aria-describedby"]}
               disabled={field.disabled}
-              placeholder="Indicaciones para el profesional…"
+              placeholder="Indicaciones para el profesional"
             />
           )}
         </FormField>
@@ -180,7 +180,7 @@ export function RiskFlagForm({
             error={field.error}
             aria-describedby={field["aria-describedby"]}
             disabled={field.disabled}
-            placeholder="Indicaciones para el profesional…"
+            placeholder="Indicaciones para el profesional"
           />
         )}
       </FormField>

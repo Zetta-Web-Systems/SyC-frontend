@@ -10,7 +10,7 @@ interface MemberProfileContactProps {
 
 export function MemberProfileContact({ member }: MemberProfileContactProps) {
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-4">
         <h6 className="text-neutral-500">Datos personales</h6>
 

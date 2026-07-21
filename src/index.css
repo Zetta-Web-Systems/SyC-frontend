@@ -34,6 +34,7 @@
   --color-error: #ef4459;
   --color-warning: #ee9145;
   --color-info: #3b82f6;
+  --color-violet: #8b5cf6;
 
   /* Colores (perfil clínico) */
   --color-clinical-none: var(--color-secondary-500);
@@ -42,6 +43,11 @@
   --color-clinical-mid: #e64a1e;
   --color-clinical-high: #dc2626;
   --color-clinical-very-high: #991b1b;
+
+  /* Colores (bloques OB)*/
+  --color-block-mobility: #8b5cf6;
+  --color-block-preparatory: #38bdf8;
+  --color-block-aerobic: #2563eb;
 
   /* Breakpoints */
   --breakpoint-xs: 488px;

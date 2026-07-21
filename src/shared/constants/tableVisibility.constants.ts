@@ -123,6 +123,36 @@ export const EXERCISE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   },
 };
 
+export const TRAINING_PLAN_TABLE_VISIBILITY: ColumnVisibilityConfig = {
+  sm: {
+    member: true,
+    dates: true,
+    durationInWeeks: false,
+    daysPerWeek: false,
+    instructor: false,
+    estado: false,
+    actions: true,
+  },
+  md: {
+    member: true,
+    dates: true,
+    durationInWeeks: true,
+    daysPerWeek: true,
+    instructor: true,
+    estado: true,
+    actions: true,
+  },
+  lg: {
+    member: true,
+    dates: true,
+    durationInWeeks: true,
+    daysPerWeek: true,
+    instructor: true,
+    estado: true,
+    actions: true,
+  },
+};
+
 export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,

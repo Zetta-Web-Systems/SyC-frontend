@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ClinicalProfilePage } from "@features/clinicalProfiles";
 
 const clinicalProfileSearchSchema = z.object({
-  from: z.enum(["profile", "update"]).optional(),
+  from: z.enum(["profile", "update", "training-plan"]).optional(),
 });
 
 export const Route = createFileRoute(

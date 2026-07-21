@@ -8,6 +8,7 @@ export const buttonVariants = cva(
         solid: "border border-transparent",
         outline: "bg-transparent border",
         ghost: "bg-transparent border border-transparent",
+        dashed: "bg-white border-[1.5px] border-dashed",
       },
       intent: {
         primary: "",
@@ -32,7 +33,6 @@ export const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      // ── SOLID ──────────────────────────────────────────────────────────
       {
         variant: "solid",
         intent: "primary",
@@ -63,7 +63,6 @@ export const buttonVariants = cva(
         className:
           "bg-neutral-900 text-white hover:bg-neutral-800 active:bg-neutral-950 focus-visible:ring-neutral-900",
       },
-      // ── OUTLINE ──────────────────────────────────────────────────────────
       {
         variant: "outline",
         intent: "primary",
@@ -94,7 +93,6 @@ export const buttonVariants = cva(
         className:
           "border-neutral-300 text-neutral-800 hover:bg-neutral-50 active:bg-neutral-100 focus-visible:ring-neutral-900",
       },
-      // ── GHOST ──────────────────────────────────────────────────────────
       {
         variant: "ghost",
         intent: "primary",
@@ -124,6 +122,18 @@ export const buttonVariants = cva(
         intent: "neutral",
         className:
           "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 active:bg-neutral-200 focus-visible:ring-neutral-900",
+      },
+      {
+        variant: "dashed",
+        intent: "primary",
+        className:
+          "border-primary-300 text-primary-600 hover:border-primary-500 hover:bg-primary-50 active:bg-primary-100 focus-visible:ring-primary-500",
+      },
+      {
+        variant: "dashed",
+        intent: "neutral",
+        className:
+          "border-neutral-300 text-neutral-600 hover:border-neutral-400 hover:bg-neutral-50 active:bg-neutral-100 focus-visible:ring-neutral-900",
       },
     ],
     defaultVariants: {

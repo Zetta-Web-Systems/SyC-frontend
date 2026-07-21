@@ -13,6 +13,7 @@ export const badgeVariants = cva(
         warning: "",
         error: "",
         info: "",
+        violet: "",
         neutral: "",
       },
       size: {
@@ -37,6 +38,7 @@ export const badgeVariants = cva(
       },
       { variant: "solid", intent: "error", class: "bg-error/15 text-error" },
       { variant: "solid", intent: "info", class: "bg-info/15 text-info" },
+      { variant: "solid", intent: "violet", class: "bg-violet/15 text-violet" },
       {
         variant: "solid",
         intent: "neutral",
@@ -46,6 +48,7 @@ export const badgeVariants = cva(
       { variant: "dot", intent: "warning", class: "text-warning" },
       { variant: "dot", intent: "error", class: "text-error" },
       { variant: "dot", intent: "info", class: "text-info" },
+      { variant: "dot", intent: "violet", class: "text-violet" },
       { variant: "dot", intent: "neutral", class: "text-neutral-500" },
     ],
     defaultVariants: {
@@ -65,6 +68,7 @@ export const badgeIconVariants = cva(
         warning: "bg-warning text-white",
         error: "bg-error text-white",
         info: "bg-info text-white",
+        violet: "bg-violet text-white",
         neutral: "bg-neutral-400 text-white",
       },
       size: {
@@ -87,6 +91,7 @@ export const badgeDotVariants = cva("inline-block rounded-full shrink-0", {
       warning: "bg-warning",
       error: "bg-error",
       info: "bg-info",
+      violet: "bg-violet",
       neutral: "bg-neutral-400",
     },
     size: {

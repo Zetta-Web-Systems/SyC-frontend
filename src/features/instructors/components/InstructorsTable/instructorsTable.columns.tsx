@@ -10,10 +10,11 @@ export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
     header: "Nombre",
     meta: { className: "w-[1%] whitespace-nowrap" },
     cell: ({ row }) => {
-      const { name, lastname, image } = row.original;
+      const { name, lastname, image, role } = row.original;
       const initials = (name.charAt(0) + lastname.charAt(0)).toUpperCase();
       const fullName = `${name} ${lastname}`;
       const lastLogin = getLastLoginInfo(row.original.lastLoginAt);
+      const isAdmin = role === "ADMIN";
 
       return (
         <div className="flex items-center justify-start gap-4">
@@ -25,8 +26,13 @@ export const instructorsColumns: ColumnDef<Instructor, unknown>[] = [
             alt={fullName}
           />
           <div className="flex flex-col items-start gap-1">
-            <span className="flex items-center gap-1 justify-center font-medium">
+            <span className="flex items-center gap-1.5 justify-center font-medium">
               {fullName}
+              {isAdmin && (
+                <Badge intent="violet" size="sm">
+                  ADMIN
+                </Badge>
+              )}
             </span>
             <span className="flex items-center gap-1 justify-center text-xs">
               <Clock

@@ -16,7 +16,7 @@ import { useClinicalProfilePageData } from "./useClinicalProfilePageData";
 
 interface ClinicalProfilePageProps {
   memberId: string;
-  from?: "profile" | "update";
+  from?: "profile" | "update" | "training-plan";
 }
 
 export default function ClinicalProfilePage({
@@ -38,6 +38,29 @@ export default function ClinicalProfilePage({
   const { snapshotRef } = useClinicalProfileSnapshot(profile);
 
   const goBack = useCallback(() => {
+    if (from === "training-plan") {
+      confirm({
+        intent: "info",
+        title: "¿A dónde querés ir?",
+        description:
+          "Podés volver a la planificación que estabas armando o seguir editando al alumno.",
+        confirmLabel: "Volver a la planificación",
+        cancelLabel: "Ir a editar alumno",
+        onConfirm: () => {
+          flushSync(() => setNavigating(true));
+          navigate({
+            to: "/training-plans/register",
+            search: { resume: true },
+          });
+        },
+        onCancel: () => {
+          flushSync(() => setNavigating(true));
+          navigate({ to: "/members/update/$memberId", params: { memberId } });
+        },
+      });
+      return;
+    }
+
     flushSync(() => setNavigating(true));
     if (from === "profile") {
       navigate({ to: "/members/profile/$memberId", params: { memberId } });
@@ -93,7 +116,7 @@ export default function ClinicalProfilePage({
         actions={
           <Button intent="neutral" variant="outline" onClick={goBack}>
             <ArrowLeft size={16} aria-hidden="true" />
-            <span className="hidden xs:inline">Volver al alumno</span>
+            <span className="hidden xs:inline">Volver</span>
           </Button>
         }
       />

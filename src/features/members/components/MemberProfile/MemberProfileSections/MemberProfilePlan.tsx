@@ -20,7 +20,7 @@ export function MemberProfilePlan({ plans }: MemberProfilePlanProps) {
   const previous = plans?.previous;
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-4 h-full">
+    <Card surface="panel" padding="md" className="h-full">
       <div className="flex flex-col gap-3 h-full">
         <span className="text-[11px] font-bold uppercase tracking-wide text-neutral-500">
           Planificación de Entrenamiento

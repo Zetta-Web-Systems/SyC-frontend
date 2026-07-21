@@ -99,6 +99,11 @@ type Status = (typeof STATUS)[keyof typeof STATUS];
 
 ## Component Patterns
 
+> **Before creating any component or primitive, inspect `src/shared/components/` and `src/shared/ui/` first.**
+> Reuse what exists — do not recreate a shared composite (Modal, Drawer, DataTable, Form,
+> SearchableInfiniteList, DropdownPanel, etc.) or a design-system primitive (Button, Card, Pill,
+> Input, Badge, etc.). Only add a new shared piece when nothing there can be composed to fit.
+
 - Props interface extends the corresponding HTML element attributes type.
 - CVA variant logic lives in a co-located `ComponentName.variants.ts` file.
 - Always use `cn()` for class composition — never string concatenation.

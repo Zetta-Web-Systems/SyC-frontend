@@ -9,6 +9,7 @@ export interface ConfirmDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  onTertiary?: () => void;
   intent?: ConfirmIntent;
   icon?: ReactNode;
   title: string;
@@ -17,6 +18,7 @@ export interface ConfirmDialogProps {
   size?: ConfirmSize;
   confirmLabel: string;
   cancelLabel?: string;
+  tertiaryLabel?: string;
   isLoading?: boolean;
 }
 
@@ -24,6 +26,7 @@ export function ConfirmDialog({
   open,
   onClose,
   onConfirm,
+  onTertiary,
   intent = "danger",
   icon,
   title,
@@ -32,6 +35,7 @@ export function ConfirmDialog({
   size = "sm",
   confirmLabel,
   cancelLabel = "Cancelar",
+  tertiaryLabel,
   isLoading = false,
 }: ConfirmDialogProps) {
   const config = INTENT_CONFIG[intent];
@@ -67,28 +71,60 @@ export function ConfirmDialog({
           </div>
         ) : null}
 
-        <div className="flex w-full mt-6 gap-3">
-          <Button
-            variant="outline"
-            intent="neutral"
-            size="md"
-            className="flex-1"
-            disabled={isLoading}
-            onClick={onClose}
-          >
-            {cancelLabel}
-          </Button>
-          <Button
-            variant="solid"
-            intent={config.confirmIntent}
-            size="md"
-            className="flex-1"
-            isLoading={isLoading}
-            onClick={onConfirm}
-          >
-            {confirmLabel}
-          </Button>
-        </div>
+        {onTertiary && tertiaryLabel ? (
+          <div className="flex w-full flex-col mt-6 gap-2.5">
+            <Button
+              variant="solid"
+              intent={config.confirmIntent}
+              size="md"
+              isLoading={isLoading}
+              onClick={onConfirm}
+            >
+              {confirmLabel}
+            </Button>
+            <Button
+              variant="outline"
+              intent="neutral"
+              size="md"
+              disabled={isLoading}
+              onClick={onTertiary}
+            >
+              {tertiaryLabel}
+            </Button>
+            <Button
+              variant="ghost"
+              intent="neutral"
+              size="md"
+              disabled={isLoading}
+              onClick={onClose}
+            >
+              {cancelLabel}
+            </Button>
+          </div>
+        ) : (
+          <div className="flex w-full mt-6 gap-3">
+            <Button
+              variant="outline"
+              intent="neutral"
+              size="md"
+              className="flex-1"
+              disabled={isLoading}
+              onClick={onClose}
+            >
+              {cancelLabel}
+            </Button>
+            <Button
+              variant="solid"
+              intent={config.confirmIntent}
+              size="md"
+              className="flex-1"
+              isLoading={isLoading}
+              onClick={onConfirm}
+            >
+              {confirmLabel}
+            </Button>
+          </div>
+        )}
       </div>
     </Modal>
   );

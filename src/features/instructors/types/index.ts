@@ -1,3 +1,5 @@
+import type { UserRole } from "@features/auth";
+
 interface BaseInstructor {
   name: string;
   lastname: string;
@@ -14,15 +16,24 @@ export interface Instructor extends BaseInstructor {
   image?: string;
   isActive: boolean;
   lastLoginAt: string;
+  role: UserRole;
+}
+
+export interface InstructorName {
+  id: string;
+  name: string;
+  lastname: string;
 }
 
 export interface RegisterInstructorDto extends BaseInstructor {
   dni: string;
   email: string;
   image?: File;
+  isAdmin?: boolean;
 }
 
 export interface UpdateInstructorDto extends Partial<BaseInstructor> {
   image?: File;
   deleteImage?: boolean;
+  isAdmin?: boolean;
 }

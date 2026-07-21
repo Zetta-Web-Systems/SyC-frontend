@@ -59,7 +59,7 @@ export function MemberProfileHeader({
   const planBadge = getPlanBadge(plans?.current);
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6">
+    <Card surface="panel" className="p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
         <Avatar
           size="profile"
