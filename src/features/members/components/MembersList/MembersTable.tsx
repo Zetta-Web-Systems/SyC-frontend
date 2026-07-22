@@ -80,7 +80,10 @@ export function MembersTable({
                   </Button>
                   <Link
                     to="/billing"
-                    search={{ search: `${member.name} ${member.lastname}` }}
+                    search={{
+                      memberId: member.id,
+                      memberName: `${member.name} ${member.lastname}`,
+                    }}
                   >
                     <Button
                       variant="ghost"
