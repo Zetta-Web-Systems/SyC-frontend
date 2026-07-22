@@ -102,7 +102,7 @@ function SettingsPage() {
                 Parámetros del sistema
               </span>
               <span className="text-xs font-normal text-neutral-500">
-                Umbrales del semáforo y precios de las membresías
+                Umbrales del semáforo de dolor
               </span>
             </span>
           </span>

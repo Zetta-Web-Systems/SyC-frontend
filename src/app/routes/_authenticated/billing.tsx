@@ -4,6 +4,8 @@ import { BillingPage } from "@features/memberPlans";
 
 const billingSearchSchema = z.object({
   search: z.string().optional(),
+  memberId: z.string().optional(),
+  memberName: z.string().optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/billing")({
@@ -12,6 +14,13 @@ export const Route = createFileRoute("/_authenticated/billing")({
 });
 
 function BillingRoute() {
-  const { search } = Route.useSearch();
-  return <BillingPage initialSearch={search} />;
+  const { search, memberId, memberName } = Route.useSearch();
+
+  return (
+    <BillingPage
+      initialSearch={search}
+      initialMemberId={memberId}
+      initialMemberName={memberName}
+    />
+  );
 }
