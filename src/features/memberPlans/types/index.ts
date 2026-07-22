@@ -48,15 +48,20 @@ export interface Payment {
   amount: number;
   paymentMethod: PaymentMethod;
   registeredBy?: PaymentRegisteredBy;
+  notes?: string;
 }
 
-export interface Fee {
+export interface FeeSimple {
   id: string;
   startDate: string;
   endDate: string;
   feeState: FeeState;
   totalAmount: number;
   amountPaid: number;
+  lateChargeAmount?: number | null;
+}
+
+export interface Fee extends FeeSimple {
   member: FeeMemberSummary;
   payments: Payment[];
   lateChargeAmount: number | null;
@@ -85,6 +90,8 @@ export interface RegisterPaymentDto {
   feeId: string;
   amount: number;
   paymentMethod: PaymentMethod;
+  memberPlanType?: MemberPlanType;
+  notes?: string;
 }
 
 export interface RegisterMembershipDto {

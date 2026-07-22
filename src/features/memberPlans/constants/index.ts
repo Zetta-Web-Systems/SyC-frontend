@@ -79,4 +79,7 @@ export const MEMBER_PLAN_TYPES_ORDER: MemberPlanType[] = [
 export const BILLING_FILTER_SCHEMA = {
   feeState: { apiKey: "feeState", initial: [] },
   memberPlanType: { apiKey: "memberPlanType", initial: [] },
+  memberId: { apiKey: "memberId", initial: [] },
 } as const satisfies FilterSchema;
+
+export const PAYMENT_NOTES_MAX_LENGTH = 255;

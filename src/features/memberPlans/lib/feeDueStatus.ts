@@ -1,6 +1,6 @@
 import { FEE_STATE, type Fee } from "../types";
 
-type FeeDueIntent = "success" | "warning" | "error";
+type FeeDueIntent = "success" | "warning" | "error" | "info";
 
 export interface FeeDueStatus {
   label: string;
@@ -21,12 +21,17 @@ function daysUntil(dateStr: string): number {
   return Math.round((target - today) / 86_400_000);
 }
 
-export function getFeeDueStatus(fee: Fee): FeeDueStatus {
+export type FeeDueSource = Pick<Fee, "feeState" | "endDate">;
+
+export function getFeeDueStatus(fee: FeeDueSource): FeeDueStatus {
   if (fee.feeState === FEE_STATE.EXPIRED) {
     return { label: "Vencida", intent: "error" };
   }
   if (fee.feeState === FEE_STATE.PAID) {
     return { label: "Pagada", intent: "success" };
+  }
+  if (fee.feeState === FEE_STATE.PARTIAL_PAYMENT) {
+    return { label: "Pago parcial", intent: "info" };
   }
 
   const days = daysUntil(fee.endDate);

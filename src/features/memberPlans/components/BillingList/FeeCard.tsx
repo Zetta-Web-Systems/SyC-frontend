@@ -5,6 +5,7 @@ import { formatCurrency } from "@shared/utils/currency.utils";
 import type { Fee } from "../../types";
 import { FEE_STATE } from "../../types";
 import { FEE_STATE_INTENT, FEE_STATE_LABELS } from "../../constants";
+import { getFeeNotes } from "../../lib/feeNotes";
 
 interface FeeCardProps {
   fee: Fee;
@@ -24,6 +25,8 @@ export function FeeCard({
   const fullName = `${member.name} ${member.lastname}`;
   const remaining = fee.totalAmount - fee.amountPaid;
   const payable = fee.feeState !== FEE_STATE.PAID;
+  const notes = getFeeNotes(fee.payments);
+  const lastNote = notes.at(-1);
 
   return (
     <div className="w-full rounded-xl border border-neutral-200 bg-white p-4">
@@ -70,6 +73,18 @@ export function FeeCard({
           </span>
         </div>
       </div>
+
+      {lastNote && (
+        <div className="mt-3 flex flex-col rounded-lg border border-info/20 bg-info/5 p-2">
+          <p className="text-xs text-neutral-700">{lastNote.text}</p>
+          {notes.length > 1 && (
+            <span className="mt-0.5 text-[11px] text-neutral-400">
+              +{notes.length - 1} observación
+              {notes.length - 1 === 1 ? "" : "es"} más
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="mt-3 flex gap-2">
         <Button

@@ -1,14 +1,19 @@
-import { Modal, Button, Input, Select } from "@shared/ui";
+import { Modal, Button, Input, Select, Textarea } from "@shared/ui";
 import { Form, FormField, FormError } from "@shared/components/Form";
 import { formatCurrency } from "@shared/utils/currency.utils";
 import type { Fee } from "../../types";
-import { PAYMENT_METHOD } from "../../types";
-import { PAYMENT_METHOD_OPTIONS } from "../../constants";
+import { FEE_STATE, PAYMENT_METHOD } from "../../types";
+import {
+  MEMBER_PLAN_TYPE_FILTER_OPTIONS,
+  PAYMENT_METHOD_OPTIONS,
+  PAYMENT_NOTES_MAX_LENGTH,
+} from "../../constants";
 import {
   buildPaymentSchema,
   type PaymentSchema,
 } from "../../schemas/payment.schema";
 import { useRegisterPaymentMutation } from "../../hooks/mutations/useRegisterPaymentMutation";
+import { useMembershipHistoryQuery } from "../../hooks/queries/useMembershipHistoryQuery";
 
 interface PaymentFormModalProps {
   fee: Fee | null;
@@ -23,15 +28,31 @@ export function PaymentFormModal({
 }: PaymentFormModalProps) {
   const mutation = useRegisterPaymentMutation();
 
+  const canChangePlan = fee?.feeState === FEE_STATE.PENDING;
+
+  const { data: history, isLoading: isLoadingPlan } = useMembershipHistoryQuery(
+    fee?.member.id ?? "",
+    open && canChangePlan,
+  );
+
   if (!fee) return null;
 
+  const currentPlanType = history?.find((item) => item.isActive)?.planType;
   const amountDue =
     fee.totalAmount + (fee.lateChargeAmount ?? 0) - fee.amountPaid;
   const fullName = `${fee.member.name} ${fee.member.lastname}`;
 
   const handleSubmit = (data: PaymentSchema) => {
+    const notes = data.notes?.trim();
+
     mutation.mutate(
-      { feeId: fee.id, amount: data.amount, paymentMethod: data.paymentMethod },
+      {
+        feeId: fee.id,
+        amount: data.amount,
+        paymentMethod: data.paymentMethod,
+        memberPlanType: canChangePlan ? data.memberPlanType : undefined,
+        notes: notes || undefined,
+      },
       { onSuccess: () => onClose() },
     );
   };
@@ -58,6 +79,8 @@ export function PaymentFormModal({
           defaultValues={{
             amount: undefined,
             paymentMethod: PAYMENT_METHOD.CASH,
+            memberPlanType: undefined,
+            notes: "",
           }}
           className="flex flex-col gap-4"
         >
@@ -104,6 +127,69 @@ export function PaymentFormModal({
                   </option>
                 ))}
               </Select>
+            )}
+          </FormField>
+
+          {canChangePlan && (
+            <div className="flex flex-col gap-1.5">
+              <FormField<PaymentSchema>
+                name="memberPlanType"
+                label="Cambiar tipo de membresía"
+              >
+                {(field) => (
+                  <Select
+                    id={field.id}
+                    name={field.name}
+                    value={field.value}
+                    onChange={(e) =>
+                      field.onChange(e.target.value || undefined)
+                    }
+                    onBlur={field.onBlur}
+                    disabled={isLoadingPlan}
+                    placeholder="Mantener el plan actual"
+                    error={field.error}
+                    aria-describedby={field["aria-describedby"]}
+                  >
+                    {MEMBER_PLAN_TYPE_FILTER_OPTIONS.map((option) => {
+                      const isCurrent = option.value === currentPlanType;
+
+                      return (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          disabled={isCurrent}
+                        >
+                          {isCurrent
+                            ? `${option.label} (plan actual)`
+                            : option.label}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                )}
+              </FormField>
+              <p className="text-xs text-neutral-400">
+                Si elegís otro plan, el cambio se aplica a partir de la próxima
+                cuota (esta se cobra con el plan actual).
+              </p>
+            </div>
+          )}
+
+          <FormField<PaymentSchema> name="notes" label="Observaciones">
+            {(field) => (
+              <Textarea
+                ref={field.ref}
+                id={field.id}
+                name={field.name}
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onBlur={field.onBlur}
+                error={field.error}
+                aria-describedby={field["aria-describedby"]}
+                rows={3}
+                maxLength={PAYMENT_NOTES_MAX_LENGTH}
+                placeholder="Notas del cobro (opcional)"
+              />
             )}
           </FormField>
 

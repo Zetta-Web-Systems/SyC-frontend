@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { PaginationState } from "@tanstack/react-table";
 import {
   DEFAULT_PAGE_SIZE,
@@ -9,21 +9,39 @@ import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 import { useFilters } from "@shared/hooks/useFilters";
 import { BILLING_FILTER_SCHEMA } from "../constants";
 
-export function useBillingFilters(initialSearch?: string) {
+interface UseBillingFiltersOptions {
+  initialSearch?: string;
+  initialMemberId?: string;
+}
+
+export function useBillingFilters({
+  initialSearch,
+  initialMemberId,
+}: UseBillingFiltersOptions = {}) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [search, setSearch] = useState(initialSearch ?? "");
 
+  const schema = useMemo(
+    () => ({
+      ...BILLING_FILTER_SCHEMA,
+      memberId: {
+        apiKey: "memberId",
+        initial: initialMemberId ? [initialMemberId] : [],
+      },
+    }),
+    [initialMemberId],
+  );
+
   const {
     filters,
     filterEntries,
     handleFilterChange: baseFilterChange,
     handleClearAllFilters: baseClearAll,
-  } = useFilters(BILLING_FILTER_SCHEMA);
+  } = useFilters(schema);
 
-  // Por defecto, ordena por estado DESC: trae vencidas y pendientes primero.
   const params: PaginatedParams = {
     page: toApiPage(pagination.pageIndex),
     size: pagination.pageSize,

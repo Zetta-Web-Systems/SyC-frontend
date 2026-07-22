@@ -1,9 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Avatar, Badge } from "@shared/ui";
+import { Avatar } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
 import { formatCurrency } from "@shared/utils/currency.utils";
 import type { Fee } from "../../types";
-import { getFeeDueStatus } from "../../lib/feeDueStatus";
+import { getFeeNotes } from "../../lib/feeNotes";
+import { FeeDueBadge } from "../common";
 
 export const billingColumns: ColumnDef<Fee, unknown>[] = [
   {
@@ -46,14 +47,7 @@ export const billingColumns: ColumnDef<Fee, unknown>[] = [
   {
     id: "dueStatus",
     header: "Vencimiento",
-    cell: ({ row }) => {
-      const { label, intent } = getFeeDueStatus(row.original);
-      return (
-        <Badge variant="dot" intent={intent} size="md">
-          {label}
-        </Badge>
-      );
-    },
+    cell: ({ row }) => <FeeDueBadge fee={row.original} />,
   },
   {
     id: "total",
@@ -79,6 +73,37 @@ export const billingColumns: ColumnDef<Fee, unknown>[] = [
           {remaining > 0 && (
             <span className="text-xs text-neutral-400">
               Resta {formatCurrency(remaining)}
+            </span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    id: "notes",
+    header: "Observaciones",
+    meta: { className: "max-w-64" },
+    cell: ({ row }) => {
+      const notes = getFeeNotes(row.original.payments);
+      if (notes.length === 0) {
+        return (
+          <span className="italic text-neutral-400">Sin observaciones</span>
+        );
+      }
+
+      const lastNote = notes[notes.length - 1];
+
+      return (
+        <div className="flex flex-col items-center gap-0.5 text-center">
+          <span
+            className="line-clamp-2 text-xs text-neutral-600"
+            title={lastNote.text}
+          >
+            {lastNote.text}
+          </span>
+          {notes.length > 1 && (
+            <span className="text-xs font-medium text-info">
+              +{notes.length - 1} más
             </span>
           )}
         </div>

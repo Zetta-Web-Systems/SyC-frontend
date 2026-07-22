@@ -1,6 +1,9 @@
 import { useMemo, useCallback } from "react";
 import { DataTableToolbar } from "@shared/components/DataTable";
-import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
+import type {
+  ExtraFilterChip,
+  ToolbarFilterConfig,
+} from "@shared/types/datatable.types";
 import {
   FEE_STATE_FILTER_OPTIONS,
   MEMBER_PLAN_TYPE_FILTER_OPTIONS,
@@ -11,6 +14,7 @@ interface BillingFiltersProps {
   onSearch: (value: string) => void;
   onSearchClear?: () => void;
   filters: Record<string, string[]>;
+  memberName?: string;
   onFilterChange: (key: string, values: string[]) => void;
   onClearAllFilters: () => void;
 }
@@ -20,6 +24,7 @@ export function BillingFilters({
   onSearch,
   onSearchClear,
   filters,
+  memberName,
   onFilterChange,
   onClearAllFilters,
 }: BillingFiltersProps) {
@@ -52,9 +57,23 @@ export function BillingFilters({
     [filters, handleChange],
   );
 
+  const extraChips = useMemo<ExtraFilterChip[]>(() => {
+    if (!filters.memberId?.length) return [];
+
+    return [
+      {
+        key: "memberId",
+        label: "Alumno",
+        value: memberName ?? "Seleccionado",
+        onRemove: () => onFilterChange("memberId", []),
+      },
+    ];
+  }, [filters.memberId, memberName, onFilterChange]);
+
   return (
     <DataTableToolbar
       filters={filterConfigs}
+      extraChips={extraChips}
       searchPlaceholder="Buscar por alumno"
       searchValue={searchValue}
       onSearch={onSearch}

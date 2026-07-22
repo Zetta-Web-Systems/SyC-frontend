@@ -7,6 +7,7 @@ import {
   FEE_STATE_LABELS,
   PAYMENT_METHOD_LABELS,
 } from "../../constants";
+import { getFeeNotes } from "../../lib/feeNotes";
 
 interface FeeDetailModalProps {
   fee: Fee | null;
@@ -23,6 +24,7 @@ export function FeeDetailModal({ fee, open, onClose }: FeeDetailModalProps) {
     member.name.charAt(0) + member.lastname.charAt(0)
   ).toUpperCase();
   const remaining = fee.totalAmount - fee.amountPaid;
+  const notes = getFeeNotes(fee.payments);
 
   return (
     <Modal open={open} onClose={onClose} title="Detalle de la cuota" size="md">
@@ -82,6 +84,31 @@ export function FeeDetailModal({ fee, open, onClose }: FeeDetailModalProps) {
 
         <div>
           <h3 className="mb-2 text-sm font-semibold text-neutral-900">
+            Observaciones ({notes.length})
+          </h3>
+          {notes.length === 0 ? (
+            <p className="text-sm italic text-neutral-400">
+              Sin observaciones registradas.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {notes.map((note) => (
+                <li
+                  key={note.id}
+                  className="rounded-lg border border-info/20 bg-info/5 p-3"
+                >
+                  <p className="text-sm text-neutral-800">{note.text}</p>
+                  <span className="mt-1 block text-xs text-neutral-500">
+                    {formatDate(note.date)} · {formatCurrency(note.amount)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-neutral-900">
             Pagos ({fee.payments.length})
           </h3>
           {fee.payments.length === 0 ? (
@@ -93,9 +120,9 @@ export function FeeDetailModal({ fee, open, onClose }: FeeDetailModalProps) {
               {fee.payments.map((payment) => (
                 <li
                   key={payment.id}
-                  className="flex items-center justify-between py-2.5"
+                  className="flex items-start justify-between gap-3 py-2.5"
                 >
-                  <div className="flex flex-col">
+                  <div className="flex min-w-0 flex-col">
                     <span className="text-sm font-medium text-neutral-900">
                       {formatCurrency(payment.amount)}
                     </span>
@@ -105,7 +132,7 @@ export function FeeDetailModal({ fee, open, onClose }: FeeDetailModalProps) {
                     </span>
                   </div>
                   {payment.registeredBy && (
-                    <span className="text-xs text-neutral-400">
+                    <span className="shrink-0 text-xs text-neutral-400">
                       {payment.registeredBy.name}{" "}
                       {payment.registeredBy.lastname}
                     </span>

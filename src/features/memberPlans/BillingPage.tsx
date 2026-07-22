@@ -10,9 +10,15 @@ import type { Fee } from "./types";
 
 interface BillingPageProps {
   initialSearch?: string;
+  initialMemberId?: string;
+  initialMemberName?: string;
 }
 
-export default function BillingPage({ initialSearch }: BillingPageProps = {}) {
+export default function BillingPage({
+  initialSearch,
+  initialMemberId,
+  initialMemberName,
+}: BillingPageProps = {}) {
   const {
     params,
     pagination,
@@ -23,7 +29,7 @@ export default function BillingPage({ initialSearch }: BillingPageProps = {}) {
     handleClearSearch,
     handleFilterChange,
     handleClearAllFilters,
-  } = useBillingFilters(initialSearch);
+  } = useBillingFilters({ initialSearch, initialMemberId });
 
   const { data, isLoading, isPlaceholderData } = useFeesQuery(params);
 
@@ -42,6 +48,7 @@ export default function BillingPage({ initialSearch }: BillingPageProps = {}) {
         onSearch={handleSearch}
         onSearchClear={handleClearSearch}
         filters={filters}
+        memberName={initialMemberName}
         onFilterChange={handleFilterChange}
         onClearAllFilters={handleClearAllFilters}
       />
