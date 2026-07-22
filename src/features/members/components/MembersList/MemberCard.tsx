@@ -7,6 +7,7 @@ import {
   MapPin,
   Pencil,
   Phone,
+  Receipt,
   Target,
   Weight,
   UserCheck,
@@ -23,6 +24,7 @@ import {
   PopoverSeparator,
 } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
+import { FeeDueBadge } from "@features/memberPlans";
 import type { Member } from "../../types";
 import { TRAINING_GOAL_LABELS } from "../../constants";
 
@@ -114,7 +116,8 @@ export function MemberCard({
                     void navigate({
                       to: "/billing",
                       search: {
-                        search: `${member.name} ${member.lastname}`,
+                        memberId: member.id,
+                        memberName: `${member.name} ${member.lastname}`,
                       },
                     });
                     setMenuOpen(false);
@@ -210,6 +213,10 @@ export function MemberCard({
           {member.trainingGoal
             ? TRAINING_GOAL_LABELS[member.trainingGoal]
             : "Sin objetivo"}
+        </span>
+        <span className="flex items-center gap-1 justify-center">
+          <Receipt size={12} className="text-neutral-400" aria-hidden="true" />
+          {member.fee ? <FeeDueBadge fee={member.fee} /> : "Sin cuota"}
         </span>
       </div>
     </div>
