@@ -8,7 +8,6 @@ export type SettingType = (typeof SETTING_TYPE)[keyof typeof SETTING_TYPE];
 
 export const SETTING_GROUP = {
   SEMAFORO: "SEMAFORO",
-  MEMBERSHIP_PRICES: "MEMBERSHIP_PRICES",
   OTHER: "OTHER",
 } as const;
 

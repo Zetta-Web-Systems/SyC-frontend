@@ -37,7 +37,6 @@ export default function SystemParametersPage() {
               key={meta.group}
               title={meta.title}
               description={meta.description}
-              group={meta.group}
               settings={filterSettingsByGroup(settings, meta.group)}
               onUpdate={handleUpdate}
             />

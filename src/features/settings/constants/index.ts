@@ -30,9 +30,4 @@ export const SETTING_GROUPS_META: SettingGroupMeta[] = [
     title: "Semáforo de dolor",
     description: "Umbrales usados para calcular el semáforo de los ejercicios.",
   },
-  {
-    group: SETTING_GROUP.MEMBERSHIP_PRICES,
-    title: "Precios de membresías",
-    description: "Valor mensual de cada tipo de membresía.",
-  },
 ];

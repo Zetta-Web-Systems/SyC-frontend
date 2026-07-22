@@ -3,7 +3,6 @@ import { SETTING_GROUP } from "../types";
 
 export function getSettingGroup(key: string): SettingGroup {
   if (key.startsWith("PAIN_TOLERANCE")) return SETTING_GROUP.SEMAFORO;
-  if (key.startsWith("MEMBER_PLAN")) return SETTING_GROUP.MEMBERSHIP_PRICES;
   return SETTING_GROUP.OTHER;
 }
 

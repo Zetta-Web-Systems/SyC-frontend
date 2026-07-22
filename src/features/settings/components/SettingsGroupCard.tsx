@@ -1,12 +1,10 @@
 import { Card } from "@shared/ui";
-import type { Setting, SettingGroup } from "../types";
-import { SETTING_GROUP } from "../types";
+import type { Setting } from "../types";
 import { SettingRow } from "./SettingsGroupCard/SettingRow";
 
 interface SettingsGroupCardProps {
   title: string;
   description: string;
-  group: SettingGroup;
   settings: Setting[];
   onUpdate: (key: string, value: string) => void;
 }
@@ -14,12 +12,9 @@ interface SettingsGroupCardProps {
 export function SettingsGroupCard({
   title,
   description,
-  group,
   settings,
   onUpdate,
 }: SettingsGroupCardProps) {
-  const isPriceGroup = group === SETTING_GROUP.MEMBERSHIP_PRICES;
-
   return (
     <Card surface="panel" padding="lg" className="flex flex-col">
       <div>
@@ -37,7 +32,6 @@ export function SettingsGroupCard({
             <SettingRow
               key={setting.key}
               setting={setting}
-              isPrice={isPriceGroup}
               onUpdate={onUpdate}
             />
           ))}
