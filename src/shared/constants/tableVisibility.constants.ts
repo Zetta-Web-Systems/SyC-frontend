@@ -70,6 +70,7 @@ export const BILLING_TABLE_VISIBILITY: ColumnVisibilityConfig = {
     dueStatus: true,
     total: false,
     paid: true,
+    notes: false,
     actions: true,
   },
   md: {
@@ -78,6 +79,7 @@ export const BILLING_TABLE_VISIBILITY: ColumnVisibilityConfig = {
     dueStatus: true,
     total: true,
     paid: true,
+    notes: false,
     actions: true,
   },
   lg: {
@@ -86,6 +88,7 @@ export const BILLING_TABLE_VISIBILITY: ColumnVisibilityConfig = {
     dueStatus: true,
     total: true,
     paid: true,
+    notes: true,
     actions: true,
   },
 };
