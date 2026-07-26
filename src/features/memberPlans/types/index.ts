@@ -63,6 +63,7 @@ export interface FeeSimple {
 
 export interface Fee extends FeeSimple {
   member: FeeMemberSummary;
+  memberPlanType: MemberPlanType;
   payments: Payment[];
   lateChargeAmount: number | null;
 }

@@ -19,7 +19,7 @@ export default function MembershipsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-neutral-900 text-xl md:text-3xl">Planes</h1>
+        <h1 className="text-neutral-900 text-xl md:text-3xl">Membresías</h1>
         <p className="mt-1 text-sm text-neutral-500">
           Tipos de membresía y su precio mensual
         </p>

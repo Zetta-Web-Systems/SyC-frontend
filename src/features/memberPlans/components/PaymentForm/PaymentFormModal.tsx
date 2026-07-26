@@ -13,7 +13,6 @@ import {
   type PaymentSchema,
 } from "../../schemas/payment.schema";
 import { useRegisterPaymentMutation } from "../../hooks/mutations/useRegisterPaymentMutation";
-import { useMembershipHistoryQuery } from "../../hooks/queries/useMembershipHistoryQuery";
 
 interface PaymentFormModalProps {
   fee: Fee | null;
@@ -28,16 +27,11 @@ export function PaymentFormModal({
 }: PaymentFormModalProps) {
   const mutation = useRegisterPaymentMutation();
 
-  const canChangePlan = fee?.feeState === FEE_STATE.PENDING;
-
-  const { data: history, isLoading: isLoadingPlan } = useMembershipHistoryQuery(
-    fee?.member.id ?? "",
-    open && canChangePlan,
-  );
-
   if (!fee) return null;
 
-  const currentPlanType = history?.find((item) => item.isActive)?.planType;
+  // El back solo acepta cambiar de plan cuando se paga una cuota pendiente.
+  const canChangePlan = fee.feeState === FEE_STATE.PENDING;
+  const currentPlanType = fee.memberPlanType;
   const amountDue =
     fee.totalAmount + (fee.lateChargeAmount ?? 0) - fee.amountPaid;
   const fullName = `${fee.member.name} ${fee.member.lastname}`;
@@ -145,7 +139,6 @@ export function PaymentFormModal({
                       field.onChange(e.target.value || undefined)
                     }
                     onBlur={field.onBlur}
-                    disabled={isLoadingPlan}
                     placeholder="Mantener el plan actual"
                     error={field.error}
                     aria-describedby={field["aria-describedby"]}

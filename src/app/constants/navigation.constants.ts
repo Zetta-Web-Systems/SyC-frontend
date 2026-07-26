@@ -88,7 +88,7 @@ export const NAV_GROUPS: NavGroup[] = [
         roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
       {
-        label: "Planes",
+        label: "Membresías",
         to: "/memberships",
         icon: CreditCard,
         color: "text-violet-400",
