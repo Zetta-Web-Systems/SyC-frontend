@@ -64,6 +64,10 @@ function dtoToFormData(dto: RegisterMember | UpdateMember): FormData {
     formData.append("clinicalProfile", JSON.stringify(dto.clinicalProfile));
   }
 
+  if ("memberPlanType" in dto && dto.memberPlanType) {
+    formData.append("memberPlanType", dto.memberPlanType);
+  }
+
   return formData;
 }
 

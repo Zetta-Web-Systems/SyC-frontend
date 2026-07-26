@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Phone } from "lucide-react";
 import { Avatar, Badge } from "@shared/ui";
+import { FeeDueBadge } from "@features/memberPlans";
 import type { Member } from "../../types";
 import { TRAINING_GOAL_LABELS } from "../../constants";
 
@@ -118,6 +119,17 @@ export const membersColumns: ColumnDef<Member, unknown>[] = [
       ) : (
         <span className="italic text-neutral-400">Sin registro</span>
       );
+    },
+  },
+  {
+    id: "fee",
+    header: "Cuota",
+    cell: ({ row }) => {
+      const fee = row.original.fee;
+      if (!fee) {
+        return <span className="italic text-neutral-400">Sin cuota</span>;
+      }
+      return <FeeDueBadge fee={fee} />;
     },
   },
   {

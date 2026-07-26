@@ -3,6 +3,7 @@ import type {
   ClinicalProfile,
   ClinicalProfileRegisterSchema,
 } from "@features/clinicalProfiles";
+import type { FeeSimple, MemberPlanType } from "@features/memberPlans";
 import type { TrainingGoal } from "../constants";
 
 export interface CurrentStatusLike {
@@ -39,6 +40,8 @@ export interface Member extends BaseMember {
   trainingGoal?: TrainingGoal | null;
   image?: string;
   clinicalProfile?: ClinicalProfile;
+  memberPlanType?: MemberPlanType | null;
+  fee?: FeeSimple;
 }
 
 export interface MemberSimple {
@@ -54,6 +57,7 @@ export interface RegisterMember extends BaseMember {
   bornDate?: string;
   currentWeight?: number;
   trainingGoal?: TrainingGoal;
+  memberPlanType?: MemberPlanType;
   image?: File;
   clinicalProfile: ClinicalProfileRegisterSchema;
 }
