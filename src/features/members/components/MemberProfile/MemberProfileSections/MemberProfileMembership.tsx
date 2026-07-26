@@ -1,18 +1,23 @@
 import { History, RefreshCw, CreditCard } from "lucide-react";
 import { Card, Badge, Button } from "@shared/ui";
+import { formatDate } from "@shared/utils/date.utils";
 import {
+  FeeDueBadge,
   MEMBER_PLAN_TYPE_LABELS,
+  type FeeSimple,
   type MemberPlanType,
 } from "@features/memberPlans";
 
 interface MemberProfileMembershipProps {
   planType?: MemberPlanType | null;
+  fee?: FeeSimple;
   onAssign?: () => void;
   onViewHistory?: () => void;
 }
 
 export function MemberProfileMembership({
   planType,
+  fee,
   onAssign,
   onViewHistory,
 }: MemberProfileMembershipProps) {
@@ -47,6 +52,18 @@ export function MemberProfileMembership({
             </span>
           )}
         </div>
+
+        {fee && (
+          <div className="flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 text-sm">
+            <div className="flex flex-col">
+              <span className="text-neutral-600">Cuota</span>
+              <span className="text-xs text-neutral-400">
+                Vence {formatDate(fee.endDate)}
+              </span>
+            </div>
+            <FeeDueBadge fee={fee} />
+          </div>
+        )}
 
         <div className="mt-1 flex flex-col gap-2">
           {onViewHistory && (

@@ -46,6 +46,7 @@ export function MemberProfile({
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <MemberProfileMembership
               planType={member.memberPlanType}
+              fee={member.fee}
               onAssign={() => setAssignOpen(true)}
               onViewHistory={() => setHistoryOpen(true)}
             />
