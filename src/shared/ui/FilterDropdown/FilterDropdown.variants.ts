@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const filterDropdownTriggerVariants = cva(
-  "inline-flex items-center gap-2 whitespace-nowrap rounded-xl border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 cursor-pointer active:scale-[0.98] h-10 px-4 text-sm",
+  "inline-flex items-center gap-2 whitespace-nowrap rounded-xl border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 cursor-pointer active:scale-[0.98] h-10 px-4 text-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100",
   {
     variants: {
       isActive: {

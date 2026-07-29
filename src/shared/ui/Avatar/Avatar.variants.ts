@@ -15,6 +15,7 @@ export const avatarVariants = cva(
         primary: "bg-primary-100 text-primary-700",
         secondary: "bg-secondary-100 text-secondary-700",
         neutral: "bg-neutral-200 text-neutral-700",
+        violet: "bg-violet/15 text-violet",
       },
     },
     defaultVariants: {

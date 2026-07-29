@@ -70,6 +70,8 @@ const imageField = z.instanceof(File).optional().nullable();
 
 const deleteImageField = z.boolean().optional();
 
+const isAdminField = z.boolean().optional();
+
 export const registerInstructorSchema = z.object({
   name: nameField,
   lastname: lastnameField,
@@ -79,6 +81,7 @@ export const registerInstructorSchema = z.object({
   emergencyPhone: emergencyPhoneField,
   address: addressField,
   image: imageField,
+  isAdmin: isAdminField,
 });
 
 export type RegisterInstructorSchema = z.infer<typeof registerInstructorSchema>;
@@ -91,6 +94,7 @@ export const updateInstructorSchema = z.object({
   address: addressField,
   image: imageField,
   deleteImage: deleteImageField,
+  isAdmin: isAdminField,
 });
 
 export type UpdateInstructorSchema = z.infer<typeof updateInstructorSchema>;

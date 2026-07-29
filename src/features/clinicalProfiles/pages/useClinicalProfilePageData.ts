@@ -18,7 +18,12 @@ export function useClinicalProfilePageData(
   memberId?: string,
 ): UseClinicalProfilePageDataResult {
   const memberQuery = useMemberQuery(memberId);
-  const riskFlagsQuery = useRiskFlagsQuery({ page: 1, size: 200 });
+  const riskFlagsQuery = useRiskFlagsQuery({
+    page: 1,
+    size: 200,
+    filters: ["isActive"],
+    filtersValues: ["1"],
+  });
 
   const member = memberQuery.data;
   const profile = member?.clinicalProfile ?? null;

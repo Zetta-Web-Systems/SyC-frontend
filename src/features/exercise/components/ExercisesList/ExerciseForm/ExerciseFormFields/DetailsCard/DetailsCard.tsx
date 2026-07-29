@@ -11,7 +11,7 @@ type ExerciseFormValues = RegisterExerciseSchema | UpdateExerciseSchema;
 
 export function DetailsCard() {
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-5">
         <h6 className="flex items-center gap-1.5 text-neutral-500">
           Detalles del ejercicio
@@ -29,7 +29,7 @@ export function DetailsCard() {
               error={field.error}
               aria-describedby={field["aria-describedby"]}
               disabled={field.disabled}
-              placeholder="Descripción de cómo se realiza el ejercicio…"
+              placeholder="Descripción de cómo se realiza el ejercicio"
             />
           )}
         </FormField>

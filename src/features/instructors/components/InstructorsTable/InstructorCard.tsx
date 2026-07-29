@@ -56,7 +56,7 @@ export function InstructorCard({
         />
 
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <p className="truncate text-sm font-semibold text-neutral-900">
+          <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-neutral-900">
             {fullName}
           </p>
           <span className="flex items-center gap-1 text-xs text-neutral-500">

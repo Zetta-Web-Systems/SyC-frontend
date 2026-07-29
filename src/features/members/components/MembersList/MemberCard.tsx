@@ -1,11 +1,13 @@
 import { useState } from "react";
 import {
   CalendarDays,
+  DollarSign,
   EllipsisVertical,
   IdCard,
   MapPin,
   Pencil,
   Phone,
+  Receipt,
   Target,
   Weight,
   UserCheck,
@@ -22,6 +24,7 @@ import {
   PopoverSeparator,
 } from "@shared/ui";
 import { formatDate } from "@shared/utils/date.utils";
+import { FeeDueBadge } from "@features/memberPlans";
 import type { Member } from "../../types";
 import { TRAINING_GOAL_LABELS } from "../../constants";
 
@@ -108,6 +111,21 @@ export function MemberCard({
                 </PopoverItem>
                 <PopoverSeparator />
                 <PopoverItem
+                  icon={<DollarSign color="green" />}
+                  onClick={() => {
+                    void navigate({
+                      to: "/billing",
+                      search: {
+                        memberId: member.id,
+                        memberName: `${member.name} ${member.lastname}`,
+                      },
+                    });
+                    setMenuOpen(false);
+                  }}
+                >
+                  Ver cuotas
+                </PopoverItem>
+                <PopoverItem
                   icon={<CalendarDays color="#4ea49c" />}
                   onClick={() => {
                     void navigate({
@@ -132,7 +150,6 @@ export function MemberCard({
                 >
                   Editar
                 </PopoverItem>
-                <PopoverSeparator />
                 <PopoverSeparator />
                 <PopoverItem
                   icon={<UserX />}
@@ -196,6 +213,10 @@ export function MemberCard({
           {member.trainingGoal
             ? TRAINING_GOAL_LABELS[member.trainingGoal]
             : "Sin objetivo"}
+        </span>
+        <span className="flex items-center gap-1 justify-center">
+          <Receipt size={12} className="text-neutral-400" aria-hidden="true" />
+          {member.fee ? <FeeDueBadge fee={member.fee} /> : "Sin cuota"}
         </span>
       </div>
     </div>

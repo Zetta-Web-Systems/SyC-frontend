@@ -21,7 +21,7 @@ export function ExerciseProfileOtherLinks({
   if (links.length === 0) return null;
 
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-3">
         <h6 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Otros recursos

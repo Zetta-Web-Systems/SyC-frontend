@@ -23,6 +23,7 @@ export interface ExerciseFormHelpers {
 interface ExerciseFormCreateProps {
   exercise?: undefined;
   initialGroupId: string;
+  initialName?: string;
   groups: ExerciseGroup[];
   isLoadingGroups?: boolean;
   onGroupSearch?: (q: string) => void;
@@ -66,6 +67,7 @@ ExerciseForm.displayName = "ExerciseForm";
 
 function CreateExerciseForm({
   initialGroupId,
+  initialName,
   groups,
   isLoadingGroups,
   onGroupSearch,
@@ -105,7 +107,7 @@ function CreateExerciseForm({
       }}
       defaultValues={{
         exerciseGroupId: initialGroupId,
-        name: "",
+        name: initialName ?? "",
         affectedZones: initialZones,
         links: [],
       }}

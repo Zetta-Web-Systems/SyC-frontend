@@ -8,7 +8,7 @@ type MemberFormValues = RegisterMemberSchema & { deleteImage?: boolean };
 
 export function PhysicalCard() {
   return (
-    <Card className="rounded-xl border border-neutral-200 bg-white p-5">
+    <Card surface="panel" padding="lg">
       <div className="flex flex-col gap-4">
         <h6 className="flex items-center gap-1.5 text-neutral-500">
           Perfil físico

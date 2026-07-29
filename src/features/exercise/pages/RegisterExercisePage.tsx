@@ -13,11 +13,15 @@ import type { RegisterExerciseSchema } from "../schemas/exercise.schema";
 import type { RegisterExercise } from "../types";
 
 interface RegisterExercisePageProps {
-  groupId: string;
+  groupId?: string;
+  initialName?: string;
+  from?: "training-plan";
 }
 
 export default function RegisterExercisePage({
   groupId,
+  initialName,
+  from,
 }: RegisterExercisePageProps) {
   const navigate = useNavigate();
   const mutation = useRegisterExerciseMutation();
@@ -28,19 +32,30 @@ export default function RegisterExercisePage({
     useGroupExercisesQuery({ page: 1, size: 100 });
   const groups = groupsData?.data ?? [];
 
-  function goToList(targetGroupId: string) {
-    flushSync(() => setNavigating(true));
-    navigate({
-      to: "/exercises/$groupId",
-      params: { groupId: targetGroupId },
-    });
-  }
+  const fromTrainingPlan = from === "training-plan";
 
   function handleBack() {
-    navigate({
-      to: "/exercises/$groupId",
-      params: { groupId },
-    });
+    if (fromTrainingPlan) {
+      navigate({ to: "/training-plans/register", search: { resume: true } });
+      return;
+    }
+    if (groupId) {
+      navigate({ to: "/exercises/$groupId", params: { groupId } });
+      return;
+    }
+    navigate({ to: "/exercises" });
+  }
+
+  function goToSuccess(targetGroupId: string, createdExerciseId: string) {
+    flushSync(() => setNavigating(true));
+    if (fromTrainingPlan) {
+      navigate({
+        to: "/training-plans/register",
+        search: { createdExerciseId },
+      });
+      return;
+    }
+    navigate({ to: "/exercises/$groupId", params: { groupId: targetGroupId } });
   }
 
   function handleRegister(
@@ -58,11 +73,11 @@ export default function RegisterExercisePage({
         mutation.mutate(
           { groupId: exerciseGroupId, dto },
           {
-            onSuccess: () => {
+            onSuccess: (created) => {
               if (createMore) {
                 helpers.resetPreservingGroup();
               } else {
-                goToList(exerciseGroupId);
+                goToSuccess(exerciseGroupId, created.id);
               }
             },
           },
@@ -85,7 +100,8 @@ export default function RegisterExercisePage({
       />
 
       <ExerciseForm
-        initialGroupId={groupId}
+        initialGroupId={groupId ?? ""}
+        initialName={initialName}
         groups={groups}
         isLoadingGroups={isLoadingGroups}
         onSubmit={handleRegister}

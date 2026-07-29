@@ -60,15 +60,6 @@ export function AttendanceAdminAccess({ visible }: AttendanceAdminAccessProps) {
           </svg>
         )}
       </div>
-
-      {/* <button
-        type="button"
-        onClick={handleLogout}
-        className="fixed bottom-4 right-4 z-40 text-primary-200 opacity-30 transition-opacity duration-300 hover:opacity-60"
-        aria-label="Opciones de administración"
-      >
-        <Settings size={16} />
-      </button> */}
     </div>
   );
 }

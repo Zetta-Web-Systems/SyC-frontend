@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MEMBER_PLAN_TYPE } from "@features/memberPlans";
 import { TrainingGoal } from "../constants";
 import { MEMBER_VALIDATION as MV } from "./member.validation";
 
@@ -80,6 +81,13 @@ const trainingGoalField = z
   .optional()
   .nullable();
 
+const memberPlanTypeField = z
+  .enum(MEMBER_PLAN_TYPE, {
+    error: "Seleccioná un tipo de membresía",
+  })
+  .optional()
+  .nullable();
+
 export const registerMemberSchema = z.object({
   name: nameField,
   lastname: lastnameField,
@@ -92,6 +100,7 @@ export const registerMemberSchema = z.object({
   bornDate: bornDateField,
   currentWeight: currentWeightField,
   trainingGoal: trainingGoalField,
+  memberPlanType: memberPlanTypeField,
 });
 
 export type RegisterMemberSchema = z.infer<typeof registerMemberSchema>;

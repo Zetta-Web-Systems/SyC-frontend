@@ -30,6 +30,7 @@ dist-ssr
 .opencode
 .docs
 .claude
+.scripts
 
 # TanStack Router — auto-generated route tree
 src/app/routeTree.gen.ts

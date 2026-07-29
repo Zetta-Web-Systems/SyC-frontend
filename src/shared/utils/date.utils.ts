@@ -25,6 +25,11 @@ const dateShortFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
   month: "short",
 });
 
+const dayMonthFormatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, {
+  day: "2-digit",
+  month: "2-digit",
+});
+
 // Helper centralizado
 function parseDate(input: string | number | Date): Date {
   if (typeof input === "string") {
@@ -74,6 +79,15 @@ export function formatDateTime(date: string | number | Date): string {
  */
 export function formatDateShort(date: string | number | Date): string {
   return dateShortFormatter.format(parseDate(date));
+}
+
+/**
+ * Formatea una fecha en formato numérico día/mes, sin año.
+ * @example
+ * formatDayMonth("2026-06-03") => "03/06"
+ */
+export function formatDayMonth(date: string | number | Date): string {
+  return dayMonthFormatter.format(parseDate(date));
 }
 
 /**

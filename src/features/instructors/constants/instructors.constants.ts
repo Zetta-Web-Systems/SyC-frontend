@@ -5,6 +5,7 @@ export const INSTRUCTORS_KEYS = {
   all: ["instructors"] as const,
   list: (params: PaginatedParams) =>
     [...INSTRUCTORS_KEYS.all, "list", params] as const,
+  names: () => [...INSTRUCTORS_KEYS.all, "names"] as const,
 } as const;
 
 export const STATUS_FILTER_OPTIONS: FilterOption[] = [
