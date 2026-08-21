@@ -16,7 +16,13 @@ export type {
   InlineEditDateProps,
 } from "./InlineEditField/InlineEditField";
 export type { PillProps } from "./Pill/Pill";
+export type { AnchoredPopoverProps } from "./Popover/AnchoredPopover";
 export type { PopoverProps } from "./Popover/Popover";
+export type { PopoverHeaderProps } from "./Popover/PopoverHeader";
+export type {
+  AnchoredPopoverPosition,
+  AnchoredPopoverState,
+} from "./Popover/useAnchoredPopover";
 export type { SearchableSelectProps } from "./SearchableSelect/SearchableSelect";
 export type {
   SelectMenuProps,
@@ -51,9 +57,12 @@ export { Input } from "./Input/Input";
 export { Label } from "./Label/Label";
 export { Modal } from "./Modal/Modal";
 export { Pill } from "./Pill/Pill";
+export { AnchoredPopover } from "./Popover/AnchoredPopover";
 export { Popover } from "./Popover/Popover";
+export { PopoverHeader } from "./Popover/PopoverHeader";
 export { PopoverItem } from "./Popover/PopoverItem";
 export { PopoverSeparator } from "./Popover/PopoverSeparator";
+export { useAnchoredPopover } from "./Popover/useAnchoredPopover";
 export { SearchInput } from "./SearchInput/SearchInput";
 export { SearchableSelect } from "./SearchableSelect/SearchableSelect";
 export { Select } from "./Select/Select";
