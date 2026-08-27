@@ -68,7 +68,8 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
 
         <PopoverItem
           icon={<Pencil />}
-          onClick={() => run(() => actions.edit(cell.slot))}
+          disabled
+          title="Esta acción no está disponible por el momento."
         >
           Editar horario
         </PopoverItem>
@@ -76,7 +77,8 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         <PopoverItem
           icon={<Trash2 />}
           variant="danger"
-          onClick={() => run(() => actions.removeOverride(cell.override))}
+          disabled
+          title="Esta acción no está disponible por el momento."
         >
           Quitar el bloqueo
         </PopoverItem>
@@ -87,20 +89,16 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
   const everyDay = SCHEDULE_DAY_LABELS[cell.dayOfWeek].toLowerCase();
   const hour = formatSlotTime(cell.startTime);
 
+  const disabledActionTitle = "Esta acción no está disponible por el momento.";
+
   if (cell.kind === "disabled") {
     return (
       <>
-        <PopoverItem
-          icon={<Power />}
-          onClick={() => run(() => actions.setEnabled(cell.slot, true))}
-        >
+        <PopoverItem icon={<Power />} disabled title={disabledActionTitle}>
           Abrir los {everyDay} a las {hour}
         </PopoverItem>
 
-        <PopoverItem
-          icon={<Pencil />}
-          onClick={() => run(() => actions.edit(cell.slot))}
-        >
+        <PopoverItem icon={<Pencil />} disabled title={disabledActionTitle}>
           Editar horario
         </PopoverItem>
 
@@ -109,7 +107,8 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         <PopoverItem
           icon={<Trash2 />}
           variant="danger"
-          onClick={() => run(() => actions.removeRow(cell.startTime))}
+          disabled
+          title={disabledActionTitle}
         >
           Eliminar las {hour} de toda la semana
         </PopoverItem>
@@ -119,10 +118,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
 
   return (
     <>
-      <PopoverItem
-        icon={<Pencil />}
-        onClick={() => run(() => actions.edit(cell.slot))}
-      >
+      <PopoverItem icon={<Pencil />} disabled title={disabledActionTitle}>
         Editar horario
       </PopoverItem>
 
@@ -133,10 +129,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         Bloquear sólo el {formatDate(cell.date)}
       </PopoverItem>
 
-      <PopoverItem
-        icon={<PowerOff />}
-        onClick={() => run(() => actions.setEnabled(cell.slot, false))}
-      >
+      <PopoverItem icon={<PowerOff />} disabled title={disabledActionTitle}>
         Cerrar los {everyDay} a las {hour}
       </PopoverItem>
 
@@ -145,7 +138,8 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
       <PopoverItem
         icon={<Trash2 />}
         variant="danger"
-        onClick={() => run(() => actions.removeRow(cell.startTime))}
+        disabled
+        title={disabledActionTitle}
       >
         Eliminar las {hour} de toda la semana
       </PopoverItem>

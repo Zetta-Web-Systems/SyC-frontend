@@ -4,10 +4,11 @@ import {
   MAX_SLOT_CAPACITY,
   MIN_SLOT_CAPACITY,
   SCHEDULE_DAY_LABELS,
+  SLOT_TAG,
+  type SlotTag,
 } from "../../constants";
 import { useUpdateTimeSlotMutation } from "../../hooks/mutations/useUpdateTimeSlotMutation";
-import { useSlotTagsQuery } from "../../hooks/queries/useSlotTagsQuery";
-import { formatSlotRange, getSlotEndTime } from "../../lib/slotStatus";
+import { formatSlotRange } from "../../lib/slotStatus";
 import {
   editTimeSlotSchema,
   type EditTimeSlotSchema,
@@ -33,8 +34,6 @@ function SlotTagSelect({
   error,
   describedBy,
 }: SlotTagSelectProps) {
-  const { data: tags = [], isLoading } = useSlotTagsQuery();
-
   return (
     <Select
       id={id}
@@ -42,14 +41,13 @@ function SlotTagSelect({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onBlur={onBlur}
-      disabled={isLoading}
       placeholder="Sin etiqueta"
       error={error}
       aria-describedby={describedBy}
     >
-      {tags.map((tag) => (
-        <option key={tag.id} value={tag.id}>
-          {tag.name}
+      {Object.values(SLOT_TAG).map((tag) => (
+        <option key={tag} value={tag}>
+          {tag}
         </option>
       ))}
     </Select>
@@ -73,7 +71,10 @@ export function EditTimeSlotModal({
     mutation.mutate(
       {
         timeSlotId: slot.id,
-        dto: { capacity: data.capacity, tagId: data.tagId || null },
+        dto: {
+          capacity: data.capacity,
+          tag: (data.tag || null) as SlotTag | null,
+        },
       },
       { onSuccess: () => onClose() },
     );
@@ -86,7 +87,7 @@ export function EditTimeSlotModal({
           <span className="text-neutral-500">Horario</span>
           <span className="font-medium text-neutral-900">
             {SCHEDULE_DAY_LABELS[slot.dayOfWeek]},{" "}
-            {formatSlotRange(slot.startTime, getSlotEndTime(slot.startTime))}
+            {formatSlotRange(slot.startTime, slot.endTime)}
           </span>
         </div>
 
@@ -95,7 +96,7 @@ export function EditTimeSlotModal({
           onSubmit={handleSubmit}
           defaultValues={{
             capacity: slot.capacity,
-            tagId: slot.tag?.id ?? "",
+            tag: slot.tag ?? "",
           }}
           className="flex flex-col gap-4"
         >
@@ -124,12 +125,12 @@ export function EditTimeSlotModal({
             )}
           </FormField>
 
-          <FormField<EditTimeSlotSchema> name="tagId" label="Etiqueta">
+          <FormField<EditTimeSlotSchema> name="tag" label="Etiqueta">
             {(field) => (
               <SlotTagSelect
                 id={field.id}
                 name={field.name}
-                value={field.value}
+                value={field.value ?? ""}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 error={field.error}

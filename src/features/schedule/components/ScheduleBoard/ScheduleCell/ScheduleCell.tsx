@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { Badge } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
-import { SCHEDULE_DAY_LABELS } from "../../../constants";
+import { SCHEDULE_DAY_LABELS, SLOT_TAG_COLORS } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
 import type { TurnActions } from "../../../hooks/useTurnActions";
 import {
@@ -78,11 +78,10 @@ function BlockCell({ cell }: BlockCellProps) {
     <div
       className={cn(
         "relative flex h-full min-h-16 flex-col items-center justify-center gap-0.5 rounded-xl text-[11.5px] font-bold tracking-wide text-white uppercase",
-        !tag?.colorHex && "bg-secondary-500",
+        tag ? SLOT_TAG_COLORS[tag] : "bg-secondary-500",
       )}
-      style={tag?.colorHex ? { backgroundColor: tag.colorHex } : undefined}
     >
-      {tag?.name ?? "No asignable"}
+      {tag ?? "No asignable"}
       <small className="text-[10px] font-semibold normal-case opacity-85">
         {formatSlotTime(cell.startTime)} hs
       </small>
@@ -132,7 +131,7 @@ export function ScheduleCell({
         <RejectDropZone
           cellId={cell.id}
           label={label}
-          reason={`Ese horario está reservado para ${cell.slot.tag?.name ?? "otra actividad"}.`}
+          reason={`Ese horario está reservado para ${cell.slot.tag ?? "otra actividad"}.`}
         >
           <BlockCell cell={cell} />
           <CellMenu cell={cell} actions={slotActions} onColor />
@@ -144,7 +143,7 @@ export function ScheduleCell({
         <RejectDropZone
           cellId={cell.id}
           label={label}
-          reason={`Ese día está cerrado: ${cell.closure.type.toLowerCase()}.`}
+          reason={`Ese día está cerrado por ${cell.closure.type.toLowerCase()}.`}
         >
           <ClosedCell
             label="Cerrado"

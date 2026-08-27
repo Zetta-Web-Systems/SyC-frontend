@@ -159,9 +159,13 @@ export function ScheduleBoard({
       <div className="overflow-x-auto">
         <div
           className={cn(
-            "grid min-w-238 grid-cols-[112px_repeat(5,minmax(168px,1fr))] transition-opacity",
+            "grid transition-opacity",
             isRefreshing && "opacity-60",
           )}
+          style={{
+            gridTemplateColumns: `112px repeat(${grid.days.length}, minmax(168px, 1fr))`,
+            minWidth: `${112 + grid.days.length * 168}px`,
+          }}
         >
           <div className="sticky left-0 z-40 bg-primary-500" />
           {grid.days.map((day, index) => (

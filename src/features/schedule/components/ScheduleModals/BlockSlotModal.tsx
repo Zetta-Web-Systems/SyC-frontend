@@ -2,7 +2,7 @@ import { Button, Input, Modal, Textarea } from "@shared/ui";
 import { Form, FormError, FormField } from "@shared/components/Form";
 import { SCHEDULE_DAY_LABELS } from "../../constants";
 import { useCreateOverrideMutation } from "../../hooks/mutations/useCreateOverrideMutation";
-import { formatSlotRange, getSlotEndTime } from "../../lib/slotStatus";
+import { formatSlotRange } from "../../lib/slotStatus";
 import {
   blockSlotSchema,
   BLOCK_REASON_MAX_LENGTH,
@@ -45,7 +45,7 @@ export function BlockSlotModal({
           <span className="text-neutral-500">Horario</span>
           <span className="font-medium text-neutral-900">
             {SCHEDULE_DAY_LABELS[slot.dayOfWeek]},{" "}
-            {formatSlotRange(slot.startTime, getSlotEndTime(slot.startTime))}
+            {formatSlotRange(slot.startTime, slot.endTime)}
           </span>
         </div>
 
@@ -82,7 +82,7 @@ export function BlockSlotModal({
                 onBlur={field.onBlur}
                 rows={3}
                 maxLength={BLOCK_REASON_MAX_LENGTH}
-                placeholder="Juega la Selección"
+                placeholder="Motivo de cierre del horario (opcional)"
                 error={field.error}
                 aria-describedby={field["aria-describedby"]}
               />

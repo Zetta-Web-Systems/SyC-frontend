@@ -12,7 +12,7 @@ import { ScheduleHeaderActions } from "./components/ScheduleHeaderActions/Schedu
 import { ScheduleModals } from "./components/ScheduleModals/ScheduleModals";
 import { ScheduleToolbar } from "./components/ScheduleToolbar/ScheduleToolbar";
 import { UnassignedPanel } from "./components/UnassignedPanel/UnassignedPanel";
-import type { Shift } from "./constants";
+import { SCHEDULE_DAYS, SCHEDULE_WEEKEND_DAYS, type Shift } from "./constants";
 import { useScheduleWeekQuery } from "./hooks/queries/useScheduleWeekQuery";
 import { useScheduleDnd } from "./hooks/ui/useScheduleDnd";
 import { useScheduleModals } from "./hooks/ui/useScheduleModals";
@@ -28,20 +28,30 @@ import {
   dndScreenReaderInstructions,
 } from "./lib/scheduleDndA11y";
 import { buildScheduleGrid } from "./lib/scheduleGrid";
+import {
+  formatWeekDescription,
+  formatWeekRange,
+  getWeekRange,
+} from "./lib/scheduleWeek";
 
 const NO_COLLAPSED_SHIFTS: ReadonlySet<Shift> = new Set();
 
 export default function SchedulePage() {
   const week = useScheduleWeekNav();
   const { data, isLoading, isError, isPlaceholderData } = useScheduleWeekQuery(
-    week.from,
-    week.to,
+    week.date,
   );
+
+  const range = data ? { from: data.from, to: data.to } : week.fallbackRange;
+  const rangeLabel = formatWeekRange(range.from, range.to);
+  const description = formatWeekDescription(range.from, range.to);
+  const isCurrentWeek = getWeekRange(new Date()).from === range.from;
 
   const { expandedIds, toggle, expand, expandAll, collapseAll } =
     useSlotExpansion();
   const { collapsedShifts, toggleShift } = useShiftCollapse();
   const [isUnassignedOpen, setIsUnassignedOpen] = useState(true);
+  const [isWeekendVisible, setIsWeekendVisible] = useState(false);
 
   const search = useScheduleSearch(data);
   const unassigned = useUnassignedMembers({ enabled: isUnassignedOpen });
@@ -49,7 +59,25 @@ export default function SchedulePage() {
   const modals = useScheduleModals();
   const dnd = useScheduleDnd({ onDropIntoSlot: expand });
 
-  const grid = useMemo(() => (data ? buildScheduleGrid(data) : null), [data]);
+  const visibleDays = useMemo(
+    () =>
+      isWeekendVisible
+        ? [...SCHEDULE_DAYS, ...SCHEDULE_WEEKEND_DAYS]
+        : SCHEDULE_DAYS,
+    [isWeekendVisible],
+  );
+
+  const grid = useMemo(() => {
+    if (!data) return null;
+    if (isWeekendVisible) return buildScheduleGrid(data);
+
+    return buildScheduleGrid({
+      ...data,
+      days: data.days.filter(
+        (day) => !SCHEDULE_WEEKEND_DAYS.includes(day.dayOfWeek),
+      ),
+    });
+  }, [data, isWeekendVisible]);
 
   const slotActions = useSlotActions(modals, grid);
 
@@ -84,7 +112,7 @@ export default function SchedulePage() {
       <div className="flex flex-col gap-4">
         <PageHeader
           title="Turnero"
-          description={week.description}
+          description={description}
           actions={
             <ScheduleHeaderActions
               onCloseDay={() => modals.openCloseDay()}
@@ -94,8 +122,8 @@ export default function SchedulePage() {
         />
 
         <ScheduleToolbar
-          rangeLabel={week.rangeLabel}
-          isCurrentWeek={week.isCurrentWeek}
+          rangeLabel={rangeLabel}
+          isCurrentWeek={isCurrentWeek}
           onPreviousWeek={week.goToPreviousWeek}
           onNextWeek={week.goToNextWeek}
           onCurrentWeek={week.goToCurrentWeek}
@@ -108,6 +136,8 @@ export default function SchedulePage() {
           isUnassignedOpen={isUnassignedOpen}
           unassignedCount={unassigned.total}
           onToggleUnassigned={() => setIsUnassignedOpen((open) => !open)}
+          isWeekendVisible={isWeekendVisible}
+          onToggleWeekend={() => setIsWeekendVisible((visible) => !visible)}
         />
 
         <div
@@ -117,7 +147,7 @@ export default function SchedulePage() {
           )}
         >
           <div className="flex min-w-0 flex-col gap-4">
-            {isLoading && <ScheduleBoardSkeleton />}
+            {isLoading && <ScheduleBoardSkeleton days={visibleDays} />}
 
             {isError && (
               <ListState

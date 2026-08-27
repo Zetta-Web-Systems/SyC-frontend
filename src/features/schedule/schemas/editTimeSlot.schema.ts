@@ -7,7 +7,7 @@ export const editTimeSlotSchema = z.object({
     .int("Tiene que ser un número entero")
     .min(MIN_SLOT_CAPACITY, "No puede ser negativa")
     .max(MAX_SLOT_CAPACITY, `No puede superar ${MAX_SLOT_CAPACITY}`),
-  tagId: z.string().optional(),
+  tag: z.string().optional(),
 });
 
 export type EditTimeSlotSchema = z.infer<typeof editTimeSlotSchema>;

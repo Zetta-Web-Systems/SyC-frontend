@@ -21,6 +21,11 @@ const DROP_DATA: UnassignedDropData = {
   label: "la lista de sin asignar",
 };
 
+/**
+ * TEMP: falta `GET /schedule/members/unassigned` real. Hasta entonces esta lista está mockeada
+ */
+const UNASSIGNED_PANEL_ENABLED = false;
+
 interface UnassignedMemberChipProps {
   member: MemberSimple;
 }
@@ -31,17 +36,30 @@ function UnassignedMemberChip({ member }: UnassignedMemberChipProps) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: unassignedDragId(member.id),
     data,
+    disabled: !UNASSIGNED_PANEL_ENABLED,
   });
 
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      aria-label={`Arrastrá a ${formatMemberFullName(member)} a un horario`}
+      {...(UNASSIGNED_PANEL_ENABLED ? attributes : {})}
+      {...(UNASSIGNED_PANEL_ENABLED ? listeners : {})}
+      aria-label={
+        UNASSIGNED_PANEL_ENABLED
+          ? `Arrastrá a ${formatMemberFullName(member)} a un horario`
+          : `${formatMemberFullName(member)} (esta acción no está disponible por el momento)`
+      }
+      title={
+        UNASSIGNED_PANEL_ENABLED
+          ? undefined
+          : "Esta acción no está disponible por el momento."
+      }
       className={cn(
-        "rounded-full transition-opacity select-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
-        isDragging ? "cursor-grabbing opacity-40" : "cursor-grab",
+        "rounded-full transition-opacity select-none focus-visible:outline-none",
+        UNASSIGNED_PANEL_ENABLED
+          ? "cursor-grab focus-visible:ring-2 focus-visible:ring-primary-500"
+          : "cursor-not-allowed opacity-60",
+        isDragging && "cursor-grabbing opacity-40",
       )}
     >
       <MemberChip
@@ -99,8 +117,9 @@ export function UnassignedPanel({ state, isDragging }: UnassignedPanelProps) {
       />
 
       <p className="border-t border-neutral-100 px-3 py-3 text-xs leading-relaxed text-neutral-400">
-        Arrastrá un alumno hasta un horario para anotarlo. Para sacarlo,
-        arrastralo de vuelta acá.
+        {UNASSIGNED_PANEL_ENABLED
+          ? "Arrastrá un alumno hasta un horario para anotarlo. Para quitarlo, arrastralo de vuelta hasta acá."
+          : "Anotar alumnos desde este panel no está disponible por el momento. Para quitar a alguien de un horario, se lo puede arrastrar hasta acá."}
       </p>
     </Card>
   );

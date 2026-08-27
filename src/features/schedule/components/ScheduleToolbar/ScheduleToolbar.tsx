@@ -1,4 +1,5 @@
 import {
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
   ChevronsDownUp,
@@ -82,7 +83,7 @@ function MemberSearch({
   return (
     <div className="flex flex-col gap-1">
       <SearchInput
-        placeholder="Buscar alumno en la grilla"
+        placeholder="Buscar alumno"
         onSearch={onSearch}
         className="w-full sm:w-60"
       />
@@ -148,6 +149,30 @@ function ExpandAllToggle({
   );
 }
 
+interface WeekendToggleProps {
+  isVisible: boolean;
+  onToggle: () => void;
+}
+
+function WeekendToggle({ isVisible, onToggle }: WeekendToggleProps) {
+  return (
+    <Button
+      variant="outline"
+      intent={isVisible ? "primary" : "neutral"}
+      size="md"
+      aria-pressed={isVisible}
+      title={
+        isVisible ? "Ocultar sábado y domingo" : "Mostrar sábado y domingo"
+      }
+      onClick={onToggle}
+      className={cn("rounded-xl", isVisible && "bg-primary-50")}
+    >
+      <CalendarDays size={15} aria-hidden="true" />
+      Fin de semana
+    </Button>
+  );
+}
+
 interface UnassignedToggleProps {
   isOpen: boolean;
   count: number;
@@ -195,6 +220,8 @@ interface ScheduleToolbarProps {
   isUnassignedOpen: boolean;
   unassignedCount: number;
   onToggleUnassigned: () => void;
+  isWeekendVisible: boolean;
+  onToggleWeekend: () => void;
 }
 
 export function ScheduleToolbar({
@@ -212,6 +239,8 @@ export function ScheduleToolbar({
   isUnassignedOpen,
   unassignedCount,
   onToggleUnassigned,
+  isWeekendVisible,
+  onToggleWeekend,
 }: ScheduleToolbarProps) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -236,6 +265,11 @@ export function ScheduleToolbar({
           areAllExpanded={areAllExpanded}
           onExpandAll={onExpandAll}
           onCollapseAll={onCollapseAll}
+        />
+
+        <WeekendToggle
+          isVisible={isWeekendVisible}
+          onToggle={onToggleWeekend}
         />
 
         <UnassignedToggle

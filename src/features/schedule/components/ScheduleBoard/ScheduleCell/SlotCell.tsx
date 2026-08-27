@@ -4,7 +4,9 @@ import { cn } from "@shared/lib/cn";
 import {
   SLOT_STATUS_INTENT,
   SLOT_STATUS_TINT,
+  SLOT_TAG_TINT,
   type SlotStatus,
+  type SlotTag,
 } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
 import type { TurnActions } from "../../../hooks/useTurnActions";
@@ -14,11 +16,9 @@ import {
   type SlotDropData,
 } from "../../../lib/scheduleDnd";
 import type { ScheduleSearchMatches } from "../../../lib/scheduleSearch";
-import type { SlotCellData, SlotRosterEntry, SlotTag } from "../../../types";
+import type { SlotCellData, SlotRosterEntry } from "../../../types";
 import { CellMenu } from "./CellMenu";
 import { TurnChip } from "./TurnChip";
-
-const TAG_TINT_ALPHA = "26";
 
 interface SlotTagPillProps {
   tag: SlotTag;
@@ -31,17 +31,9 @@ function SlotTagPill({ tag, className }: SlotTagPillProps) {
       size="xs"
       uppercase
       intent="neutral"
-      className={cn("shrink-0", className)}
-      style={
-        tag.colorHex
-          ? {
-              backgroundColor: `${tag.colorHex}${TAG_TINT_ALPHA}`,
-              color: tag.colorHex,
-            }
-          : undefined
-      }
+      className={cn("shrink-0", SLOT_TAG_TINT[tag], className)}
     >
-      {tag.name}
+      {tag}
     </Pill>
   );
 }
