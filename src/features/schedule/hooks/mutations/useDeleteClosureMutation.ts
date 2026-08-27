@@ -7,12 +7,11 @@ export function useDeleteClosureMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ closureId }: { closureId: string }) =>
-      deleteClosure(closureId),
+    mutationFn: ({ date }: { date: string }) => deleteClosure(date),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Se quitó el cierre", {
-        description: "El día vuelve a estar abierto.",
+      toast.success("Cierre eliminado", {
+        description: "El día fue habilitado nuevamente.",
       });
     },
   });

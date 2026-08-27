@@ -11,7 +11,9 @@ export function useCreateClosureMutation() {
     mutationFn: (dto: CreateClosureDto) => createClosure(dto),
     onSuccess: (closure) => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Día cerrado", { description: closure.type });
+      toast.success("Día cerrado", {
+        description: `El cierre por ${closure.type.toLowerCase()} fue registrado correctamente.`,
+      });
     },
   });
 }

@@ -11,8 +11,8 @@ export function useRemoveTurnMutation() {
       removeTurn(turnId),
     onSuccess: (_data, { memberName }) => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Alumno sin turno", {
-        description: `${memberName} quedó en la lista de sin asignar.`,
+      toast.success("Alumno retirado", {
+        description: `${memberName} fue retirado del horario y pasó a la lista de alumnos sin asignar.`,
       });
     },
   });

@@ -12,7 +12,7 @@ export function useAssignTurnMutation() {
     onSuccess: (turn) => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
       toast.success("Alumno asignado", {
-        description: `${turn.member.name} ${turn.member.lastname} quedó anotado en el horario.`,
+        description: `${turn.member.name} ${turn.member.lastname} fue anotado en el horario correctamente.`,
       });
     },
   });

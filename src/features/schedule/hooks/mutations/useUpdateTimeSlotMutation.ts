@@ -17,7 +17,9 @@ export function useUpdateTimeSlotMutation() {
     }) => updateTimeSlot(timeSlotId, dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Horario actualizado");
+      toast.success("Horario actualizado", {
+        description: "El horario fue actualizado correctamente.",
+      });
     },
   });
 }

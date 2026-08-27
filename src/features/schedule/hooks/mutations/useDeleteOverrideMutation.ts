@@ -11,7 +11,9 @@ export function useDeleteOverrideMutation() {
       deleteOverride(overrideId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Se quitó el bloqueo");
+      toast.success("Bloqueo eliminado", {
+        description: "El horario fue habilitado nuevamente para esa fecha.",
+      });
     },
   });
 }

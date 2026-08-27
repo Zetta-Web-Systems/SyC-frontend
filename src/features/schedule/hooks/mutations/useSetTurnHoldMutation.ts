@@ -13,9 +13,11 @@ export function useSetTurnHoldMutation() {
     onSuccess: (turn) => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
       toast.success(
-        turn.heldByOwner ? "Lugar guardado" : "El lugar dejó de estar guardado",
+        turn.onHold ? "Lugar guardado" : "Reserva de lugar cancelada",
         {
-          description: `${turn.member.name} ${turn.member.lastname}.`,
+          description: turn.onHold
+            ? `El lugar de ${turn.member.name} ${turn.member.lastname} fue guardado correctamente.`
+            : `El lugar de ${turn.member.name} ${turn.member.lastname} fue liberado correctamente.`,
         },
       );
     },

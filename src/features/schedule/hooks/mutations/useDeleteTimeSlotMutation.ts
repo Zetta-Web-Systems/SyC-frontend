@@ -11,7 +11,10 @@ export function useDeleteTimeSlotMutation() {
       deleteTimeSlotRow(startTime),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Horario eliminado");
+      toast.success("Horario eliminado", {
+        description:
+          "El horario fue eliminado correctamente de toda la semana.",
+      });
     },
   });
 }

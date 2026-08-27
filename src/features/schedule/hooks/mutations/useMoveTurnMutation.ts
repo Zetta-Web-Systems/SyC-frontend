@@ -13,7 +13,7 @@ export function useMoveTurnMutation() {
     onSuccess: (turn) => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
       toast.success("Turno reasignado", {
-        description: `${turn.member.name} ${turn.member.lastname} pasó a otro horario.`,
+        description: `${turn.member.name} ${turn.member.lastname} fue reasignado a otro horario correctamente.`,
       });
     },
   });

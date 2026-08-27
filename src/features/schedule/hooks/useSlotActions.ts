@@ -49,9 +49,9 @@ function describeOpenDays(
     .map((cell) => SCHEDULE_DAY_LABELS[cell.dayOfWeek].toLowerCase());
 
   if (days.length === 0) return "";
-  if (days.length === 1) return ` Hoy sólo se usa los ${days[0]}.`;
+  if (days.length === 1) return ` Actualmente se utiliza únicamente los ${days[0]}.`;
 
-  return ` Hoy se usa los ${days.slice(0, -1).join(", ")} y ${days.at(-1)}.`;
+  return ` Actualmente se utiliza los ${days.slice(0, -1).join(", ")} y ${days.at(-1)}.`;
 }
 
 export function useSlotActions(
@@ -74,7 +74,10 @@ export function useSlotActions(
 
   const setEnabled = useCallback(
     (slot: TimeSlot, enabled: boolean) => {
-      updateTimeSlot.mutate({ timeSlotId: slot.id, dto: { enabled } });
+      updateTimeSlot.mutate({
+        timeSlotId: slot.id,
+        dto: { isActive: enabled },
+      });
     },
     [updateTimeSlot],
   );
@@ -86,13 +89,13 @@ export function useSlotActions(
 
       const peopleNote =
         assignedCount > 0
-          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado va a quedar" : "alumnos anotados van a quedar"} sin turno.`
+          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno.`
           : "";
 
       confirm({
         intent: "danger",
-        title: `Eliminar las ${hour}`,
-        description: `Esa hora desaparece del turnero en los cinco días.${describeOpenDays(grid, startTime)}${peopleNote} Si sólo querés que no se use algún día, cerrá esa celda en vez de eliminar la hora.`,
+        title: "Eliminar horario",
+        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(grid, startTime)}${peopleNote} Para desactivar un solo día, se puede cerrar esa celda en particular.`,
         confirmLabel: "Eliminar",
         onConfirm: () => deleteTimeSlot.mutate({ startTime }),
       });
@@ -104,10 +107,10 @@ export function useSlotActions(
     (closure: CalendarClosure) => {
       confirm({
         intent: "warning",
-        title: "Quitar el cierre",
-        description: `El cierre por ${closure.type.toLowerCase()} deja de aplicar y esos días vuelven a estar abiertos.`,
-        confirmLabel: "Quitar",
-        onConfirm: () => deleteClosure.mutate({ closureId: closure.id }),
+        title: "Eliminar cierre",
+        description: `¿Estás seguro que deseas eliminar el cierre por ${closure.type.toLowerCase()}? Los días correspondientes volverán a estar habilitados.`,
+        confirmLabel: "Eliminar",
+        onConfirm: () => deleteClosure.mutate({ date: closure.startDate }),
       });
     },
     [deleteClosure],
@@ -117,9 +120,9 @@ export function useSlotActions(
     (override: TimeSlotOverride) => {
       confirm({
         intent: "warning",
-        title: "Quitar el bloqueo",
-        description: `El horario vuelve a estar disponible el ${formatDate(override.date)}.`,
-        confirmLabel: "Quitar",
+        title: "Eliminar bloqueo",
+        description: `¿Estás seguro que deseas eliminar el bloqueo? El horario volverá a estar disponible el ${formatDate(override.date)}.`,
+        confirmLabel: "Eliminar",
         onConfirm: () => deleteOverride.mutate({ overrideId: override.id }),
       });
     },

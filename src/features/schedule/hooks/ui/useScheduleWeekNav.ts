@@ -1,11 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import {
-  addWeeks,
-  formatWeekDescription,
-  formatWeekRange,
-  getWeekRange,
-  startOfWeek,
-} from "../../lib/scheduleWeek";
+import { addWeeks, getWeekRange, startOfWeek } from "../../lib/scheduleWeek";
 
 export function useScheduleWeekNav() {
   const [anchor, setAnchor] = useState(() => startOfWeek(new Date()));
@@ -22,19 +16,11 @@ export function useScheduleWeekNav() {
     setAnchor(startOfWeek(new Date()));
   }, []);
 
-  const { from, to } = useMemo(() => getWeekRange(anchor), [anchor]);
-
-  const isCurrentWeek = useMemo(
-    () => getWeekRange(new Date()).from === from,
-    [from],
-  );
+  const fallbackRange = useMemo(() => getWeekRange(anchor), [anchor]);
 
   return {
-    from,
-    to,
-    rangeLabel: formatWeekRange(from, to),
-    description: formatWeekDescription(from, to),
-    isCurrentWeek,
+    date: fallbackRange.from,
+    fallbackRange,
     goToPreviousWeek,
     goToNextWeek,
     goToCurrentWeek,

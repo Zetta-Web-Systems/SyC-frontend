@@ -19,7 +19,6 @@ import {
 } from "../../lib/scheduleDnd";
 import { formatMemberFullName } from "../../lib/memberDisplay";
 import { useAssignTurnMutation } from "../mutations/useAssignTurnMutation";
-import { useMoveTurnMutation } from "../mutations/useMoveTurnMutation";
 import { useRemoveTurnMutation } from "../mutations/useRemoveTurnMutation";
 
 const ACTIVATION_DISTANCE = 5;
@@ -30,7 +29,6 @@ interface UseScheduleDndOptions {
 
 export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
   const assignTurn = useAssignTurnMutation();
-  const moveTurn = useMoveTurnMutation();
   const removeTurn = useRemoveTurnMutation();
 
   const [activeDrag, setActiveDrag] = useState<ActiveDragData | null>(null);
@@ -72,7 +70,7 @@ export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
       if (!drag || !drop) return;
 
       if (drop.type === DROP_TYPE.REJECT) {
-        toast.warning("Ahí no se puede anotar a nadie", {
+        toast.warning("No es posible anotar en este horario", {
           description: drop.reason,
         });
         return;
@@ -90,11 +88,10 @@ export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
 
         if (drag.slotId === drop.slotId) return;
 
-        moveTurn.mutate({
-          turnId: drag.turnId,
-          dto: { timeSlotId: drop.slotId },
+        toast.warning("No es posible mover el turno entre horarios", {
+          description:
+            "Para reasignarlo, primero hay que quitar al alumno del horario actual y luego anotarlo en el nuevo.",
         });
-        onDropIntoSlot(drop.slotId);
         return;
       }
 
@@ -105,7 +102,7 @@ export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
         });
       }
     },
-    [assignTurn, moveTurn, removeTurn, onDropIntoSlot],
+    [assignTurn, removeTurn, onDropIntoSlot],
   );
 
   return {

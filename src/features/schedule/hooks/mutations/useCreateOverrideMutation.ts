@@ -13,7 +13,7 @@ export function useCreateOverrideMutation() {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
       toast.success("Horario bloqueado", {
         description:
-          "Solo para esa fecha; el resto de las semanas sigue igual.",
+          "El bloqueo fue registrado correctamente para esa fecha. El resto de las semanas no se ve afectado.",
       });
     },
   });
