@@ -4,6 +4,8 @@ export const SCHEDULE_DAY = {
   WEDNESDAY: "Miercoles",
   THURSDAY: "Jueves",
   FRIDAY: "Viernes",
+  SATURDAY: "Sabado",
+  SUNDAY: "Domingo",
 } as const;
 
 export type ScheduleDay = (typeof SCHEDULE_DAY)[keyof typeof SCHEDULE_DAY];
@@ -16,12 +18,19 @@ export const SCHEDULE_DAYS: readonly ScheduleDay[] = [
   SCHEDULE_DAY.FRIDAY,
 ] as const;
 
+export const SCHEDULE_WEEKEND_DAYS: readonly ScheduleDay[] = [
+  SCHEDULE_DAY.SATURDAY,
+  SCHEDULE_DAY.SUNDAY,
+] as const;
+
 export const SCHEDULE_DAY_LABELS: Record<ScheduleDay, string> = {
   [SCHEDULE_DAY.MONDAY]: "Lunes",
   [SCHEDULE_DAY.TUESDAY]: "Martes",
   [SCHEDULE_DAY.WEDNESDAY]: "Miércoles",
   [SCHEDULE_DAY.THURSDAY]: "Jueves",
   [SCHEDULE_DAY.FRIDAY]: "Viernes",
+  [SCHEDULE_DAY.SATURDAY]: "Sábado",
+  [SCHEDULE_DAY.SUNDAY]: "Domingo",
 };
 
 export const SHIFT = {
@@ -74,20 +83,34 @@ export const SLOT_STATUS_LABELS: Record<SlotStatus, string> = {
 
 export const CLOSURE_TYPE = {
   HOLIDAY: "Feriado",
-  VACATION: "Vacaciones del local",
-  MAINTENANCE: "Mantenimiento",
+  VACATION: "Vacaciones",
   OTHER: "Otro",
 } as const;
 
 export type ClosureType = (typeof CLOSURE_TYPE)[keyof typeof CLOSURE_TYPE];
 
+export const SLOT_TAG = {
+  YOGA: "Yoga",
+  NIÑOS: "Niños",
+} as const;
+
+export type SlotTag = (typeof SLOT_TAG)[keyof typeof SLOT_TAG];
+
+export const SLOT_TAG_COLORS: Record<SlotTag, string> = {
+  [SLOT_TAG.YOGA]: "bg-secondary-500",
+  [SLOT_TAG.NIÑOS]: "bg-violet",
+};
+
+export const SLOT_TAG_TINT: Record<SlotTag, string> = {
+  [SLOT_TAG.YOGA]: "bg-secondary-500/15 text-secondary-700",
+  [SLOT_TAG.NIÑOS]: "bg-violet/15 text-violet",
+};
+
 export const SCHEDULE_KEYS = {
   all: ["schedule"] as const,
-  week: (from: string, to: string) =>
-    [...SCHEDULE_KEYS.all, "week", from, to] as const,
+  week: (date: string) => [...SCHEDULE_KEYS.all, "week", date] as const,
   unassigned: (search?: string) =>
     [...SCHEDULE_KEYS.all, "unassigned", search] as const,
-  tags: () => [...SCHEDULE_KEYS.all, "tags"] as const,
 } as const;
 
 export const CLOSURE_TYPE_OPTIONS: { label: string; value: ClosureType }[] =
