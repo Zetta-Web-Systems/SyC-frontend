@@ -1,5 +1,5 @@
 import { formatDateToISO } from "@shared/utils/date.utils";
-import { SCHEDULE_DAYS, type ScheduleDay } from "../constants";
+import { SCHEDULE_DAYS } from "../constants";
 
 const DAYS_PER_WEEK = 7;
 const MONDAY = 1;
@@ -42,16 +42,6 @@ export function getWeekRange(anchor: Date): { from: string; to: string } {
     from: formatDateToISO(monday),
     to: formatDateToISO(addDays(monday, SCHEDULE_DAYS.length - 1)),
   };
-}
-
-export function getWeekdays(
-  from: string,
-): { date: string; dayOfWeek: ScheduleDay }[] {
-  const monday = parseISODate(from);
-  return SCHEDULE_DAYS.map((dayOfWeek, index) => ({
-    date: formatDateToISO(addDays(monday, index)),
-    dayOfWeek,
-  }));
 }
 
 export function formatWeekRange(from: string, to: string): string {

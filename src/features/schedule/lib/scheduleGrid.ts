@@ -61,7 +61,7 @@ function buildCell(
   if (!slot) return { ...base, kind: "unavailable" };
   if (closure) return { ...base, kind: "closed", slot, closure };
   if (override) return { ...base, kind: "blocked", slot, override };
-  if (!slot.enabled) return { ...base, kind: "disabled", slot };
+  if (!slot.isActive) return { ...base, kind: "disabled", slot };
   if (slot.capacity === NOT_ASSIGNABLE_CAPACITY) {
     return { ...base, kind: "block", slot };
   }
@@ -113,7 +113,9 @@ export function buildScheduleGrid(week: ScheduleWeek): ScheduleGrid {
 
   const rows: ScheduleRow[] = startTimes.map((startTime) => ({
     startTime,
-    endTime: getSlotEndTime(startTime),
+    endTime:
+      slots.find((slot) => slot.startTime === startTime)?.endTime ??
+      getSlotEndTime(startTime),
     shift: getShift(startTime),
     cells: days.map((day) => {
       const slot = slotsByKey.get(slotKey(day.dayOfWeek, startTime));
