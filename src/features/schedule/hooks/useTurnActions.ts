@@ -17,7 +17,7 @@ export function useTurnActions(): TurnActions {
     (turn: MemberTurn) => {
       setTurnHold.mutate({
         turnId: turn.id,
-        dto: { heldByOwner: !turn.heldByOwner },
+        dto: { onHold: !turn.onHold },
       });
     },
     [setTurnHold],
