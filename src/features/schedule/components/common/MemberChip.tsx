@@ -11,6 +11,7 @@ interface MemberChipProps {
   isHeld?: boolean;
   isOverturn?: boolean;
   isHighlighted?: boolean;
+  badge?: string;
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export function MemberChip({
   isHeld = false,
   isOverturn = false,
   isHighlighted = false,
+  badge,
   className,
 }: MemberChipProps) {
   return (
@@ -47,8 +49,13 @@ export function MemberChip({
         className,
       )}
     >
-      {formatMemberShortName(member)}
+      <span className="leading-none">{formatMemberShortName(member)}</span>
       {isHeld && <Lock size={11} aria-hidden="true" className="shrink-0" />}
+      {badge && (
+        <span className="shrink-0 rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] leading-none font-bold text-neutral-500 tabular-nums">
+          {badge}
+        </span>
+      )}
     </span>
   );
 }

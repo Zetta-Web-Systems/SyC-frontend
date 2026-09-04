@@ -108,7 +108,8 @@ export const SLOT_TAG_TINT: Record<SlotTag, string> = {
 
 export const SCHEDULE_KEYS = {
   all: ["schedule"] as const,
-  week: (date: string) => [...SCHEDULE_KEYS.all, "week", date] as const,
+  weeks: () => [...SCHEDULE_KEYS.all, "week"] as const,
+  week: (date: string) => [...SCHEDULE_KEYS.weeks(), date] as const,
   unassigned: (search?: string) =>
     [...SCHEDULE_KEYS.all, "unassigned", search] as const,
 } as const;

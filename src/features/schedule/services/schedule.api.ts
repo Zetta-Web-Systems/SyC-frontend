@@ -1,16 +1,10 @@
 import { api } from "@shared/api/api";
 import { getApiErrorMessage } from "@shared/api/apiError";
 import { formatDateToISO } from "@shared/utils/date.utils";
+import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type { PaginatedResponse } from "@shared/types/pagination.types";
 import type { MemberSimple } from "@features/members";
-import {
-  mockDeleteOverride,
-  mockDeleteTimeSlotRow,
-  mockGetUnassignedMembers,
-  mockMoveTurn,
-  mockSetTurnHold,
-  mockUpdateTimeSlot,
-} from "../data/schedule.mock";
+import { mockMoveTurn, mockUpdateTimeSlot } from "../data/schedule.mock";
 import {
   SCHEDULE_DAYS,
   SCHEDULE_DAY_LABELS,
@@ -35,6 +29,7 @@ import type {
   SetTurnHoldDto,
   TimeSlot,
   TimeSlotOverride,
+  UnassignedMember,
   UpdateTimeSlotDto,
 } from "../types";
 
@@ -46,16 +41,17 @@ export async function getScheduleWeek(date: string): Promise<ScheduleWeek> {
   return mapWeeklyScheduleResponse(data);
 }
 
-/**
- * TEMP: sin endpoint todavía (`GET /schedule/members/unassigned`)
- * El panel "Sin asignar" queda deshabilitado para arrastrar mientras tanto.
- */
 export async function getUnassignedMembers(params: {
   page: number;
   size: number;
   search?: string;
-}): Promise<PaginatedResponse<MemberSimple>> {
-  return mockGetUnassignedMembers(params);
+}): Promise<PaginatedResponse<UnassignedMember>> {
+  const { data } = await api.get<PaginatedResponse<UnassignedMember>>(
+    "/members/list/paginated/unassigned",
+    { params: buildPaginatedParams(params) },
+  );
+
+  return data;
 }
 
 export async function assignTurn(dto: AssignTurnDto): Promise<MemberTurn> {
@@ -95,14 +91,22 @@ export async function removeTurn(turnId: string): Promise<void> {
   await api.delete(`/schedule/time-slot/member-turn/${turnId}`);
 }
 
-/**
- * TEMP: sin endpoint todavía (poner/sacar onHold). Deshabilitado en el menú del alumno
- */
+interface RawMemberTurnHold {
+  member: MemberSimple;
+  onHold: boolean;
+}
+
 export async function setTurnHold(
   turnId: string,
   dto: SetTurnHoldDto,
-): Promise<MemberTurn> {
-  return mockSetTurnHold(turnId, dto);
+): Promise<RawMemberTurnHold> {
+  const { data } = await api.patch<RawMemberTurnHold>(
+    `/schedule/time-slot/member-turn/on-hold/${turnId}`,
+    undefined,
+    { params: { "on-hold": dto.onHold } },
+  );
+
+  return data;
 }
 
 /**
@@ -166,12 +170,47 @@ export async function updateTimeSlot(
   return mockUpdateTimeSlot(timeSlotId, dto);
 }
 
-/**
- * TEMP: sin endpoint todavía (eliminar/desactivar TimeSlot). Deshabilitado
- * en el menú del horario (ver CellMenu).
- */
-export async function deleteTimeSlotRow(startTime: string): Promise<void> {
-  return mockDeleteTimeSlotRow(startTime);
+export async function deleteTimeSlot(timeSlotId: string): Promise<void> {
+  await api.delete(`/schedule/time-slot/${timeSlotId}`);
+}
+
+export async function restoreTimeSlot(timeSlotId: string): Promise<void> {
+  await api.patch(`/schedule/time-slot/restore/${timeSlotId}`);
+}
+
+export async function deleteTimeSlotRow(
+  startTime: string,
+  currentWeek: ScheduleWeek | undefined,
+): Promise<void> {
+  const normalizedStart = normalizeTime(startTime);
+  const targets = (currentWeek?.timeSlots ?? []).filter(
+    (slot) =>
+      slot.isActive && normalizeTime(slot.startTime) === normalizedStart,
+  );
+
+  if (targets.length === 0) {
+    throw new Error("No quedan días abiertos a esa hora para eliminar.");
+  }
+
+  const done: TimeSlot[] = [];
+
+  for (const slot of targets) {
+    try {
+      await deleteTimeSlot(slot.id);
+      done.push(slot);
+    } catch (error) {
+      const doneLabel = done
+        .map((item) => SCHEDULE_DAY_LABELS[item.dayOfWeek])
+        .join(", ");
+      const doneNote = doneLabel
+        ? `El horario fue eliminado correctamente los días: ${doneLabel}. `
+        : "";
+
+      throw new Error(
+        `${doneNote}No se pudo eliminar el horario del día ${SCHEDULE_DAY_LABELS[slot.dayOfWeek]}: ${getApiErrorMessage(error)}`,
+      );
+    }
+  }
 }
 
 interface RawScheduleClosure {
@@ -213,16 +252,17 @@ export async function createOverride(
   );
 
   return {
-    id: data.id,
     timeSlotId: data.timeSlotId,
     date: data.date,
     reason: data.reason ?? null,
   };
 }
 
-/**
- * TEMP: sin endpoint todavía (eliminar TimeSlotOverride). Deshabilitado en el menú del horario bloqueado
- */
-export async function deleteOverride(overrideId: string): Promise<void> {
-  return mockDeleteOverride(overrideId);
+export async function deleteOverride(
+  date: string,
+  timeSlotId: string,
+): Promise<void> {
+  await api.delete("/schedule/time-slot/override", {
+    params: { date, timeSlotId },
+  });
 }

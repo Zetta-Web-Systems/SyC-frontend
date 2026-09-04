@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import type { RefObject } from "react";
-import type { MemberSimple } from "@features/members";
 import { useInfiniteScrollObserver } from "@shared/hooks/useInfiniteScrollObserver";
 import { useUnassignedMembersQuery } from "../queries/useUnassignedMembersQuery";
+import type { UnassignedMember } from "../../types";
 
 interface UseUnassignedMembersOptions {
   enabled: boolean;
@@ -11,7 +11,7 @@ interface UseUnassignedMembersOptions {
 export interface UnassignedMembersState {
   search: string;
   setSearch: (value: string) => void;
-  items: MemberSimple[];
+  items: UnassignedMember[];
   total: number;
   isLoading: boolean;
   isFetchingNextPage: boolean;
@@ -27,7 +27,7 @@ export function useUnassignedMembers({
   const [search, setSearch] = useState("");
   const query = useUnassignedMembersQuery(search);
 
-  const items = useMemo<MemberSimple[]>(
+  const items = useMemo<UnassignedMember[]>(
     () => query.data?.pages.flatMap((page) => page.data) ?? [],
     [query.data],
   );

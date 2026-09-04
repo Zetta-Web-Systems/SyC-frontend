@@ -77,8 +77,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         <PopoverItem
           icon={<Trash2 />}
           variant="danger"
-          disabled
-          title="Esta acción no está disponible por el momento."
+          onClick={() => run(() => actions.removeOverride(cell.override))}
         >
           Quitar el bloqueo
         </PopoverItem>
@@ -94,7 +93,10 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
   if (cell.kind === "disabled") {
     return (
       <>
-        <PopoverItem icon={<Power />} disabled title={disabledActionTitle}>
+        <PopoverItem
+          icon={<Power />}
+          onClick={() => run(() => actions.setEnabled(cell.slot, true))}
+        >
           Abrir los {everyDay} a las {hour}
         </PopoverItem>
 
@@ -107,8 +109,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         <PopoverItem
           icon={<Trash2 />}
           variant="danger"
-          disabled
-          title={disabledActionTitle}
+          onClick={() => run(() => actions.removeRow(cell.startTime))}
         >
           Eliminar las {hour} de toda la semana
         </PopoverItem>
@@ -129,7 +130,10 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
         Bloquear sólo el {formatDate(cell.date)}
       </PopoverItem>
 
-      <PopoverItem icon={<PowerOff />} disabled title={disabledActionTitle}>
+      <PopoverItem
+        icon={<PowerOff />}
+        onClick={() => run(() => actions.setEnabled(cell.slot, false))}
+      >
         Cerrar los {everyDay} a las {hour}
       </PopoverItem>
 
@@ -138,8 +142,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
       <PopoverItem
         icon={<Trash2 />}
         variant="danger"
-        disabled
-        title={disabledActionTitle}
+        onClick={() => run(() => actions.removeRow(cell.startTime))}
       >
         Eliminar las {hour} de toda la semana
       </PopoverItem>

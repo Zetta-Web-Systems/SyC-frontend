@@ -87,7 +87,12 @@ export function buildScheduleGrid(week: ScheduleWeek): ScheduleGrid {
 
   const slotsByKey = new Map<string, TimeSlot>();
   for (const slot of slots) {
-    slotsByKey.set(slotKey(slot.dayOfWeek, slot.startTime), slot);
+    const key = slotKey(slot.dayOfWeek, slot.startTime);
+    const current = slotsByKey.get(key);
+
+    if (!current || (!current.isActive && slot.isActive)) {
+      slotsByKey.set(key, slot);
+    }
   }
 
   const turnsBySlot = new Map<string, MemberTurn[]>();

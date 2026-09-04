@@ -1,4 +1,5 @@
 import type { MemberSimple } from "@features/members";
+import type { MemberPlanType } from "@features/memberPlans";
 import type {
   ClosureType,
   ScheduleDay,
@@ -35,8 +36,8 @@ export interface CalendarClosure {
   reason?: string | null;
 }
 
+/** El backend no expone el id del override: se identifica por `timeSlotId` + `date`. */
 export interface TimeSlotOverride {
-  id: string;
   timeSlotId: string;
   date: string;
   reason?: string | null;
@@ -142,8 +143,14 @@ export interface CreateTimeSlotDto {
 
 export interface UpdateTimeSlotDto {
   capacity?: number;
-  isActive?: boolean;
   tag?: SlotTag | null;
+}
+
+export interface UnassignedMember {
+  member: MemberSimple;
+  memberPlan?: MemberPlanType;
+  turnsAssignedCount: number;
+  totalMemberPlanTurns: number;
 }
 
 export interface CreateClosureDto {

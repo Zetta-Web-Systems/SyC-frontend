@@ -7,8 +7,8 @@ export function useDeleteOverrideMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ overrideId }: { overrideId: string }) =>
-      deleteOverride(overrideId),
+    mutationFn: ({ date, timeSlotId }: { date: string; timeSlotId: string }) =>
+      deleteOverride(date, timeSlotId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
       toast.success("Bloqueo eliminado", {

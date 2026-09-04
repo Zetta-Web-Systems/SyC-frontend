@@ -115,7 +115,6 @@ export function mapWeeklyScheduleResponse(
       // El `isClosed` de la celda es del TimeSlotOverride, distinto del `isClosed` del día (que es el CalendarClosure de arriba)
       if (slot.isClosed) {
         overrides.push({
-          id: `override-${slot.id}-${day.date}`,
           timeSlotId: slot.id,
           date: day.date,
           reason: slot.closureReason ?? null,

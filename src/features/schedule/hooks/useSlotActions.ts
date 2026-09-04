@@ -12,7 +12,7 @@ import type {
 import { useDeleteClosureMutation } from "./mutations/useDeleteClosureMutation";
 import { useDeleteOverrideMutation } from "./mutations/useDeleteOverrideMutation";
 import { useDeleteTimeSlotMutation } from "./mutations/useDeleteTimeSlotMutation";
-import { useUpdateTimeSlotMutation } from "./mutations/useUpdateTimeSlotMutation";
+import { useSetTimeSlotActiveMutation } from "./mutations/useSetTimeSlotActiveMutation";
 import type { ScheduleModalsState } from "./ui/useScheduleModals";
 
 export interface SlotActions {
@@ -37,6 +37,18 @@ function countAssignedInRow(
   );
 }
 
+function countAssignedInCell(
+  grid: ScheduleGrid | null,
+  slotId: string,
+): number {
+  const cells = grid?.rows.flatMap((row) => row.cells) ?? [];
+  const cell = cells.find(
+    (item) => item.kind === "slot" && item.slot.id === slotId,
+  );
+
+  return cell?.kind === "slot" ? cell.roster.length : 0;
+}
+
 function describeOpenDays(
   grid: ScheduleGrid | null,
   startTime: string,
@@ -49,7 +61,8 @@ function describeOpenDays(
     .map((cell) => SCHEDULE_DAY_LABELS[cell.dayOfWeek].toLowerCase());
 
   if (days.length === 0) return "";
-  if (days.length === 1) return ` Actualmente se utiliza únicamente los ${days[0]}.`;
+  if (days.length === 1)
+    return ` Actualmente se utiliza únicamente los ${days[0]}.`;
 
   return ` Actualmente se utiliza los ${days.slice(0, -1).join(", ")} y ${days.at(-1)}.`;
 }
@@ -58,7 +71,7 @@ export function useSlotActions(
   modals: ScheduleModalsState,
   grid: ScheduleGrid | null,
 ): SlotActions {
-  const updateTimeSlot = useUpdateTimeSlotMutation();
+  const setTimeSlotActive = useSetTimeSlotActiveMutation();
   const deleteTimeSlot = useDeleteTimeSlotMutation();
   const deleteClosure = useDeleteClosureMutation();
   const deleteOverride = useDeleteOverrideMutation();
@@ -74,12 +87,30 @@ export function useSlotActions(
 
   const setEnabled = useCallback(
     (slot: TimeSlot, enabled: boolean) => {
-      updateTimeSlot.mutate({
-        timeSlotId: slot.id,
-        dto: { isActive: enabled },
+      if (enabled) {
+        setTimeSlotActive.mutate({ timeSlotId: slot.id, isActive: true });
+        return;
+      }
+
+      const assignedCount = countAssignedInCell(grid, slot.id);
+      const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek].toLowerCase();
+      const hour = formatSlotTime(slot.startTime);
+
+      const peopleNote =
+        assignedCount > 0
+          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno, y volver a abrir el horario no los reasigna.`
+          : "";
+
+      confirm({
+        intent: "warning",
+        title: "Cerrar horario",
+        description: `¿Estás seguro que deseas cerrar los ${day} a las ${hour}?${peopleNote}`,
+        confirmLabel: "Cerrar",
+        onConfirm: () =>
+          setTimeSlotActive.mutate({ timeSlotId: slot.id, isActive: false }),
       });
     },
-    [updateTimeSlot],
+    [setTimeSlotActive, grid],
   );
 
   const removeRow = useCallback(
@@ -123,7 +154,11 @@ export function useSlotActions(
         title: "Eliminar bloqueo",
         description: `¿Estás seguro que deseas eliminar el bloqueo? El horario volverá a estar disponible el ${formatDate(override.date)}.`,
         confirmLabel: "Eliminar",
-        onConfirm: () => deleteOverride.mutate({ overrideId: override.id }),
+        onConfirm: () =>
+          deleteOverride.mutate({
+            date: override.date,
+            timeSlotId: override.timeSlotId,
+          }),
       });
     },
     [deleteOverride],

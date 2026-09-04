@@ -27,6 +27,7 @@ import { MemberChip } from "../../common";
 interface TurnChipMenuProps {
   member: MemberSimple;
   isHeld: boolean;
+  onToggleHold: () => void;
   onRemove: () => void;
   onClose: () => void;
 }
@@ -34,6 +35,7 @@ interface TurnChipMenuProps {
 function TurnChipMenu({
   member,
   isHeld,
+  onToggleHold,
   onRemove,
   onClose,
 }: TurnChipMenuProps) {
@@ -67,8 +69,7 @@ function TurnChipMenu({
 
       <PopoverItem
         icon={isHeld ? <LockOpen /> : <Lock />}
-        disabled
-        title="Esta acción no está disponible por el momento."
+        onClick={() => run(onToggleHold)}
       >
         {isHeld ? "Dejar de guardar el lugar" : "Guardar el lugar"}
       </PopoverItem>
@@ -154,6 +155,7 @@ export function TurnChip({
         <TurnChipMenu
           member={turn.member}
           isHeld={turn.onHold}
+          onToggleHold={() => actions.toggleHold(turn)}
           onRemove={() => actions.remove(turn)}
           onClose={close}
         />

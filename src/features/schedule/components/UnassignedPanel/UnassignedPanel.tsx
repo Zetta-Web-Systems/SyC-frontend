@@ -3,7 +3,6 @@ import { UserRoundSearch } from "lucide-react";
 import { Card } from "@shared/ui";
 import { SearchableInfiniteList } from "@shared/components/SearchableInfiniteList";
 import { cn } from "@shared/lib/cn";
-import type { MemberSimple } from "@features/members";
 import type { UnassignedMembersState } from "../../hooks/ui/useUnassignedMembers";
 import { formatMemberFullName } from "../../lib/memberDisplay";
 import {
@@ -14,6 +13,7 @@ import {
   type UnassignedDragData,
   type UnassignedDropData,
 } from "../../lib/scheduleDnd";
+import type { UnassignedMember } from "../../types";
 import { MemberChip } from "../common";
 
 const DROP_DATA: UnassignedDropData = {
@@ -21,49 +21,33 @@ const DROP_DATA: UnassignedDropData = {
   label: "la lista de sin asignar",
 };
 
-/**
- * TEMP: falta `GET /schedule/members/unassigned` real. Hasta entonces esta lista está mockeada
- */
-const UNASSIGNED_PANEL_ENABLED = false;
-
 interface UnassignedMemberChipProps {
-  member: MemberSimple;
+  item: UnassignedMember;
 }
 
-function UnassignedMemberChip({ member }: UnassignedMemberChipProps) {
+function UnassignedMemberChip({ item }: UnassignedMemberChipProps) {
+  const { member, turnsAssignedCount, totalMemberPlanTurns } = item;
   const data: UnassignedDragData = { type: DRAG_TYPE.UNASSIGNED, member };
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: unassignedDragId(member.id),
     data,
-    disabled: !UNASSIGNED_PANEL_ENABLED,
   });
 
   return (
     <div
       ref={setNodeRef}
-      {...(UNASSIGNED_PANEL_ENABLED ? attributes : {})}
-      {...(UNASSIGNED_PANEL_ENABLED ? listeners : {})}
-      aria-label={
-        UNASSIGNED_PANEL_ENABLED
-          ? `Arrastrá a ${formatMemberFullName(member)} a un horario`
-          : `${formatMemberFullName(member)} (esta acción no está disponible por el momento)`
-      }
-      title={
-        UNASSIGNED_PANEL_ENABLED
-          ? undefined
-          : "Esta acción no está disponible por el momento."
-      }
+      {...attributes}
+      {...listeners}
+      aria-label={`Arrastrá a ${formatMemberFullName(member)} a un horario`}
       className={cn(
-        "rounded-full transition-opacity select-none focus-visible:outline-none",
-        UNASSIGNED_PANEL_ENABLED
-          ? "cursor-grab focus-visible:ring-2 focus-visible:ring-primary-500"
-          : "cursor-not-allowed opacity-60",
+        "cursor-grab rounded-full transition-opacity select-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
         isDragging && "cursor-grabbing opacity-40",
       )}
     >
       <MemberChip
         member={member}
+        badge={`${turnsAssignedCount}/${totalMemberPlanTurns}`}
         className="border-dashed border-neutral-300 text-neutral-500"
       />
     </div>
@@ -92,7 +76,7 @@ export function UnassignedPanel({ state, isDragging }: UnassignedPanelProps) {
           "border-transparent bg-primary-50 ring-2 ring-primary-400 ring-offset-2 ring-offset-neutral-50",
       )}
     >
-      <SearchableInfiniteList<MemberSimple>
+      <SearchableInfiniteList<UnassignedMember>
         search={state.search}
         searchSlot={{
           searchPlaceholder: "Buscar alumno",
@@ -107,8 +91,8 @@ export function UnassignedPanel({ state, isDragging }: UnassignedPanelProps) {
         isError={state.isError}
         scrollRef={state.scrollRef}
         sentinelRef={state.sentinelRef}
-        keyFor={(member) => member.id}
-        renderItem={(member) => <UnassignedMemberChip member={member} />}
+        keyFor={(item) => item.member.id}
+        renderItem={(item) => <UnassignedMemberChip item={item} />}
         sectionTitle="Sin asignar"
         listContainerClassName="flex flex-wrap gap-1.5 px-3 pb-3"
         emptyIcon={<UserRoundSearch size={18} aria-hidden="true" />}
@@ -117,9 +101,8 @@ export function UnassignedPanel({ state, isDragging }: UnassignedPanelProps) {
       />
 
       <p className="border-t border-neutral-100 px-3 py-3 text-xs leading-relaxed text-neutral-400">
-        {UNASSIGNED_PANEL_ENABLED
-          ? "Arrastrá un alumno hasta un horario para anotarlo. Para quitarlo, arrastralo de vuelta hasta acá."
-          : "Anotar alumnos desde este panel no está disponible por el momento. Para quitar a alguien de un horario, se lo puede arrastrar hasta acá."}
+        Arrastrá un alumno hasta un horario para anotarlo. Para quitarlo,
+        arrastralo de vuelta hasta acá.
       </p>
     </Card>
   );

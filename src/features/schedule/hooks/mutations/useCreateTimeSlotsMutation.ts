@@ -11,7 +11,7 @@ export function useCreateTimeSlotsMutation() {
   return useMutation({
     mutationFn: (dto: CreateTimeSlotDto) => {
       const currentWeek = queryClient
-        .getQueriesData<ScheduleWeek>({ queryKey: SCHEDULE_KEYS.all })
+        .getQueriesData<ScheduleWeek>({ queryKey: SCHEDULE_KEYS.weeks() })
         .map(([, weekData]) => weekData)
         .find((weekData): weekData is ScheduleWeek => weekData !== undefined);
 
