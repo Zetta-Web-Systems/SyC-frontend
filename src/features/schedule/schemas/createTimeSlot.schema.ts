@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { MAX_SLOT_CAPACITY, MIN_SLOT_CAPACITY } from "../constants";
-
-const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+import {
+  MAX_SLOT_CAPACITY,
+  MIN_SLOT_CAPACITY,
+  TIME_PATTERN,
+} from "../constants";
 
 export const createTimeSlotSchema = z.object({
   startTime: z
