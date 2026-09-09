@@ -1,20 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@shared/stores/toast.store";
-import { deleteTimeSlotRow } from "../../services/schedule.api";
+import { deleteTimeSlot } from "../../services/schedule.api";
 import { SCHEDULE_KEYS } from "../../constants";
-import type { ScheduleWeek } from "../../types";
+import { getSlotsInRow, runRowOperation } from "../../lib/scheduleRows";
+import type { TimeSlot } from "../../types";
+
+interface DeleteTimeSlotRowVariables {
+  startTime: string;
+  weekSlots: TimeSlot[];
+}
 
 export function useDeleteTimeSlotMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ startTime }: { startTime: string }) => {
-      const currentWeek = queryClient
-        .getQueriesData<ScheduleWeek>({ queryKey: SCHEDULE_KEYS.weeks() })
-        .map(([, weekData]) => weekData)
-        .find((weekData): weekData is ScheduleWeek => weekData !== undefined);
+    mutationFn: ({ startTime, weekSlots }: DeleteTimeSlotRowVariables) => {
+      const targets = getSlotsInRow(weekSlots, startTime);
 
-      return deleteTimeSlotRow(startTime, currentWeek);
+      if (targets.length === 0) {
+        throw new Error("No quedan días abiertos a esa hora para eliminar.");
+      }
+
+      return runRowOperation(targets, (slot) => deleteTimeSlot(slot.id), {
+        done: "eliminado",
+        action: "eliminar",
+      });
     },
     onSuccess: () => {
       toast.success("Horario eliminado", {

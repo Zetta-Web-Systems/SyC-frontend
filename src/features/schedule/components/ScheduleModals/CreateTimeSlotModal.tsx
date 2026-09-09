@@ -11,21 +11,27 @@ import {
   createTimeSlotSchema,
   type CreateTimeSlotSchema,
 } from "../../schemas/createTimeSlot.schema";
+import type { TimeSlot } from "../../types";
 
 interface CreateTimeSlotModalProps {
   open: boolean;
   onClose: () => void;
+  weekSlots: TimeSlot[];
 }
 
 export function CreateTimeSlotModal({
   open,
   onClose,
+  weekSlots,
 }: CreateTimeSlotModalProps) {
   const mutation = useCreateTimeSlotsMutation();
 
   function handleSubmit(data: CreateTimeSlotSchema) {
     mutation.mutate(
-      { startTime: data.startTime, capacity: data.capacity },
+      {
+        dto: { startTime: data.startTime, capacity: data.capacity },
+        weekSlots,
+      },
       { onSuccess: () => onClose() },
     );
   }

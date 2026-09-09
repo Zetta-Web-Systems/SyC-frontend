@@ -1,4 +1,5 @@
 import type { ScheduleModalsState } from "../../hooks/ui/useScheduleModals";
+import type { TimeSlot } from "../../types";
 import { BlockSlotModal } from "./BlockSlotModal";
 import { CloseDayModal } from "./CloseDayModal";
 import { CreateTimeSlotModal } from "./CreateTimeSlotModal";
@@ -6,19 +7,27 @@ import { EditTimeSlotModal } from "./EditTimeSlotModal";
 
 interface ScheduleModalsProps {
   state: ScheduleModalsState;
+  weekSlots: TimeSlot[];
 }
 
-export function ScheduleModals({ state }: ScheduleModalsProps) {
+export function ScheduleModals({ state, weekSlots }: ScheduleModalsProps) {
   const { modal, close } = state;
 
   if (!modal) return null;
 
   switch (modal.kind) {
     case "createSlot":
-      return <CreateTimeSlotModal open onClose={close} />;
+      return <CreateTimeSlotModal open onClose={close} weekSlots={weekSlots} />;
 
     case "editSlot":
-      return <EditTimeSlotModal open onClose={close} slot={modal.slot} />;
+      return (
+        <EditTimeSlotModal
+          open
+          onClose={close}
+          slot={modal.slot}
+          weekSlots={weekSlots}
+        />
+      );
 
     case "closeDay":
       return <CloseDayModal open onClose={close} date={modal.date} />;
