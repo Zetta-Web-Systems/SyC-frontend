@@ -26,6 +26,7 @@ interface RawScheduleTimeSlot {
   endTime: string;
   capacity: number;
   memberTurns: RawMemberTurn[];
+  /** INFO (por si me olvido): Siempre true: el backend ya no manda los horarios dados de baja. */
   isActive: boolean;
   isClosed: boolean;
   closureReason?: string;
@@ -104,7 +105,6 @@ export function mapWeeklyScheduleResponse(
         startTime: slot.startTime,
         endTime: slot.endTime,
         capacity: slot.capacity,
-        isActive: slot.isActive,
         tag: slot.tag ?? null,
       });
 
@@ -112,7 +112,7 @@ export function mapWeeklyScheduleResponse(
         turns.push(mapMemberTurn(turn, slot.id, day.date));
       }
 
-      // El `isClosed` de la celda es del TimeSlotOverride, distinto del `isClosed` del día (que es el CalendarClosure de arriba)
+      // INFO: El `isClosed` de la celda es del TimeSlotOverride, distinto del `isClosed` del día (que es el CalendarClosure de arriba)
       if (slot.isClosed) {
         overrides.push({
           timeSlotId: slot.id,
@@ -140,7 +140,6 @@ export function mapTimeSlotWrite(raw: RawTimeSlotWrite): TimeSlot {
     startTime: raw.startTime,
     endTime: raw.endTime,
     capacity: raw.capacity,
-    isActive: raw.isActive,
     tag: raw.tag ?? null,
   };
 }

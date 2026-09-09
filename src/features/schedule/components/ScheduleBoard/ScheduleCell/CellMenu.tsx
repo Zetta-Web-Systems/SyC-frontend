@@ -2,7 +2,6 @@ import {
   CalendarOff,
   EllipsisVertical,
   Pencil,
-  Power,
   PowerOff,
   Trash2,
 } from "lucide-react";
@@ -68,8 +67,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
 
         <PopoverItem
           icon={<Pencil />}
-          disabled
-          title="Esta acción no está disponible por el momento."
+          onClick={() => run(() => actions.edit(cell.slot))}
         >
           Editar horario
         </PopoverItem>
@@ -88,38 +86,12 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
   const everyDay = SCHEDULE_DAY_LABELS[cell.dayOfWeek].toLowerCase();
   const hour = formatSlotTime(cell.startTime);
 
-  const disabledActionTitle = "Esta acción no está disponible por el momento.";
-
-  if (cell.kind === "disabled") {
-    return (
-      <>
-        <PopoverItem
-          icon={<Power />}
-          onClick={() => run(() => actions.setEnabled(cell.slot, true))}
-        >
-          Abrir los {everyDay} a las {hour}
-        </PopoverItem>
-
-        <PopoverItem icon={<Pencil />} disabled title={disabledActionTitle}>
-          Editar horario
-        </PopoverItem>
-
-        <PopoverSeparator />
-
-        <PopoverItem
-          icon={<Trash2 />}
-          variant="danger"
-          onClick={() => run(() => actions.removeRow(cell.startTime))}
-        >
-          Eliminar las {hour} de toda la semana
-        </PopoverItem>
-      </>
-    );
-  }
-
   return (
     <>
-      <PopoverItem icon={<Pencil />} disabled title={disabledActionTitle}>
+      <PopoverItem
+        icon={<Pencil />}
+        onClick={() => run(() => actions.edit(cell.slot))}
+      >
         Editar horario
       </PopoverItem>
 
@@ -132,7 +104,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
 
       <PopoverItem
         icon={<PowerOff />}
-        onClick={() => run(() => actions.setEnabled(cell.slot, false))}
+        onClick={() => run(() => actions.close(cell.slot))}
       >
         Cerrar los {everyDay} a las {hour}
       </PopoverItem>

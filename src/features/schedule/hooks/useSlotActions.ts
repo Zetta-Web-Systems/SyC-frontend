@@ -2,23 +2,28 @@ import { useCallback, useMemo } from "react";
 import { confirm } from "@shared/stores/confirm.store";
 import { formatDate } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS } from "../constants";
+import { formatDayList } from "../lib/scheduleDays";
+import { getSlotsInRow } from "../lib/scheduleRows";
 import { formatSlotTime } from "../lib/slotStatus";
 import type {
   CalendarClosure,
   ScheduleGrid,
   TimeSlot,
   TimeSlotOverride,
+  UnavailableCellData,
 } from "../types";
+import { useCloseTimeSlotCellMutation } from "./mutations/useCloseTimeSlotCellMutation";
 import { useDeleteClosureMutation } from "./mutations/useDeleteClosureMutation";
 import { useDeleteOverrideMutation } from "./mutations/useDeleteOverrideMutation";
 import { useDeleteTimeSlotMutation } from "./mutations/useDeleteTimeSlotMutation";
-import { useSetTimeSlotActiveMutation } from "./mutations/useSetTimeSlotActiveMutation";
+import { useOpenTimeSlotCellMutation } from "./mutations/useOpenTimeSlotCellMutation";
 import type { ScheduleModalsState } from "./ui/useScheduleModals";
 
 export interface SlotActions {
   edit: (slot: TimeSlot) => void;
   block: (slot: TimeSlot, date: string) => void;
-  setEnabled: (slot: TimeSlot, enabled: boolean) => void;
+  close: (slot: TimeSlot) => void;
+  open: (cell: UnavailableCellData) => void;
   removeRow: (startTime: string) => void;
   removeClosure: (closure: CalendarClosure) => void;
   removeOverride: (override: TimeSlotOverride) => void;
@@ -49,29 +54,26 @@ function countAssignedInCell(
   return cell?.kind === "slot" ? cell.roster.length : 0;
 }
 
-function describeOpenDays(
-  grid: ScheduleGrid | null,
-  startTime: string,
-): string {
-  const row = grid?.rows.find((item) => item.startTime === startTime);
-  if (!row) return "";
-
-  const days = row.cells
-    .filter((cell) => cell.kind === "slot" || cell.kind === "block")
-    .map((cell) => SCHEDULE_DAY_LABELS[cell.dayOfWeek].toLowerCase());
-
+function describeOpenDays(weekSlots: TimeSlot[], startTime: string): string {
+  const days = getSlotsInRow(weekSlots, startTime).map(
+    (slot) => slot.dayOfWeek,
+  );
   if (days.length === 0) return "";
-  if (days.length === 1)
-    return ` Actualmente se utiliza únicamente los ${days[0]}.`;
 
-  return ` Actualmente se utiliza los ${days.slice(0, -1).join(", ")} y ${days.at(-1)}.`;
+  const label = formatDayList(days).toLowerCase();
+
+  return days.length === 1
+    ? ` Actualmente se utiliza únicamente los ${label}.`
+    : ` Actualmente se utiliza los ${label}.`;
 }
 
 export function useSlotActions(
   modals: ScheduleModalsState,
   grid: ScheduleGrid | null,
+  weekSlots: TimeSlot[],
 ): SlotActions {
-  const setTimeSlotActive = useSetTimeSlotActiveMutation();
+  const closeTimeSlotCell = useCloseTimeSlotCellMutation();
+  const openTimeSlotCell = useOpenTimeSlotCellMutation();
   const deleteTimeSlot = useDeleteTimeSlotMutation();
   const deleteClosure = useDeleteClosureMutation();
   const deleteOverride = useDeleteOverrideMutation();
@@ -85,32 +87,38 @@ export function useSlotActions(
     [openBlockSlot],
   );
 
-  const setEnabled = useCallback(
-    (slot: TimeSlot, enabled: boolean) => {
-      if (enabled) {
-        setTimeSlotActive.mutate({ timeSlotId: slot.id, isActive: true });
-        return;
-      }
-
+  const close = useCallback(
+    (slot: TimeSlot) => {
       const assignedCount = countAssignedInCell(grid, slot.id);
       const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek].toLowerCase();
       const hour = formatSlotTime(slot.startTime);
 
       const peopleNote =
         assignedCount > 0
-          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno, y volver a abrir el horario no los reasigna.`
+          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno.`
           : "";
 
       confirm({
         intent: "warning",
         title: "Cerrar horario",
-        description: `¿Estás seguro que deseas cerrar los ${day} a las ${hour}?${peopleNote}`,
+        description: `¿Estás seguro que deseas cerrar los ${day} a las ${hour}?${peopleNote} Se puede volver a abrir, pero la celda queda vacía: a los alumnos hay que anotarlos de nuevo.`,
         confirmLabel: "Cerrar",
-        onConfirm: () =>
-          setTimeSlotActive.mutate({ timeSlotId: slot.id, isActive: false }),
+        onConfirm: () => closeTimeSlotCell.mutate({ timeSlotId: slot.id }),
       });
     },
-    [setTimeSlotActive, grid],
+    [closeTimeSlotCell, grid],
+  );
+
+  const open = useCallback(
+    (cell: UnavailableCellData) => {
+      openTimeSlotCell.mutate({
+        dayOfWeek: cell.dayOfWeek,
+        startTime: cell.startTime,
+        endTime: cell.endTime,
+        capacity: cell.capacity,
+      });
+    },
+    [openTimeSlotCell],
   );
 
   const removeRow = useCallback(
@@ -126,12 +134,12 @@ export function useSlotActions(
       confirm({
         intent: "danger",
         title: "Eliminar horario",
-        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(grid, startTime)}${peopleNote} Para desactivar un solo día, se puede cerrar esa celda en particular.`,
+        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(weekSlots, startTime)}${peopleNote} Para desactivar un solo día, se puede cerrar esa celda en particular.`,
         confirmLabel: "Eliminar",
-        onConfirm: () => deleteTimeSlot.mutate({ startTime }),
+        onConfirm: () => deleteTimeSlot.mutate({ startTime, weekSlots }),
       });
     },
-    [deleteTimeSlot, grid],
+    [deleteTimeSlot, grid, weekSlots],
   );
 
   const removeClosure = useCallback(
@@ -168,11 +176,20 @@ export function useSlotActions(
     () => ({
       edit: openEditSlot,
       block,
-      setEnabled,
+      close,
+      open,
       removeRow,
       removeClosure,
       removeOverride,
     }),
-    [openEditSlot, block, setEnabled, removeRow, removeClosure, removeOverride],
+    [
+      openEditSlot,
+      block,
+      close,
+      open,
+      removeRow,
+      removeClosure,
+      removeOverride,
+    ],
   );
 }

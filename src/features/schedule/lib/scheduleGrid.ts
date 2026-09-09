@@ -1,3 +1,4 @@
+import { DEFAULT_SLOT_CAPACITY } from "../constants";
 import type {
   CalendarClosure,
   MemberTurn,
@@ -18,6 +19,12 @@ import {
 } from "./slotStatus";
 
 const NOT_ASSIGNABLE_CAPACITY = 0;
+
+interface RowContext {
+  startTime: string;
+  endTime: string;
+  capacity: number;
+}
 
 function slotKey(dayOfWeek: string, startTime: string): string {
   return `${dayOfWeek}|${startTime}`;
@@ -45,23 +52,32 @@ function buildRoster(
 
 function buildCell(
   day: ScheduleDayInfo,
-  startTime: string,
+  row: RowContext,
   slot: TimeSlot | undefined,
   turns: MemberTurn[],
   override: TimeSlotOverride | undefined,
   closure: CalendarClosure | null | undefined,
 ): ScheduleCellData {
   const base = {
-    id: `${day.date}|${startTime}`,
+    id: `${day.date}|${row.startTime}`,
     date: day.date,
     dayOfWeek: day.dayOfWeek,
-    startTime,
+    startTime: row.startTime,
   };
 
-  if (!slot) return { ...base, kind: "unavailable" };
+  // Sin TimeSlot no hay nada que cerrar ni bloquear, así que este caso va primero.
+  if (!slot) {
+    return {
+      ...base,
+      kind: "unavailable",
+      endTime: row.endTime,
+      capacity: row.capacity,
+      canOpen: !closure,
+    };
+  }
+
   if (closure) return { ...base, kind: "closed", slot, closure };
   if (override) return { ...base, kind: "blocked", slot, override };
-  if (!slot.isActive) return { ...base, kind: "disabled", slot };
   if (slot.capacity === NOT_ASSIGNABLE_CAPACITY) {
     return { ...base, kind: "block", slot };
   }
@@ -83,16 +99,12 @@ export function buildScheduleGrid(week: ScheduleWeek): ScheduleGrid {
   const slots = week.timeSlots.map((slot) => ({
     ...slot,
     startTime: normalizeTime(slot.startTime),
+    endTime: normalizeTime(slot.endTime),
   }));
 
   const slotsByKey = new Map<string, TimeSlot>();
   for (const slot of slots) {
-    const key = slotKey(slot.dayOfWeek, slot.startTime);
-    const current = slotsByKey.get(key);
-
-    if (!current || (!current.isActive && slot.isActive)) {
-      slotsByKey.set(key, slot);
-    }
+    slotsByKey.set(slotKey(slot.dayOfWeek, slot.startTime), slot);
   }
 
   const turnsBySlot = new Map<string, MemberTurn[]>();
@@ -116,25 +128,36 @@ export function buildScheduleGrid(week: ScheduleWeek): ScheduleGrid {
 
   const startTimes = [...new Set(slots.map((slot) => slot.startTime))].sort();
 
-  const rows: ScheduleRow[] = startTimes.map((startTime) => ({
-    startTime,
-    endTime:
-      slots.find((slot) => slot.startTime === startTime)?.endTime ??
-      getSlotEndTime(startTime),
-    shift: getShift(startTime),
-    cells: days.map((day) => {
-      const slot = slotsByKey.get(slotKey(day.dayOfWeek, startTime));
+  const rows: ScheduleRow[] = startTimes.map((startTime) => {
+    const rowSlots = slots.filter((slot) => slot.startTime === startTime);
 
-      return buildCell(
-        day,
-        startTime,
-        slot,
-        slot ? (turnsBySlot.get(slot.id) ?? []) : [],
-        slot ? overridesByKey.get(overrideKey(slot.id, day.date)) : undefined,
-        day.closure,
-      );
-    }),
-  }));
+    // INFO: Para la capacidad se ignoran las celdas no asignables: abrir una celda es abrirla a alumnos, no crear otro bloque de Yoga vacío.
+    const row: RowContext = {
+      startTime,
+      endTime: rowSlots[0]?.endTime ?? getSlotEndTime(startTime),
+      capacity:
+        rowSlots.find((slot) => slot.capacity > NOT_ASSIGNABLE_CAPACITY)
+          ?.capacity ?? DEFAULT_SLOT_CAPACITY,
+    };
+
+    return {
+      startTime: row.startTime,
+      endTime: row.endTime,
+      shift: getShift(startTime),
+      cells: days.map((day) => {
+        const slot = slotsByKey.get(slotKey(day.dayOfWeek, startTime));
+
+        return buildCell(
+          day,
+          row,
+          slot,
+          slot ? (turnsBySlot.get(slot.id) ?? []) : [],
+          slot ? overridesByKey.get(overrideKey(slot.id, day.date)) : undefined,
+          day.closure,
+        );
+      }),
+    };
+  });
 
   return { days, rows };
 }

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
-import { Badge } from "@shared/ui";
+import { Plus } from "lucide-react";
+import { Badge, Button } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { SCHEDULE_DAY_LABELS, SLOT_TAG_COLORS } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
@@ -12,7 +13,11 @@ import {
 } from "../../../lib/scheduleDnd";
 import type { ScheduleSearchMatches } from "../../../lib/scheduleSearch";
 import { formatSlotTime } from "../../../lib/slotStatus";
-import type { BlockCellData, ScheduleCellData } from "../../../types";
+import type {
+  BlockCellData,
+  ScheduleCellData,
+  UnavailableCellData,
+} from "../../../types";
 import { CellMenu } from "./CellMenu";
 import { SlotCell } from "./SlotCell";
 
@@ -63,6 +68,36 @@ function ClosedCell({ label, detail, badge }: ClosedCellProps) {
     >
       {badge && <span className="absolute top-2 left-2">{badge}</span>}
       {label}
+    </div>
+  );
+}
+
+interface EmptyCellProps {
+  cell: UnavailableCellData;
+  label: string;
+  onOpen: (cell: UnavailableCellData) => void;
+}
+
+function EmptyCell({ cell, label, onOpen }: EmptyCellProps) {
+  if (!cell.canOpen) {
+    return (
+      <div className="h-full min-h-16 rounded-xl border border-dashed border-neutral-200" />
+    );
+  }
+
+  return (
+    <div className="flex h-full min-h-16 items-center justify-center rounded-xl border border-dashed border-neutral-200 transition-colors hover:border-primary-300 hover:bg-primary-50/40">
+      <Button
+        variant="ghost"
+        intent="neutral"
+        size="sm"
+        aria-label={`Abrir ${label}`}
+        onClick={() => onOpen(cell)}
+        className="opacity-0 transition-opacity group-hover/cell:opacity-100 focus-visible:opacity-100"
+      >
+        <Plus size={14} aria-hidden="true" />
+        Abrir
+      </Button>
     </div>
   );
 }
@@ -180,26 +215,14 @@ export function ScheduleCell({
         </RejectDropZone>
       );
 
-    case "disabled":
-      return (
-        <RejectDropZone
-          cellId={cell.id}
-          label={label}
-          reason="Ese horario está deshabilitado."
-        >
-          <ClosedCell label="Deshabilitado" />
-          <CellMenu cell={cell} actions={slotActions} />
-        </RejectDropZone>
-      );
-
     case "unavailable":
       return (
         <RejectDropZone
           cellId={cell.id}
           label={label}
-          reason="Ese horario no está disponible."
+          reason="Ese día no tiene turno a esa hora."
         >
-          <ClosedCell label="Cerrado" />
+          <EmptyCell cell={cell} label={label} onOpen={slotActions.open} />
         </RejectDropZone>
       );
   }
