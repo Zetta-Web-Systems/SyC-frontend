@@ -4,6 +4,7 @@ import type {
   ClinicalProfileRegisterSchema,
 } from "@features/clinicalProfiles";
 import type { FeeSimple, MemberPlanType } from "@features/memberPlans";
+import type { TimeSlot } from "@features/schedule";
 import type { TrainingGoal } from "../constants";
 
 export interface CurrentStatusLike {
@@ -42,6 +43,7 @@ export interface Member extends BaseMember {
   clinicalProfile?: ClinicalProfile;
   memberPlanType?: MemberPlanType | null;
   fee?: FeeSimple;
+  timeSlots?: TimeSlot[];
 }
 
 export interface MemberSimple {

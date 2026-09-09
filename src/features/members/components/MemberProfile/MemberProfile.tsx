@@ -4,11 +4,13 @@ import {
   AssignMembershipModal,
   MembershipHistoryModal,
 } from "@features/memberPlans";
+import { MemberTurnHistoryModal } from "@features/schedule";
 import type { Member } from "../../types";
 import { MemberProfileHeader } from "./MemberProfileSections/MemberProfileHeader";
 import { MemberProfileContact } from "./MemberProfileSections/MemberProfileContact";
 import { MemberProfileMembership } from "./MemberProfileSections/MemberProfileMembership";
 import { MemberProfilePlan } from "./MemberProfileSections/MemberProfilePlan";
+import { MemberProfileSchedule } from "./MemberProfileSections/MemberProfileSchedule";
 import { mockTrainingPlans } from "../../data/memberProfile.mock";
 
 interface MemberProfileProps {
@@ -28,6 +30,7 @@ export function MemberProfile({
 }: MemberProfileProps) {
   const [assignOpen, setAssignOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [scheduleHistoryOpen, setScheduleHistoryOpen] = useState(false);
 
   const memberName = `${member.name} ${member.lastname}`;
 
@@ -51,6 +54,11 @@ export function MemberProfile({
               onViewHistory={() => setHistoryOpen(true)}
             />
             <MemberProfilePlan plans={mockTrainingPlans} />
+
+            <MemberProfileSchedule
+              timeSlots={member.timeSlots}
+              onViewHistory={() => setScheduleHistoryOpen(true)}
+            />
           </div>
 
           {painEvolutionSlot}
@@ -76,6 +84,13 @@ export function MemberProfile({
         memberName={memberName}
         open={historyOpen}
         onClose={() => setHistoryOpen(false)}
+      />
+
+      <MemberTurnHistoryModal
+        memberId={member.id}
+        memberName={memberName}
+        open={scheduleHistoryOpen}
+        onClose={() => setScheduleHistoryOpen(false)}
       />
     </div>
   );
