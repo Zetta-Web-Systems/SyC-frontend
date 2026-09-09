@@ -27,6 +27,7 @@ export function useTurnActions(): TurnActions {
     (turn: MemberTurn) => {
       removeTurn.mutate({
         turnId: turn.id,
+        memberId: turn.member.id,
         memberName: formatMemberFullName(turn.member),
       });
     },

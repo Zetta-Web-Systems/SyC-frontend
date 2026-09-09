@@ -19,6 +19,7 @@ import {
 } from "../../lib/scheduleDnd";
 import { formatMemberFullName } from "../../lib/memberDisplay";
 import { useAssignTurnMutation } from "../mutations/useAssignTurnMutation";
+import { useMoveTurnMutation } from "../mutations/useMoveTurnMutation";
 import { useRemoveTurnMutation } from "../mutations/useRemoveTurnMutation";
 
 const ACTIVATION_DISTANCE = 5;
@@ -29,6 +30,7 @@ interface UseScheduleDndOptions {
 
 export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
   const assignTurn = useAssignTurnMutation();
+  const moveTurn = useMoveTurnMutation();
   const removeTurn = useRemoveTurnMutation();
 
   const [activeDrag, setActiveDrag] = useState<ActiveDragData | null>(null);
@@ -79,8 +81,8 @@ export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
       if (drop.type === DROP_TYPE.SLOT) {
         if (drag.type === DRAG_TYPE.UNASSIGNED) {
           assignTurn.mutate({
-            timeSlotId: drop.slotId,
-            memberId: drag.member.id,
+            dto: { timeSlotId: drop.slotId, memberId: drag.member.id },
+            memberName: formatMemberFullName(drag.member),
           });
           onDropIntoSlot(drop.slotId);
           return;
@@ -88,21 +90,27 @@ export function useScheduleDnd({ onDropIntoSlot }: UseScheduleDndOptions) {
 
         if (drag.slotId === drop.slotId) return;
 
-        toast.warning("No es posible mover el turno entre horarios", {
-          description:
-            "Para reasignarlo, primero hay que quitar al alumno del horario actual y luego anotarlo en el nuevo.",
+        moveTurn.mutate({
+          dto: {
+            memberTurnId: drag.turnId,
+            memberId: drag.member.id,
+            timeSlotId: drop.slotId,
+          },
+          memberName: formatMemberFullName(drag.member),
         });
+        onDropIntoSlot(drop.slotId);
         return;
       }
 
       if (drag.type === DRAG_TYPE.TURN) {
         removeTurn.mutate({
           turnId: drag.turnId,
+          memberId: drag.member.id,
           memberName: formatMemberFullName(drag.member),
         });
       }
     },
-    [assignTurn, removeTurn, onDropIntoSlot],
+    [assignTurn, moveTurn, removeTurn, onDropIntoSlot],
   );
 
   return {
