@@ -14,7 +14,6 @@ export interface TimeSlot {
   startTime: string;
   endTime: string;
   capacity: number;
-  isActive: boolean;
   tag?: SlotTag | null;
 }
 
@@ -36,7 +35,6 @@ export interface CalendarClosure {
   reason?: string | null;
 }
 
-/** El backend no expone el id del override: se identifica por `timeSlotId` + `date`. */
 export interface TimeSlotOverride {
   timeSlotId: string;
   date: string;
@@ -82,11 +80,6 @@ export interface BlockCellData extends BaseCell {
   slot: TimeSlot;
 }
 
-export interface DisabledCellData extends BaseCell {
-  kind: "disabled";
-  slot: TimeSlot;
-}
-
 export interface ClosedCellData extends BaseCell {
   kind: "closed";
   slot: TimeSlot;
@@ -101,12 +94,14 @@ export interface BlockedCellData extends BaseCell {
 
 export interface UnavailableCellData extends BaseCell {
   kind: "unavailable";
+  endTime: string;
+  capacity: number;
+  canOpen: boolean;
 }
 
 export type ScheduleCellData =
   | SlotCellData
   | BlockCellData
-  | DisabledCellData
   | ClosedCellData
   | BlockedCellData
   | UnavailableCellData;
@@ -129,6 +124,8 @@ export interface AssignTurnDto {
 }
 
 export interface MoveTurnDto {
+  memberTurnId: string;
+  memberId: string;
   timeSlotId: string;
 }
 
@@ -141,9 +138,29 @@ export interface CreateTimeSlotDto {
   capacity: number;
 }
 
+export interface OpenTimeSlotCellDto {
+  dayOfWeek: ScheduleDay;
+  startTime: string;
+  endTime: string;
+  capacity: number;
+}
+
 export interface UpdateTimeSlotDto {
+  startTime?: string;
+  endTime?: string;
   capacity?: number;
   tag?: SlotTag | null;
+}
+
+export type UpdateTimeSlotScope = "cell" | "row";
+
+export interface MemberTurnHistoryEntry {
+  id: string;
+  timeSlot: TimeSlot;
+  startDate: string;
+  endDate?: string | null;
+  isActive: boolean;
+  onHold: boolean;
 }
 
 export interface UnassignedMember {
