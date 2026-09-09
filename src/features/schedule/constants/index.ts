@@ -112,7 +112,11 @@ export const SCHEDULE_KEYS = {
   week: (date: string) => [...SCHEDULE_KEYS.weeks(), date] as const,
   unassigned: (search?: string) =>
     [...SCHEDULE_KEYS.all, "unassigned", search] as const,
+  memberTurns: (memberId: string) =>
+    [...SCHEDULE_KEYS.all, "member-turns", memberId] as const,
 } as const;
+
+export const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 export const CLOSURE_TYPE_OPTIONS: { label: string; value: ClosureType }[] =
   Object.values(CLOSURE_TYPE).map((value) => ({ label: value, value }));

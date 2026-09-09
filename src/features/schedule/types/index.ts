@@ -138,7 +138,7 @@ export interface CreateTimeSlotDto {
   capacity: number;
 }
 
-export interface OpenTimeSlotCellDto {
+export interface RegisterTimeSlotDto {
   dayOfWeek: ScheduleDay;
   startTime: string;
   endTime: string;
