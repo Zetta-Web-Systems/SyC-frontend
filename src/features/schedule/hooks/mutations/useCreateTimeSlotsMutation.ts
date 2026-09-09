@@ -53,7 +53,7 @@ export function useCreateTimeSlotsMutation() {
     },
     onSuccess: (slots) => {
       toast.success("Horario agregado", {
-        description: `El horario de ${formatSlotRange(slots[0].startTime, slots[0].endTime)} fue agregado correctamente de lunes a viernes. Los días que no correspondan se pueden cerrar desde cada celda.`,
+        description: `El horario de ${formatSlotRange(slots[0].startTime, slots[0].endTime)} fue agregado correctamente de lunes a viernes. Los días que no correspondan se pueden eliminar desde el menú de cada celda.`,
       });
     },
     // INFO: La fila puede quedar a medias, así que se refresca falle o no.

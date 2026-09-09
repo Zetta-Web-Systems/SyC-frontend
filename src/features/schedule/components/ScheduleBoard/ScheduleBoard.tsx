@@ -6,6 +6,7 @@ import { formatDayMonth } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS, SHIFT_LABELS, type Shift } from "../../constants";
 import type { SlotActions } from "../../hooks/useSlotActions";
 import type { TurnActions } from "../../hooks/useTurnActions";
+import { getRowDays } from "../../lib/scheduleRows";
 import type { ScheduleSearchMatches } from "../../lib/scheduleSearch";
 import { formatSlotRange } from "../../lib/slotStatus";
 import type { ScheduleDayInfo, ScheduleGrid } from "../../types";
@@ -181,6 +182,7 @@ export function ScheduleBoard({
             const startsShift =
               index === 0 || grid.rows[index - 1].shift !== row.shift;
             const isShiftCollapsed = collapsedShifts.has(row.shift);
+            const rowDays = getRowDays(row);
 
             return (
               <Fragment key={row.startTime}>
@@ -207,6 +209,7 @@ export function ScheduleBoard({
                       >
                         <ScheduleCell
                           cell={cell}
+                          rowDays={rowDays}
                           isExpanded={
                             cell.kind === "slot" &&
                             expandedIds.has(cell.slot.id)

@@ -3,7 +3,7 @@ import { toast } from "@shared/stores/toast.store";
 import { deleteTimeSlot } from "../../services/schedule.api";
 import { SCHEDULE_KEYS } from "../../constants";
 
-export function useCloseTimeSlotCellMutation() {
+export function useDeleteTimeSlotCellMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -11,9 +11,9 @@ export function useCloseTimeSlotCellMutation() {
       deleteTimeSlot(timeSlotId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_KEYS.all });
-      toast.success("Horario cerrado", {
+      toast.success("Horario eliminado", {
         description:
-          "El horario fue cerrado para ese día. Los alumnos anotados quedaron sin turno.",
+          "El horario fue eliminado de ese día. Los alumnos anotados quedaron sin turno.",
       });
     },
   });

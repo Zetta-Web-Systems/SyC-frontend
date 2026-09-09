@@ -24,6 +24,9 @@ import {
 import type { SlotRosterEntry } from "../../../types";
 import { MemberChip } from "../../common";
 
+const TURN_MENU_WIDTH = 236;
+const TURN_MENU_HEIGHT = 216;
+
 interface TurnChipMenuProps {
   member: MemberSimple;
   isHeld: boolean;
@@ -54,6 +57,7 @@ function TurnChipMenu({
 
       <PopoverItem
         icon={<UserRound />}
+        iconTone="primary"
         onClick={() =>
           run(
             () =>
@@ -69,6 +73,12 @@ function TurnChipMenu({
 
       <PopoverItem
         icon={isHeld ? <LockOpen /> : <Lock />}
+        iconTone={isHeld ? "success" : "warning"}
+        description={
+          isHeld
+            ? "El lugar vuelve a estar disponible"
+            : "Nadie más puede ocupar su lugar"
+        }
         onClick={() => run(onToggleHold)}
       >
         {isHeld ? "Dejar de guardar el lugar" : "Guardar el lugar"}
@@ -100,7 +110,10 @@ export function TurnChip({
 }: TurnChipProps) {
   const { turn, isOverturn } = entry;
   const { anchorRef, position, isOpen, toggle, close } =
-    useAnchoredPopover<HTMLButtonElement>();
+    useAnchoredPopover<HTMLButtonElement>({
+      width: TURN_MENU_WIDTH,
+      estimatedHeight: TURN_MENU_HEIGHT,
+    });
 
   const data: TurnDragData = {
     type: DRAG_TYPE.TURN,

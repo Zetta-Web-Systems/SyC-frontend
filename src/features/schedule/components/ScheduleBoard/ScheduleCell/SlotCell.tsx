@@ -5,6 +5,7 @@ import {
   SLOT_STATUS_INTENT,
   SLOT_STATUS_TINT,
   SLOT_TAG_TINT,
+  type ScheduleDay,
   type SlotStatus,
   type SlotTag,
 } from "../../../constants";
@@ -118,6 +119,7 @@ function SlotRoster({ roster, isExpanded, actions, matches }: SlotRosterProps) {
 
 interface SlotCellProps {
   cell: SlotCellData;
+  rowDays: readonly ScheduleDay[];
   label: string;
   isExpanded: boolean;
   onToggle: (slotId: string) => void;
@@ -129,6 +131,7 @@ interface SlotCellProps {
 
 export function SlotCell({
   cell,
+  rowDays,
   label,
   isExpanded,
   onToggle,
@@ -168,7 +171,7 @@ export function SlotCell({
         <SlotTagPill tag={cell.slot.tag} className="absolute top-2 left-2" />
       )}
 
-      <CellMenu cell={cell} actions={slotActions} />
+      <CellMenu cell={cell} rowDays={rowDays} actions={slotActions} />
 
       <SlotCountBadge
         label={label}

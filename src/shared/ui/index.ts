@@ -19,6 +19,7 @@ export type { PillProps } from "./Pill/Pill";
 export type { AnchoredPopoverProps } from "./Popover/AnchoredPopover";
 export type { PopoverProps } from "./Popover/Popover";
 export type { PopoverHeaderProps } from "./Popover/PopoverHeader";
+export type { PopoverItemProps, PopoverItemTone } from "./Popover/PopoverItem";
 export type {
   AnchoredPopoverPosition,
   AnchoredPopoverState,

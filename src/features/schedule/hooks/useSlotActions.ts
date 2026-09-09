@@ -12,9 +12,9 @@ import type {
   TimeSlotOverride,
   UnavailableCellData,
 } from "../types";
-import { useCloseTimeSlotCellMutation } from "./mutations/useCloseTimeSlotCellMutation";
 import { useDeleteClosureMutation } from "./mutations/useDeleteClosureMutation";
 import { useDeleteOverrideMutation } from "./mutations/useDeleteOverrideMutation";
+import { useDeleteTimeSlotCellMutation } from "./mutations/useDeleteTimeSlotCellMutation";
 import { useDeleteTimeSlotMutation } from "./mutations/useDeleteTimeSlotMutation";
 import { useOpenTimeSlotCellMutation } from "./mutations/useOpenTimeSlotCellMutation";
 import type { ScheduleModalsState } from "./ui/useScheduleModals";
@@ -22,7 +22,7 @@ import type { ScheduleModalsState } from "./ui/useScheduleModals";
 export interface SlotActions {
   edit: (slot: TimeSlot) => void;
   block: (slot: TimeSlot, date: string) => void;
-  close: (slot: TimeSlot) => void;
+  removeCell: (slot: TimeSlot) => void;
   open: (cell: UnavailableCellData) => void;
   removeRow: (startTime: string) => void;
   removeClosure: (closure: CalendarClosure) => void;
@@ -72,7 +72,7 @@ export function useSlotActions(
   grid: ScheduleGrid | null,
   weekSlots: TimeSlot[],
 ): SlotActions {
-  const closeTimeSlotCell = useCloseTimeSlotCellMutation();
+  const deleteTimeSlotCell = useDeleteTimeSlotCellMutation();
   const openTimeSlotCell = useOpenTimeSlotCellMutation();
   const deleteTimeSlot = useDeleteTimeSlotMutation();
   const deleteClosure = useDeleteClosureMutation();
@@ -87,7 +87,7 @@ export function useSlotActions(
     [openBlockSlot],
   );
 
-  const close = useCallback(
+  const removeCell = useCallback(
     (slot: TimeSlot) => {
       const assignedCount = countAssignedInCell(grid, slot.id);
       const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek].toLowerCase();
@@ -99,14 +99,14 @@ export function useSlotActions(
           : "";
 
       confirm({
-        intent: "warning",
-        title: "Cerrar horario",
-        description: `¿Estás seguro que deseas cerrar los ${day} a las ${hour}?${peopleNote} Se puede volver a abrir, pero la celda queda vacía: a los alumnos hay que anotarlos de nuevo.`,
-        confirmLabel: "Cerrar",
-        onConfirm: () => closeTimeSlotCell.mutate({ timeSlotId: slot.id }),
+        intent: "danger",
+        title: "Eliminar horario",
+        description: `¿Estás seguro que deseas eliminar el horario de cada ${day} a las ${hour}?${peopleNote} El resto de la semana no se toca. La celda se puede volver a abrir, pero queda vacía: a los alumnos hay que anotarlos de nuevo.`,
+        confirmLabel: "Eliminar",
+        onConfirm: () => deleteTimeSlotCell.mutate({ timeSlotId: slot.id }),
       });
     },
-    [closeTimeSlotCell, grid],
+    [deleteTimeSlotCell, grid],
   );
 
   const open = useCallback(
@@ -134,7 +134,7 @@ export function useSlotActions(
       confirm({
         intent: "danger",
         title: "Eliminar horario",
-        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(weekSlots, startTime)}${peopleNote} Para desactivar un solo día, se puede cerrar esa celda en particular.`,
+        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(weekSlots, startTime)}${peopleNote} Para dar de baja un solo día, se puede eliminar esa celda desde su menú.`,
         confirmLabel: "Eliminar",
         onConfirm: () => deleteTimeSlot.mutate({ startTime, weekSlots }),
       });
@@ -176,7 +176,7 @@ export function useSlotActions(
     () => ({
       edit: openEditSlot,
       block,
-      close,
+      removeCell,
       open,
       removeRow,
       removeClosure,
@@ -185,7 +185,7 @@ export function useSlotActions(
     [
       openEditSlot,
       block,
-      close,
+      removeCell,
       open,
       removeRow,
       removeClosure,
