@@ -1,30 +1,22 @@
 import { api } from "@shared/api/api";
-import { getApiErrorMessage } from "@shared/api/apiError";
-import { formatDateToISO } from "@shared/utils/date.utils";
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type { PaginatedResponse } from "@shared/types/pagination.types";
 import type { MemberSimple } from "@features/members";
-import { mockMoveTurn, mockUpdateTimeSlot } from "../data/schedule.mock";
-import {
-  SCHEDULE_DAYS,
-  SCHEDULE_DAY_LABELS,
-  type ClosureType,
-} from "../constants";
+import type { ClosureType } from "../constants";
 import {
   mapTimeSlotWrite,
   mapWeeklyScheduleResponse,
   type RawTimeSlotWrite,
   type RawWeeklySchedule,
 } from "../lib/scheduleApiMapper";
-import { getSlotEndTime, normalizeTime } from "../lib/slotStatus";
 import type {
   AssignTurnDto,
   CalendarClosure,
   CreateClosureDto,
   CreateOverrideDto,
-  CreateTimeSlotDto,
-  MemberTurn,
+  MemberTurnHistoryEntry,
   MoveTurnDto,
+  RegisterTimeSlotDto,
   ScheduleWeek,
   SetTurnHoldDto,
   TimeSlot,
@@ -32,6 +24,18 @@ import type {
   UnassignedMember,
   UpdateTimeSlotDto,
 } from "../types";
+
+interface RawMemberTurnHold {
+  member: MemberSimple;
+  onHold: boolean;
+}
+
+interface RawScheduleClosure {
+  id: string;
+  date: string;
+  type: ClosureType;
+  reason?: string;
+}
 
 export async function getScheduleWeek(date: string): Promise<ScheduleWeek> {
   const { data } = await api.get<RawWeeklySchedule>("/schedule", {
@@ -54,46 +58,34 @@ export async function getUnassignedMembers(params: {
   return data;
 }
 
-export async function assignTurn(dto: AssignTurnDto): Promise<MemberTurn> {
-  const { data } = await api.post<RawTimeSlotWrite>(
-    `/schedule/time-slot/${dto.timeSlotId}/add-member/${dto.memberId}`,
+export async function getMemberTurnHistory(
+  memberId: string,
+): Promise<MemberTurnHistoryEntry[]> {
+  const { data } = await api.get<MemberTurnHistoryEntry[]>(
+    `/schedule/time-slot/member-turn/member/${memberId}`,
   );
 
-  const rawTurn = data.memberTurns.find(
-    (turn) => turn.member.id === dto.memberId,
-  );
-  if (!rawTurn) {
-    throw new Error("El alumno no fue anotado en el horario.");
-  }
-
-  return {
-    id: rawTurn.id,
-    timeSlotId: data.id,
-    member: rawTurn.member,
-    startDate: formatDateToISO(new Date()),
-    endDate: null,
-    isActive: rawTurn.isActive,
-    onHold: rawTurn.onHold,
-  };
+  return data;
 }
 
-/**
- * TEMP: sin endpoint todavía (mover un MemberTurn entre TimeSlot). Deshabilitado en el drag&drop entre celdas
- */
-export async function moveTurn(
-  turnId: string,
-  dto: MoveTurnDto,
-): Promise<MemberTurn> {
-  return mockMoveTurn(turnId, dto);
+export async function assignTurn(dto: AssignTurnDto): Promise<void> {
+  await api.post("/schedule/time-slot/add-member", undefined, {
+    params: { timeSlotId: dto.timeSlotId, memberId: dto.memberId },
+  });
+}
+
+export async function moveTurn(dto: MoveTurnDto): Promise<void> {
+  await api.post("/schedule/time-slot/move-member", undefined, {
+    params: {
+      memberTurnId: dto.memberTurnId,
+      memberId: dto.memberId,
+      timeSlotId: dto.timeSlotId,
+    },
+  });
 }
 
 export async function removeTurn(turnId: string): Promise<void> {
   await api.delete(`/schedule/time-slot/member-turn/${turnId}`);
-}
-
-interface RawMemberTurnHold {
-  member: MemberSimple;
-  onHold: boolean;
 }
 
 export async function setTurnHold(
@@ -109,115 +101,31 @@ export async function setTurnHold(
   return data;
 }
 
-/**
- * Da de alta una hora nueva de lunes a viernes. El backend registra una celda (un día)
- * por llamada, no la fila entera de una — se hacen 5 POST secuenciales, validando antes
- * contra la semana ya cargada que ninguno de los 5 días tenga ya una hora solapada
- * (así se evita la causa más común de quedar a mitad de camino). Si igual falla una llamada
- * intermedia, se informa qué días quedaron creados y cuál falló.
- */
-export async function createTimeSlots(
-  dto: CreateTimeSlotDto,
-  currentWeek: ScheduleWeek | undefined,
-): Promise<TimeSlot[]> {
-  const startTime = normalizeTime(dto.startTime);
-  const endTime = getSlotEndTime(startTime);
-
-  const overlapping = (currentWeek?.timeSlots ?? []).filter(
-    (slot) => slot.isActive && normalizeTime(slot.startTime) === startTime,
+export async function registerTimeSlot(
+  dto: RegisterTimeSlotDto,
+): Promise<TimeSlot> {
+  const { data } = await api.post<RawTimeSlotWrite>(
+    "/schedule/time-slot/register",
+    dto,
   );
 
-  if (overlapping.length > 0) {
-    const days = overlapping
-      .map((slot) => SCHEDULE_DAY_LABELS[slot.dayOfWeek])
-      .join(", ");
-    throw new Error(`Ya existe un horario a esa hora los días: ${days}.`);
-  }
-
-  const created: TimeSlot[] = [];
-
-  for (const dayOfWeek of SCHEDULE_DAYS) {
-    try {
-      const { data } = await api.post<RawTimeSlotWrite>(
-        "/schedule/time-slot/register",
-        { dayOfWeek, startTime, endTime, capacity: dto.capacity },
-      );
-      created.push(mapTimeSlotWrite(data));
-    } catch (error) {
-      const doneLabel = created
-        .map((slot) => SCHEDULE_DAY_LABELS[slot.dayOfWeek])
-        .join(", ");
-      const doneNote = doneLabel
-        ? `El horario fue creado correctamente los días: ${doneLabel}. `
-        : "";
-
-      throw new Error(
-        `${doneNote}No se pudo crear el horario del día ${SCHEDULE_DAY_LABELS[dayOfWeek]}: ${getApiErrorMessage(error)}`,
-      );
-    }
-  }
-
-  return created;
+  return mapTimeSlotWrite(data);
 }
 
-/**
- * TEMP: sin endpoint todavía (PATCH de TimeSlot). Deshabilitado en el menú del horario
- */
 export async function updateTimeSlot(
   timeSlotId: string,
   dto: UpdateTimeSlotDto,
 ): Promise<TimeSlot> {
-  return mockUpdateTimeSlot(timeSlotId, dto);
+  const { data } = await api.patch<RawTimeSlotWrite>(
+    `/schedule/time-slot/${timeSlotId}`,
+    dto,
+  );
+
+  return mapTimeSlotWrite(data);
 }
 
 export async function deleteTimeSlot(timeSlotId: string): Promise<void> {
   await api.delete(`/schedule/time-slot/${timeSlotId}`);
-}
-
-export async function restoreTimeSlot(timeSlotId: string): Promise<void> {
-  await api.patch(`/schedule/time-slot/restore/${timeSlotId}`);
-}
-
-export async function deleteTimeSlotRow(
-  startTime: string,
-  currentWeek: ScheduleWeek | undefined,
-): Promise<void> {
-  const normalizedStart = normalizeTime(startTime);
-  const targets = (currentWeek?.timeSlots ?? []).filter(
-    (slot) =>
-      slot.isActive && normalizeTime(slot.startTime) === normalizedStart,
-  );
-
-  if (targets.length === 0) {
-    throw new Error("No quedan días abiertos a esa hora para eliminar.");
-  }
-
-  const done: TimeSlot[] = [];
-
-  for (const slot of targets) {
-    try {
-      await deleteTimeSlot(slot.id);
-      done.push(slot);
-    } catch (error) {
-      const doneLabel = done
-        .map((item) => SCHEDULE_DAY_LABELS[item.dayOfWeek])
-        .join(", ");
-      const doneNote = doneLabel
-        ? `El horario fue eliminado correctamente los días: ${doneLabel}. `
-        : "";
-
-      throw new Error(
-        `${doneNote}No se pudo eliminar el horario del día ${SCHEDULE_DAY_LABELS[slot.dayOfWeek]}: ${getApiErrorMessage(error)}`,
-      );
-    }
-  }
-}
-
-interface RawScheduleClosure {
-  id: string;
-  date: string;
-  type: ClosureType;
-  reason?: string;
 }
 
 export async function createClosure(
