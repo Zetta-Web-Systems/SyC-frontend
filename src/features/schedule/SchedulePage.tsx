@@ -79,7 +79,10 @@ export default function SchedulePage() {
     });
   }, [data, isWeekendVisible]);
 
-  const slotActions = useSlotActions(modals, grid);
+  // Sin filtrar por fin de semana: las acciones de fila alcanzan a todos los días.
+  const weekSlots = useMemo(() => data?.timeSlots ?? [], [data]);
+
+  const slotActions = useSlotActions(modals, grid, weekSlots);
 
   const assignableSlotIds = useMemo(
     () =>
@@ -197,7 +200,7 @@ export default function SchedulePage() {
         </div>
       </div>
 
-      <ScheduleModals state={modals} />
+      <ScheduleModals state={modals} weekSlots={weekSlots} />
 
       {createPortal(
         <DragOverlay dropAnimation={null}>
