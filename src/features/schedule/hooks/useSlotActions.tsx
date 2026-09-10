@@ -2,9 +2,14 @@ import { useCallback, useMemo } from "react";
 import { confirm } from "@shared/stores/confirm.store";
 import { formatDate } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS } from "../constants";
+import {
+  ScheduleConfirmSummary,
+  type ScheduleConfirmImpact,
+  type ScheduleConfirmRow,
+} from "../components/common";
 import { formatDayList } from "../lib/scheduleDays";
 import { getSlotsInRow } from "../lib/scheduleRows";
-import { formatSlotTime } from "../lib/slotStatus";
+import { formatSlotRange, formatSlotTime } from "../lib/slotStatus";
 import type {
   CalendarClosure,
   ScheduleGrid,
@@ -26,8 +31,11 @@ export interface SlotActions {
   open: (cell: UnavailableCellData) => void;
   removeRow: (startTime: string) => void;
   removeClosure: (closure: CalendarClosure) => void;
-  removeOverride: (override: TimeSlotOverride) => void;
+  removeOverride: (override: TimeSlotOverride, slot: TimeSlot) => void;
 }
+
+const SINGLE_DAY_NOTE =
+  'Para dar de baja un solo día, usá "Eliminar este día" en esa celda.';
 
 function countAssignedInRow(
   grid: ScheduleGrid | null,
@@ -54,17 +62,21 @@ function countAssignedInCell(
   return cell?.kind === "slot" ? cell.roster.length : 0;
 }
 
-function describeOpenDays(weekSlots: TimeSlot[], startTime: string): string {
-  const days = getSlotsInRow(weekSlots, startTime).map(
-    (slot) => slot.dayOfWeek,
-  );
-  if (days.length === 0) return "";
+function buildImpact(assignedCount: number): ScheduleConfirmImpact {
+  if (assignedCount === 0) {
+    return { tone: "neutral", text: "No hay alumnos anotados" };
+  }
 
-  const label = formatDayList(days).toLowerCase();
+  return {
+    tone: "danger",
+    text: `${assignedCount} ${assignedCount === 1 ? "alumno queda" : "alumnos quedan"} sin turno`,
+  };
+}
 
-  return days.length === 1
-    ? ` Actualmente se utiliza únicamente los ${label}.`
-    : ` Actualmente se utiliza los ${label}.`;
+function formatClosureDays(closure: CalendarClosure): string {
+  return closure.startDate === closure.endDate
+    ? formatDate(closure.startDate)
+    : `${formatDate(closure.startDate)} al ${formatDate(closure.endDate)}`;
 }
 
 export function useSlotActions(
@@ -89,19 +101,27 @@ export function useSlotActions(
 
   const removeCell = useCallback(
     (slot: TimeSlot) => {
-      const assignedCount = countAssignedInCell(grid, slot.id);
       const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek].toLowerCase();
-      const hour = formatSlotTime(slot.startTime);
-
-      const peopleNote =
-        assignedCount > 0
-          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno.`
-          : "";
 
       confirm({
         intent: "danger",
-        title: "Eliminar horario",
-        description: `¿Estás seguro que deseas eliminar el horario de cada ${day} a las ${hour}?${peopleNote} El resto de la semana no se toca. La celda se puede volver a abrir, pero queda vacía: a los alumnos hay que anotarlos de nuevo.`,
+        size: "md",
+        title: "Eliminar este día",
+        description:
+          "Se da de baja esa celda. El resto de la semana no se toca.",
+        body: (
+          <ScheduleConfirmSummary
+            rows={[
+              {
+                label: "Horario",
+                value: formatSlotRange(slot.startTime, slot.endTime),
+              },
+              { label: "Día", value: `Cada ${day}` },
+            ]}
+            impact={buildImpact(countAssignedInCell(grid, slot.id))}
+            note="Se puede volver a abrir desde la celda vacía, pero queda sin alumnos."
+          />
+        ),
         confirmLabel: "Eliminar",
         onConfirm: () => deleteTimeSlotCell.mutate({ timeSlotId: slot.id }),
       });
@@ -123,18 +143,34 @@ export function useSlotActions(
 
   const removeRow = useCallback(
     (startTime: string) => {
-      const assignedCount = countAssignedInRow(grid, startTime);
-      const hour = formatSlotTime(startTime);
+      const rowSlots = getSlotsInRow(weekSlots, startTime);
+      const days = rowSlots.map((slot) => slot.dayOfWeek);
+      const isSingleDay = days.length === 1;
 
-      const peopleNote =
-        assignedCount > 0
-          ? ` ${assignedCount} ${assignedCount === 1 ? "alumno anotado quedará" : "alumnos anotados quedarán"} sin turno.`
-          : "";
+      const timeLabel = rowSlots.length
+        ? formatSlotRange(startTime, rowSlots[0].endTime)
+        : formatSlotTime(startTime);
 
       confirm({
         intent: "danger",
-        title: "Eliminar horario",
-        description: `¿Estás seguro que deseas eliminar el horario de las ${hour} de toda la semana?${describeOpenDays(weekSlots, startTime)}${peopleNote} Para dar de baja un solo día, se puede eliminar esa celda desde su menú.`,
+        size: "md",
+        title: isSingleDay ? "Eliminar el horario" : "Eliminar toda la fila",
+        description: isSingleDay
+          ? "Se da de baja la única celda que tiene esa hora."
+          : "Se elimina esa hora de todos los días en los que está abierta.",
+        body: (
+          <ScheduleConfirmSummary
+            rows={[
+              { label: "Horario", value: timeLabel },
+              {
+                label: isSingleDay ? "Día" : "Días",
+                value: formatDayList(days),
+              },
+            ]}
+            impact={buildImpact(countAssignedInRow(grid, startTime))}
+            note={isSingleDay ? undefined : SINGLE_DAY_NOTE}
+          />
+        ),
         confirmLabel: "Eliminar",
         onConfirm: () => deleteTimeSlot.mutate({ startTime, weekSlots }),
       });
@@ -144,11 +180,19 @@ export function useSlotActions(
 
   const removeClosure = useCallback(
     (closure: CalendarClosure) => {
+      const rows: ScheduleConfirmRow[] = [
+        { label: "Tipo", value: closure.type },
+        ...(closure.reason ? [{ label: "Motivo", value: closure.reason }] : []),
+        { label: "Días", value: formatClosureDays(closure) },
+      ];
+
       confirm({
-        intent: "warning",
-        title: "Eliminar cierre",
-        description: `¿Estás seguro que deseas eliminar el cierre por ${closure.type.toLowerCase()}? Los días correspondientes volverán a estar habilitados.`,
-        confirmLabel: "Eliminar",
+        intent: "info",
+        size: "md",
+        title: "Quitar el cierre",
+        description: "Los días del cierre vuelven a tener turnos.",
+        body: <ScheduleConfirmSummary rows={rows} />,
+        confirmLabel: "Quitar",
         onConfirm: () => deleteClosure.mutate({ date: closure.startDate }),
       });
     },
@@ -156,12 +200,27 @@ export function useSlotActions(
   );
 
   const removeOverride = useCallback(
-    (override: TimeSlotOverride) => {
+    (override: TimeSlotOverride, slot: TimeSlot) => {
+      const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek];
+
+      const rows: ScheduleConfirmRow[] = [
+        { label: "Fecha", value: `${day} ${formatDate(override.date)}` },
+        {
+          label: "Horario",
+          value: formatSlotRange(slot.startTime, slot.endTime),
+        },
+        ...(override.reason
+          ? [{ label: "Motivo", value: override.reason }]
+          : []),
+      ];
+
       confirm({
-        intent: "warning",
-        title: "Eliminar bloqueo",
-        description: `¿Estás seguro que deseas eliminar el bloqueo? El horario volverá a estar disponible el ${formatDate(override.date)}.`,
-        confirmLabel: "Eliminar",
+        intent: "info",
+        size: "md",
+        title: "Quitar el bloqueo",
+        description: "El horario vuelve a estar disponible ese día.",
+        body: <ScheduleConfirmSummary rows={rows} />,
+        confirmLabel: "Quitar",
         onConfirm: () =>
           deleteOverride.mutate({
             date: override.date,

@@ -127,7 +127,7 @@ export function CloseDayModal({ open, onClose, date }: CloseDayModalProps) {
                 onBlur={field.onBlur}
                 rows={3}
                 maxLength={CLOSURE_REASON_MAX_LENGTH}
-                placeholder="Feriado de carnaval (opcional)"
+                placeholder="Motivo de cierre (opcional)"
                 error={field.error}
                 aria-describedby={field["aria-describedby"]}
               />
