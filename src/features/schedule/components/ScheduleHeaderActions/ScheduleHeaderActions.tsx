@@ -26,11 +26,11 @@ export function ScheduleHeaderActions({
       <Button
         intent="primary"
         onClick={onCreateTimeSlot}
-        aria-label="Crear horario"
+        aria-label="Agregar horario"
         className="max-sm:w-10 max-sm:px-0"
       >
         <Plus size={15} aria-hidden="true" />
-        <span className="max-sm:hidden">Crear horario</span>
+        <span className="max-sm:hidden">Agregar horario</span>
       </Button>
     </>
   );

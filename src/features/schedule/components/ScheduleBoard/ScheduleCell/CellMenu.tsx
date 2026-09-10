@@ -94,7 +94,9 @@ function CellMenuItems({
           icon={<CalendarCheck />}
           iconTone="success"
           description="El horario vuelve a estar disponible"
-          onClick={() => run(() => actions.removeOverride(cell.override))}
+          onClick={() =>
+            run(() => actions.removeOverride(cell.override, cell.slot))
+          }
         >
           Quitar el bloqueo
         </PopoverItem>
