@@ -146,7 +146,6 @@ export async function createClosure(
   const last = data[data.length - 1];
 
   return {
-    id: first.id,
     type: first.type,
     startDate: first.date,
     endDate: last.date,

@@ -12,6 +12,7 @@ import type {
   TimeSlot,
   TimeSlotOverride,
 } from "../types";
+import { groupConsecutiveClosures } from "./scheduleClosures";
 
 interface RawMemberTurn {
   id: string;
@@ -59,17 +60,11 @@ export interface RawTimeSlotWrite {
   tag?: SlotTag | null;
 }
 
-function mapMemberTurn(
-  raw: RawMemberTurn,
-  timeSlotId: string,
-  date: string,
-): MemberTurn {
+function mapMemberTurn(raw: RawMemberTurn, timeSlotId: string): MemberTurn {
   return {
     id: raw.id,
     timeSlotId,
     member: raw.member,
-    startDate: date,
-    endDate: null,
     isActive: raw.isActive,
     onHold: raw.onHold,
   };
@@ -89,7 +84,6 @@ export function mapWeeklyScheduleResponse(
       dayOfWeek: day.dayOfWeek,
       closure: day.isClosed
         ? {
-            id: day.date,
             type: day.closureType ?? CLOSURE_TYPE.OTHER,
             startDate: day.date,
             endDate: day.date,
@@ -109,7 +103,7 @@ export function mapWeeklyScheduleResponse(
       });
 
       for (const turn of slot.memberTurns) {
-        turns.push(mapMemberTurn(turn, slot.id, day.date));
+        turns.push(mapMemberTurn(turn, slot.id));
       }
 
       // INFO: El `isClosed` de la celda es del TimeSlotOverride, distinto del `isClosed` del día (que es el CalendarClosure de arriba)
@@ -126,7 +120,7 @@ export function mapWeeklyScheduleResponse(
   return {
     from: raw.weekStart,
     to: raw.weekEnd,
-    days,
+    days: groupConsecutiveClosures(days),
     timeSlots,
     turns,
     overrides,

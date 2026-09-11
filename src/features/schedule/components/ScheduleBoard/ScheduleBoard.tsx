@@ -21,7 +21,7 @@ interface ScheduleDayHeaderProps {
   day: ScheduleDayInfo;
   isFirst: boolean;
   onCloseDay: (date: string) => void;
-  onRemoveClosure: (closure: CalendarClosure) => void;
+  onRemoveClosure: (closure: CalendarClosure, date: string) => void;
 }
 
 function ScheduleDayHeader({
@@ -37,7 +37,7 @@ function ScheduleDayHeader({
     <button
       type="button"
       onClick={() =>
-        closure ? onRemoveClosure(closure) : onCloseDay(day.date)
+        closure ? onRemoveClosure(closure, day.date) : onCloseDay(day.date)
       }
       aria-label={
         closure ? `Quitar el cierre del ${dayLabel}` : `Cerrar el ${dayLabel}`

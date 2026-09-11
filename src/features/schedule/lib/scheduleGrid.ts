@@ -38,19 +38,9 @@ function overrideKey(timeSlotId: string, date: string): string {
   return `${timeSlotId}|${date}`;
 }
 
-function isTurnActiveOn(turn: MemberTurn, date: string): boolean {
-  if (!turn.isActive) return false;
-  if (turn.startDate > date) return false;
-  return !turn.endDate || turn.endDate >= date;
-}
-
-function buildRoster(
-  turns: MemberTurn[],
-  date: string,
-  capacity: number,
-): SlotRosterEntry[] {
+function buildRoster(turns: MemberTurn[], capacity: number): SlotRosterEntry[] {
   return turns
-    .filter((turn) => isTurnActiveOn(turn, date))
+    .filter((turn) => turn.isActive)
     .map((turn, index) => ({ turn, isOverturn: index >= capacity }));
 }
 
@@ -88,7 +78,7 @@ function buildCell(
     return { ...base, kind: "block", slot };
   }
 
-  const roster = buildRoster(turns, day.date, slot.capacity);
+  const roster = buildRoster(turns, slot.capacity);
 
   return {
     ...base,
@@ -125,10 +115,7 @@ export function buildScheduleGrid(
   }
 
   const turnsBySlot = new Map<string, MemberTurn[]>();
-  const sortedTurns = [...week.turns].sort(
-    (a, b) =>
-      a.startDate.localeCompare(b.startDate) || a.id.localeCompare(b.id),
-  );
+  const sortedTurns = [...week.turns].sort((a, b) => a.id.localeCompare(b.id));
   for (const turn of sortedTurns) {
     const current = turnsBySlot.get(turn.timeSlotId);
     if (current) current.push(turn);

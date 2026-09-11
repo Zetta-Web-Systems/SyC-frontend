@@ -64,7 +64,9 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
           icon={<CalendarCheck />}
           iconTone="success"
           description="Se reabren los días del cierre"
-          onClick={() => run(() => actions.removeClosure(cell.closure))}
+          onClick={() =>
+            run(() => actions.removeClosure(cell.closure, cell.date))
+          }
         >
           Quitar el cierre
         </PopoverItem>

@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from "react";
 import { confirm } from "@shared/stores/confirm.store";
-import { formatDate } from "@shared/utils/date.utils";
+import { formatDate, formatDayMonth } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS } from "../constants";
 import {
   ScheduleConfirmSummary,
   type ScheduleConfirmImpact,
   type ScheduleConfirmRow,
 } from "../components/common";
+import { eachDateInRange } from "../lib/scheduleClosures";
 import { formatDayList } from "../lib/scheduleDays";
 import { describeSlotRanges } from "../lib/scheduleOverlap";
 import { getSlotsInRow } from "../lib/scheduleRows";
@@ -32,7 +33,7 @@ export interface SlotActions {
   removeCell: (slot: TimeSlot) => void;
   open: (cell: UnavailableCellData) => void;
   removeRow: (startTime: string, endTime: string) => void;
-  removeClosure: (closure: CalendarClosure) => void;
+  removeClosure: (closure: CalendarClosure, date: string) => void;
   removeOverride: (override: TimeSlotOverride, slot: TimeSlot) => void;
 }
 
@@ -235,21 +236,38 @@ export function useSlotActions(
   );
 
   const removeClosure = useCallback(
-    (closure: CalendarClosure) => {
+    (closure: CalendarClosure, date: string) => {
+      const dayCount = eachDateInRange(
+        closure.startDate,
+        closure.endDate,
+      ).length;
+      const isRange = dayCount > 1;
+
       const rows: ScheduleConfirmRow[] = [
         { label: "Tipo", value: closure.type },
         ...(closure.reason ? [{ label: "Motivo", value: closure.reason }] : []),
-        { label: "Días", value: formatClosureDays(closure) },
+        { label: isRange ? "Días" : "Día", value: formatClosureDays(closure) },
       ];
 
       confirm({
         intent: "info",
         size: "md",
         title: "Quitar el cierre",
-        description: "Los días del cierre vuelven a tener turnos.",
+        description: isRange
+          ? "Los días del cierre vuelven a tener turnos, o sólo el que elegiste."
+          : "El día vuelve a tener turnos.",
         body: <ScheduleConfirmSummary rows={rows} />,
-        confirmLabel: "Quitar",
-        onConfirm: () => deleteClosure.mutate({ date: closure.startDate }),
+        confirmLabel: isRange ? `Quitar los ${dayCount} días` : "Quitar",
+        tertiaryLabel: isRange
+          ? `Quitar sólo el ${formatDayMonth(date)}`
+          : undefined,
+        onConfirm: () => deleteClosure.mutate({ closure }),
+        onTertiary: isRange
+          ? () =>
+              deleteClosure.mutate({
+                closure: { ...closure, startDate: date, endDate: date },
+              })
+          : undefined,
       });
     },
     [deleteClosure],

@@ -1,3 +1,4 @@
+import { useFormContext, useWatch } from "react-hook-form";
 import { Button, Input, Modal, Select, Textarea } from "@shared/ui";
 import { Form, FormError, FormField } from "@shared/components/Form";
 import { formatDateToISO } from "@shared/utils/date.utils";
@@ -8,6 +9,58 @@ import {
   CLOSURE_REASON_MAX_LENGTH,
   type CloseDaySchema,
 } from "../../schemas/closeDay.schema";
+
+function CloseDayRange() {
+  const { control } = useFormContext<CloseDaySchema>();
+  const startDate = useWatch({ control, name: "startDate" });
+
+  return (
+    <div className="flex gap-3">
+      <FormField<CloseDaySchema>
+        name="startDate"
+        label="Desde"
+        required
+        className="flex-1"
+      >
+        {(field) => (
+          <Input
+            ref={field.ref}
+            id={field.id}
+            name={field.name}
+            type="date"
+            value={field.value}
+            onChange={(e) => field.onChange(e.target.value)}
+            onBlur={field.onBlur}
+            error={field.error}
+            aria-describedby={field["aria-describedby"]}
+          />
+        )}
+      </FormField>
+
+      <FormField<CloseDaySchema>
+        name="endDate"
+        label="Hasta"
+        required
+        className="flex-1"
+      >
+        {(field) => (
+          <Input
+            ref={field.ref}
+            id={field.id}
+            name={field.name}
+            type="date"
+            min={startDate}
+            value={field.value}
+            onChange={(e) => field.onChange(e.target.value)}
+            onBlur={field.onBlur}
+            error={field.error}
+            aria-describedby={field["aria-describedby"]}
+          />
+        )}
+      </FormField>
+    </div>
+  );
+}
 
 interface CloseDayModalProps {
   open: boolean;
@@ -67,49 +120,7 @@ export function CloseDayModal({ open, onClose, date }: CloseDayModalProps) {
             )}
           </FormField>
 
-          <div className="flex gap-3">
-            <FormField<CloseDaySchema>
-              name="startDate"
-              label="Desde"
-              required
-              className="flex-1"
-            >
-              {(field) => (
-                <Input
-                  ref={field.ref}
-                  id={field.id}
-                  name={field.name}
-                  type="date"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  onBlur={field.onBlur}
-                  error={field.error}
-                  aria-describedby={field["aria-describedby"]}
-                />
-              )}
-            </FormField>
-
-            <FormField<CloseDaySchema>
-              name="endDate"
-              label="Hasta"
-              required
-              className="flex-1"
-            >
-              {(field) => (
-                <Input
-                  ref={field.ref}
-                  id={field.id}
-                  name={field.name}
-                  type="date"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  onBlur={field.onBlur}
-                  error={field.error}
-                  aria-describedby={field["aria-describedby"]}
-                />
-              )}
-            </FormField>
-          </div>
+          <CloseDayRange />
 
           <p className="-mt-2 text-xs text-neutral-400">
             El cierre aplica al día completo. Para tapar una sola hora, usá

@@ -21,14 +21,11 @@ export interface MemberTurn {
   id: string;
   timeSlotId: string;
   member: MemberSimple;
-  startDate: string;
-  endDate?: string | null;
   isActive: boolean;
   onHold: boolean;
 }
 
 export interface CalendarClosure {
-  id: string;
   type: ClosureType;
   startDate: string;
   endDate: string;
