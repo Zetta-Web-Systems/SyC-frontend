@@ -74,8 +74,9 @@ export default function SchedulePage() {
 
   // Sin filtrar por fin de semana: las acciones de fila alcanzan a todos los días.
   const weekSlots = useMemo(() => data?.timeSlots ?? [], [data]);
+  const weekTurns = useMemo(() => data?.turns ?? [], [data]);
 
-  const slotActions = useSlotActions(modals, grid, weekSlots);
+  const slotActions = useSlotActions(modals, weekSlots, weekTurns);
 
   const assignableSlotIds = useMemo(
     () =>
@@ -166,6 +167,7 @@ export default function SchedulePage() {
             {grid && !isError && grid.rows.length > 0 && (
               <ScheduleBoard
                 grid={grid}
+                weekSlots={weekSlots}
                 expandedIds={expandedIds}
                 onToggleSlot={toggle}
                 actions={turnActions}

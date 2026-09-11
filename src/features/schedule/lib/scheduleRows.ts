@@ -1,6 +1,6 @@
 import { getApiErrorMessage } from "@shared/api/apiError";
 import { SCHEDULE_DAY_LABELS, type ScheduleDay } from "../constants";
-import type { ScheduleRow, TimeSlot } from "../types";
+import type { TimeSlot } from "../types";
 import { normalizeTime } from "./slotStatus";
 
 interface RowOperationVerbs {
@@ -66,11 +66,4 @@ export async function runRowOperation<
   }
 
   return results;
-}
-
-/** Los días de la semana en los que esa fila tiene un horario abierto. */
-export function getRowDays(row: ScheduleRow): ScheduleDay[] {
-  return row.cells
-    .filter((cell) => cell.kind !== "unavailable")
-    .map((cell) => cell.dayOfWeek);
 }

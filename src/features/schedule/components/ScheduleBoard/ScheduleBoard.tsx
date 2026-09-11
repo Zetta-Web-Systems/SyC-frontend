@@ -6,9 +6,9 @@ import { formatDayMonth } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS, SHIFT_LABELS, type Shift } from "../../constants";
 import type { SlotActions } from "../../hooks/useSlotActions";
 import type { TurnActions } from "../../hooks/useTurnActions";
-import { getRowDays } from "../../lib/scheduleRows";
+import { getSlotsInRow } from "../../lib/scheduleRows";
 import type { ScheduleSearchMatches } from "../../lib/scheduleSearch";
-import type { ScheduleDayInfo, ScheduleGrid } from "../../types";
+import type { ScheduleDayInfo, ScheduleGrid, TimeSlot } from "../../types";
 import { ScheduleCell } from "./ScheduleCell/ScheduleCell";
 import { ScheduleTimeLabel } from "./ScheduleRow/ScheduleTimeLabel";
 
@@ -102,6 +102,7 @@ function AddTimeSlotRow({ onCreate }: AddTimeSlotRowProps) {
 
 interface ScheduleBoardProps {
   grid: ScheduleGrid;
+  weekSlots: TimeSlot[];
   expandedIds: ReadonlySet<string>;
   onToggleSlot: (slotId: string) => void;
   actions: TurnActions;
@@ -117,6 +118,7 @@ interface ScheduleBoardProps {
 
 export function ScheduleBoard({
   grid,
+  weekSlots,
   expandedIds,
   onToggleSlot,
   actions,
@@ -169,7 +171,11 @@ export function ScheduleBoard({
             const startsShift =
               index === 0 || grid.rows[index - 1].shift !== row.shift;
             const isShiftCollapsed = collapsedShifts.has(row.shift);
-            const rowDays = getRowDays(row);
+            const rowDays = getSlotsInRow(
+              weekSlots,
+              row.startTime,
+              row.endTime,
+            ).map((slot) => slot.dayOfWeek);
 
             return (
               <Fragment key={`${row.startTime}|${row.endTime}`}>

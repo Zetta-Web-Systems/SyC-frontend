@@ -13,7 +13,7 @@ import { getSlotsInRow } from "../lib/scheduleRows";
 import { formatSlotRange } from "../lib/slotStatus";
 import type {
   CalendarClosure,
-  ScheduleGrid,
+  MemberTurn,
   TimeSlot,
   TimeSlotOverride,
   UnavailableCellData,
@@ -39,32 +39,14 @@ export interface SlotActions {
 const SINGLE_DAY_NOTE =
   'Para dar de baja un solo día, usá "Eliminar este día" en esa celda.';
 
-function countAssignedInRow(
-  grid: ScheduleGrid | null,
-  startTime: string,
-  endTime: string,
+function countAssigned(
+  turns: MemberTurn[],
+  slots: readonly TimeSlot[],
 ): number {
-  const row = grid?.rows.find(
-    (item) => item.startTime === startTime && item.endTime === endTime,
-  );
-  if (!row) return 0;
+  const slotIds = new Set(slots.map((slot) => slot.id));
 
-  return row.cells.reduce(
-    (total, cell) => total + (cell.kind === "slot" ? cell.roster.length : 0),
-    0,
-  );
-}
-
-function countAssignedInCell(
-  grid: ScheduleGrid | null,
-  slotId: string,
-): number {
-  const cells = grid?.rows.flatMap((row) => row.cells) ?? [];
-  const cell = cells.find(
-    (item) => item.kind === "slot" && item.slot.id === slotId,
-  );
-
-  return cell?.kind === "slot" ? cell.roster.length : 0;
+  return turns.filter((turn) => turn.isActive && slotIds.has(turn.timeSlotId))
+    .length;
 }
 
 function describeRoster(assignedCount: number): string {
@@ -92,8 +74,8 @@ function formatClosureDays(closure: CalendarClosure): string {
 
 export function useSlotActions(
   modals: ScheduleModalsState,
-  grid: ScheduleGrid | null,
   weekSlots: TimeSlot[],
+  weekTurns: MemberTurn[],
 ): SlotActions {
   const deleteTimeSlotCell = useDeleteTimeSlotCellMutation();
   const openTimeSlotCell = useOpenTimeSlotCellMutation();
@@ -133,7 +115,7 @@ export function useSlotActions(
               },
               { label: "Día", value: `Cada ${day}` },
             ]}
-            impact={buildImpact(countAssignedInCell(grid, slot.id))}
+            impact={buildImpact(countAssigned(weekTurns, [slot]))}
             note={
               isLastDay
                 ? 'Para volver a tenerlo hay que crearlo desde "Agregar horario".'
@@ -145,7 +127,7 @@ export function useSlotActions(
         onConfirm: () => deleteTimeSlotCell.mutate({ timeSlotId: slot.id }),
       });
     },
-    [deleteTimeSlotCell, grid, weekSlots],
+    [deleteTimeSlotCell, weekSlots, weekTurns],
   );
 
   const open = useCallback(
@@ -163,10 +145,7 @@ export function useSlotActions(
       }
 
       const canMove = cell.conflicts.length === 1;
-      const assigned = cell.conflicts.reduce(
-        (total, conflict) => total + countAssignedInCell(grid, conflict.id),
-        0,
-      );
+      const assigned = countAssigned(weekTurns, cell.conflicts);
 
       const replace = () =>
         openTimeSlotCell.mutate({ dto, replacedSlots: cell.conflicts });
@@ -216,7 +195,7 @@ export function useSlotActions(
         onTertiary: canMove ? replace : undefined,
       });
     },
-    [grid, openTimeSlotCell, updateTimeSlot, weekSlots],
+    [openTimeSlotCell, updateTimeSlot, weekSlots, weekTurns],
   );
 
   const removeRow = useCallback(
@@ -243,7 +222,7 @@ export function useSlotActions(
                 value: formatDayList(days),
               },
             ]}
-            impact={buildImpact(countAssignedInRow(grid, startTime, endTime))}
+            impact={buildImpact(countAssigned(weekTurns, rowSlots))}
             note={isSingleDay ? undefined : SINGLE_DAY_NOTE}
           />
         ),
@@ -252,7 +231,7 @@ export function useSlotActions(
           deleteTimeSlot.mutate({ startTime, endTime, weekSlots }),
       });
     },
-    [deleteTimeSlot, grid, weekSlots],
+    [deleteTimeSlot, weekSlots, weekTurns],
   );
 
   const removeClosure = useCallback(
