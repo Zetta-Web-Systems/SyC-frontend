@@ -8,8 +8,9 @@ import {
   type ScheduleConfirmRow,
 } from "../components/common";
 import { formatDayList } from "../lib/scheduleDays";
+import { describeSlotRanges } from "../lib/scheduleOverlap";
 import { getSlotsInRow } from "../lib/scheduleRows";
-import { formatSlotRange, formatSlotTime } from "../lib/slotStatus";
+import { formatSlotRange } from "../lib/slotStatus";
 import type {
   CalendarClosure,
   ScheduleGrid,
@@ -22,6 +23,7 @@ import { useDeleteOverrideMutation } from "./mutations/useDeleteOverrideMutation
 import { useDeleteTimeSlotCellMutation } from "./mutations/useDeleteTimeSlotCellMutation";
 import { useDeleteTimeSlotMutation } from "./mutations/useDeleteTimeSlotMutation";
 import { useOpenTimeSlotCellMutation } from "./mutations/useOpenTimeSlotCellMutation";
+import { useUpdateTimeSlotMutation } from "./mutations/useUpdateTimeSlotMutation";
 import type { ScheduleModalsState } from "./ui/useScheduleModals";
 
 export interface SlotActions {
@@ -29,7 +31,7 @@ export interface SlotActions {
   block: (slot: TimeSlot, date: string) => void;
   removeCell: (slot: TimeSlot) => void;
   open: (cell: UnavailableCellData) => void;
-  removeRow: (startTime: string) => void;
+  removeRow: (startTime: string, endTime: string) => void;
   removeClosure: (closure: CalendarClosure) => void;
   removeOverride: (override: TimeSlotOverride, slot: TimeSlot) => void;
 }
@@ -62,6 +64,12 @@ function countAssignedInCell(
   return cell?.kind === "slot" ? cell.roster.length : 0;
 }
 
+function describeRoster(assignedCount: number): string {
+  if (assignedCount === 0) return "No hay alumnos anotados";
+
+  return `${assignedCount} ${assignedCount === 1 ? "alumno anotado" : "alumnos anotados"} en ese horario`;
+}
+
 function buildImpact(assignedCount: number): ScheduleConfirmImpact {
   if (assignedCount === 0) {
     return { tone: "neutral", text: "No hay alumnos anotados" };
@@ -86,6 +94,7 @@ export function useSlotActions(
 ): SlotActions {
   const deleteTimeSlotCell = useDeleteTimeSlotCellMutation();
   const openTimeSlotCell = useOpenTimeSlotCellMutation();
+  const updateTimeSlot = useUpdateTimeSlotMutation();
   const deleteTimeSlot = useDeleteTimeSlotMutation();
   const deleteClosure = useDeleteClosureMutation();
   const deleteOverride = useDeleteOverrideMutation();
@@ -131,25 +140,82 @@ export function useSlotActions(
 
   const open = useCallback(
     (cell: UnavailableCellData) => {
-      openTimeSlotCell.mutate({
+      const dto = {
         dayOfWeek: cell.dayOfWeek,
         startTime: cell.startTime,
         endTime: cell.endTime,
         capacity: cell.capacity,
+      };
+
+      if (cell.conflicts.length === 0) {
+        openTimeSlotCell.mutate({ dto });
+        return;
+      }
+
+      const canMove = cell.conflicts.length === 1;
+      const assigned = cell.conflicts.reduce(
+        (total, conflict) => total + countAssignedInCell(grid, conflict.id),
+        0,
+      );
+
+      const replace = () =>
+        openTimeSlotCell.mutate({ dto, replacedSlots: cell.conflicts });
+
+      const move = () =>
+        updateTimeSlot.mutate({
+          slot: cell.conflicts[0],
+          dto: { startTime: cell.startTime, endTime: cell.endTime },
+          scope: "cell",
+          weekSlots,
+        });
+
+      confirm({
+        intent: canMove ? "warning" : "danger",
+        size: "md",
+        title: "Ese día ya tiene otro horario",
+        description: canMove
+          ? "Dos horarios no se pueden pisar el mismo día. Podés mover el que está o borrarlo y abrir este vacío."
+          : "Dos horarios no se pueden pisar el mismo día. Para abrir este hay que borrar los que están.",
+        body: (
+          <ScheduleConfirmSummary
+            rows={[
+              {
+                label: "Querés abrir",
+                value: `${SCHEDULE_DAY_LABELS[cell.dayOfWeek]} ${formatSlotRange(cell.startTime, cell.endTime)}`,
+              },
+              {
+                label: "Se pisa con",
+                value: describeSlotRanges(cell.conflicts),
+              },
+            ]}
+            impact={
+              canMove
+                ? { tone: "neutral", text: describeRoster(assigned) }
+                : buildImpact(assigned)
+            }
+            note={
+              canMove
+                ? "Moverlo conserva a los alumnos anotados. Borrarlo los deja sin turno y el horario nuevo arranca vacío."
+                : "Los horarios que se pisan se borran y el nuevo arranca vacío."
+            }
+          />
+        ),
+        confirmLabel: canMove ? "Mover ese horario acá" : "Borrar y abrir",
+        tertiaryLabel: canMove ? "Borrar y abrir vacío" : undefined,
+        onConfirm: canMove ? move : replace,
+        onTertiary: canMove ? replace : undefined,
       });
     },
-    [openTimeSlotCell],
+    [grid, openTimeSlotCell, updateTimeSlot, weekSlots],
   );
 
   const removeRow = useCallback(
-    (startTime: string) => {
-      const rowSlots = getSlotsInRow(weekSlots, startTime);
+    (startTime: string, endTime: string) => {
+      const rowSlots = getSlotsInRow(weekSlots, startTime, endTime);
       const days = rowSlots.map((slot) => slot.dayOfWeek);
       const isSingleDay = days.length === 1;
 
-      const timeLabel = rowSlots.length
-        ? formatSlotRange(startTime, rowSlots[0].endTime)
-        : formatSlotTime(startTime);
+      const timeLabel = formatSlotRange(startTime, endTime);
 
       confirm({
         intent: "danger",
@@ -172,7 +238,8 @@ export function useSlotActions(
           />
         ),
         confirmLabel: "Eliminar",
-        onConfirm: () => deleteTimeSlot.mutate({ startTime, weekSlots }),
+        onConfirm: () =>
+          deleteTimeSlot.mutate({ startTime, endTime, weekSlots }),
       });
     },
     [deleteTimeSlot, grid, weekSlots],

@@ -10,7 +10,11 @@ import {
 import { useUpdateTimeSlotMutation } from "../../hooks/mutations/useUpdateTimeSlotMutation";
 import { formatDayList } from "../../lib/scheduleDays";
 import { getSlotsInRow } from "../../lib/scheduleRows";
-import { formatSlotRange, normalizeTime } from "../../lib/slotStatus";
+import {
+  formatSlotDuration,
+  formatSlotRange,
+  normalizeTime,
+} from "../../lib/slotStatus";
 import {
   editTimeSlotSchema,
   type EditTimeSlotSchema,
@@ -72,7 +76,7 @@ export function EditTimeSlotModal({
   const mutation = useUpdateTimeSlotMutation();
 
   const dayLabel = SCHEDULE_DAY_LABELS[slot.dayOfWeek];
-  const rowDays = getSlotsInRow(weekSlots, slot.startTime).map(
+  const rowDays = getSlotsInRow(weekSlots, slot.startTime, slot.endTime).map(
     (rowSlot) => rowSlot.dayOfWeek,
   );
   const canEditRow = rowDays.length > 1;
@@ -101,6 +105,9 @@ export function EditTimeSlotModal({
           <span className="text-neutral-500">Horario</span>
           <span className="font-medium text-neutral-900">
             {dayLabel}, {formatSlotRange(slot.startTime, slot.endTime)}
+            <span className="ml-1.5 font-normal text-neutral-400">
+              {formatSlotDuration(slot.startTime, slot.endTime)}
+            </span>
           </span>
         </div>
 

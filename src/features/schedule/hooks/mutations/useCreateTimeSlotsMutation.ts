@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@shared/stores/toast.store";
 import { registerTimeSlot } from "../../services/schedule.api";
 import { SCHEDULE_DAYS, SCHEDULE_KEYS } from "../../constants";
+import { describeDaySelection } from "../../lib/scheduleDays";
 import {
   describeSlotDays,
   findOverlappingSlots,
@@ -19,18 +20,23 @@ interface CreateTimeSlotsVariables {
   weekSlots: TimeSlot[];
 }
 
+const FULL_WEEK_NOTE =
+  " Los días que no correspondan se pueden eliminar desde el menú de cada celda.";
+
 export function useCreateTimeSlotsMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ dto, weekSlots }: CreateTimeSlotsVariables) => {
       const startTime = normalizeTime(dto.startTime);
-      const endTime = getSlotEndTime(startTime);
+      const endTime = dto.endTime
+        ? normalizeTime(dto.endTime)
+        : getSlotEndTime(startTime);
 
       const conflicts = findOverlappingSlots(weekSlots, {
         startTime,
         endTime,
-        days: SCHEDULE_DAYS,
+        days: dto.days,
       });
 
       if (conflicts.length > 0) {
@@ -40,7 +46,7 @@ export function useCreateTimeSlotsMutation() {
       }
 
       return runRowOperation(
-        SCHEDULE_DAYS.map((dayOfWeek) => ({ dayOfWeek })),
+        dto.days.map((dayOfWeek) => ({ dayOfWeek })),
         ({ dayOfWeek }) =>
           registerTimeSlot({
             dayOfWeek,
@@ -51,9 +57,11 @@ export function useCreateTimeSlotsMutation() {
         { done: "creado", action: "crear" },
       );
     },
-    onSuccess: (slots) => {
+    onSuccess: (slots, { dto }) => {
+      const isFullWeek = dto.days.length === SCHEDULE_DAYS.length;
+
       toast.success("Horario agregado", {
-        description: `El horario de ${formatSlotRange(slots[0].startTime, slots[0].endTime)} fue agregado correctamente de lunes a viernes. Los días que no correspondan se pueden eliminar desde el menú de cada celda.`,
+        description: `El horario de ${formatSlotRange(slots[0].startTime, slots[0].endTime)} fue agregado correctamente ${describeDaySelection(dto.days)}.${isFullWeek ? FULL_WEEK_NOTE : ""}`,
       });
     },
     // INFO: La fila puede quedar a medias, así que se refresca falle o no.

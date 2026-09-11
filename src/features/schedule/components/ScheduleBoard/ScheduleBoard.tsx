@@ -185,7 +185,7 @@ export function ScheduleBoard({
             const rowDays = getRowDays(row);
 
             return (
-              <Fragment key={row.startTime}>
+              <Fragment key={`${row.startTime}|${row.endTime}`}>
                 {startsShift && (
                   <ScheduleShiftRow
                     shift={row.shift}

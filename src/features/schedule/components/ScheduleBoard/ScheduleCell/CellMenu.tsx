@@ -160,7 +160,9 @@ function CellMenuItems({
           icon={<Trash2 />}
           variant="danger"
           description={everyDay}
-          onClick={() => run(() => actions.removeRow(cell.startTime))}
+          onClick={() =>
+            run(() => actions.removeRow(cell.startTime, cell.endTime))
+          }
         >
           Eliminar el horario
         </PopoverItem>
@@ -179,7 +181,9 @@ function CellMenuItems({
             icon={<Trash2 />}
             variant="danger"
             description={formatDayList(rowDays)}
-            onClick={() => run(() => actions.removeRow(cell.startTime))}
+            onClick={() =>
+              run(() => actions.removeRow(cell.startTime, cell.endTime))
+            }
           >
             Eliminar toda la fila
           </PopoverItem>

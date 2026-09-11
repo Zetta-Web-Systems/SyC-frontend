@@ -66,6 +66,7 @@ interface BaseCell {
   date: string;
   dayOfWeek: ScheduleDay;
   startTime: string;
+  endTime: string;
 }
 
 export interface SlotCellData extends BaseCell {
@@ -94,9 +95,9 @@ export interface BlockedCellData extends BaseCell {
 
 export interface UnavailableCellData extends BaseCell {
   kind: "unavailable";
-  endTime: string;
   capacity: number;
   canOpen: boolean;
+  conflicts: TimeSlot[];
 }
 
 export type ScheduleCellData =
@@ -135,7 +136,9 @@ export interface SetTurnHoldDto {
 
 export interface CreateTimeSlotDto {
   startTime: string;
+  endTime?: string;
   capacity: number;
+  days: ScheduleDay[];
 }
 
 export interface RegisterTimeSlotDto {

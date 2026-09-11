@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@shared/stores/toast.store";
 import { updateTimeSlot } from "../../services/schedule.api";
 import { SCHEDULE_KEYS } from "../../constants";
+import { describeDaySelection } from "../../lib/scheduleDays";
 import {
   describeSlotDays,
   findOverlappingSlots,
@@ -27,7 +28,7 @@ export function useUpdateTimeSlotMutation() {
     mutationFn: ({ slot, dto, scope, weekSlots }: UpdateTimeSlotVariables) => {
       const rowMates =
         scope === "row"
-          ? getSlotsInRow(weekSlots, slot.startTime).filter(
+          ? getSlotsInRow(weekSlots, slot.startTime, slot.endTime).filter(
               (rowMate) => rowMate.id !== slot.id,
             )
           : [];
@@ -61,11 +62,15 @@ export function useUpdateTimeSlotMutation() {
         { done: "actualizado", action: "actualizar" },
       );
     },
-    onSuccess: (_data, { scope }) => {
+    onSuccess: (_data, { slot, scope, weekSlots }) => {
+      const days = getSlotsInRow(weekSlots, slot.startTime, slot.endTime).map(
+        (rowMate) => rowMate.dayOfWeek,
+      );
+
       toast.success("Horario actualizado", {
         description:
           scope === "row"
-            ? "El horario fue actualizado correctamente en toda la semana."
+            ? `El horario fue actualizado correctamente ${describeDaySelection(days)}.`
             : "El horario fue actualizado correctamente para ese día.",
       });
     },
