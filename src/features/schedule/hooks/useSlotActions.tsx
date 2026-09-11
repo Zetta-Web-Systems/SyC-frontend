@@ -42,8 +42,11 @@ const SINGLE_DAY_NOTE =
 function countAssignedInRow(
   grid: ScheduleGrid | null,
   startTime: string,
+  endTime: string,
 ): number {
-  const row = grid?.rows.find((item) => item.startTime === startTime);
+  const row = grid?.rows.find(
+    (item) => item.startTime === startTime && item.endTime === endTime,
+  );
   if (!row) return 0;
 
   return row.cells.reduce(
@@ -240,7 +243,7 @@ export function useSlotActions(
                 value: formatDayList(days),
               },
             ]}
-            impact={buildImpact(countAssignedInRow(grid, startTime))}
+            impact={buildImpact(countAssignedInRow(grid, startTime, endTime))}
             note={isSingleDay ? undefined : SINGLE_DAY_NOTE}
           />
         ),
