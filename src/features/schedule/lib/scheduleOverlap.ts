@@ -1,7 +1,7 @@
 import type { ScheduleDay } from "../constants";
 import type { TimeSlot } from "../types";
 import { formatDayList } from "./scheduleDays";
-import { normalizeTime } from "./slotStatus";
+import { formatSlotRange, normalizeTime } from "./slotStatus";
 
 interface OverlapQuery {
   startTime: string;
@@ -44,4 +44,14 @@ export function findOverlappingSlots(
 
 export function describeSlotDays(slots: TimeSlot[]): string {
   return formatDayList(slots.map((slot) => slot.dayOfWeek));
+}
+
+export function describeSlotRanges(slots: TimeSlot[]): string {
+  const ranges = slots.map((slot) =>
+    formatSlotRange(slot.startTime, slot.endTime),
+  );
+
+  if (ranges.length <= 1) return ranges.join("");
+
+  return `${ranges.slice(0, -1).join(", ")} y ${ranges.at(-1)}`;
 }

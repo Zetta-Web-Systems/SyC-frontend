@@ -15,6 +15,11 @@ function parseTime(startTime: string): { hours: number; minutes: number } {
   return { hours, minutes };
 }
 
+function toMinutes(time: string): number {
+  const { hours, minutes } = parseTime(time);
+  return hours * MINUTES_PER_HOUR + minutes;
+}
+
 export function normalizeTime(time: string): string {
   const { hours, minutes } = parseTime(time);
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
@@ -32,13 +37,35 @@ export function getShift(startTime: string): Shift {
   return hours < AFTERNOON_START_HOUR ? SHIFT.MORNING : SHIFT.AFTERNOON;
 }
 
-export function getSlotEndTime(startTime: string): string {
-  const { hours, minutes } = parseTime(startTime);
-  const total = hours * MINUTES_PER_HOUR + minutes + SLOT_DURATION_MINUTES;
-  const endHours = Math.floor(total / MINUTES_PER_HOUR) % HOURS_PER_DAY;
-  const endMinutes = total % MINUTES_PER_HOUR;
+export function addMinutesToTime(time: string, minutes: number): string {
+  const total = toMinutes(time) + minutes;
+  const hours = Math.floor(total / MINUTES_PER_HOUR) % HOURS_PER_DAY;
 
-  return `${String(endHours).padStart(2, "0")}:${String(endMinutes).padStart(2, "0")}`;
+  return `${String(hours).padStart(2, "0")}:${String(total % MINUTES_PER_HOUR).padStart(2, "0")}`;
+}
+
+export function getSlotEndTime(startTime: string): string {
+  return addMinutesToTime(startTime, SLOT_DURATION_MINUTES);
+}
+
+export function getSlotDurationMinutes(
+  startTime: string,
+  endTime: string,
+): number {
+  return toMinutes(endTime) - toMinutes(startTime);
+}
+
+export function formatSlotDuration(startTime: string, endTime: string): string {
+  const minutes = getSlotDurationMinutes(startTime, endTime);
+  if (minutes <= 0) return "";
+
+  const hours = Math.floor(minutes / MINUTES_PER_HOUR);
+  const rest = minutes % MINUTES_PER_HOUR;
+
+  if (hours === 0) return `${rest} min`;
+  if (rest === 0) return `${hours} h`;
+
+  return `${hours} h ${rest} min`;
 }
 
 export function formatSlotTime(time: string): string {

@@ -11,10 +11,16 @@ interface RowOperationVerbs {
 export function getSlotsInRow(
   slots: TimeSlot[],
   startTime: string,
+  endTime: string,
 ): TimeSlot[] {
-  const normalized = normalizeTime(startTime);
+  const start = normalizeTime(startTime);
+  const end = normalizeTime(endTime);
 
-  return slots.filter((slot) => normalizeTime(slot.startTime) === normalized);
+  return slots.filter(
+    (slot) =>
+      normalizeTime(slot.startTime) === start &&
+      normalizeTime(slot.endTime) === end,
+  );
 }
 
 function buildFailureMessage(
