@@ -135,6 +135,13 @@ export async function createClosure(
     "/schedule/closure",
     dto,
   );
+
+  if (data.length === 0) {
+    throw new Error(
+      "No se registró ningún cierre para esas fechas. Puede que ya estuvieran cerradas.",
+    );
+  }
+
   const first = data[0];
   const last = data[data.length - 1];
 

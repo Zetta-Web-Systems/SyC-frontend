@@ -2,13 +2,18 @@ import { Fragment, useMemo } from "react";
 import { CalendarOff, ChevronDown, Plus } from "lucide-react";
 import { Card } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
-import { formatDayMonth } from "@shared/utils/date.utils";
+import { formatDate, formatDayMonth } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS, SHIFT_LABELS, type Shift } from "../../constants";
 import type { SlotActions } from "../../hooks/useSlotActions";
 import type { TurnActions } from "../../hooks/useTurnActions";
 import { getSlotsInRow } from "../../lib/scheduleRows";
 import type { ScheduleSearchMatches } from "../../lib/scheduleSearch";
-import type { ScheduleDayInfo, ScheduleGrid, TimeSlot } from "../../types";
+import type {
+  CalendarClosure,
+  ScheduleDayInfo,
+  ScheduleGrid,
+  TimeSlot,
+} from "../../types";
 import { ScheduleCell } from "./ScheduleCell/ScheduleCell";
 import { ScheduleTimeLabel } from "./ScheduleRow/ScheduleTimeLabel";
 
@@ -16,19 +21,27 @@ interface ScheduleDayHeaderProps {
   day: ScheduleDayInfo;
   isFirst: boolean;
   onCloseDay: (date: string) => void;
+  onRemoveClosure: (closure: CalendarClosure) => void;
 }
 
 function ScheduleDayHeader({
   day,
   isFirst,
   onCloseDay,
+  onRemoveClosure,
 }: ScheduleDayHeaderProps) {
   const { closure } = day;
+  const dayLabel = `${SCHEDULE_DAY_LABELS[day.dayOfWeek]} ${formatDate(day.date)}`;
 
   return (
     <button
       type="button"
-      onClick={() => onCloseDay(day.date)}
+      onClick={() =>
+        closure ? onRemoveClosure(closure) : onCloseDay(day.date)
+      }
+      aria-label={
+        closure ? `Quitar el cierre del ${dayLabel}` : `Cerrar el ${dayLabel}`
+      }
       title={closure ? `Cerrado: ${closure.type}` : "Cerrar este día completo"}
       className={cn(
         "flex cursor-pointer flex-col items-center gap-0.5 bg-primary-500 px-1.5 py-2.5 text-center transition-colors hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none focus-visible:-outline-offset-2",
@@ -164,6 +177,7 @@ export function ScheduleBoard({
               day={day}
               isFirst={index === 0}
               onCloseDay={onCloseDay}
+              onRemoveClosure={slotActions.removeClosure}
             />
           ))}
 

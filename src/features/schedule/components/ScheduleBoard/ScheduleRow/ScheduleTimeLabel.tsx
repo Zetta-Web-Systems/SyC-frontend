@@ -75,11 +75,7 @@ export function ScheduleTimeLabel({
       >
         <PopoverHeader
           title={timeLabel}
-          description={
-            rowDays.length > 0
-              ? `Abierto ${formatDayList(rowDays)}`
-              : "Sin días abiertos esta semana"
-          }
+          description={`Abierto ${formatDayList(rowDays)}`}
         />
 
         <PopoverSeparator />
