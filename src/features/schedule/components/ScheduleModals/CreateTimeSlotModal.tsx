@@ -156,7 +156,7 @@ export function CreateTimeSlotModal({
                 {selectedConflicts.length > 0 && (
                   <p role="status" className="-mt-2 text-xs text-error">
                     Los {formatDayList(selectedConflicts).toLowerCase()} ya
-                    tienen un horario que se pisa con ese rango. Sacá esos días
+                    tienen un horario que se pisa con ese rango. Quita esos días
                     o cambiá la hora.
                   </p>
                 )}
