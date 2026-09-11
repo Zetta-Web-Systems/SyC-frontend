@@ -1,4 +1,4 @@
-import { DEFAULT_SLOT_CAPACITY } from "../constants";
+import { DEFAULT_SLOT_CAPACITY, type ScheduleDay } from "../constants";
 import type {
   CalendarClosure,
   MemberTurn,
@@ -99,14 +99,25 @@ function buildCell(
   };
 }
 
-export function buildScheduleGrid(week: ScheduleWeek): ScheduleGrid {
-  const days = [...week.days].sort((a, b) => a.date.localeCompare(b.date));
+export function buildScheduleGrid(
+  week: ScheduleWeek,
+  visibleDays: readonly ScheduleDay[],
+): ScheduleGrid {
+  // INFO: Los horarios se filtran junto con los días. Si no, uno de un día oculto
+  // (un horario sólo del sábado con el finde apagado) arma igual su fila, vacía de punta a punta.
+  const isVisible = new Set(visibleDays);
 
-  const slots = week.timeSlots.map((slot) => ({
-    ...slot,
-    startTime: normalizeTime(slot.startTime),
-    endTime: normalizeTime(slot.endTime),
-  }));
+  const days = week.days
+    .filter((day) => isVisible.has(day.dayOfWeek))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  const slots = week.timeSlots
+    .filter((slot) => isVisible.has(slot.dayOfWeek))
+    .map((slot) => ({
+      ...slot,
+      startTime: normalizeTime(slot.startTime),
+      endTime: normalizeTime(slot.endTime),
+    }));
 
   const slotsByKey = new Map<string, TimeSlot>();
   for (const slot of slots) {

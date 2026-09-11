@@ -67,17 +67,10 @@ export default function SchedulePage() {
     [isWeekendVisible],
   );
 
-  const grid = useMemo(() => {
-    if (!data) return null;
-    if (isWeekendVisible) return buildScheduleGrid(data);
-
-    return buildScheduleGrid({
-      ...data,
-      days: data.days.filter(
-        (day) => !SCHEDULE_WEEKEND_DAYS.includes(day.dayOfWeek),
-      ),
-    });
-  }, [data, isWeekendVisible]);
+  const grid = useMemo(
+    () => (data ? buildScheduleGrid(data, visibleDays) : null),
+    [data, visibleDays],
+  );
 
   // Sin filtrar por fin de semana: las acciones de fila alcanzan a todos los días.
   const weekSlots = useMemo(() => data?.timeSlots ?? [], [data]);
