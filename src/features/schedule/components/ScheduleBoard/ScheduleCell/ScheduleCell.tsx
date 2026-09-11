@@ -9,7 +9,6 @@ import {
   OPEN_CELL_TONE,
   SCHEDULE_DAY_LABELS,
   SLOT_TAG_COLORS,
-  type ScheduleDay,
 } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
 import type { TurnActions } from "../../../hooks/useTurnActions";
@@ -151,7 +150,6 @@ function BlockCell({ cell }: BlockCellProps) {
 
 interface ScheduleCellProps {
   cell: ScheduleCellData;
-  rowDays: readonly ScheduleDay[];
   isExpanded: boolean;
   onToggle: (slotId: string) => void;
   actions: TurnActions;
@@ -162,7 +160,6 @@ interface ScheduleCellProps {
 
 export function ScheduleCell({
   cell,
-  rowDays,
   isExpanded,
   onToggle,
   actions,
@@ -176,7 +173,6 @@ export function ScheduleCell({
     return (
       <SlotCell
         cell={cell}
-        rowDays={rowDays}
         label={label}
         isExpanded={isExpanded}
         onToggle={onToggle}
@@ -197,12 +193,7 @@ export function ScheduleCell({
           reason={`Ese horario está reservado para ${cell.slot.tag ?? "otra actividad"}.`}
         >
           <BlockCell cell={cell} />
-          <CellMenu
-            cell={cell}
-            rowDays={rowDays}
-            actions={slotActions}
-            onColor
-          />
+          <CellMenu cell={cell} actions={slotActions} onColor />
         </RejectDropZone>
       );
 
@@ -222,7 +213,7 @@ export function ScheduleCell({
               </Badge>
             }
           />
-          <CellMenu cell={cell} rowDays={rowDays} actions={slotActions} />
+          <CellMenu cell={cell} actions={slotActions} />
         </RejectDropZone>
       );
 
@@ -244,7 +235,7 @@ export function ScheduleCell({
               </Badge>
             }
           />
-          <CellMenu cell={cell} rowDays={rowDays} actions={slotActions} />
+          <CellMenu cell={cell} actions={slotActions} />
         </RejectDropZone>
       );
 

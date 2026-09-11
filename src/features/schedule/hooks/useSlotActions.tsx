@@ -111,13 +111,16 @@ export function useSlotActions(
   const removeCell = useCallback(
     (slot: TimeSlot) => {
       const day = SCHEDULE_DAY_LABELS[slot.dayOfWeek].toLowerCase();
+      const isLastDay =
+        getSlotsInRow(weekSlots, slot.startTime, slot.endTime).length <= 1;
 
       confirm({
         intent: "danger",
         size: "md",
         title: "Eliminar este día",
-        description:
-          "Se da de baja esa celda. El resto de la semana no se toca.",
+        description: isLastDay
+          ? "Es el único día con esa hora, así que la fila desaparece del turnero."
+          : "Se da de baja esa celda. El resto de la semana no se toca.",
         body: (
           <ScheduleConfirmSummary
             rows={[
@@ -128,14 +131,18 @@ export function useSlotActions(
               { label: "Día", value: `Cada ${day}` },
             ]}
             impact={buildImpact(countAssignedInCell(grid, slot.id))}
-            note="Se puede volver a abrir desde la celda vacía, pero queda sin alumnos."
+            note={
+              isLastDay
+                ? 'Para volver a tenerlo hay que crearlo desde "Agregar horario".'
+                : "Se puede volver a abrir desde la celda vacía, pero queda sin alumnos."
+            }
           />
         ),
         confirmLabel: "Eliminar",
         onConfirm: () => deleteTimeSlotCell.mutate({ timeSlotId: slot.id }),
       });
     },
-    [deleteTimeSlotCell, grid],
+    [deleteTimeSlotCell, grid, weekSlots],
   );
 
   const open = useCallback(

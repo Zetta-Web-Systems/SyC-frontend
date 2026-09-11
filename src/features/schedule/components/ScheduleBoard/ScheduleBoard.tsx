@@ -8,9 +8,9 @@ import type { SlotActions } from "../../hooks/useSlotActions";
 import type { TurnActions } from "../../hooks/useTurnActions";
 import { getRowDays } from "../../lib/scheduleRows";
 import type { ScheduleSearchMatches } from "../../lib/scheduleSearch";
-import { formatSlotRange } from "../../lib/slotStatus";
 import type { ScheduleDayInfo, ScheduleGrid } from "../../types";
 import { ScheduleCell } from "./ScheduleCell/ScheduleCell";
+import { ScheduleTimeLabel } from "./ScheduleRow/ScheduleTimeLabel";
 
 interface ScheduleDayHeaderProps {
   day: ScheduleDayInfo;
@@ -80,19 +80,6 @@ function ScheduleShiftRow({
         </span>
       )}
     </button>
-  );
-}
-
-interface ScheduleTimeLabelProps {
-  startTime: string;
-  endTime: string;
-}
-
-function ScheduleTimeLabel({ startTime, endTime }: ScheduleTimeLabelProps) {
-  return (
-    <div className="sticky left-0 z-30 flex items-center justify-center border-t border-neutral-100 bg-white px-1 py-2 text-center text-[13px] font-bold text-neutral-500">
-      {formatSlotRange(startTime, endTime)}
-    </div>
   );
 }
 
@@ -200,6 +187,8 @@ export function ScheduleBoard({
                     <ScheduleTimeLabel
                       startTime={row.startTime}
                       endTime={row.endTime}
+                      rowDays={rowDays}
+                      actions={slotActions}
                     />
 
                     {row.cells.map((cell) => (
@@ -209,7 +198,6 @@ export function ScheduleBoard({
                       >
                         <ScheduleCell
                           cell={cell}
-                          rowDays={rowDays}
                           isExpanded={
                             cell.kind === "slot" &&
                             expandedIds.has(cell.slot.id)

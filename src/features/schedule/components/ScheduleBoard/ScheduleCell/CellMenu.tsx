@@ -4,7 +4,6 @@ import {
   CalendarOff,
   EllipsisVertical,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import {
   AnchoredPopover,
@@ -16,9 +15,8 @@ import {
 } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import { formatDayMonth } from "@shared/utils/date.utils";
-import { SCHEDULE_DAY_LABELS, type ScheduleDay } from "../../../constants";
+import { SCHEDULE_DAY_LABELS } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
-import { formatDayList } from "../../../lib/scheduleDays";
 import { formatSlotTime } from "../../../lib/slotStatus";
 import type { ScheduleCellData } from "../../../types";
 
@@ -27,7 +25,7 @@ const MENU_WIDTH = 252;
 const MENU_HEIGHT = {
   closed: 152,
   blocked: 232,
-  slot: 316,
+  slot: 260,
 } as const;
 
 const EDIT_DESCRIPTION = "Hora, cupo y etiqueta";
@@ -40,17 +38,11 @@ function estimateMenuHeight(cell: ScheduleCellData): number {
 
 interface CellMenuItemsProps {
   cell: ScheduleCellData;
-  rowDays: readonly ScheduleDay[];
   actions: SlotActions;
   onClose: () => void;
 }
 
-function CellMenuItems({
-  cell,
-  rowDays,
-  actions,
-  onClose,
-}: CellMenuItemsProps) {
+function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
   function run(action: () => void) {
     onClose();
     action();
@@ -117,7 +109,6 @@ function CellMenuItems({
 
   const dayLabel = SCHEDULE_DAY_LABELS[cell.dayOfWeek];
   const everyDay = `Cada ${dayLabel.toLowerCase()}`;
-  const isSingleDayRow = rowDays.length <= 1;
 
   const headerDetail =
     cell.kind === "slot"
@@ -155,57 +146,25 @@ function CellMenuItems({
 
       <PopoverSeparator />
 
-      {isSingleDayRow ? (
-        <PopoverItem
-          icon={<Trash2 />}
-          variant="danger"
-          description={everyDay}
-          onClick={() =>
-            run(() => actions.removeRow(cell.startTime, cell.endTime))
-          }
-        >
-          Eliminar el horario
-        </PopoverItem>
-      ) : (
-        <>
-          <PopoverItem
-            icon={<CalendarMinus />}
-            variant="danger"
-            description={everyDay}
-            onClick={() => run(() => actions.removeCell(cell.slot))}
-          >
-            Eliminar este día
-          </PopoverItem>
-
-          <PopoverItem
-            icon={<Trash2 />}
-            variant="danger"
-            description={formatDayList(rowDays)}
-            onClick={() =>
-              run(() => actions.removeRow(cell.startTime, cell.endTime))
-            }
-          >
-            Eliminar toda la fila
-          </PopoverItem>
-        </>
-      )}
+      <PopoverItem
+        icon={<CalendarMinus />}
+        variant="danger"
+        description={everyDay}
+        onClick={() => run(() => actions.removeCell(cell.slot))}
+      >
+        Eliminar este día
+      </PopoverItem>
     </>
   );
 }
 
 interface CellMenuProps {
   cell: ScheduleCellData;
-  rowDays: readonly ScheduleDay[];
   actions: SlotActions;
   onColor?: boolean;
 }
 
-export function CellMenu({
-  cell,
-  rowDays,
-  actions,
-  onColor = false,
-}: CellMenuProps) {
+export function CellMenu({ cell, actions, onColor = false }: CellMenuProps) {
   const { anchorRef, position, isOpen, toggle, close } =
     useAnchoredPopover<HTMLButtonElement>({
       width: MENU_WIDTH,
@@ -234,12 +193,7 @@ export function CellMenu({
         anchorRef={anchorRef}
         onClose={close}
       >
-        <CellMenuItems
-          cell={cell}
-          rowDays={rowDays}
-          actions={actions}
-          onClose={close}
-        />
+        <CellMenuItems cell={cell} actions={actions} onClose={close} />
       </AnchoredPopover>
     </>
   );
