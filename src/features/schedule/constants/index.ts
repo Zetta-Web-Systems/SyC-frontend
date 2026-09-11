@@ -33,6 +33,16 @@ export const SCHEDULE_DAY_LABELS: Record<ScheduleDay, string> = {
   [SCHEDULE_DAY.SUNDAY]: "Domingo",
 };
 
+export const SCHEDULE_DAY_SHORT_LABELS: Record<ScheduleDay, string> = {
+  [SCHEDULE_DAY.MONDAY]: "Lun",
+  [SCHEDULE_DAY.TUESDAY]: "Mar",
+  [SCHEDULE_DAY.WEDNESDAY]: "Mié",
+  [SCHEDULE_DAY.THURSDAY]: "Jue",
+  [SCHEDULE_DAY.FRIDAY]: "Vie",
+  [SCHEDULE_DAY.SATURDAY]: "Sáb",
+  [SCHEDULE_DAY.SUNDAY]: "Dom",
+};
+
 export const SHIFT = {
   MORNING: "morning",
   AFTERNOON: "afternoon",
@@ -104,6 +114,27 @@ export const SLOT_TAG_COLORS: Record<SlotTag, string> = {
 export const SLOT_TAG_TINT: Record<SlotTag, string> = {
   [SLOT_TAG.YOGA]: "bg-secondary-500/15 text-secondary-700",
   [SLOT_TAG.NIÑOS]: "bg-violet/15 text-violet",
+};
+
+export const OPEN_CELL_TONE = {
+  NEUTRAL: "neutral",
+  CONFLICT: "conflict",
+} as const;
+
+export type OpenCellTone = (typeof OPEN_CELL_TONE)[keyof typeof OPEN_CELL_TONE];
+
+export const OPEN_CELL_FRAME: Record<OpenCellTone, string> = {
+  [OPEN_CELL_TONE.NEUTRAL]:
+    "hover:border-solid hover:border-primary-300 hover:bg-primary-50/60",
+  [OPEN_CELL_TONE.CONFLICT]:
+    "hover:border-solid hover:border-warning/50 hover:bg-warning/10",
+};
+
+export const OPEN_CELL_ACTION: Record<OpenCellTone, string> = {
+  [OPEN_CELL_TONE.NEUTRAL]:
+    "text-neutral-400 hover:bg-white hover:text-primary-700 group-hover/cell:text-primary-700 group-hover/cell:ring-1 group-hover/cell:ring-primary-200",
+  [OPEN_CELL_TONE.CONFLICT]:
+    "text-warning/80 hover:bg-white hover:text-warning group-hover/cell:text-warning group-hover/cell:ring-1 group-hover/cell:ring-warning/30",
 };
 
 export const SCHEDULE_KEYS = {

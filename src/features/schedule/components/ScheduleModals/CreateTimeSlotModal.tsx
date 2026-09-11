@@ -4,19 +4,39 @@ import {
   DEFAULT_SLOT_CAPACITY,
   MAX_SLOT_CAPACITY,
   MIN_SLOT_CAPACITY,
+  SCHEDULE_DAYS,
+  TIME_PATTERN,
+  type ScheduleDay,
 } from "../../constants";
 import { useCreateTimeSlotsMutation } from "../../hooks/mutations/useCreateTimeSlotsMutation";
+import { describeDaySelection, formatDayList } from "../../lib/scheduleDays";
+import { findOverlappingSlots } from "../../lib/scheduleOverlap";
 import { formatSlotRange, getSlotEndTime } from "../../lib/slotStatus";
 import {
   createTimeSlotSchema,
   type CreateTimeSlotSchema,
 } from "../../schemas/createTimeSlot.schema";
 import type { TimeSlot } from "../../types";
+import { SlotDaysPicker } from "./SlotDaysPicker";
 
 interface CreateTimeSlotModalProps {
   open: boolean;
   onClose: () => void;
   weekSlots: TimeSlot[];
+}
+
+function getConflictingDays(
+  weekSlots: TimeSlot[],
+  startTime: string,
+): Set<ScheduleDay> {
+  if (!TIME_PATTERN.test(startTime)) return new Set();
+
+  const conflicts = findOverlappingSlots(weekSlots, {
+    startTime,
+    endTime: getSlotEndTime(startTime),
+  });
+
+  return new Set(conflicts.map((slot) => slot.dayOfWeek));
 }
 
 export function CreateTimeSlotModal({
@@ -29,7 +49,11 @@ export function CreateTimeSlotModal({
   function handleSubmit(data: CreateTimeSlotSchema) {
     mutation.mutate(
       {
-        dto: { startTime: data.startTime, capacity: data.capacity },
+        dto: {
+          startTime: data.startTime,
+          capacity: data.capacity,
+          days: data.days,
+        },
         weekSlots,
       },
       { onSuccess: () => onClose() },
@@ -45,11 +69,22 @@ export function CreateTimeSlotModal({
           defaultValues={{
             startTime: "",
             capacity: DEFAULT_SLOT_CAPACITY,
+            days: [...SCHEDULE_DAYS],
           }}
           className="flex flex-col gap-4"
         >
           {(form) => {
             const currentStartTime = form.watch("startTime");
+            const selectedDays = form.watch("days");
+
+            const isValidStartTime = TIME_PATTERN.test(currentStartTime);
+            const conflictingDays = getConflictingDays(
+              weekSlots,
+              currentStartTime,
+            );
+            const selectedConflicts = selectedDays.filter((day) =>
+              conflictingDays.has(day),
+            );
 
             return (
               <>
@@ -104,13 +139,34 @@ export function CreateTimeSlotModal({
                   </FormField>
                 </div>
 
+                <FormField<CreateTimeSlotSchema> name="days" label="Días">
+                  {(field) => (
+                    <SlotDaysPicker
+                      id={field.id}
+                      value={field.value}
+                      conflictingDays={conflictingDays}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      error={field.error}
+                      describedBy={field["aria-describedby"]}
+                    />
+                  )}
+                </FormField>
+
+                {selectedConflicts.length > 0 && (
+                  <p role="status" className="-mt-2 text-xs text-error">
+                    Los {formatDayList(selectedConflicts).toLowerCase()} ya
+                    tienen un horario que se pisa con ese rango. Sacá esos días
+                    o cambiá la hora.
+                  </p>
+                )}
+
                 <p className="-mt-2 text-xs text-neutral-400">
-                  El horario se agrega de lunes a viernes
-                  {currentStartTime
-                    ? `, de ${formatSlotRange(currentStartTime, getSlotEndTime(currentStartTime))}.`
-                    : ". Los turnos duran una hora, así que la hora de fin se calcula sola."}{" "}
-                  Después se cierran los días que no se usen y se les pone
-                  etiqueta desde cada celda.
+                  {isValidStartTime && selectedDays.length > 0
+                    ? `El horario se agrega ${describeDaySelection(selectedDays)}, de ${formatSlotRange(currentStartTime, getSlotEndTime(currentStartTime))}.`
+                    : "Los turnos duran una hora, así que la hora de fin se calcula sola."}{" "}
+                  Cada día se puede cerrar o etiquetar después desde el menú de
+                  su celda.
                 </p>
 
                 <FormError mutation={mutation} />

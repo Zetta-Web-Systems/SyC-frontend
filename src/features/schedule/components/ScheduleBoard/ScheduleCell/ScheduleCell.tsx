@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
-import { Plus } from "lucide-react";
+import { Plus, TriangleAlert } from "lucide-react";
 import { Badge, Button } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import {
+  OPEN_CELL_ACTION,
+  OPEN_CELL_FRAME,
+  OPEN_CELL_TONE,
   SCHEDULE_DAY_LABELS,
   SLOT_TAG_COLORS,
   type ScheduleDay,
@@ -89,17 +92,35 @@ function EmptyCell({ cell, label, onOpen }: EmptyCellProps) {
     );
   }
 
+  const hasConflicts = cell.conflicts.length > 0;
+  const tone = hasConflicts ? OPEN_CELL_TONE.CONFLICT : OPEN_CELL_TONE.NEUTRAL;
+
   return (
-    <div className="flex h-full min-h-16 items-center justify-center rounded-xl border border-dashed border-neutral-200 transition-colors hover:border-primary-300 hover:bg-primary-50/40">
+    <div
+      className={cn(
+        "flex h-full min-h-16 items-center justify-center rounded-xl border border-dashed border-neutral-200 bg-neutral-50/40 transition-all duration-150",
+        OPEN_CELL_FRAME[tone],
+      )}
+    >
       <Button
         variant="ghost"
         intent="neutral"
         size="sm"
         aria-label={`Abrir ${label}`}
+        title={
+          hasConflicts ? "Ese día ya tiene otro horario a esa hora" : undefined
+        }
         onClick={() => onOpen(cell)}
-        className="opacity-0 transition-opacity group-hover/cell:opacity-100 focus-visible:opacity-100"
+        className={cn(
+          "gap-1.5 px-2.5 opacity-70 duration-150 group-hover/cell:scale-105 group-hover/cell:bg-white group-hover/cell:opacity-100 group-hover/cell:shadow-sm focus-visible:opacity-100",
+          OPEN_CELL_ACTION[tone],
+        )}
       >
-        <Plus size={14} aria-hidden="true" />
+        {hasConflicts ? (
+          <TriangleAlert size={14} aria-hidden="true" />
+        ) : (
+          <Plus size={14} aria-hidden="true" />
+        )}
         Abrir
       </Button>
     </div>
@@ -232,7 +253,11 @@ export function ScheduleCell({
         <RejectDropZone
           cellId={cell.id}
           label={label}
-          reason="Ese día no tiene turno a esa hora."
+          reason={
+            cell.conflicts.length > 0
+              ? "Ese día tiene otro horario a esa hora."
+              : "Ese día no tiene turno a esa hora."
+          }
         >
           <EmptyCell cell={cell} label={label} onOpen={slotActions.open} />
         </RejectDropZone>
