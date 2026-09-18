@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Lock } from "lucide-react";
+import { Lock, RotateCcw } from "lucide-react";
 import { Badge, Card } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import {
@@ -49,9 +49,7 @@ export function ScheduleLegend() {
       ))}
 
       <LegendItem
-        mark={
-          <Lock size={14} aria-hidden="true" className="text-secondary-600" />
-        }
+        mark={<Lock size={14} aria-hidden="true" className="text-error" />}
       >
         Lugar guardado por la dueña
       </LegendItem>
@@ -65,6 +63,19 @@ export function ScheduleLegend() {
         }
       >
         Sobreturno autorizado
+      </LegendItem>
+
+      <LegendItem
+        mark={
+          <span
+            aria-hidden="true"
+            className="inline-flex h-4 w-7 items-center justify-center rounded-full border border-dashed border-secondary-300 bg-secondary-50 text-secondary-700"
+          >
+            <RotateCcw size={10} />
+          </span>
+        }
+      >
+        Turno de recuperación
       </LegendItem>
 
       <LegendItem

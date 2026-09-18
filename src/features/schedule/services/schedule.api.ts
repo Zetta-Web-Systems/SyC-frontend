@@ -14,6 +14,7 @@ import type {
   CalendarClosure,
   CreateClosureDto,
   CreateOverrideDto,
+  CreateRecoveryTurnDto,
   MemberTurnHistoryEntry,
   MoveTurnDto,
   RegisterTimeSlotDto,
@@ -99,6 +100,22 @@ export async function setTurnHold(
   );
 
   return data;
+}
+
+export async function addRecoveryTurn(
+  dto: CreateRecoveryTurnDto,
+): Promise<void> {
+  await api.post("/schedule/time-slot/add-recovery-turn", undefined, {
+    params: {
+      timeSlotId: dto.timeSlotId,
+      memberId: dto.memberId,
+      date: dto.date,
+    },
+  });
+}
+
+export async function deleteRecoveryTurn(recoveryId: string): Promise<void> {
+  await api.delete(`/schedule/time-slot/delete-recovery-turn/${recoveryId}`);
 }
 
 export async function registerTimeSlot(

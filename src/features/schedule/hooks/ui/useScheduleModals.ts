@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import type { TimeSlot } from "../../types";
+import type { RecoveryTurnMode, TimeSlot } from "../../types";
 
 export type ScheduleModal =
   | { kind: "createSlot" }
   | { kind: "editSlot"; slot: TimeSlot }
   | { kind: "closeDay"; date?: string }
-  | { kind: "blockSlot"; slot: TimeSlot; date: string };
+  | { kind: "blockSlot"; slot: TimeSlot; date: string }
+  | { kind: "recoveryTurn"; mode: RecoveryTurnMode };
 
 export interface ScheduleModalsState {
   modal: ScheduleModal | null;
@@ -13,6 +14,7 @@ export interface ScheduleModalsState {
   openEditSlot: (slot: TimeSlot) => void;
   openCloseDay: (date?: string) => void;
   openBlockSlot: (slot: TimeSlot, date: string) => void;
+  openRecoveryTurn: (mode: RecoveryTurnMode) => void;
   close: () => void;
 }
 
@@ -35,6 +37,10 @@ export function useScheduleModals(): ScheduleModalsState {
     setModal({ kind: "blockSlot", slot, date });
   }, []);
 
+  const openRecoveryTurn = useCallback((mode: RecoveryTurnMode) => {
+    setModal({ kind: "recoveryTurn", mode });
+  }, []);
+
   const close = useCallback(() => setModal(null), []);
 
   return useMemo(
@@ -44,8 +50,17 @@ export function useScheduleModals(): ScheduleModalsState {
       openEditSlot,
       openCloseDay,
       openBlockSlot,
+      openRecoveryTurn,
       close,
     }),
-    [modal, openCreateSlot, openEditSlot, openCloseDay, openBlockSlot, close],
+    [
+      modal,
+      openCreateSlot,
+      openEditSlot,
+      openCloseDay,
+      openBlockSlot,
+      openRecoveryTurn,
+      close,
+    ],
   );
 }

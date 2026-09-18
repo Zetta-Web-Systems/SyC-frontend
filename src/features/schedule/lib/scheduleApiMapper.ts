@@ -7,6 +7,7 @@ import {
 } from "../constants";
 import type {
   MemberTurn,
+  RecoveryTurn,
   ScheduleDayInfo,
   ScheduleWeek,
   TimeSlot,
@@ -21,13 +22,18 @@ interface RawMemberTurn {
   onHold: boolean;
 }
 
+interface RawRecoveryTurn {
+  id: string;
+  member: MemberSimple;
+}
+
 interface RawScheduleTimeSlot {
   id: string;
   startTime: string;
   endTime: string;
   capacity: number;
   memberTurns: RawMemberTurn[];
-  /** INFO (por si me olvido): Siempre true: el backend ya no manda los horarios dados de baja. */
+  recoveryTurns?: RawRecoveryTurn[];
   isActive: boolean;
   isClosed: boolean;
   closureReason?: string;
@@ -77,6 +83,7 @@ export function mapWeeklyScheduleResponse(
   const timeSlots: TimeSlot[] = [];
   const turns: MemberTurn[] = [];
   const overrides: TimeSlotOverride[] = [];
+  const recoveries: RecoveryTurn[] = [];
 
   for (const day of raw.days) {
     days.push({
@@ -106,6 +113,15 @@ export function mapWeeklyScheduleResponse(
         turns.push(mapMemberTurn(turn, slot.id));
       }
 
+      for (const recovery of slot.recoveryTurns ?? []) {
+        recoveries.push({
+          id: recovery.id,
+          timeSlotId: slot.id,
+          date: day.date,
+          member: recovery.member,
+        });
+      }
+
       // INFO: El `isClosed` de la celda es del TimeSlotOverride, distinto del `isClosed` del día (que es el CalendarClosure de arriba)
       if (slot.isClosed) {
         overrides.push({
@@ -124,6 +140,7 @@ export function mapWeeklyScheduleResponse(
     timeSlots,
     turns,
     overrides,
+    recoveries,
   };
 }
 

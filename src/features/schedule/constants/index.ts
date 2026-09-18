@@ -23,6 +23,11 @@ export const SCHEDULE_WEEKEND_DAYS: readonly ScheduleDay[] = [
   SCHEDULE_DAY.SUNDAY,
 ] as const;
 
+export const SCHEDULE_ALL_DAYS: readonly ScheduleDay[] = [
+  ...SCHEDULE_DAYS,
+  ...SCHEDULE_WEEKEND_DAYS,
+] as const;
+
 export const SCHEDULE_DAY_LABELS: Record<ScheduleDay, string> = {
   [SCHEDULE_DAY.MONDAY]: "Lunes",
   [SCHEDULE_DAY.TUESDAY]: "Martes",

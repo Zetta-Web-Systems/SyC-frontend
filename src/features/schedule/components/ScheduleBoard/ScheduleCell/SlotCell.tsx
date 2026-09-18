@@ -1,4 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
+import { RotateCcw } from "lucide-react";
 import { Badge, Pill } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import {
@@ -15,9 +16,11 @@ import {
   slotDropId,
   type SlotDropData,
 } from "../../../lib/scheduleDnd";
+import { countRecoveries } from "../../../lib/scheduleRecovery";
 import type { ScheduleSearchMatches } from "../../../lib/scheduleSearch";
 import type { SlotCellData, SlotRosterEntry } from "../../../types";
 import { CellMenu } from "./CellMenu";
+import { RecoveryChip } from "./RecoveryChip";
 import { TurnChip } from "./TurnChip";
 
 interface SlotTagPillProps {
@@ -88,6 +91,29 @@ function SlotCountBadge({
   );
 }
 
+interface SlotRecoveryMarkProps {
+  count: number;
+}
+
+function SlotRecoveryMark({ count }: SlotRecoveryMarkProps) {
+  const detail =
+    count === 1
+      ? "1 recuperación este día"
+      : `${count} recuperaciones este día`;
+
+  return (
+    <span
+      role="img"
+      title={detail}
+      aria-label={detail}
+      className="absolute bottom-1.5 left-2 inline-flex items-center gap-0.5 rounded-full border border-dashed border-secondary-300 bg-secondary-50 px-1.5 py-0.5 text-[10px] leading-none font-bold text-secondary-700 tabular-nums"
+    >
+      <RotateCcw size={9} aria-hidden="true" />
+      {count}
+    </span>
+  );
+}
+
 interface SlotRosterProps {
   roster: SlotRosterEntry[];
   isExpanded: boolean;
@@ -104,14 +130,24 @@ function SlotRoster({ roster, isExpanded, actions, matches }: SlotRosterProps) {
         isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0",
       )}
     >
-      {roster.map((entry) => (
-        <TurnChip
-          key={entry.turn.id}
-          entry={entry}
-          actions={actions}
-          isHighlighted={matches.turnIds.has(entry.turn.id)}
-        />
-      ))}
+      {roster.map((entry) =>
+        entry.kind === "turn" ? (
+          <TurnChip
+            key={entry.turn.id}
+            turn={entry.turn}
+            isOverturn={entry.isOverturn}
+            actions={actions}
+            isHighlighted={matches.turnIds.has(entry.turn.id)}
+          />
+        ) : (
+          <RecoveryChip
+            key={entry.recovery.id}
+            recovery={entry.recovery}
+            actions={actions}
+            isHighlighted={matches.recoveryIds.has(entry.recovery.id)}
+          />
+        ),
+      )}
     </div>
   );
 }
@@ -151,6 +187,7 @@ export function SlotCell({
 
   const isMatch = matches.isActive && matches.slotIds.has(cell.slot.id);
   const showRoster = isExpanded || isMatch;
+  const recoveryCount = countRecoveries(cell.roster);
 
   return (
     <div
@@ -178,6 +215,10 @@ export function SlotCell({
         isExpanded={showRoster}
         onToggle={() => onToggle(cell.slot.id)}
       />
+
+      {!showRoster && recoveryCount > 0 && (
+        <SlotRecoveryMark count={recoveryCount} />
+      )}
 
       <SlotRoster
         roster={cell.roster}

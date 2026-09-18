@@ -25,6 +25,13 @@ export interface MemberTurn {
   onHold: boolean;
 }
 
+export interface RecoveryTurn {
+  id: string;
+  timeSlotId: string;
+  date: string;
+  member: MemberSimple;
+}
+
 export interface CalendarClosure {
   type: ClosureType;
   startDate: string;
@@ -51,12 +58,12 @@ export interface ScheduleWeek {
   timeSlots: TimeSlot[];
   turns: MemberTurn[];
   overrides: TimeSlotOverride[];
+  recoveries: RecoveryTurn[];
 }
 
-export interface SlotRosterEntry {
-  turn: MemberTurn;
-  isOverturn: boolean;
-}
+export type SlotRosterEntry =
+  | { kind: "turn"; turn: MemberTurn; isOverturn: boolean }
+  | { kind: "recovery"; recovery: RecoveryTurn };
 
 interface BaseCell {
   id: string;
@@ -130,6 +137,16 @@ export interface MoveTurnDto {
 export interface SetTurnHoldDto {
   onHold: boolean;
 }
+
+export interface CreateRecoveryTurnDto {
+  timeSlotId: string;
+  memberId: string;
+  date: string;
+}
+
+export type RecoveryTurnMode =
+  | { kind: "cell"; slot: TimeSlot; date: string }
+  | { kind: "member"; member: MemberSimple };
 
 export interface CreateTimeSlotDto {
   startTime: string;

@@ -12,3 +12,10 @@ export function formatMemberShortName(member: MemberSimple): string {
 export function formatMemberFullName(member: MemberSimple): string {
   return `${member.name} ${member.lastname}`;
 }
+
+/**
+ * @example formatMemberInitials({ name: "More", lastname: "Gómez" }) => "MG"
+ */
+export function formatMemberInitials(member: MemberSimple): string {
+  return `${member.name[0] ?? ""}${member.lastname[0] ?? ""}`.toUpperCase();
+}

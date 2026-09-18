@@ -2,6 +2,7 @@ import { DEFAULT_SLOT_CAPACITY, type ScheduleDay } from "../constants";
 import type {
   CalendarClosure,
   MemberTurn,
+  RecoveryTurn,
   ScheduleCellData,
   ScheduleDayInfo,
   ScheduleGrid,
@@ -38,10 +39,25 @@ function overrideKey(timeSlotId: string, date: string): string {
   return `${timeSlotId}|${date}`;
 }
 
+function recoveryKey(timeSlotId: string, date: string): string {
+  return `${timeSlotId}|${date}`;
+}
+
 function buildRoster(turns: MemberTurn[], capacity: number): SlotRosterEntry[] {
   return turns
     .filter((turn) => turn.isActive)
-    .map((turn, index) => ({ turn, isOverturn: index >= capacity }));
+    .map((turn, index) => ({
+      kind: "turn" as const,
+      turn,
+      isOverturn: index >= capacity,
+    }));
+}
+
+function buildRecoveryEntries(recoveries: RecoveryTurn[]): SlotRosterEntry[] {
+  return recoveries.map((recovery) => ({
+    kind: "recovery" as const,
+    recovery,
+  }));
 }
 
 function buildCell(
@@ -49,6 +65,7 @@ function buildCell(
   row: RowContext,
   slot: TimeSlot | undefined,
   turns: MemberTurn[],
+  recoveries: RecoveryTurn[],
   override: TimeSlotOverride | undefined,
   closure: CalendarClosure | null | undefined,
   conflicts: TimeSlot[],
@@ -78,7 +95,10 @@ function buildCell(
     return { ...base, kind: "block", slot };
   }
 
-  const roster = buildRoster(turns, slot.capacity);
+  const roster = [
+    ...buildRoster(turns, slot.capacity),
+    ...buildRecoveryEntries(recoveries),
+  ];
 
   return {
     ...base,
@@ -120,6 +140,17 @@ export function buildScheduleGrid(
     const current = turnsBySlot.get(turn.timeSlotId);
     if (current) current.push(turn);
     else turnsBySlot.set(turn.timeSlotId, [turn]);
+  }
+
+  const recoveriesByKey = new Map<string, RecoveryTurn[]>();
+  const sortedRecoveries = [...week.recoveries].sort((a, b) =>
+    a.id.localeCompare(b.id),
+  );
+  for (const recovery of sortedRecoveries) {
+    const key = recoveryKey(recovery.timeSlotId, recovery.date);
+    const current = recoveriesByKey.get(key);
+    if (current) current.push(recovery);
+    else recoveriesByKey.set(key, [recovery]);
   }
 
   const overridesByKey = new Map<string, TimeSlotOverride>();
@@ -175,6 +206,9 @@ export function buildScheduleGrid(
           row,
           slot,
           slot ? (turnsBySlot.get(slot.id) ?? []) : [],
+          slot
+            ? (recoveriesByKey.get(recoveryKey(slot.id, day.date)) ?? [])
+            : [],
           slot ? overridesByKey.get(overrideKey(slot.id, day.date)) : undefined,
           day.closure,
           conflicts,

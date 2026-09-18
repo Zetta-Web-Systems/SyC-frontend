@@ -30,6 +30,7 @@ import type { ScheduleModalsState } from "./ui/useScheduleModals";
 export interface SlotActions {
   edit: (slot: TimeSlot) => void;
   block: (slot: TimeSlot, date: string) => void;
+  addRecovery: (slot: TimeSlot, date: string) => void;
   removeCell: (slot: TimeSlot) => void;
   open: (cell: UnavailableCellData) => void;
   removeRow: (startTime: string, endTime: string) => void;
@@ -85,13 +86,20 @@ export function useSlotActions(
   const deleteClosure = useDeleteClosureMutation();
   const deleteOverride = useDeleteOverrideMutation();
 
-  const { openEditSlot, openBlockSlot } = modals;
+  const { openEditSlot, openBlockSlot, openRecoveryTurn } = modals;
 
   const block = useCallback(
     (slot: TimeSlot, date: string) => {
       openBlockSlot(slot, date);
     },
     [openBlockSlot],
+  );
+
+  const addRecovery = useCallback(
+    (slot: TimeSlot, date: string) => {
+      openRecoveryTurn({ kind: "cell", slot, date });
+    },
+    [openRecoveryTurn],
   );
 
   const removeCell = useCallback(
@@ -309,6 +317,7 @@ export function useSlotActions(
     () => ({
       edit: openEditSlot,
       block,
+      addRecovery,
       removeCell,
       open,
       removeRow,
@@ -318,6 +327,7 @@ export function useSlotActions(
     [
       openEditSlot,
       block,
+      addRecovery,
       removeCell,
       open,
       removeRow,

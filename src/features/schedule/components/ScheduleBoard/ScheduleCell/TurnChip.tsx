@@ -1,7 +1,13 @@
 import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useDraggable } from "@dnd-kit/core";
-import { Lock, LockOpen, UserRound, UserRoundMinus } from "lucide-react";
+import {
+  Lock,
+  LockOpen,
+  RotateCcw,
+  UserRound,
+  UserRoundMinus,
+} from "lucide-react";
 import {
   AnchoredPopover,
   PopoverHeader,
@@ -21,16 +27,17 @@ import {
   turnDragId,
   type TurnDragData,
 } from "../../../lib/scheduleDnd";
-import type { SlotRosterEntry } from "../../../types";
+import type { MemberTurn } from "../../../types";
 import { MemberChip } from "../../common";
 
 const TURN_MENU_WIDTH = 236;
-const TURN_MENU_HEIGHT = 216;
+const TURN_MENU_HEIGHT = 264;
 
 interface TurnChipMenuProps {
   member: MemberSimple;
   isHeld: boolean;
   onToggleHold: () => void;
+  onMarkRecovery: () => void;
   onRemove: () => void;
   onClose: () => void;
 }
@@ -39,6 +46,7 @@ function TurnChipMenu({
   member,
   isHeld,
   onToggleHold,
+  onMarkRecovery,
   onRemove,
   onClose,
 }: TurnChipMenuProps) {
@@ -73,7 +81,7 @@ function TurnChipMenu({
 
       <PopoverItem
         icon={isHeld ? <LockOpen /> : <Lock />}
-        iconTone={isHeld ? "success" : "warning"}
+        iconTone={isHeld ? "success" : "danger"}
         description={
           isHeld
             ? "El lugar vuelve a estar disponible"
@@ -82,6 +90,15 @@ function TurnChipMenu({
         onClick={() => run(onToggleHold)}
       >
         {isHeld ? "Dejar de guardar el lugar" : "Guardar el lugar"}
+      </PopoverItem>
+
+      <PopoverItem
+        icon={<RotateCcw />}
+        iconTone="secondary"
+        description="Anotarlo como recuperación en otro turno"
+        onClick={() => run(onMarkRecovery)}
+      >
+        Recuperar en otro turno
       </PopoverItem>
 
       <PopoverSeparator />
@@ -98,17 +115,18 @@ function TurnChipMenu({
 }
 
 interface TurnChipProps {
-  entry: SlotRosterEntry;
+  turn: MemberTurn;
+  isOverturn: boolean;
   actions: TurnActions;
   isHighlighted?: boolean;
 }
 
 export function TurnChip({
-  entry,
+  turn,
+  isOverturn,
   actions,
   isHighlighted = false,
 }: TurnChipProps) {
-  const { turn, isOverturn } = entry;
   const { anchorRef, position, isOpen, toggle, close } =
     useAnchoredPopover<HTMLButtonElement>({
       width: TURN_MENU_WIDTH,
@@ -169,6 +187,7 @@ export function TurnChip({
           member={turn.member}
           isHeld={turn.onHold}
           onToggleHold={() => actions.toggleHold(turn)}
+          onMarkRecovery={() => actions.markRecovery(turn.member)}
           onRemove={() => actions.remove(turn)}
           onClose={close}
         />

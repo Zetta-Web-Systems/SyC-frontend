@@ -4,6 +4,7 @@ import {
   CalendarOff,
   EllipsisVertical,
   Pencil,
+  RotateCcw,
 } from "lucide-react";
 import {
   AnchoredPopover,
@@ -17,6 +18,7 @@ import { cn } from "@shared/lib/cn";
 import { formatDayMonth } from "@shared/utils/date.utils";
 import { SCHEDULE_DAY_LABELS } from "../../../constants";
 import type { SlotActions } from "../../../hooks/useSlotActions";
+import { getRecoveryBlockReason } from "../../../lib/scheduleRecovery";
 import { formatSlotTime } from "../../../lib/slotStatus";
 import type { ScheduleCellData } from "../../../types";
 
@@ -25,7 +27,7 @@ const MENU_WIDTH = 252;
 const MENU_HEIGHT = {
   closed: 152,
   blocked: 232,
-  slot: 260,
+  slot: 308,
 } as const;
 
 const EDIT_DESCRIPTION = "Hora, cupo y etiqueta";
@@ -111,6 +113,7 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
 
   const dayLabel = SCHEDULE_DAY_LABELS[cell.dayOfWeek];
   const everyDay = `Cada ${dayLabel.toLowerCase()}`;
+  const recoveryBlockReason = getRecoveryBlockReason(cell, new Date());
 
   const headerDetail =
     cell.kind === "slot"
@@ -136,6 +139,21 @@ function CellMenuItems({ cell, actions, onClose }: CellMenuItemsProps) {
       >
         Editar horario
       </PopoverItem>
+
+      {cell.kind === "slot" && (
+        <PopoverItem
+          icon={<RotateCcw />}
+          iconTone="secondary"
+          description={
+            recoveryBlockReason ?? `Sólo el ${formatDayMonth(cell.date)}`
+          }
+          disabled={recoveryBlockReason !== null}
+          title={recoveryBlockReason ?? undefined}
+          onClick={() => run(() => actions.addRecovery(cell.slot, cell.date))}
+        >
+          Agregar recuperación
+        </PopoverItem>
+      )}
 
       <PopoverItem
         icon={<CalendarOff />}

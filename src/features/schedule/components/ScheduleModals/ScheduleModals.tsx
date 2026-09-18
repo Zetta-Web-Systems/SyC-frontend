@@ -4,13 +4,19 @@ import { BlockSlotModal } from "./BlockSlotModal";
 import { CloseDayModal } from "./CloseDayModal";
 import { CreateTimeSlotModal } from "./CreateTimeSlotModal";
 import { EditTimeSlotModal } from "./EditTimeSlotModal";
+import { RecoveryTurnModal } from "./RecoveryTurnModal";
 
 interface ScheduleModalsProps {
   state: ScheduleModalsState;
   weekSlots: TimeSlot[];
+  weekDate: string;
 }
 
-export function ScheduleModals({ state, weekSlots }: ScheduleModalsProps) {
+export function ScheduleModals({
+  state,
+  weekSlots,
+  weekDate,
+}: ScheduleModalsProps) {
   const { modal, close } = state;
 
   if (!modal) return null;
@@ -39,6 +45,16 @@ export function ScheduleModals({ state, weekSlots }: ScheduleModalsProps) {
           onClose={close}
           slot={modal.slot}
           date={modal.date}
+        />
+      );
+
+    case "recoveryTurn":
+      return (
+        <RecoveryTurnModal
+          open
+          onClose={close}
+          mode={modal.mode}
+          weekDate={weekDate}
         />
       );
   }

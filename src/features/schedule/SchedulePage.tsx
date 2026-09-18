@@ -55,8 +55,8 @@ export default function SchedulePage() {
 
   const search = useScheduleSearch(data);
   const unassigned = useUnassignedMembers({ enabled: isUnassignedOpen });
-  const turnActions = useTurnActions();
   const modals = useScheduleModals();
+  const turnActions = useTurnActions(modals);
   const dnd = useScheduleDnd({ onDropIntoSlot: expand });
 
   const visibleDays = useMemo(
@@ -126,7 +126,8 @@ export default function SchedulePage() {
           onCurrentWeek={week.goToCurrentWeek}
           onMemberSearch={search.setSearch}
           isSearching={search.matches.isActive}
-          matchCount={search.matches.slotIds.size}
+          matchedMemberCount={search.matches.memberIds.size}
+          matchedSlotCount={search.matches.slotIds.size}
           areAllExpanded={areAllExpanded}
           onExpandAll={() => expandAll(assignableSlotIds)}
           onCollapseAll={collapseAll}
@@ -195,7 +196,11 @@ export default function SchedulePage() {
         </div>
       </div>
 
-      <ScheduleModals state={modals} weekSlots={weekSlots} />
+      <ScheduleModals
+        state={modals}
+        weekSlots={weekSlots}
+        weekDate={week.date}
+      />
 
       {createPortal(
         <DragOverlay dropAnimation={null}>

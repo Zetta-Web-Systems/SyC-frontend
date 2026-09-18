@@ -1,4 +1,4 @@
-import { Lock } from "lucide-react";
+import { Lock, RotateCcw } from "lucide-react";
 import type { MemberSimple } from "@features/members";
 import { cn } from "@shared/lib/cn";
 import {
@@ -10,6 +10,7 @@ interface MemberChipProps {
   member: MemberSimple;
   isHeld?: boolean;
   isOverturn?: boolean;
+  isRecovery?: boolean;
   isHighlighted?: boolean;
   badge?: string;
   className?: string;
@@ -19,10 +20,12 @@ function buildTitle(
   member: MemberSimple,
   isHeld: boolean,
   isOverturn: boolean,
+  isRecovery: boolean,
 ) {
   const notes = [
     isHeld ? "lugar guardado" : null,
     isOverturn ? "sobreturno" : null,
+    isRecovery ? "recuperación" : null,
   ].filter(Boolean);
 
   const fullName = formatMemberFullName(member);
@@ -33,24 +36,29 @@ export function MemberChip({
   member,
   isHeld = false,
   isOverturn = false,
+  isRecovery = false,
   isHighlighted = false,
   badge,
   className,
 }: MemberChipProps) {
   return (
     <span
-      title={buildTitle(member, isHeld, isOverturn)}
+      title={buildTitle(member, isHeld, isOverturn, isRecovery)}
       className={cn(
         "inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-xs font-semibold text-neutral-600",
-        isHeld &&
-          "border-dashed border-secondary-300 bg-secondary-50 text-secondary-700",
+        isHeld && "border-dashed border-error bg-error/10 text-error",
         isOverturn && "border-warning bg-warning/20 text-neutral-800",
+        isRecovery &&
+          "border-dashed border-secondary-300 bg-secondary-50 text-secondary-700",
         isHighlighted && "border-primary-500 bg-primary-100 text-primary-700",
         className,
       )}
     >
       <span className="leading-none">{formatMemberShortName(member)}</span>
       {isHeld && <Lock size={11} aria-hidden="true" className="shrink-0" />}
+      {isRecovery && (
+        <RotateCcw size={11} aria-hidden="true" className="shrink-0" />
+      )}
       {badge && (
         <span className="shrink-0 rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] leading-none font-bold text-neutral-500 tabular-nums">
           {badge}
