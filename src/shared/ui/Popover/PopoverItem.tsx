@@ -4,6 +4,7 @@ import { cn } from "@shared/lib/cn";
 export type PopoverItemTone =
   | "neutral"
   | "primary"
+  | "secondary"
   | "success"
   | "warning"
   | "danger";
@@ -11,6 +12,7 @@ export type PopoverItemTone =
 const POPOVER_ITEM_ICON_TONES: Record<PopoverItemTone, string> = {
   neutral: "text-neutral-400",
   primary: "text-primary-500",
+  secondary: "text-secondary-500",
   success: "text-success",
   warning: "text-warning",
   danger: "text-error",
