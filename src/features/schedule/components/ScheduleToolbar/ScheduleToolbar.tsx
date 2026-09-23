@@ -66,19 +66,24 @@ function WeekNavigator({
 interface MemberSearchProps {
   onSearch: (value: string) => void;
   isSearching: boolean;
-  matchCount: number;
+  memberCount: number;
+  slotCount: number;
 }
 
-function buildSearchSummary(matchCount: number): string {
-  if (matchCount === 0) return "No está anotado esta semana";
-  if (matchCount === 1) return "Anotado en 1 horario";
-  return `Anotado en ${matchCount} horarios`;
+function buildSearchSummary(memberCount: number, slotCount: number): string {
+  if (memberCount === 0) return "Nadie coincide esta semana";
+
+  const slots = slotCount === 1 ? "1 horario" : `${slotCount} horarios`;
+  if (memberCount === 1) return `Anotado en ${slots}`;
+
+  return `${memberCount} alumnos en ${slots}`;
 }
 
 function MemberSearch({
   onSearch,
   isSearching,
-  matchCount,
+  memberCount,
+  slotCount,
 }: MemberSearchProps) {
   return (
     <div className="flex flex-col gap-1">
@@ -93,10 +98,10 @@ function MemberSearch({
           role="status"
           className={cn(
             "px-1 text-[11px] font-medium",
-            matchCount > 0 ? "text-primary-600" : "text-neutral-400",
+            memberCount > 0 ? "text-primary-600" : "text-neutral-400",
           )}
         >
-          {buildSearchSummary(matchCount)}
+          {buildSearchSummary(memberCount, slotCount)}
         </p>
       )}
     </div>
@@ -213,7 +218,8 @@ interface ScheduleToolbarProps {
   onCurrentWeek: () => void;
   onMemberSearch: (value: string) => void;
   isSearching: boolean;
-  matchCount: number;
+  matchedMemberCount: number;
+  matchedSlotCount: number;
   areAllExpanded: boolean;
   onExpandAll: () => void;
   onCollapseAll: () => void;
@@ -232,7 +238,8 @@ export function ScheduleToolbar({
   onCurrentWeek,
   onMemberSearch,
   isSearching,
-  matchCount,
+  matchedMemberCount,
+  matchedSlotCount,
   areAllExpanded,
   onExpandAll,
   onCollapseAll,
@@ -256,7 +263,8 @@ export function ScheduleToolbar({
         <MemberSearch
           onSearch={onMemberSearch}
           isSearching={isSearching}
-          matchCount={matchCount}
+          memberCount={matchedMemberCount}
+          slotCount={matchedSlotCount}
         />
       </div>
 
