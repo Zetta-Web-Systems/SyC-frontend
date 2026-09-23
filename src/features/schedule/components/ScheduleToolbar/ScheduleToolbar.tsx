@@ -64,6 +64,7 @@ function WeekNavigator({
 }
 
 interface MemberSearchProps {
+  value: string;
   onSearch: (value: string) => void;
   isSearching: boolean;
   memberCount: number;
@@ -80,6 +81,7 @@ function buildSearchSummary(memberCount: number, slotCount: number): string {
 }
 
 function MemberSearch({
+  value,
   onSearch,
   isSearching,
   memberCount,
@@ -89,6 +91,7 @@ function MemberSearch({
     <div className="flex flex-col gap-1">
       <SearchInput
         placeholder="Buscar alumno"
+        externalValue={value}
         onSearch={onSearch}
         className="w-full sm:w-60"
       />
@@ -216,6 +219,7 @@ interface ScheduleToolbarProps {
   onPreviousWeek: () => void;
   onNextWeek: () => void;
   onCurrentWeek: () => void;
+  memberSearch: string;
   onMemberSearch: (value: string) => void;
   isSearching: boolean;
   matchedMemberCount: number;
@@ -236,6 +240,7 @@ export function ScheduleToolbar({
   onPreviousWeek,
   onNextWeek,
   onCurrentWeek,
+  memberSearch,
   onMemberSearch,
   isSearching,
   matchedMemberCount,
@@ -261,6 +266,7 @@ export function ScheduleToolbar({
         />
 
         <MemberSearch
+          value={memberSearch}
           onSearch={onMemberSearch}
           isSearching={isSearching}
           memberCount={matchedMemberCount}

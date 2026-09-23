@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useDraggable } from "@dnd-kit/core";
 import {
+  CalendarSearch,
   Lock,
   LockOpen,
   RotateCcw,
@@ -31,11 +32,12 @@ import type { MemberTurn } from "../../../types";
 import { MemberChip } from "../../common";
 
 const TURN_MENU_WIDTH = 236;
-const TURN_MENU_HEIGHT = 264;
+const TURN_MENU_HEIGHT = 320;
 
 interface TurnChipMenuProps {
   member: MemberSimple;
   isHeld: boolean;
+  onShowSlots: () => void;
   onToggleHold: () => void;
   onMarkRecovery: () => void;
   onRemove: () => void;
@@ -45,6 +47,7 @@ interface TurnChipMenuProps {
 function TurnChipMenu({
   member,
   isHeld,
+  onShowSlots,
   onToggleHold,
   onMarkRecovery,
   onRemove,
@@ -80,8 +83,18 @@ function TurnChipMenu({
       </PopoverItem>
 
       <PopoverItem
+        icon={<CalendarSearch />}
+        iconTone="secondary"
+        onClick={() => run(onShowSlots)}
+      >
+        Mostrar horarios
+      </PopoverItem>
+
+      <PopoverSeparator />
+
+      <PopoverItem
         icon={isHeld ? <LockOpen /> : <Lock />}
-        iconTone={isHeld ? "success" : "danger"}
+        iconTone={"danger"}
         description={
           isHeld
             ? "El lugar vuelve a estar disponible"
@@ -94,7 +107,7 @@ function TurnChipMenu({
 
       <PopoverItem
         icon={<RotateCcw />}
-        iconTone="secondary"
+        iconTone="success"
         description="Anotarlo como recuperación en otro turno"
         onClick={() => run(onMarkRecovery)}
       >
@@ -186,6 +199,7 @@ export function TurnChip({
         <TurnChipMenu
           member={turn.member}
           isHeld={turn.onHold}
+          onShowSlots={() => actions.showSlots(turn.member)}
           onToggleHold={() => actions.toggleHold(turn)}
           onMarkRecovery={() => actions.markRecovery(turn.member)}
           onRemove={() => actions.remove(turn)}

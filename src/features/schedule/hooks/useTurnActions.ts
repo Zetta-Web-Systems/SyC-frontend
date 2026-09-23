@@ -10,11 +10,15 @@ import type { ScheduleModalsState } from "./ui/useScheduleModals";
 export interface TurnActions {
   toggleHold: (turn: MemberTurn) => void;
   remove: (turn: MemberTurn) => void;
+  showSlots: (member: MemberSimple) => void;
   markRecovery: (member: MemberSimple) => void;
   removeRecovery: (recovery: RecoveryTurn) => void;
 }
 
-export function useTurnActions(modals: ScheduleModalsState): TurnActions {
+export function useTurnActions(
+  modals: ScheduleModalsState,
+  onSearchMember: (value: string) => void,
+): TurnActions {
   const setTurnHold = useSetTurnHoldMutation();
   const removeTurn = useRemoveTurnMutation();
   const recovery = useRecoveryActions(modals);
@@ -40,13 +44,21 @@ export function useTurnActions(modals: ScheduleModalsState): TurnActions {
     [removeTurn],
   );
 
+  const showSlots = useCallback(
+    (member: MemberSimple) => {
+      onSearchMember(formatMemberFullName(member));
+    },
+    [onSearchMember],
+  );
+
   return useMemo(
     () => ({
       toggleHold,
       remove,
+      showSlots,
       markRecovery: recovery.mark,
       removeRecovery: recovery.remove,
     }),
-    [toggleHold, remove, recovery.mark, recovery.remove],
+    [toggleHold, remove, showSlots, recovery.mark, recovery.remove],
   );
 }

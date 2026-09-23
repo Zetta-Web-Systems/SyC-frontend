@@ -56,7 +56,7 @@ export default function SchedulePage() {
   const search = useScheduleSearch(data);
   const unassigned = useUnassignedMembers({ enabled: isUnassignedOpen });
   const modals = useScheduleModals();
-  const turnActions = useTurnActions(modals);
+  const turnActions = useTurnActions(modals, search.setSearch);
   const dnd = useScheduleDnd({ onDropIntoSlot: expand });
 
   const visibleDays = useMemo(
@@ -124,6 +124,7 @@ export default function SchedulePage() {
           onPreviousWeek={week.goToPreviousWeek}
           onNextWeek={week.goToNextWeek}
           onCurrentWeek={week.goToCurrentWeek}
+          memberSearch={search.search}
           onMemberSearch={search.setSearch}
           isSearching={search.matches.isActive}
           matchedMemberCount={search.matches.memberIds.size}
