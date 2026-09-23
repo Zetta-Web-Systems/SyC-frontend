@@ -288,7 +288,7 @@ function DayOptions({
   onSelect,
 }: DayOptionsProps) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap justify-center gap-1.5">
       {dates.map((date) => (
         <button
           key={date}
@@ -531,7 +531,7 @@ export function RecoveryTurnModal({
       open={open}
       onClose={onClose}
       title="Turno de recuperación"
-      size="sm"
+      size="md"
     >
       {mode.kind === "cell" ? (
         <RecoveryByCell mode={mode} weekDate={weekDate} onClose={onClose} />
