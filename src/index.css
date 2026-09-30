@@ -66,6 +66,16 @@
   }
 }
 
+@utility bg-stripes-neutral {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-neutral-100) 0,
+    var(--color-neutral-100) 6px,
+    var(--color-neutral-50) 6px,
+    var(--color-neutral-50) 12px
+  );
+}
+
 @keyframes toast-progress {
   from {
     transform: scaleX(1);
