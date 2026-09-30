@@ -1,37 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getApiErrorMessage } from "@shared/api/apiError";
 import {
+  ABSENCE_CHECK_IN_MESSAGE,
   ATTENDANCE_ACTION,
   MOOD_MESSAGES,
   REQUEST_STATUS,
   RESET_TIMINGS,
   type AttendanceAction,
   type Mood,
-  type RequestStatus,
 } from "../../constants";
-import type { AttendanceCheckIn } from "../../types";
+import type { AttendanceFlowState } from "../../types";
 import { useAttendanceDni } from "./useAttendanceDni";
 import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
 import { useAttendanceMoodMutation } from "./../mutations/useAttendanceMoodMutation";
 
-interface FlowState {
-  status: RequestStatus | AttendanceAction;
-  response: AttendanceCheckIn | null;
-  error: string | null;
-  moodMessage: string | null;
-  profileImageUrl: string | null;
-}
-
-const INITIAL_STATE: FlowState = {
+const INITIAL_STATE: AttendanceFlowState = {
   status: REQUEST_STATUS.IDLE,
   response: null,
   error: null,
   moodMessage: null,
+  feeMessage: null,
   profileImageUrl: null,
 };
 
 export function useAttendanceFlow() {
-  const [state, setState] = useState<FlowState>(INITIAL_STATE);
+  const [state, setState] = useState<AttendanceFlowState>(INITIAL_STATE);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
@@ -60,7 +53,7 @@ export function useAttendanceFlow() {
   }, [clearTimer, dniClear]);
 
   const startResetTimer = useCallback(
-    (status: "entry" | "exit") => {
+    (status: AttendanceAction) => {
       clearTimer();
       timerRef.current = setTimeout(reset, RESET_TIMINGS[status]);
     },
@@ -94,34 +87,34 @@ export function useAttendanceFlow() {
     if (!isValid) return;
     if (mutation.isPending) return;
 
-    setState({
-      status: REQUEST_STATUS.LOADING,
-      response: null,
-      error: null,
-      moodMessage: null,
-      profileImageUrl: null,
-    });
+    setState({ ...INITIAL_STATE, status: REQUEST_STATUS.LOADING });
 
     mutation.mutate(dni, {
       onSuccess: (response) => {
+        if (response.isAbsent) {
+          dniClear();
+          setState({
+            ...INITIAL_STATE,
+            status: REQUEST_STATUS.ERROR,
+            error: ABSENCE_CHECK_IN_MESSAGE,
+          });
+          return;
+        }
+
         if (response.departureTime != null) {
           setState({
+            ...INITIAL_STATE,
             status: ATTENDANCE_ACTION.EXIT,
             response,
-            error: null,
-            moodMessage: null,
-            profileImageUrl: null,
           });
           startResetTimer("exit");
           return;
         }
 
         setState({
+          ...INITIAL_STATE,
           status: REQUEST_STATUS.MOOD_SELECTION,
           response,
-          error: null,
-          moodMessage: null,
-          profileImageUrl: null,
         });
       },
       onError: (err) => {
@@ -133,11 +126,9 @@ export function useAttendanceFlow() {
         dniClear();
 
         setState({
+          ...INITIAL_STATE,
           status: REQUEST_STATUS.ERROR,
-          response: null,
           error: message,
-          moodMessage: null,
-          profileImageUrl: null,
         });
 
         // TMP-MSG: No auto-dismiss: el error permanece visible hasta que el usuario presione una tecla
@@ -160,21 +151,22 @@ export function useAttendanceFlow() {
         {
           onSuccess: (data) => {
             setState({
+              ...INITIAL_STATE,
               status: ATTENDANCE_ACTION.ENTRY,
               response: currentResponse,
-              error: null,
               moodMessage: data.message ?? MOOD_MESSAGES[mood],
-              profileImageUrl: data.profileImageUrl ?? null,
+              feeMessage: data.feeMessage || null,
+              profileImageUrl:
+                data.profileImageUrl ?? currentResponse.profileImageUrl ?? null,
             });
             startResetTimer("entry");
           },
           onError: () => {
             setState({
+              ...INITIAL_STATE,
               status: ATTENDANCE_ACTION.ENTRY,
               response: currentResponse,
-              error: null,
-              moodMessage: null,
-              profileImageUrl: null,
+              profileImageUrl: currentResponse.profileImageUrl ?? null,
             });
             startResetTimer("entry");
           },
@@ -191,6 +183,7 @@ export function useAttendanceFlow() {
     response: state.response,
     error: state.error,
     moodMessage: state.moodMessage,
+    feeMessage: state.feeMessage,
     profileImageUrl: state.profileImageUrl,
 
     dni,

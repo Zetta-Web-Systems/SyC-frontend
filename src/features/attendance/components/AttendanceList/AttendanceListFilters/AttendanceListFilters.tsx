@@ -5,17 +5,19 @@ import type { ToolbarFilterConfig } from "@shared/types/datatable.types";
 import type { ExtraFilterChip } from "@shared/types/datatable.types";
 import type { DateFilterDropdownProps } from "@shared/ui";
 import {
+  DEPARTURE_FILTER_OPTIONS,
   MONTH_OPTIONS,
   PERSON_TYPE_SINGULAR_LABELS,
   type AttendanceType,
 } from "../../../constants";
-import { getYearOptions } from "@features/attendance/utils";
+import { getYearOptions, registersDeparture } from "../../../utils";
 
 interface AttendanceListFiltersProps {
   searchValue: string;
   monthFilter: string[];
   yearFilter: string[];
   dateFilter: Date | null;
+  departureFilter: string[];
   type: AttendanceType;
   personName?: string;
   onSearch: (value: string) => void;
@@ -23,6 +25,7 @@ interface AttendanceListFiltersProps {
   onMonthChange: (selected: string[]) => void;
   onYearChange: (selected: string[]) => void;
   onDateChange: (date: Date | null) => void;
+  onDepartureChange: (selected: string[]) => void;
   onClearAllFilters: () => void;
   onPersonClear?: () => void;
   actions?: ReactNode;
@@ -33,6 +36,7 @@ export function AttendanceListFilters({
   monthFilter,
   yearFilter,
   dateFilter,
+  departureFilter,
   type,
   personName,
   onSearch,
@@ -40,11 +44,15 @@ export function AttendanceListFilters({
   onMonthChange,
   onYearChange,
   onDateChange,
+  onDepartureChange,
   onClearAllFilters,
   onPersonClear,
   actions,
 }: AttendanceListFiltersProps) {
-  const yearOptions = useMemo(() => getYearOptions(), []);
+  const yearOptions = useMemo(
+    () => getYearOptions(new Date().getFullYear()),
+    [],
+  );
   const dateFilterConfig = useMemo<Omit<DateFilterDropdownProps, "className">>(
     () => ({
       label: "Fecha",
@@ -54,8 +62,8 @@ export function AttendanceListFilters({
     [dateFilter, onDateChange],
   );
 
-  const filters = useMemo<ToolbarFilterConfig[]>(
-    () => [
+  const filters = useMemo<ToolbarFilterConfig[]>(() => {
+    const dateFilters: ToolbarFilterConfig[] = [
       {
         key: "month",
         label: "Mes",
@@ -76,16 +84,33 @@ export function AttendanceListFilters({
         searchable: false,
         disabled: dateFilter !== null,
       },
-    ],
-    [
-      monthFilter,
-      yearFilter,
-      onMonthChange,
-      onYearChange,
-      dateFilter,
-      yearOptions,
-    ],
-  );
+    ];
+
+    if (!registersDeparture(type)) return dateFilters;
+
+    return [
+      ...dateFilters,
+      {
+        key: "departureRegistered",
+        label: "Salida",
+        options: DEPARTURE_FILTER_OPTIONS,
+        selected: departureFilter,
+        onChange: onDepartureChange,
+        multiple: false,
+        searchable: false,
+      },
+    ];
+  }, [
+    monthFilter,
+    yearFilter,
+    departureFilter,
+    onMonthChange,
+    onYearChange,
+    onDepartureChange,
+    dateFilter,
+    yearOptions,
+    type,
+  ]);
 
   const extraChips = useMemo<ExtraFilterChip[]>(() => {
     if (!personName || !onPersonClear) return [];

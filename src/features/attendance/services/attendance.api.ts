@@ -5,11 +5,7 @@ import type {
 } from "@shared/types/pagination.types";
 import { buildPaginatedParams } from "@shared/utils/pagination.utils";
 import type { Mood } from "../constants";
-import type {
-  Attendance,
-  AttendanceCheckIn,
-  AttendanceMoodUpdate,
-} from "../types";
+import type { Attendance, AttendanceCheckIn } from "../types";
 
 export async function registerAttendance(dni: string) {
   const { data } = await api.post<AttendanceCheckIn>("/attendances", { dni });
@@ -17,7 +13,7 @@ export async function registerAttendance(dni: string) {
 }
 
 export async function setAttendanceMood(id: string, mood: Mood) {
-  const { data } = await api.patch<AttendanceMoodUpdate>(
+  const { data } = await api.patch<AttendanceCheckIn>(
     `/attendances/${id}/mood`,
     { mood },
   );

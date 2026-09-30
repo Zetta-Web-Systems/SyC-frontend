@@ -1,3 +1,4 @@
+import type { BadgeProps } from "@shared/ui";
 import type { FilterOption } from "@shared/types/filters.types";
 import type { PaginatedParams } from "@shared/types/pagination.types";
 
@@ -21,6 +22,42 @@ export const FALLBACK_MESSAGES = {
   entry: () => `Asistencia registrada correctamente`,
   exit: () => `Egreso registrado correctamente`,
 } as const;
+
+export const FALLBACK_GREETINGS = {
+  entry: (fullName: string) => `Hola, ${fullName}`,
+  exit: (fullName: string) => `Hasta luego, ${fullName}`,
+} as const;
+
+export const ABSENCE_CHECK_IN_MESSAGE =
+  "Tenés una ausencia registrada hoy. Avisale a tu profe.";
+
+export const DEPARTURE_FILTER_OPTIONS: FilterOption[] = [
+  { label: "Registrada", value: "true" },
+  { label: "Sin registrar", value: "false" },
+];
+
+export const DEPARTURE_STATE = {
+  IN_PROGRESS: "in_progress",
+  NOT_REGISTERED: "not_registered",
+} as const;
+
+export type DepartureState =
+  (typeof DEPARTURE_STATE)[keyof typeof DEPARTURE_STATE];
+
+export const DEPARTURE_STATE_LABELS: Record<DepartureState, string> = {
+  in_progress: "En curso",
+  not_registered: "Sin registrar",
+};
+
+export const DEPARTURE_STATE_INTENT: Record<
+  DepartureState,
+  BadgeProps["intent"]
+> = {
+  in_progress: "success",
+  not_registered: "neutral",
+};
+
+export const YEAR_FILTER_YEARS_BACK = 2;
 
 export const REQUEST_STATUS = {
   IDLE: "idle",
@@ -75,6 +112,35 @@ export const MOOD_MESSAGES: Record<Mood, string> = {
   unmotivated: "Un paso a la vez, ya estás acá",
 };
 
+export const MOOD_INTENT: Record<Mood, BadgeProps["intent"]> = {
+  motivated: "success",
+  energetic: "violet",
+  tired: "warning",
+  sore: "error",
+  unmotivated: "neutral",
+};
+
+export const ATTENDANCE_STATUS = {
+  PRESENT: "present",
+  ABSENT: "absent",
+} as const;
+
+export type AttendanceStatus =
+  (typeof ATTENDANCE_STATUS)[keyof typeof ATTENDANCE_STATUS];
+
+export const ATTENDANCE_STATUS_LABELS: Record<AttendanceStatus, string> = {
+  present: "Presente",
+  absent: "Ausente",
+};
+
+export const ATTENDANCE_STATUS_INTENT: Record<
+  AttendanceStatus,
+  BadgeProps["intent"]
+> = {
+  present: "success",
+  absent: "error",
+};
+
 export const PERSON_TYPE = {
   INSTRUCTOR: "INSTRUCTOR",
   MEMBER: "MEMBER",
@@ -91,6 +157,12 @@ export const PERSON_TYPE_SINGULAR_LABELS: Record<AttendanceType, string> = {
   INSTRUCTOR: "Profesor",
   MEMBER: "Alumno",
 };
+
+export const PERSON_TYPE_INTENT: Record<AttendanceType, BadgeProps["intent"]> =
+  {
+    INSTRUCTOR: "info",
+    MEMBER: "neutral",
+  };
 
 export const MONTH_OPTIONS: FilterOption[] = [
   { label: "Enero", value: "1" },

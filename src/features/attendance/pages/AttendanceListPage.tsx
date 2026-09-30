@@ -26,6 +26,7 @@ export default function AttendanceListPage({
     monthFilter,
     yearFilter,
     dateFilter,
+    departureFilter,
     viewMode,
     // setViewMode,
     setPagination,
@@ -34,6 +35,7 @@ export default function AttendanceListPage({
     handleMonthChange,
     handleYearChange,
     handleDateChange,
+    handleDepartureChange,
     handleClearAllFilters,
   } = useAttendanceFilters({
     type,
@@ -56,9 +58,11 @@ export default function AttendanceListPage({
         monthFilter={monthFilter}
         yearFilter={yearFilter}
         dateFilter={dateFilter}
+        departureFilter={departureFilter}
         onMonthChange={handleMonthChange}
         onYearChange={handleYearChange}
         onDateChange={handleDateChange}
+        onDepartureChange={handleDepartureChange}
         onClearAllFilters={handleClearAllFilters}
         personName={personName}
         onPersonClear={onPersonClear}
@@ -70,6 +74,7 @@ export default function AttendanceListPage({
 
       <AttendanceTable
         data={attendances}
+        type={type}
         rowCount={rowCount}
         pagination={pagination}
         onPaginationChange={setPagination}
