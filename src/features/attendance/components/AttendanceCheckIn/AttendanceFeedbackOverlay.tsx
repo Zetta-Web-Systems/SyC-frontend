@@ -14,6 +14,7 @@ interface AttendanceFeedbackOverlayProps {
   status: AttendanceAction | RequestStatus;
   response: AttendanceCheckIn | null;
   moodMessage?: string | null;
+  feeMessage?: string | null;
   profileImageUrl?: string | null;
 }
 
@@ -28,6 +29,7 @@ export function AttendanceFeedbackOverlay({
   status,
   response,
   moodMessage,
+  feeMessage,
   profileImageUrl,
 }: AttendanceFeedbackOverlayProps) {
   const bg = BACKGROUND_MAP[status] ?? "bg-primary-900";
@@ -47,6 +49,7 @@ export function AttendanceFeedbackOverlay({
         <AttendanceEntryFeedback
           response={response}
           subtitle={moodMessage ?? undefined}
+          feeMessage={feeMessage}
           profileImageUrl={profileImageUrl}
         />
       )}

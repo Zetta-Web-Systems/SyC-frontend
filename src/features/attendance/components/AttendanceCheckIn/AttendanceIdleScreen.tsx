@@ -1,18 +1,7 @@
+import type { AttendanceErrorState, AttendanceKeypadState } from "../../types";
 import { AttendanceDniDisplay } from "./AttendanceDisplay/AttendanceDniDisplay";
 import { AttendanceNumericKeypad } from "./AttendanceDisplay/AttendanceNumericKeypad";
 import { AttendanceInlineError } from "./AttendanceFeedback/AttendanceInlineError";
-
-export interface AttendanceKeypadState {
-  isValid: boolean;
-  canAddDigit: boolean;
-  isEmpty: boolean;
-  disabled: boolean;
-}
-
-export interface AttendanceErrorState {
-  message: string | null;
-  visible: boolean;
-}
 
 interface AttendanceIdleScreenProps {
   dni: string;

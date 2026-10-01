@@ -1,8 +1,9 @@
 import { Hand } from "lucide-react";
 import { formatDuration, formatTimeShort } from "@shared/utils/date.utils";
 import { AttendanceInfoCard } from "./AttendanceInfoCard";
-import { FALLBACK_MESSAGES } from "../../../constants";
+import { FALLBACK_GREETINGS, FALLBACK_MESSAGES } from "../../../constants";
 import type { AttendanceCheckIn } from "../../../types";
+import { formatAttendanceTime } from "../../../utils";
 
 interface AttendanceExitFeedbackProps {
   response: AttendanceCheckIn;
@@ -11,13 +12,17 @@ interface AttendanceExitFeedbackProps {
 export function AttendanceExitFeedback({
   response,
 }: AttendanceExitFeedbackProps) {
+  const title =
+    response.message ||
+    FALLBACK_GREETINGS.exit(`${response.name} ${response.lastname}`);
   const subtitle = FALLBACK_MESSAGES.exit();
 
-  const duration = response.departureTime
-    ? formatDuration(response.arrivalTime, response.departureTime)
-    : null;
+  const duration =
+    response.arrivalTime && response.departureTime
+      ? formatDuration(response.arrivalTime, response.departureTime)
+      : null;
 
-  const arrivalShort = formatTimeShort(response.arrivalTime);
+  const arrivalShort = formatAttendanceTime(response.arrivalTime);
   const departureShort = response.departureTime
     ? formatTimeShort(response.departureTime)
     : null;
@@ -43,7 +48,7 @@ export function AttendanceExitFeedback({
         style={{ animationDelay: "700ms" }}
       >
         <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
-          {response.message}
+          {title}
         </h2>
       </div>
 

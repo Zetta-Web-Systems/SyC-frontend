@@ -53,6 +53,7 @@ export default function AttendanceCheckInPage() {
           status={flow.status}
           response={flow.response}
           moodMessage={flow.moodMessage}
+          feeMessage={flow.feeMessage}
           profileImageUrl={flow.profileImageUrl}
         />
       )}

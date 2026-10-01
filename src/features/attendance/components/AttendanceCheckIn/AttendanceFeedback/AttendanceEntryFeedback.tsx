@@ -1,19 +1,24 @@
 import { CircleCheckBig } from "lucide-react";
 import { AttendanceInfoCard } from "./AttendanceInfoCard";
-import { FALLBACK_MESSAGES } from "../../../constants";
+import { FALLBACK_GREETINGS, FALLBACK_MESSAGES } from "../../../constants";
 import type { AttendanceCheckIn } from "../../../types";
 
 interface AttendanceEntryFeedbackProps {
   response: AttendanceCheckIn;
   subtitle?: string;
+  feeMessage?: string | null;
   profileImageUrl?: string | null;
 }
 
 export function AttendanceEntryFeedback({
   response,
   subtitle,
+  feeMessage,
   profileImageUrl,
 }: AttendanceEntryFeedbackProps) {
+  const title =
+    response.message ||
+    FALLBACK_GREETINGS.entry(`${response.name} ${response.lastname}`);
   const resolvedSubtitle = subtitle ?? FALLBACK_MESSAGES.entry();
 
   return (
@@ -40,7 +45,7 @@ export function AttendanceEntryFeedback({
         style={{ animationDelay: "700ms" }}
       >
         <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
-          {response.message}
+          {title}
         </h2>
       </div>
 
@@ -54,12 +59,18 @@ export function AttendanceEntryFeedback({
       </div>
 
       <div
-        className="mt-8 flex gap-4 animate-[attendance-card-up_450ms_ease-out_both] md:mt-10 md:gap-6"
+        className="mt-8 flex flex-wrap justify-center gap-4 animate-[attendance-card-up_450ms_ease-out_both] md:mt-10 md:gap-6"
         style={{ animationDelay: "1000ms" }}
       >
         <AttendanceInfoCard label="Hora de entrada">
-          {response.arrivalTime}
+          {response.arrivalTime ?? "—"}
         </AttendanceInfoCard>
+
+        {feeMessage && (
+          <AttendanceInfoCard label="Cuota">
+            <span className="text-xl md:text-2xl">{feeMessage}</span>
+          </AttendanceInfoCard>
+        )}
       </div>
     </div>
   );
