@@ -1,3 +1,4 @@
+import { getDaysUntil } from "@shared/utils/date.utils";
 import { FEE_STATE, type Fee } from "../types";
 
 type FeeDueIntent = "success" | "warning" | "error" | "info";
@@ -8,18 +9,6 @@ export interface FeeDueStatus {
 }
 
 const GREEN_THRESHOLD_DAYS = 15;
-
-function daysUntil(dateStr: string): number {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const target = new Date(year, month - 1, day).getTime();
-  const now = new Date();
-  const today = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-  ).getTime();
-  return Math.round((target - today) / 86_400_000);
-}
 
 export type FeeDueSource = Pick<Fee, "feeState" | "endDate">;
 
@@ -34,7 +23,7 @@ export function getFeeDueStatus(fee: FeeDueSource): FeeDueStatus {
     return { label: "Pago parcial", intent: "info" };
   }
 
-  const days = daysUntil(fee.endDate);
+  const days = getDaysUntil(fee.endDate);
   const label =
     days <= 0 ? "Vence hoy" : `Vence en ${days} día${days === 1 ? "" : "s"}`;
   const intent: FeeDueIntent =

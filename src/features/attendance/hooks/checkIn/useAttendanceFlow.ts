@@ -1,15 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getApiErrorMessage } from "@shared/api/apiError";
 import {
   ABSENCE_CHECK_IN_MESSAGE,
   ATTENDANCE_ACTION,
-  MOOD_MESSAGES,
+  CHECK_IN_TIMEOUTS,
+  MOOD_SECONDS,
   REQUEST_STATUS,
-  RESET_TIMINGS,
   type AttendanceAction,
   type Mood,
 } from "../../constants";
-import type { AttendanceFlowState } from "../../types";
+import type {
+  AttendanceCheckIn,
+  AttendanceFee,
+  AttendanceFlowState,
+  CheckInTimer,
+} from "../../types";
+import {
+  getCheckInErrorMessage,
+  getFeeStatus,
+  getResultSeconds,
+  isRepeatCheckIn,
+} from "../../utils/checkIn.utils";
 import { useAttendanceDni } from "./useAttendanceDni";
 import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
 import { useAttendanceMoodMutation } from "./../mutations/useAttendanceMoodMutation";
@@ -18,9 +28,9 @@ const INITIAL_STATE: AttendanceFlowState = {
   status: REQUEST_STATUS.IDLE,
   response: null,
   error: null,
-  moodMessage: null,
+  fee: undefined,
   feeMessage: null,
-  profileImageUrl: null,
+  timer: null,
 };
 
 export function useAttendanceFlow() {
@@ -31,6 +41,7 @@ export function useAttendanceFlow() {
     dni,
     addDigit: dniAddDigit,
     removeDigit: dniRemoveDigit,
+    replace: dniReplace,
     clear: dniClear,
     isValid,
     canAddDigit,
@@ -52,18 +63,39 @@ export function useAttendanceFlow() {
     dniClear();
   }, [clearTimer, dniClear]);
 
-  const startResetTimer = useCallback(
-    (status: AttendanceAction) => {
+  const startTimer = useCallback(
+    (seconds: number, onDone: () => void): CheckInTimer => {
       clearTimer();
-      timerRef.current = setTimeout(reset, RESET_TIMINGS[status]);
+      timerRef.current = setTimeout(onDone, seconds * 1000);
+      return { seconds, endsAt: Date.now() + seconds * 1000 };
     },
-    [clearTimer, reset],
+    [clearTimer],
+  );
+
+  const showResult = useCallback(
+    (
+      status: AttendanceAction,
+      response: AttendanceCheckIn,
+      fee?: AttendanceFee | null,
+      feeMessage: string | null = null,
+    ) => {
+      const intent = getFeeStatus(fee, feeMessage)?.intent;
+      const timer = startTimer(getResultSeconds(intent), reset);
+      setState({ ...INITIAL_STATE, status, response, fee, feeMessage, timer });
+    },
+    [startTimer, reset],
   );
 
   const dismissError = useCallback(() => {
     clearTimer();
     setState(INITIAL_STATE);
   }, [clearTimer]);
+
+  useEffect(() => {
+    if (state.status !== REQUEST_STATUS.IDLE || dni.length === 0) return;
+    const id = setTimeout(dniClear, CHECK_IN_TIMEOUTS.idleDni);
+    return () => clearTimeout(id);
+  }, [state.status, dni, dniClear]);
 
   const addDigit = useCallback(
     (digit: string) => {
@@ -81,6 +113,16 @@ export function useAttendanceFlow() {
     }
     dniRemoveDigit();
   }, [state.status, dismissError, dniRemoveDigit]);
+
+  const setDni = useCallback(
+    (value: string) => {
+      if (state.status === REQUEST_STATUS.ERROR) {
+        dismissError();
+      }
+      dniReplace(value);
+    },
+    [state.status, dismissError, dniReplace],
+  );
 
   const submit = useCallback(() => {
     if (state.status !== REQUEST_STATUS.IDLE) return;
@@ -102,39 +144,35 @@ export function useAttendanceFlow() {
         }
 
         if (response.departureTime != null) {
-          setState({
-            ...INITIAL_STATE,
-            status: ATTENDANCE_ACTION.EXIT,
-            response,
-          });
-          startResetTimer("exit");
+          showResult(ATTENDANCE_ACTION.EXIT, response);
           return;
         }
 
+        if (isRepeatCheckIn(response)) {
+          showResult(ATTENDANCE_ACTION.REPEAT, response);
+          return;
+        }
+
+        const timer = startTimer(MOOD_SECONDS, () =>
+          showResult(ATTENDANCE_ACTION.ENTRY, response),
+        );
         setState({
           ...INITIAL_STATE,
           status: REQUEST_STATUS.MOOD_SELECTION,
           response,
+          timer,
         });
       },
       onError: (err) => {
-        const message = getApiErrorMessage(
-          err,
-          "DNI no reconocido o error de conexión",
-        );
-
         dniClear();
-
         setState({
           ...INITIAL_STATE,
           status: REQUEST_STATUS.ERROR,
-          error: message,
+          error: getCheckInErrorMessage(err),
         });
-
-        // TMP-MSG: No auto-dismiss: el error permanece visible hasta que el usuario presione una tecla
       },
     });
-  }, [state.status, dni, isValid, dniClear, mutation, startResetTimer]);
+  }, [state.status, dni, isValid, dniClear, mutation, startTimer, showResult]);
 
   const selectMood = useCallback(
     (mood: Mood) => {
@@ -144,37 +182,43 @@ export function useAttendanceFlow() {
       const currentResponse = state.response;
       if (!currentResponse) return;
 
-      setState((prev) => ({ ...prev, status: REQUEST_STATUS.MOOD_LOADING }));
+      clearTimer();
+      setState((prev) => ({
+        ...prev,
+        status: REQUEST_STATUS.MOOD_LOADING,
+        timer: null,
+      }));
 
       moodMutation.mutate(
         { id: currentResponse.id, mood },
         {
           onSuccess: (data) => {
-            setState({
-              ...INITIAL_STATE,
-              status: ATTENDANCE_ACTION.ENTRY,
-              response: currentResponse,
-              moodMessage: data.message ?? MOOD_MESSAGES[mood],
-              feeMessage: data.feeMessage || null,
-              profileImageUrl:
-                data.profileImageUrl ?? currentResponse.profileImageUrl ?? null,
-            });
-            startResetTimer("entry");
+            showResult(
+              ATTENDANCE_ACTION.ENTRY,
+              {
+                ...currentResponse,
+                mood,
+                profileImageUrl:
+                  data.profileImageUrl ?? currentResponse.profileImageUrl,
+              },
+              data.fee,
+              data.feeMessage || null,
+            );
           },
           onError: () => {
-            setState({
-              ...INITIAL_STATE,
-              status: ATTENDANCE_ACTION.ENTRY,
-              response: currentResponse,
-              profileImageUrl: currentResponse.profileImageUrl ?? null,
-            });
-            startResetTimer("entry");
+            showResult(ATTENDANCE_ACTION.ENTRY, currentResponse);
           },
         },
       );
     },
-    [state.status, state.response, moodMutation, startResetTimer],
+    [state.status, state.response, moodMutation, clearTimer, showResult],
   );
+
+  const skipMood = useCallback(() => {
+    if (state.status !== REQUEST_STATUS.MOOD_SELECTION) return;
+    if (!state.response) return;
+    showResult(ATTENDANCE_ACTION.ENTRY, state.response);
+  }, [state.status, state.response, showResult]);
 
   useEffect(() => clearTimer, [clearTimer]);
 
@@ -182,19 +226,22 @@ export function useAttendanceFlow() {
     status: state.status,
     response: state.response,
     error: state.error,
-    moodMessage: state.moodMessage,
+    fee: state.fee,
     feeMessage: state.feeMessage,
-    profileImageUrl: state.profileImageUrl,
+    timer: state.timer,
 
     dni,
     addDigit,
     removeDigit,
+    setDni,
     isValid,
     canAddDigit,
     isEmpty,
 
     submit,
     selectMood,
+    skipMood,
+    dismiss: reset,
     reset,
   };
 }

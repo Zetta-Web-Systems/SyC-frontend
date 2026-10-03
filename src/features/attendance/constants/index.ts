@@ -11,22 +11,7 @@ export const ATTENDANCE_KEYS = {
 export const DNI_MIN_LENGTH = 7;
 export const DNI_MAX_LENGTH = 8;
 
-export const RESET_TIMINGS = {
-  entry: 6000,
-  exit: 6000,
-} as const;
-
 export const LONG_PRESS_DURATION = 1500;
-
-export const FALLBACK_MESSAGES = {
-  entry: () => `Asistencia registrada correctamente`,
-  exit: () => `Egreso registrado correctamente`,
-} as const;
-
-export const FALLBACK_GREETINGS = {
-  entry: (fullName: string) => `Hola, ${fullName}`,
-  exit: (fullName: string) => `Hasta luego, ${fullName}`,
-} as const;
 
 export const ABSENCE_CHECK_IN_MESSAGE =
   "Tenés una ausencia registrada hoy. Avisale a tu profe.";
@@ -73,6 +58,7 @@ export type RequestStatus =
 export const ATTENDANCE_ACTION = {
   ENTRY: "entry",
   EXIT: "exit",
+  REPEAT: "repeat",
 } as const;
 
 export type AttendanceAction =
@@ -178,3 +164,102 @@ export const MONTH_OPTIONS: FilterOption[] = [
   { label: "Noviembre", value: "11" },
   { label: "Diciembre", value: "12" },
 ];
+
+export const CHECK_IN_TIMEOUTS = {
+  idleDni: 20_000,
+} as const;
+
+export const MOOD_SECONDS = 30;
+
+export const RESULT_SECONDS = {
+  calm: 10,
+  attention: 15,
+} as const;
+
+export const MOOD_CHOICE_FEEDBACK_MS = 450;
+
+export const MOOD_ORDER: Mood[] = [
+  MOOD.MOTIVATED,
+  MOOD.ENERGETIC,
+  MOOD.TIRED,
+  MOOD.SORE,
+  MOOD.UNMOTIVATED,
+];
+
+export const CHECK_IN_ERROR_MESSAGES = {
+  NOT_FOUND: "No encontramos ese DNI. Revisá el número o avisale al profe.",
+  TOO_SOON:
+    "Ya marcaste hace un ratito. Esperá unos minutos y volvé a intentar.",
+  OFFLINE: "No pudimos conectarnos. Probá de nuevo en un momento.",
+} as const;
+
+export const FEE_STATUS_KIND = {
+  PAID: "paid",
+  UP_TO_DATE: "up_to_date",
+  DUE_SOON: "due_soon",
+  DUE_TODAY: "due_today",
+  PARTIAL: "partial",
+  EXPIRED: "expired",
+  UNKNOWN: "unknown",
+} as const;
+
+export type FeeStatusKind =
+  (typeof FEE_STATUS_KIND)[keyof typeof FEE_STATUS_KIND];
+
+export type FeeStatusIntent =
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
+  | "neutral";
+
+export const FEE_STATUS_FRAME: Record<FeeStatusIntent, string> = {
+  success: "border-success",
+  warning: "border-warning",
+  info: "border-info",
+  error: "border-error",
+  neutral: "border-neutral-300",
+};
+
+export const FEE_STATUS_BAND: Record<FeeStatusIntent, string> = {
+  success: "bg-success text-white",
+  warning: "bg-warning text-neutral-900",
+  info: "bg-info text-white",
+  error: "bg-error text-white",
+  neutral: "bg-neutral-100 text-neutral-900",
+};
+
+export const FEE_STATUS_INK: Record<FeeStatusIntent, string> = {
+  success: "text-emerald-700",
+  warning: "text-orange-700",
+  info: "text-blue-700",
+  error: "text-rose-700",
+  neutral: "text-neutral-900",
+};
+
+export const WEEKDAY_NAMES = [
+  "domingo",
+  "lunes",
+  "martes",
+  "miércoles",
+  "jueves",
+  "viernes",
+  "sábado",
+] as const;
+
+export const MONTH_NAMES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+] as const;
+
+export const KIOSK_LOGO_SRC = "/images/attendance/attendance-image.png";

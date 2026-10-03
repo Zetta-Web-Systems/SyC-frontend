@@ -1,9 +1,8 @@
 import { useCallback } from "react";
-// import { Settings } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { confirm } from "@shared/stores/confirm.store";
 import { useLogoutMutation } from "@features/auth";
-import { useAttendanceLongPress } from "../../hooks/checkIn/useAttendanceLongPress";
+import { useAttendanceLongPress } from "../../../hooks/checkIn/useAttendanceLongPress";
 
 interface AttendanceAdminAccessProps {
   visible: boolean;

@@ -1,6 +1,9 @@
+import type { FeeState } from "@features/memberPlans";
 import type {
   AttendanceAction,
   AttendanceType,
+  FeeStatusIntent,
+  FeeStatusKind,
   Mood,
   RequestStatus,
 } from "../constants";
@@ -21,9 +24,15 @@ export interface Attendance {
   absentReason?: string | null;
 }
 
+export interface AttendanceFee {
+  feeState: FeeState;
+  endDate: string;
+}
+
 export interface AttendanceCheckIn extends Attendance {
   message?: string | null;
   feeMessage?: string | null;
+  fee?: AttendanceFee | null;
 }
 
 export interface SetAttendanceMoodArgs {
@@ -31,13 +40,34 @@ export interface SetAttendanceMoodArgs {
   mood: Mood;
 }
 
+export type CheckInPerson = Pick<
+  Attendance,
+  "name" | "lastname" | "profileImageUrl"
+>;
+
+export interface CheckInTimer {
+  seconds: number;
+  endsAt: number;
+}
+
 export interface AttendanceFlowState {
   status: RequestStatus | AttendanceAction;
   response: AttendanceCheckIn | null;
   error: string | null;
-  moodMessage: string | null;
+  fee?: AttendanceFee | null;
   feeMessage: string | null;
-  profileImageUrl: string | null;
+  timer: CheckInTimer | null;
+}
+
+export interface FeeStatusView {
+  kind: FeeStatusKind;
+  intent: FeeStatusIntent;
+  label: string;
+  dateCaption: string | null;
+  date: Date | null;
+  countdown: string | null;
+  advice: string | null;
+  message: string | null;
 }
 
 export interface AttendanceKeypadState {
