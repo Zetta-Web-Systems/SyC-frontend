@@ -38,23 +38,16 @@ export function AttendanceFeeStatus({ status }: AttendanceFeeStatusProps) {
             <p className="text-[64px] leading-none font-black tracking-tight text-neutral-900">
               {formatDayMonth(status.date)}
             </p>
-            {(status.countdown || status.advice) && (
-              <p className="mt-4 text-[26px] text-neutral-700">
-                {status.countdown && (
-                  <span
-                    className={cn("font-bold", FEE_STATUS_INK[status.intent])}
-                  >
-                    {status.countdown}
-                  </span>
-                )}
-                {status.countdown && status.advice && " · "}
-                {status.advice}
-              </p>
-            )}
+            <p className="mt-4 text-[26px] text-neutral-700">
+              <span className={cn("font-bold", FEE_STATUS_INK[status.intent])}>
+                {status.countdown}
+              </span>
+              {status.advice && ` · ${status.advice}`}
+            </p>
           </>
         ) : (
-          <p className="text-4xl font-semibold text-neutral-900">
-            {status.message}
+          <p className="py-2 text-[32px] leading-snug font-semibold text-neutral-900">
+            {status.advice}
           </p>
         )}
       </div>

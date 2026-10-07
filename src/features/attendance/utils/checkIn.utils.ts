@@ -1,18 +1,31 @@
 import { AxiosError } from "axios";
 import { getApiErrorMessage } from "@shared/api/apiError";
 import { getDaysUntil } from "@shared/utils/date.utils";
-import { FEE_STATE, getFeeDueStatus } from "@features/memberPlans";
+import {
+  FEE_STATE,
+  getFeeDueStatus,
+  type FeeSimple,
+} from "@features/memberPlans";
 import {
   CHECK_IN_ERROR_MESSAGES,
-  FEE_STATUS_KIND,
   MONTH_NAMES,
+  PERSON_TYPE,
   RESULT_SECONDS,
   WEEKDAY_NAMES,
   type FeeStatusIntent,
 } from "../constants";
-import type { AttendanceCheckIn, AttendanceFee, FeeStatusView } from "../types";
+import type { AttendanceCheckIn, FeeStatusView } from "../types";
 
 const PAY_AT_DESK = "Podés pagarla en recepción.";
+
+const NO_FEE_STATUS: FeeStatusView = {
+  intent: "neutral",
+  label: "Sin cuota registrada",
+  dateCaption: null,
+  date: null,
+  countdown: null,
+  advice: "Hablá con el dueño para que te asigne un plan.",
+};
 
 function capitalize(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
@@ -55,23 +68,11 @@ export function getInitials(name: string, lastname: string): string {
 }
 
 export function getFeeStatus(
-  fee: AttendanceFee | null | undefined,
-  feeMessage?: string | null,
+  fee: FeeSimple | null | undefined,
   now: Date = new Date(),
 ): FeeStatusView | null {
-  if (!fee) {
-    if (fee === null || !feeMessage) return null;
-    return {
-      kind: FEE_STATUS_KIND.UNKNOWN,
-      intent: "neutral",
-      label: "Cuota",
-      dateCaption: null,
-      date: null,
-      countdown: null,
-      advice: null,
-      message: feeMessage,
-    };
-  }
+  if (fee === null) return NO_FEE_STATUS;
+  if (!fee) return null;
 
   const { intent } = getFeeDueStatus(fee);
   const daysLeft = getDaysUntil(fee.endDate, now);
@@ -80,13 +81,11 @@ export function getFeeStatus(
     date: toLocalDate(fee.endDate),
     dateCaption: "Fecha de pago",
     countdown: getCountdown(daysLeft),
-    message: null,
   };
 
   if (fee.feeState === FEE_STATE.PAID) {
     return {
       ...base,
-      kind: FEE_STATUS_KIND.PAID,
       label: "Cuota pagada",
       dateCaption: "Próxima fecha de pago",
       advice: null,
@@ -96,7 +95,6 @@ export function getFeeStatus(
   if (fee.feeState === FEE_STATE.PARTIAL_PAYMENT) {
     return {
       ...base,
-      kind: FEE_STATUS_KIND.PARTIAL,
       label: "Cuota pagada en parte",
       advice: "Te queda un saldo por pagar.",
     };
@@ -105,7 +103,6 @@ export function getFeeStatus(
   if (fee.feeState === FEE_STATE.EXPIRED) {
     return {
       ...base,
-      kind: FEE_STATUS_KIND.EXPIRED,
       label: "Cuota vencida",
       countdown:
         daysLeft < 0 ? `Venció hace ${countDays(-daysLeft)}` : "Venció",
@@ -116,7 +113,6 @@ export function getFeeStatus(
   if (daysLeft <= 0) {
     return {
       ...base,
-      kind: FEE_STATUS_KIND.DUE_TODAY,
       label: "Cuota vence hoy",
       countdown: "Es hoy",
       advice: PAY_AT_DESK,
@@ -126,26 +122,30 @@ export function getFeeStatus(
   if (intent === "warning") {
     return {
       ...base,
-      kind: FEE_STATUS_KIND.DUE_SOON,
       label: "Cuota por vencer",
       advice: PAY_AT_DESK,
     };
   }
 
-  return {
-    ...base,
-    kind: FEE_STATUS_KIND.UP_TO_DATE,
-    label: "Cuota al día",
-    advice: null,
-  };
+  return { ...base, label: "Cuota al día", advice: null };
 }
 
-export function getResultSeconds(
-  intent: FeeStatusIntent | null | undefined,
-): number {
-  return !intent || intent === "success" || intent === "neutral"
+export function getResultSeconds(intent: FeeStatusIntent | undefined): number {
+  return !intent || intent === "success"
     ? RESULT_SECONDS.calm
     : RESULT_SECONDS.attention;
+}
+
+export function resolveCheckInFee(
+  response: AttendanceCheckIn,
+  fee?: FeeSimple,
+): FeeSimple | null | undefined {
+  if (fee) return fee;
+  return response.type === PERSON_TYPE.MEMBER ? null : undefined;
+}
+
+export function isMissingFeeError(error: unknown): boolean {
+  return error instanceof AxiosError && error.response?.status === 404;
 }
 
 export function isRepeatCheckIn(response: AttendanceCheckIn): boolean {
