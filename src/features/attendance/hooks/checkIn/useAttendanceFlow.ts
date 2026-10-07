@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { FeeSimple } from "@features/memberPlans";
 import {
   ABSENCE_CHECK_IN_MESSAGE,
   ATTENDANCE_ACTION,
@@ -10,7 +11,6 @@ import {
 } from "../../constants";
 import type {
   AttendanceCheckIn,
-  AttendanceFee,
   AttendanceFlowState,
   CheckInTimer,
 } from "../../types";
@@ -18,7 +18,9 @@ import {
   getCheckInErrorMessage,
   getFeeStatus,
   getResultSeconds,
+  isMissingFeeError,
   isRepeatCheckIn,
+  resolveCheckInFee,
 } from "../../utils/checkIn.utils";
 import { useAttendanceDni } from "./useAttendanceDni";
 import { useAttendanceMutation } from "./../mutations/useAttendanceMutation";
@@ -29,7 +31,6 @@ const INITIAL_STATE: AttendanceFlowState = {
   response: null,
   error: null,
   fee: undefined,
-  feeMessage: null,
   timer: null,
 };
 
@@ -76,12 +77,11 @@ export function useAttendanceFlow() {
     (
       status: AttendanceAction,
       response: AttendanceCheckIn,
-      fee?: AttendanceFee | null,
-      feeMessage: string | null = null,
+      fee?: FeeSimple | null,
     ) => {
-      const intent = getFeeStatus(fee, feeMessage)?.intent;
+      const intent = getFeeStatus(fee)?.intent;
       const timer = startTimer(getResultSeconds(intent), reset);
-      setState({ ...INITIAL_STATE, status, response, fee, feeMessage, timer });
+      setState({ ...INITIAL_STATE, status, response, fee, timer });
     },
     [startTimer, reset],
   );
@@ -201,12 +201,17 @@ export function useAttendanceFlow() {
                 profileImageUrl:
                   data.profileImageUrl ?? currentResponse.profileImageUrl,
               },
-              data.fee,
-              data.feeMessage || null,
+              resolveCheckInFee(currentResponse, data.fee),
             );
           },
-          onError: () => {
-            showResult(ATTENDANCE_ACTION.ENTRY, currentResponse);
+          onError: (err) => {
+            showResult(
+              ATTENDANCE_ACTION.ENTRY,
+              currentResponse,
+              isMissingFeeError(err)
+                ? resolveCheckInFee(currentResponse)
+                : undefined,
+            );
           },
         },
       );
@@ -221,7 +226,6 @@ export function useAttendanceFlow() {
     response: state.response,
     error: state.error,
     fee: state.fee,
-    feeMessage: state.feeMessage,
     timer: state.timer,
 
     dni,

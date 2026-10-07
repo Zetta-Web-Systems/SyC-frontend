@@ -67,7 +67,7 @@ export default function AttendanceCheckInPage() {
     }
 
     const isRepeat = flow.status === ATTENDANCE_ACTION.REPEAT;
-    const feeStatus = getFeeStatus(flow.fee, flow.feeMessage);
+    const feeStatus = getFeeStatus(flow.fee);
 
     return (
       <AttendanceResult

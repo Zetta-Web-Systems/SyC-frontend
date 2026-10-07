@@ -1,6 +1,7 @@
 import type { BadgeProps } from "@shared/ui";
 import type { FilterOption } from "@shared/types/filters.types";
 import type { PaginatedParams } from "@shared/types/pagination.types";
+import type { FeeDueStatus } from "@features/memberPlans";
 
 export const ATTENDANCE_KEYS = {
   all: ["attendance"] as const,
@@ -193,25 +194,7 @@ export const CHECK_IN_ERROR_MESSAGES = {
   OFFLINE: "No pudimos conectarnos. Probá de nuevo en un momento.",
 } as const;
 
-export const FEE_STATUS_KIND = {
-  PAID: "paid",
-  UP_TO_DATE: "up_to_date",
-  DUE_SOON: "due_soon",
-  DUE_TODAY: "due_today",
-  PARTIAL: "partial",
-  EXPIRED: "expired",
-  UNKNOWN: "unknown",
-} as const;
-
-export type FeeStatusKind =
-  (typeof FEE_STATUS_KIND)[keyof typeof FEE_STATUS_KIND];
-
-export type FeeStatusIntent =
-  | "success"
-  | "warning"
-  | "error"
-  | "info"
-  | "neutral";
+export type FeeStatusIntent = FeeDueStatus["intent"] | "neutral";
 
 export const FEE_STATUS_FRAME: Record<FeeStatusIntent, string> = {
   success: "border-success",
