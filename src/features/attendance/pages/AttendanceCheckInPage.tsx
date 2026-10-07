@@ -35,7 +35,6 @@ export default function AttendanceCheckInPage() {
           secondsLeft={secondsLeft}
           disabled={isMoodLoading}
           onSelect={flow.selectMood}
-          onSkip={flow.skipMood}
         />
       );
     }

@@ -214,12 +214,6 @@ export function useAttendanceFlow() {
     [state.status, state.response, moodMutation, clearTimer, showResult],
   );
 
-  const skipMood = useCallback(() => {
-    if (state.status !== REQUEST_STATUS.MOOD_SELECTION) return;
-    if (!state.response) return;
-    showResult(ATTENDANCE_ACTION.ENTRY, state.response);
-  }, [state.status, state.response, showResult]);
-
   useEffect(() => clearTimer, [clearTimer]);
 
   return {
@@ -240,7 +234,6 @@ export function useAttendanceFlow() {
 
     submit,
     selectMood,
-    skipMood,
     dismiss: reset,
     reset,
   };

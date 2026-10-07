@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, SkipForward } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { Avatar, Button, IconBox } from "@shared/ui";
 import {
@@ -18,7 +18,6 @@ interface AttendanceMoodScreenProps {
   secondsLeft: number;
   disabled?: boolean;
   onSelect: (mood: Mood) => void;
-  onSkip: () => void;
 }
 
 const OPTION_OFFSET_MS = 150;
@@ -30,7 +29,6 @@ export function AttendanceMoodScreen({
   secondsLeft,
   disabled = false,
   onSelect,
-  onSkip,
 }: AttendanceMoodScreenProps) {
   const [chosen, setChosen] = useState<Mood | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -120,21 +118,9 @@ export function AttendanceMoodScreen({
         ))}
       </div>
 
-      <div className="mt-auto flex flex-wrap items-center gap-8 motion-safe:animate-[attendance-content-up_400ms_ease-out_450ms_both]">
-        <Button
-          variant="outline"
-          intent="neutral"
-          className="h-20 gap-3 border-2 bg-white px-10 text-[28px] text-neutral-700"
-          disabled={isLocked}
-          onClick={onSkip}
-        >
-          <SkipForward className="size-8" aria-hidden="true" />
-          Saltar
-        </Button>
-        <p className="text-2xl text-neutral-600">
-          Si no elegís, seguimos solos en {secondsLeft} s.
-        </p>
-      </div>
+      <p className="mt-auto text-2xl text-neutral-600 motion-safe:animate-[attendance-content-up_400ms_ease-out_450ms_both]">
+        Si no elegís, seguimos solos en {secondsLeft} s.
+      </p>
     </div>
   );
 }
