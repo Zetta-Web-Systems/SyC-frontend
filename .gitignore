@@ -33,5 +33,4 @@ dist-ssr
 .scripts
 
 # TanStack Router — auto-generated route tree
-src/app/routeTree.gen.ts
 .tanstack
