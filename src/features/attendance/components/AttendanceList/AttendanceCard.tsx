@@ -103,8 +103,11 @@ export function AttendanceCard({ attendance }: AttendanceCardProps) {
         </div>
 
         {attendance.isAbsent ? (
-          <div className="ml-auto shrink-0">
+          <div className="ml-auto flex shrink-0 flex-col items-center gap-1">
             <AttendanceStatusBadge isAbsent />
+            <span className="text-xs font-semibold text-neutral-900">
+              {formatAttendanceTime(attendance.arrivalTime)}
+            </span>
           </div>
         ) : (
           <>

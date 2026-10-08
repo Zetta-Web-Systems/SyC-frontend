@@ -14,9 +14,6 @@ export const DNI_MAX_LENGTH = 8;
 
 export const LONG_PRESS_DURATION = 1500;
 
-export const ABSENCE_CHECK_IN_MESSAGE =
-  "Tenés una ausencia registrada hoy. Avisale a tu profe.";
-
 export const DEPARTURE_FILTER_OPTIONS: FilterOption[] = [
   { label: "Registrada", value: "true" },
   { label: "Sin registrar", value: "false" },

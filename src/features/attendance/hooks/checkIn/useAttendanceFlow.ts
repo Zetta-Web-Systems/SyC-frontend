@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FeeSimple } from "@features/memberPlans";
 import {
-  ABSENCE_CHECK_IN_MESSAGE,
   ATTENDANCE_ACTION,
   CHECK_IN_TIMEOUTS,
   MOOD_SECONDS,
@@ -133,16 +132,6 @@ export function useAttendanceFlow() {
 
     mutation.mutate(dni, {
       onSuccess: (response) => {
-        if (response.isAbsent) {
-          dniClear();
-          setState({
-            ...INITIAL_STATE,
-            status: REQUEST_STATUS.ERROR,
-            error: ABSENCE_CHECK_IN_MESSAGE,
-          });
-          return;
-        }
-
         if (response.departureTime != null) {
           showResult(ATTENDANCE_ACTION.EXIT, response);
           return;

@@ -67,17 +67,13 @@ const statusColumn: ColumnDef<Attendance, unknown> = {
   cell: ({ row }) => <AttendanceStatusBadge isAbsent={row.original.isAbsent} />,
 };
 
-const arrivalTimeColumn: ColumnDef<Attendance, unknown> = {
+const arrivalTimeColumn = (header: string): ColumnDef<Attendance, unknown> => ({
   accessorKey: "arrivalTime",
-  header: "Hora de ingreso",
-  cell: ({ row }) => {
-    const { arrivalTime, isAbsent } = row.original;
-
-    if (isAbsent) return <span>—</span>;
-
-    return <span>{formatAttendanceTime(arrivalTime)}</span>;
-  },
-};
+  header,
+  cell: ({ row }) => (
+    <span>{formatAttendanceTime(row.original.arrivalTime)}</span>
+  ),
+});
 
 const departureTimeColumn: ColumnDef<Attendance, unknown> = {
   accessorKey: "departureTime",
@@ -137,7 +133,7 @@ const absentReasonColumn: ColumnDef<Attendance, unknown> = {
 const INSTRUCTOR_COLUMNS: ColumnDef<Attendance, unknown>[] = [
   nameColumn,
   dateColumn,
-  arrivalTimeColumn,
+  arrivalTimeColumn("Hora de ingreso"),
   departureTimeColumn,
   moodColumn,
 ];
@@ -146,7 +142,7 @@ const MEMBER_COLUMNS: ColumnDef<Attendance, unknown>[] = [
   nameColumn,
   dateColumn,
   statusColumn,
-  arrivalTimeColumn,
+  arrivalTimeColumn("Hora"),
   moodColumn,
   absentReasonColumn,
 ];
