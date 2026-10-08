@@ -1,5 +1,5 @@
-import { ChevronLeft, ChevronRight, Stamp } from "lucide-react";
-import { Badge, Button, Pill } from "@shared/ui";
+import { ChevronLeft, ChevronRight, RefreshCw, Stamp } from "lucide-react";
+import { Badge, Button, IconButton, Pill } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
 import {
   SCHEDULE_DAY_LABELS,
@@ -79,12 +79,14 @@ interface LiveIndicatorProps {
   updatedAt: number;
   isFetching: boolean;
   isOffline: boolean;
+  onRefresh: () => void;
 }
 
 function LiveIndicator({
   updatedAt,
   isFetching,
   isOffline,
+  onRefresh,
 }: LiveIndicatorProps) {
   const now = useNow(LIVE_TICK_MS);
   const elapsed = formatElapsedSeconds(
@@ -92,37 +94,52 @@ function LiveIndicator({
   );
 
   return (
-    <span
-      role="status"
-      className="inline-flex items-center gap-2 text-sm text-neutral-500"
-    >
-      <span className="relative flex size-2.5" aria-hidden="true">
-        {!isOffline && (
-          <span className="absolute inline-flex size-full rounded-full bg-success opacity-60 motion-safe:animate-ping" />
-        )}
+    <span className="inline-flex items-center gap-1">
+      <span
+        role="status"
+        className="inline-flex items-center gap-2 text-sm text-neutral-500"
+      >
+        <span className="relative flex size-2.5" aria-hidden="true">
+          {!isOffline && (
+            <span className="absolute inline-flex size-full rounded-full bg-success opacity-60 motion-safe:animate-ping" />
+          )}
+          <span
+            className={cn(
+              "relative inline-flex size-2.5 rounded-full",
+              isOffline ? "bg-error" : "bg-success",
+            )}
+          />
+        </span>
         <span
           className={cn(
-            "relative inline-flex size-2.5 rounded-full",
-            isOffline ? "bg-error" : "bg-success",
+            "font-semibold",
+            isOffline ? "text-error" : "text-success",
           )}
-        />
+        >
+          {isOffline ? "Sin conexión" : "En vivo"}
+        </span>
+        <span className="tabular-nums">
+          ·{" "}
+          {isOffline
+            ? `reintentando, dato de hace ${elapsed}`
+            : isFetching
+              ? "actualizando…"
+              : `hace ${elapsed}`}
+        </span>
       </span>
-      <span
-        className={cn(
-          "font-semibold",
-          isOffline ? "text-error" : "text-success",
-        )}
+      <IconButton
+        size="md"
+        aria-label="Actualizar"
+        disabled={isFetching}
+        onClick={onRefresh}
+        className="size-11"
       >
-        {isOffline ? "Sin conexión" : "En vivo"}
-      </span>
-      <span className="tabular-nums">
-        ·{" "}
-        {isOffline
-          ? `reintentando, dato de hace ${elapsed}`
-          : isFetching
-            ? "actualizando…"
-            : `hace ${elapsed}`}
-      </span>
+        <RefreshCw
+          size={16}
+          aria-hidden="true"
+          className={cn(isFetching && "motion-safe:animate-spin")}
+        />
+      </IconButton>
     </span>
   );
 }
@@ -183,6 +200,7 @@ interface SessionTurnBarProps {
   updatedAt: number;
   isFetching: boolean;
   isOffline: boolean;
+  onRefresh: () => void;
   finish: SessionFinish | null;
   onFinish: () => void;
   searchGroups: SessionSearchGroup[];
@@ -204,6 +222,7 @@ export function SessionTurnBar({
   updatedAt,
   isFetching,
   isOffline,
+  onRefresh,
   finish,
   onFinish,
   searchGroups,
@@ -306,6 +325,7 @@ export function SessionTurnBar({
           updatedAt={updatedAt}
           isFetching={isFetching}
           isOffline={isOffline}
+          onRefresh={onRefresh}
         />
         <Badge
           variant="dot"

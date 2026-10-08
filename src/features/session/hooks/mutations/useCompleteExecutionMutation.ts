@@ -3,6 +3,7 @@ import { TRAINING_PLANS_KEYS } from "@features/trainingPlan";
 import { SESSION_KEYS } from "../../constants";
 import { completeExecution } from "../../services/session.api";
 import { applyExecutionUpdate } from "../../lib/sessionProgress";
+import { boardHasMember } from "../../lib/sessionBoardCache";
 import type { CompleteExecutionDto, SessionPlanDay } from "../../types";
 
 interface CompleteExecutionVariables {
@@ -46,7 +47,10 @@ export function useCompleteExecutionMutation(
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: planDayKey });
-      void queryClient.invalidateQueries({ queryKey: SESSION_KEYS.boards() });
+      void queryClient.invalidateQueries({
+        queryKey: SESSION_KEYS.boards(),
+        predicate: boardHasMember(memberId),
+      });
       if (trainingPlanId) {
         void queryClient.invalidateQueries({
           queryKey: TRAINING_PLANS_KEYS.detail(trainingPlanId),

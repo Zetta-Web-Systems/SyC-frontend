@@ -8,12 +8,17 @@ import { getSessionBoard } from "../../services/session.api";
 import { mapSessionBoard } from "../../lib/sessionApiMapper";
 import { isNotFoundError } from "../../lib/sessionErrors";
 
-export function useSessionBoardQuery(position: SessionPosition) {
+export function useSessionBoardQuery(
+  position: SessionPosition,
+  isViewed: boolean,
+) {
   return useQuery({
     queryKey: SESSION_KEYS.board(position),
     queryFn: () => getSessionBoard(position),
     select: mapSessionBoard,
-    refetchInterval: SESSION_REFETCH_INTERVAL,
+    staleTime: isViewed ? 0 : Infinity,
+    refetchInterval: isViewed ? SESSION_REFETCH_INTERVAL : false,
+    refetchOnWindowFocus: isViewed,
     retry: (failureCount, error) => !isNotFoundError(error) && failureCount < 1,
   });
 }

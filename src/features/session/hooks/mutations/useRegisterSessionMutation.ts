@@ -4,6 +4,7 @@ import { formatSlotRange } from "@features/schedule";
 import { USER_ROLE, useAuthStore } from "@features/auth";
 import { SESSION_KEYS } from "../../constants";
 import { registerSession } from "../../services/session.api";
+import { boardHasTurn } from "../../lib/sessionBoardCache";
 import type { SessionTurn } from "../../types";
 
 interface RegisterSessionVariables {
@@ -39,7 +40,10 @@ export function useRegisterSessionMutation() {
         },
       ),
     onSuccess: ({ timeSlot }) => {
-      void queryClient.invalidateQueries({ queryKey: SESSION_KEYS.boards() });
+      void queryClient.invalidateQueries({
+        queryKey: SESSION_KEYS.boards(),
+        predicate: boardHasTurn(timeSlot.id),
+      });
       toast.success("Sesión finalizada", {
         description: `Turno de ${formatSlotRange(timeSlot.startTime, timeSlot.endTime)}`,
       });

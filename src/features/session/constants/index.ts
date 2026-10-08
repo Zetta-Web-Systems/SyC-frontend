@@ -145,9 +145,11 @@ export const SESSION_VIEW_LABELS: Record<SessionView, string> = {
   room: "Sala",
 };
 
-export const SESSION_REFETCH_INTERVAL = 30_000;
+export const SESSION_REFETCH_INTERVAL = 60_000;
 
 export const SESSION_SEARCH_DELAY_MS = 150;
+
+export const SESSION_ROOM_COLUMNS_QUERY = "(min-width: 64rem)";
 
 export const SESSION_KEYS = {
   all: ["session"] as const,
@@ -196,6 +198,15 @@ export const EXECUTION_STATUS_BORDER: Record<ExecutionStatus, string> = {
   pending: "border-primary-300",
   done: "border-success/50",
   skipped: "border-warning/50",
+};
+
+export const EXECUTION_ACTION_TONE: Record<
+  Exclude<ExecutionStatus, typeof EXECUTION_STATUS.PENDING>,
+  string
+> = {
+  done: "border-success/60 bg-success/10 text-success hover:bg-success/15 active:bg-success/20 focus-visible:ring-success",
+  skipped:
+    "border-warning/60 bg-warning/10 text-warning hover:bg-warning/15 active:bg-warning/20 focus-visible:ring-warning",
 };
 
 export const EXECUTION_ROW_TONE: Record<ExecutionStatus, string> = {
