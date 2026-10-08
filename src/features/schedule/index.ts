@@ -7,8 +7,13 @@ export {
   CLOSURE_TYPE,
   SLOT_TAG,
   SLOT_TAG_TINT,
+  SLOT_STATUS_INTENT,
 } from "./constants";
 export type { ScheduleDay, ClosureType, SlotTag } from "./constants";
-export { formatSlotRange } from "./lib/slotStatus";
+export {
+  formatSlotRange,
+  formatSlotTime,
+  getSlotStatus,
+} from "./lib/slotStatus";
 export { useScheduleWeekQuery } from "./hooks/queries/useScheduleWeekQuery";
 export { MemberTurnHistoryModal } from "./components/MemberTurnHistory/MemberTurnHistoryModal";
