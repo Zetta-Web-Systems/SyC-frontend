@@ -36,7 +36,7 @@ export function SessionRoom({
   }
 
   return (
-    <div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-3 lg:grid-cols-[17rem_minmax(0,1fr)] lg:grid-rows-1 lg:gap-6">
+    <div className="flex flex-col gap-3 lg:grid lg:min-h-0 lg:flex-1 lg:grid-cols-[17rem_minmax(0,1fr)] lg:grid-rows-1 lg:gap-6">
       <SessionRoster
         members={members}
         progress={progress}
@@ -46,7 +46,7 @@ export function SessionRoom({
 
       <div
         key={selected.member.id}
-        className="min-h-0 overflow-y-auto pr-1 motion-safe:animate-[session-panel-in_260ms_ease-out]"
+        className="motion-safe:animate-[session-panel-in_260ms_ease-out] lg:min-h-0 lg:overflow-y-auto lg:pr-1"
       >
         <SessionMemberPanel
           sessionMember={selected}

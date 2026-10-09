@@ -232,7 +232,7 @@ export default function SessionPage({
   }
 
   return (
-    <div className={cn("flex flex-col gap-4", inRoom && "h-full")}>
+    <div className={cn("flex flex-col gap-4", inRoom && "lg:h-full")}>
       <div
         className={cn(
           "z-20 shrink-0",

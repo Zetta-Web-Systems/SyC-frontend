@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Eye, MessageSquarePlus } from "lucide-react";
 import { Badge, Button } from "@shared/ui";
 import { cn } from "@shared/lib/cn";
@@ -13,6 +13,7 @@ import {
   EXECUTION_STATUS_BORDER,
   EXECUTION_STATUS_LABELS,
   EXECUTION_STATUS_TEXT,
+  SESSION_ROOM_COLUMNS_QUERY,
 } from "../../../constants";
 import { EXECUTION_STATUS_ICON } from "../../../constants/icons";
 import { getExecutionStatus } from "../../../lib/sessionProgress";
@@ -33,6 +34,7 @@ interface FocusExerciseProps {
   onDraftChange: (text: string | null) => void;
   onSaveObservation: (text: string) => void;
   onViewExercise: () => void;
+  actions: ReactNode;
 }
 
 export function FocusExercise({
@@ -48,6 +50,7 @@ export function FocusExercise({
   onDraftChange,
   onSaveObservation,
   onViewExercise,
+  actions,
 }: FocusExerciseProps) {
   const [editing, setEditing] = useState(false);
   const ref = useRef<HTMLLIElement>(null);
@@ -60,6 +63,14 @@ export function FocusExercise({
   useEffect(() => {
     ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [previousLoading]);
+
+  useEffect(() => {
+    const media = window.matchMedia(SESSION_ROOM_COLUMNS_QUERY);
+    const scrollToFocus = () =>
+      ref.current?.scrollIntoView({ block: "nearest" });
+    media.addEventListener("change", scrollToFocus);
+    return () => media.removeEventListener("change", scrollToFocus);
+  }, []);
 
   function saveObservation(text: string) {
     setEditing(false);
@@ -74,7 +85,7 @@ export function FocusExercise({
     <li
       ref={ref}
       className={cn(
-        "scroll-mt-4 scroll-mb-28 rounded-2xl border-2 bg-white p-4 shadow-sm motion-safe:animate-[session-focus-in_220ms_ease-out] sm:p-5",
+        "scroll-mt-32 scroll-mb-4 max-md:scroll-mt-44 lg:scroll-mt-4 lg:scroll-mb-28 rounded-2xl border-2 bg-white p-4 shadow-sm motion-safe:animate-[session-focus-in_220ms_ease-out] sm:p-5",
         EXECUTION_STATUS_BORDER[status],
       )}
     >
@@ -170,6 +181,10 @@ export function FocusExercise({
             Observación
           </Button>
         )}
+      </div>
+
+      <div className="mt-4 border-t border-neutral-100 pt-4 lg:hidden">
+        {actions}
       </div>
     </li>
   );

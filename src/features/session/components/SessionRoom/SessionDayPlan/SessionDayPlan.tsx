@@ -12,7 +12,10 @@ import {
 } from "../../../lib/sessionProgress";
 import type { SessionExecution, SessionPlannedExercise } from "../../../types";
 import { CompactExerciseRow } from "./CompactExerciseRow";
-import { ExerciseActionDock } from "./ExerciseActionDock";
+import {
+  ExerciseActionButtons,
+  ExerciseActionDock,
+} from "./ExerciseActionDock";
 import { FocusExercise } from "./FocusExercise";
 
 type FocusState = string | null | undefined;
@@ -118,7 +121,7 @@ export function SessionDayPlan({
                   exercises.length,
                   countSkipped(exercises),
                 )}{" "}
-                Para cerrar queda el bloque aeróbico.
+                Queda el 4° bloque, el aeróbico.
               </p>
             </div>
           </div>
@@ -149,6 +152,14 @@ export function SessionDayPlan({
                     onSaveObservation(execution, text)
                   }
                   onViewExercise={() => onViewExercise(pe.exercise)}
+                  actions={
+                    <ExerciseActionButtons
+                      stretch
+                      execution={execution}
+                      onMark={(isCompleted) => mark(pe, execution, isCompleted)}
+                      onUndo={() => onUndo(execution)}
+                    />
+                  }
                 />
               );
             }

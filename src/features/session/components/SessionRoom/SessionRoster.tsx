@@ -113,7 +113,7 @@ export function SessionRoster({
 
       <nav
         aria-label="Alumnos del turno"
-        className="scrollbar-hide -mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:hidden"
+        className="scrollbar-hide sticky -top-10 z-10 -mx-10 flex gap-1 overflow-x-auto bg-neutral-100 px-10 py-2 max-md:-top-4 lg:hidden"
       >
         {ordered.map((sm) => {
           const selected = sm.member.id === selectedId;
