@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { DNI_MAX_LENGTH, DNI_MIN_LENGTH } from "../../constants";
 
 const DIGIT_REGEX = /^[0-9]$/;
+const NON_DIGITS = /\D/g;
 
 export function useAttendanceDni() {
   const [dni, setDni] = useState("");
@@ -15,6 +16,10 @@ export function useAttendanceDni() {
     setDni((prev) => prev.slice(0, -1));
   }, []);
 
+  const replace = useCallback((value: string) => {
+    setDni(value.replace(NON_DIGITS, "").slice(0, DNI_MAX_LENGTH));
+  }, []);
+
   const clear = useCallback(() => {
     setDni("");
   }, []);
@@ -23,5 +28,14 @@ export function useAttendanceDni() {
   const canAddDigit = dni.length < DNI_MAX_LENGTH;
   const isEmpty = dni.length === 0;
 
-  return { dni, addDigit, removeDigit, clear, isValid, canAddDigit, isEmpty };
+  return {
+    dni,
+    addDigit,
+    removeDigit,
+    replace,
+    clear,
+    isValid,
+    canAddDigit,
+    isEmpty,
+  };
 }

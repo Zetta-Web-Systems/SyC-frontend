@@ -219,3 +219,16 @@ export function formatDateToISO(date: Date): string {
   const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
 }
+
+/**
+ * Días calendario que faltan hasta una fecha "YYYY-MM-DD", en hora local.
+ * Da 0 si es hoy y un número negativo si la fecha ya pasó.
+ * @example
+ * getDaysUntil("2026-10-06", new Date(2026, 9, 1)) => 5
+ */
+export function getDaysUntil(date: string, now: Date = new Date()): number {
+  return Math.round(
+    (startOfDay(parseDate(date)).getTime() - startOfDay(now).getTime()) /
+      MS_PER_DAY,
+  );
+}

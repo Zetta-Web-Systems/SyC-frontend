@@ -9,12 +9,14 @@ import {
 import { useColumnVisibility } from "@shared/hooks/useColumnVisibility";
 import { ATTENDANCE_TABLE_VISIBILITY } from "@shared/constants/tableVisibility.constants";
 import type { ViewMode } from "@shared/ui";
+import type { AttendanceType } from "../../constants";
 import type { Attendance } from "../../types";
-import { attendanceColumns } from "./AttendanceTable.columns";
+import { getAttendanceColumns } from "./AttendanceTable.columns";
 import { AttendanceCard } from "./AttendanceCard";
 
 interface AttendanceTableProps {
   data: Attendance[];
+  type: AttendanceType;
   rowCount: number;
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
@@ -24,12 +26,14 @@ interface AttendanceTableProps {
 
 export function AttendanceTable({
   data,
+  type,
   rowCount,
   pagination,
   onPaginationChange,
   isLoading,
   viewMode,
 }: AttendanceTableProps) {
+  const columns = getAttendanceColumns(type);
   const { columnVisibility, setColumnVisibility } = useColumnVisibility({
     config: ATTENDANCE_TABLE_VISIBILITY,
   });
@@ -75,7 +79,7 @@ export function AttendanceTable({
       <div className="hidden md:block">
         {viewMode === "table" ? (
           <DataTable
-            columns={attendanceColumns}
+            columns={columns}
             data={data}
             rowCount={rowCount}
             pagination={pagination}

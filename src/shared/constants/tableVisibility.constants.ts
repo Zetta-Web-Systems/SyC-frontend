@@ -190,19 +190,28 @@ export const ATTENDANCE_TABLE_VISIBILITY: ColumnVisibilityConfig = {
   sm: {
     name: true,
     attendanceDate: true,
+    status: true,
     arrivalTime: true,
     departureTime: true,
+    mood: false,
+    absentReason: false,
   },
   md: {
     name: true,
     attendanceDate: true,
+    status: true,
     arrivalTime: true,
     departureTime: true,
+    mood: true,
+    absentReason: true,
   },
   lg: {
     name: true,
     attendanceDate: true,
+    status: true,
     arrivalTime: true,
     departureTime: true,
+    mood: true,
+    absentReason: true,
   },
 };

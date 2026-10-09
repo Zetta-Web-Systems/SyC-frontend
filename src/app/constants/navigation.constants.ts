@@ -36,6 +36,7 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/session",
         icon: Play,
         color: "text-green-400",
+        roles: [USER_ROLE.ADMIN, USER_ROLE.INSTRUCTOR],
       },
     ],
   },

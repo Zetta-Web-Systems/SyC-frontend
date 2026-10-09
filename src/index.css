@@ -96,6 +96,17 @@
   }
 }
 
+@keyframes attendance-screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes attendance-icon-bounce {
   0% {
     opacity: 0;
@@ -121,27 +132,6 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes attendance-wave {
-  0% {
-    transform: rotate(0deg);
-  }
-  20% {
-    transform: rotate(14deg);
-  }
-  40% {
-    transform: rotate(-10deg);
-  }
-  60% {
-    transform: rotate(10deg);
-  }
-  80% {
-    transform: rotate(-6deg);
-  }
-  100% {
-    transform: rotate(0deg);
   }
 }
 
@@ -211,15 +201,6 @@
   }
 }
 
-@keyframes attendance-long-press {
-  from {
-    stroke-dashoffset: 100;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
 @layer base {
   h1 {
     @apply text-3xl font-bold tracking-tight leading-tight;
@@ -252,5 +233,42 @@
 
   * {
     box-sizing: border-box;
+  }
+}
+
+@keyframes session-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes session-focus-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes session-stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

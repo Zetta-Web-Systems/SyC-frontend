@@ -1,6 +1,7 @@
 export type { AccordionProps } from "./Accordion/Accordion";
 export type { AccordionItemProps } from "./Accordion/AccordionItem";
 export type { AvatarUploaderProps } from "./AvatarUploader/AvatarUploader";
+export type { BadgeProps } from "./Badge/Badge";
 export type { ButtonProps } from "./Button/Button";
 export type { CardProps } from "./Card/Card";
 export type { DateFilterDropdownProps } from "./DateFilterDropdown/DateFilterDropdown";

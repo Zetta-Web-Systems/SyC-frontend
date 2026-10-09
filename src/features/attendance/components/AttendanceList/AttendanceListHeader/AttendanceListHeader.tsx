@@ -2,15 +2,20 @@ import { ArrowLeft, CalendarDays } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { PageHeader } from "@shared/components/PageHeader/PageHeader";
 import { Button } from "@shared/ui";
-import { PERSON_TYPE_LABELS, type AttendanceType } from "../../../constants";
+import {
+  PERSON_TYPE,
+  PERSON_TYPE_LABELS,
+  type AttendanceType,
+} from "../../../constants";
 
 interface AttendanceListHeaderProps {
   type: AttendanceType;
 }
 
 export function AttendanceListHeader({ type }: AttendanceListHeaderProps) {
-  const targetType = type === "MEMBER" ? "INSTRUCTOR" : "MEMBER";
-  const backLink = type === "MEMBER" ? "/members" : "/instructors";
+  const isMember = type === PERSON_TYPE.MEMBER;
+  const targetType = isMember ? PERSON_TYPE.INSTRUCTOR : PERSON_TYPE.MEMBER;
+  const backLink = isMember ? "/members" : "/instructors";
 
   return (
     <PageHeader

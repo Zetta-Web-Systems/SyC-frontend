@@ -9,6 +9,7 @@ import type { ViewMode } from "@shared/ui";
 import { formatDateToISO } from "@shared/utils/date.utils";
 import { toApiPage, splitFilterEntries } from "@shared/utils/pagination.utils";
 import type { AttendanceType } from "../../constants";
+import { registersDeparture } from "../../utils";
 
 interface UseAttendanceFiltersOptions {
   type: AttendanceType;
@@ -26,7 +27,15 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
   const [prevMonth, setPrevMonth] = useState<string[]>([]);
   const [prevYear, setPrevYear] = useState<string[]>([]);
   const [dateFilter, setDateFilter] = useState<Date | null>(null);
+  const [departureFilter, setDepartureFilter] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
+
+  const scopeKey = `${options.type}|${options.initialPersonId ?? ""}`;
+  const [prevScopeKey, setPrevScopeKey] = useState(scopeKey);
+  if (scopeKey !== prevScopeKey) {
+    setPrevScopeKey(scopeKey);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }
 
   const filterEntries: FilterEntry[] = [
     { key: "person.type", value: options.type },
@@ -34,6 +43,13 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
 
   if (options.initialPersonId) {
     filterEntries.push({ key: "person.id", value: options.initialPersonId });
+  }
+
+  if (registersDeparture(options.type) && departureFilter.length > 0) {
+    filterEntries.push({
+      key: "departureRegistered",
+      value: departureFilter[0],
+    });
   }
 
   if (dateFilter) {
@@ -93,6 +109,11 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     [monthFilter, yearFilter, prevMonth, prevYear],
   );
 
+  const handleDepartureChange = useCallback((values: string[]) => {
+    setDepartureFilter(values);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
   const clearSearch = useCallback(() => {
     setSearch("");
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -104,6 +125,7 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     setMonthFilter([]);
     setYearFilter([]);
     setDateFilter(null);
+    setDepartureFilter([]);
     setSearch("");
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
@@ -116,6 +138,7 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     monthFilter,
     yearFilter,
     dateFilter,
+    departureFilter,
     viewMode,
     setViewMode,
     handleSearch,
@@ -123,6 +146,7 @@ export function useAttendanceFilters(options: UseAttendanceFiltersOptions) {
     handleMonthChange,
     handleYearChange,
     handleDateChange,
+    handleDepartureChange,
     handleClearAllFilters,
   };
 }

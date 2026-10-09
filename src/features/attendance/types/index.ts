@@ -1,34 +1,73 @@
-import type { AttendanceType, Mood } from "../constants";
+import type { FeeSimple } from "@features/memberPlans";
+import type {
+  AttendanceAction,
+  AttendanceType,
+  FeeStatusIntent,
+  Mood,
+  RequestStatus,
+} from "../constants";
 
-interface BaseAttendance {
+export interface Attendance {
   id: string;
   attendanceDate: string;
-  arrivalTime: string;
-}
-
-export interface AttendanceCheckIn extends BaseAttendance {
-  name: string;
-  lastName: string;
-  dni: string;
-  type: AttendanceType;
+  arrivalTime?: string | null;
   departureTime?: string | null;
-  message: string | null;
-  mood?: Mood | null;
-}
-
-export interface AttendanceMoodUpdate {
-  id: string;
-  mood: Mood;
-  profileImageUrl?: string | null;
-  message?: string | null;
-}
-
-export interface Attendance extends BaseAttendance {
-  departureTime?: string;
   personId: string;
   name: string;
   lastname: string;
   dni: string;
   type: AttendanceType;
-  profileImageUrl?: string;
+  profileImageUrl?: string | null;
+  mood?: Mood | null;
+  isAbsent: boolean;
+  absentReason?: string | null;
+}
+
+export interface AttendanceCheckIn extends Attendance {
+  message?: string | null;
+  fee?: FeeSimple;
+}
+
+export interface SetAttendanceMoodArgs {
+  id: string;
+  mood: Mood;
+}
+
+export type CheckInPerson = Pick<
+  Attendance,
+  "name" | "lastname" | "profileImageUrl"
+>;
+
+export interface CheckInTimer {
+  seconds: number;
+  endsAt: number;
+}
+
+export interface AttendanceFlowState {
+  status: RequestStatus | AttendanceAction;
+  response: AttendanceCheckIn | null;
+  error: string | null;
+  fee?: FeeSimple | null;
+  timer: CheckInTimer | null;
+}
+
+export interface FeeStatusView {
+  intent: FeeStatusIntent;
+  label: string;
+  dateCaption: string | null;
+  date: Date | null;
+  countdown: string | null;
+  advice: string | null;
+}
+
+export interface AttendanceKeypadState {
+  isValid: boolean;
+  canAddDigit: boolean;
+  isEmpty: boolean;
+  disabled: boolean;
+}
+
+export interface AttendanceErrorState {
+  message: string | null;
+  visible: boolean;
 }
