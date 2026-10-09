@@ -37,9 +37,6 @@ function WarmupBlock({ meta, value }: WarmupBlockProps) {
             <span className="block size-1.5 rounded-full bg-current" />
           </IconBox>
           {meta.label}
-          <span className="hidden text-sm font-medium text-neutral-400 xl:inline">
-            {meta.badge}
-          </span>
           <ChevronDown
             size={14}
             aria-hidden="true"

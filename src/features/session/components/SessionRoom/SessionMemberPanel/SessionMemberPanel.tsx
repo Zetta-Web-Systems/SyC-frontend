@@ -147,7 +147,7 @@ function MemberPlanView({
           <WarmupBlocks
             plan={plan}
             keys={["mobilityBlock", "preparatoryBlock"]}
-            title="Antes de arrancar"
+            title="1° y 2° bloque"
           />
 
           <SessionDayPlan
@@ -161,7 +161,7 @@ function MemberPlanView({
               <WarmupBlocks
                 plan={plan}
                 keys={["aerobicBlock"]}
-                title="Para cerrar"
+                title="4° bloque"
               />
             }
             onMark={markExecution}
