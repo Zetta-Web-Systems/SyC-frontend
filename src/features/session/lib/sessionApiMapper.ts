@@ -15,6 +15,7 @@ import type {
   SessionRegisteredByDto,
 } from "../types";
 import { getSessionMemberPlan } from "./sessionMemberPlan";
+import { getDateTimeClock } from "./sessionTime";
 
 const STATE_FROM_DTO: Record<AttendanceStateDto, AttendanceState> = {
   [ATTENDANCE_STATE_DTO.PRESENT]: ATTENDANCE_STATE.PRESENT,
@@ -63,7 +64,7 @@ export function mapSessionFinish(
   if (!dto.registeredDateTime) return null;
 
   return {
-    finishedAt: formatTimeShort(dto.registeredDateTime.slice(11)),
+    finishedAt: getDateTimeClock(dto.registeredDateTime),
     finishedBy: getRegisteredByName(dto.registeredBy),
     observations: dto.observations || null,
   };

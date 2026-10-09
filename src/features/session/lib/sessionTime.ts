@@ -35,6 +35,13 @@ export function formatClockTime(date: Date): string {
   return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
+export function getDateTimeClock(dateTime: string): string {
+  const local = /^\d{4}-\d{2}-\d{2} (\d{2}:\d{2})/.exec(dateTime);
+  if (local) return local[1];
+  const date = new Date(dateTime);
+  return Number.isNaN(date.getTime()) ? "" : formatClockTime(date).slice(0, 5);
+}
+
 export function getTurnTiming(
   startTime: string,
   endTime: string,
